@@ -1,15 +1,19 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import base64
+import asyncio
+import uuid
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
-import uuid
+from typing import List, Optional
 from datetime import datetime, timezone
 
+from auth import hash_password, verify_password, create_token, decode_token
+from cost_estimator import estimate_cost
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -19,54 +23,462 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+# ==================== PYDANTIC MODELS ====================
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class ContractorRegister(BaseModel):
+    email: str
+    password: str
+    company_name: str
+    specialties: List[str] = []
+    service_zip_codes: List[str] = []
+    phone: str = ""
+    description: str = ""
+    latitude: float = 0.0
+    longitude: float = 0.0
 
-# Add your routes to the router instead of directly to app
+class ContractorLogin(BaseModel):
+    email: str
+    password: str
+
+class ContractorUpdate(BaseModel):
+    company_name: Optional[str] = None
+    specialties: Optional[List[str]] = None
+    service_zip_codes: Optional[List[str]] = None
+    phone: Optional[str] = None
+    description: Optional[str] = None
+    photos: Optional[List[str]] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+
+class LeadCreate(BaseModel):
+    name: str
+    phone: str
+    email: str
+    project_description: str
+    zip_code: str
+    project_id: Optional[str] = None
+    contractor_id: Optional[str] = None
+
+class ProjectResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    project_type: str
+    zip_code: str
+    status: str
+    created_at: str
+    original_image: Optional[str] = None
+    designs: List[dict] = []
+    cost_estimate: Optional[dict] = None
+
+# ==================== ZIP CODE UTILITIES ====================
+
+ZIP_COORDINATES = {
+    "10001": (40.7484, -73.9967), "10002": (40.7157, -73.9863),
+    "90001": (33.9425, -118.2551), "90210": (34.0901, -118.4065),
+    "94102": (37.7749, -122.4194), "94103": (37.7727, -122.4153),
+    "33101": (25.7617, -80.1918), "33109": (25.7617, -80.1300),
+    "60601": (41.8819, -87.6278), "60602": (41.8827, -87.6292),
+    "75201": (32.7767, -96.7970), "75202": (32.7876, -96.7985),
+    "30301": (33.7490, -84.3880), "30302": (33.7550, -84.3900),
+    "98101": (47.6062, -122.3321), "98102": (47.6205, -122.3213),
+    "02101": (42.3601, -71.0589), "02102": (42.3380, -71.0476),
+    "20001": (38.9072, -77.0369), "20002": (38.9005, -76.9900),
+}
+
+def get_zip_coords(zip_code: str):
+    if zip_code in ZIP_COORDINATES:
+        return ZIP_COORDINATES[zip_code]
+    prefix = zip_code[:3]
+    for zc, coords in ZIP_COORDINATES.items():
+        if zc[:3] == prefix:
+            return (coords[0] + 0.02, coords[1] + 0.02)
+    return (39.8283, -98.5795)  # Center of US
+
+# ==================== RENOVATION STYLE PROMPTS ====================
+
+STYLE_PROMPTS = {
+    "Bathroom": [
+        {"name": "Modern Spa Bathroom", "prompt": "Professional interior design photo of a luxurious modern spa bathroom renovation with freestanding soaking tub, rainfall shower head, natural stone tiles, warm LED lighting, live plants, wooden vanity with vessel sink, large mirror, minimalist clean aesthetic, high-end residential design, 8k quality"},
+        {"name": "Large Format Tile Shower", "prompt": "Professional interior design photo of a stunning large format tile bathroom renovation with floor-to-ceiling marble-look porcelain tiles, frameless glass shower enclosure, linear drain, recessed niches with accent lighting, floating vanity, contemporary fixtures in brushed gold, luxurious residential design, 8k quality"},
+        {"name": "Microcement Seamless Bathroom", "prompt": "Professional interior design photo of an elegant microcement seamless bathroom renovation with continuous concrete-look walls and floor, integrated shower area, wall-mounted toilet, floating oak vanity, round mirror with backlight, industrial-chic pendant lights, sophisticated minimal residential design, 8k quality"},
+    ],
+    "Shower": [
+        {"name": "Walk-in Rainfall Shower", "prompt": "Professional interior design photo of a luxury walk-in rainfall shower renovation with large format natural stone tiles, frameless glass panel, multiple shower heads including rainfall and handheld, built-in bench, recessed niches with ambient lighting, brushed nickel fixtures, spa-like atmosphere, 8k quality"},
+        {"name": "Steam Shower Suite", "prompt": "Professional interior design photo of a premium steam shower suite renovation with floor-to-ceiling mosaic tiles, built-in steam generator, aromatherapy system, chromotherapy LED lights, teak wood bench, body jets, frameless glass enclosure, luxurious spa design, 8k quality"},
+        {"name": "Curbless Modern Shower", "prompt": "Professional interior design photo of a sleek curbless modern shower renovation with linear drain, large format porcelain tiles continuous from bathroom floor, minimalist glass partition, wall-mounted fixtures in matte black, floating shelf niche, clean lines, accessible luxury design, 8k quality"},
+    ],
+    "Kitchen": [
+        {"name": "Contemporary Chef Kitchen", "prompt": "Professional interior design photo of a stunning contemporary chef kitchen renovation with large waterfall island in white quartz, custom cabinetry in sage green, professional-grade stainless appliances, herringbone backsplash, pendant lights over island, hardwood floors, open shelving, high-end residential design, 8k quality"},
+        {"name": "Modern Farmhouse Kitchen", "prompt": "Professional interior design photo of a beautiful modern farmhouse kitchen renovation with shaker-style white cabinets, butcher block island, subway tile backsplash, apron-front sink, brass fixtures, open shelving with ceramics, pendant lighting, reclaimed wood accents, warm inviting residential design, 8k quality"},
+        {"name": "Luxury Minimalist Kitchen", "prompt": "Professional interior design photo of a luxury minimalist kitchen renovation with handleless cabinets in warm walnut and white, integrated appliances, waterfall marble island, hidden storage solutions, under-cabinet LED lighting, statement range hood, floor-to-ceiling windows, ultra-modern residential design, 8k quality"},
+    ],
+    "Pool Deck": [
+        {"name": "Resort-Style Pool Deck", "prompt": "Professional landscape design photo of a resort-style pool deck renovation with travertine pavers, infinity-edge pool, built-in hot tub, outdoor kitchen area, palm trees and tropical landscaping, lounge chairs with umbrellas, fire pit, string lights, luxury residential exterior design, 8k quality"},
+        {"name": "Modern Geometric Pool Deck", "prompt": "Professional landscape design photo of a modern geometric pool deck renovation with large format concrete pavers, rectangular pool with LED lighting, raised planters with ornamental grasses, built-in seating, pergola with retractable shade, minimalist water features, contemporary residential exterior design, 8k quality"},
+        {"name": "Natural Stone Pool Deck", "prompt": "Professional landscape design photo of a natural stone pool deck renovation with flagstone pavers, freeform pool with waterfall feature, mature landscaping, outdoor fireplace, covered cabana with ceiling fan, stone walls, lush greenery, elegant residential exterior design, 8k quality"},
+    ],
+    "Patio": [
+        {"name": "Outdoor Living Room Patio", "prompt": "Professional landscape design photo of an outdoor living room patio renovation with covered pergola, built-in L-shaped sofa with cushions, coffee table, outdoor TV, ceiling fans, string lights, stone fireplace, container gardens, composite decking, cozy residential exterior design, 8k quality"},
+        {"name": "Mediterranean Courtyard Patio", "prompt": "Professional landscape design photo of a Mediterranean courtyard patio renovation with terracotta tile flooring, arched pergola with climbing vines, central fountain, wrought iron furniture, mosaic accent table, olive trees in terracotta pots, warm-toned stucco walls, romantic residential exterior design, 8k quality"},
+        {"name": "Modern Rooftop Patio", "prompt": "Professional landscape design photo of a modern rooftop patio renovation with porcelain tile pavers, sectional sofa, dining area with planter walls, built-in bar, city skyline views, ambient lighting, artificial turf accent, wind-resistant planters, sophisticated urban residential design, 8k quality"},
+    ],
+}
+
+# ==================== ROUTES ====================
+
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "AI Renovation Visualizer API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+# --- Project Routes ---
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.post("/projects/upload")
+async def upload_project(
+    photo: UploadFile = File(...),
+    zip_code: str = Form(...),
+    project_type: str = Form(...)
+):
+    image_data = await photo.read()
+    image_base64 = base64.b64encode(image_data).decode("utf-8")
+    content_type = photo.content_type or "image/jpeg"
 
-# Include the router in the main app
+    project_id = str(uuid.uuid4())
+    project = {
+        "id": project_id,
+        "project_type": project_type,
+        "zip_code": zip_code,
+        "original_image": f"data:{content_type};base64,{image_base64}",
+        "status": "uploaded",
+        "designs": [],
+        "cost_estimate": None,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.projects.insert_one(project)
+
+    return {
+        "id": project_id,
+        "project_type": project_type,
+        "zip_code": zip_code,
+        "status": "uploaded",
+        "created_at": project["created_at"],
+    }
+
+
+@api_router.post("/projects/{project_id}/generate")
+async def generate_designs(project_id: str):
+    project = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    project_type = project["project_type"]
+    styles = STYLE_PROMPTS.get(project_type, STYLE_PROMPTS["Bathroom"])
+
+    try:
+        from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+
+        api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+        image_gen = OpenAIImageGeneration(api_key=api_key)
+
+        async def gen_one(style):
+            images = await image_gen.generate_images(
+                prompt=style["prompt"],
+                model="gpt-image-1",
+                number_of_images=1,
+            )
+            if images and len(images) > 0:
+                return {
+                    "name": style["name"],
+                    "image": f"data:image/png;base64,{base64.b64encode(images[0]).decode('utf-8')}",
+                }
+            return None
+
+        results = await asyncio.gather(*[gen_one(s) for s in styles], return_exceptions=True)
+        designs = []
+        for r in results:
+            if isinstance(r, dict) and r is not None:
+                designs.append(r)
+            elif isinstance(r, Exception):
+                logger.error(f"Image generation error: {r}")
+
+    except Exception as e:
+        logger.error(f"AI generation failed: {e}")
+        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
+
+    # Calculate cost estimate
+    cost = estimate_cost(project_type, project["zip_code"])
+
+    await db.projects.update_one(
+        {"id": project_id},
+        {"$set": {"designs": designs, "cost_estimate": cost, "status": "completed"}},
+    )
+
+    return {
+        "id": project_id,
+        "designs": designs,
+        "cost_estimate": cost,
+        "status": "completed",
+    }
+
+
+@api_router.get("/projects/{project_id}")
+async def get_project(project_id: str):
+    project = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
+
+
+# --- Contractor Routes ---
+
+@api_router.post("/contractors/register")
+async def register_contractor(data: ContractorRegister):
+    existing = await db.contractors.find_one({"email": data.email}, {"_id": 0})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    contractor_id = str(uuid.uuid4())
+    contractor = {
+        "id": contractor_id,
+        "email": data.email,
+        "password_hash": hash_password(data.password),
+        "company_name": data.company_name,
+        "specialties": data.specialties,
+        "service_zip_codes": data.service_zip_codes,
+        "phone": data.phone,
+        "description": data.description,
+        "photos": [],
+        "latitude": data.latitude,
+        "longitude": data.longitude,
+        "rating": 0.0,
+        "review_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.contractors.insert_one(contractor)
+
+    token = create_token(contractor_id)
+    return {
+        "token": token,
+        "contractor": {
+            "id": contractor_id,
+            "email": data.email,
+            "company_name": data.company_name,
+        },
+    }
+
+
+@api_router.post("/contractors/login")
+async def login_contractor(data: ContractorLogin):
+    contractor = await db.contractors.find_one({"email": data.email}, {"_id": 0})
+    if not contractor or not verify_password(data.password, contractor["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    token = create_token(contractor["id"])
+    return {
+        "token": token,
+        "contractor": {
+            "id": contractor["id"],
+            "email": contractor["email"],
+            "company_name": contractor["company_name"],
+        },
+    }
+
+
+@api_router.get("/contractors/me")
+async def get_my_profile(contractor_id: str = Depends(decode_token)):
+    contractor = await db.contractors.find_one({"id": contractor_id}, {"_id": 0, "password_hash": 0})
+    if not contractor:
+        raise HTTPException(status_code=404, detail="Contractor not found")
+    return contractor
+
+
+@api_router.put("/contractors/me")
+async def update_my_profile(data: ContractorUpdate, contractor_id: str = Depends(decode_token)):
+    update_data = {k: v for k, v in data.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
+    await db.contractors.update_one({"id": contractor_id}, {"$set": update_data})
+    contractor = await db.contractors.find_one({"id": contractor_id}, {"_id": 0, "password_hash": 0})
+    return contractor
+
+
+@api_router.get("/contractors/search")
+async def search_contractors(zip_code: str, project_type: str = ""):
+    query = {"service_zip_codes": {"$in": [zip_code, zip_code[:3]]}}
+    contractors = await db.contractors.find(query, {"_id": 0, "password_hash": 0}).to_list(50)
+
+    # If no results by zip, get all contractors
+    if not contractors:
+        contractors = await db.contractors.find({}, {"_id": 0, "password_hash": 0}).to_list(20)
+
+    user_coords = get_zip_coords(zip_code)
+
+    for c in contractors:
+        clat = c.get("latitude", 0)
+        clng = c.get("longitude", 0)
+        if clat and clng:
+            import math
+            dlat = math.radians(clat - user_coords[0])
+            dlng = math.radians(clng - user_coords[1])
+            a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(user_coords[0])) * math.cos(math.radians(clat)) * math.sin(dlng / 2) ** 2
+            c_val = 2 * math.asin(math.sqrt(a))
+            c["distance_miles"] = round(c_val * 3956, 1)
+        else:
+            c["distance_miles"] = 0
+
+    contractors.sort(key=lambda x: x.get("distance_miles", 999))
+    return {"contractors": contractors, "user_location": {"lat": user_coords[0], "lng": user_coords[1]}}
+
+
+@api_router.get("/contractors/{contractor_id}")
+async def get_contractor_public(contractor_id: str):
+    contractor = await db.contractors.find_one({"id": contractor_id}, {"_id": 0, "password_hash": 0})
+    if not contractor:
+        raise HTTPException(status_code=404, detail="Contractor not found")
+    return contractor
+
+
+# --- Lead Routes ---
+
+@api_router.post("/leads")
+async def create_lead(data: LeadCreate):
+    lead_id = str(uuid.uuid4())
+    lead = {
+        "id": lead_id,
+        **data.model_dump(),
+        "status": "new",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.leads.insert_one(lead)
+    return {"id": lead_id, "status": "new", "message": "Quote request submitted successfully"}
+
+
+@api_router.get("/leads")
+async def get_leads(contractor_id: str = Depends(decode_token)):
+    leads = await db.leads.find(
+        {"contractor_id": contractor_id}, {"_id": 0}
+    ).to_list(100)
+    return {"leads": leads}
+
+
+@api_router.get("/leads/all")
+async def get_all_leads(contractor_id: str = Depends(decode_token)):
+    # Get contractor's service area
+    contractor = await db.contractors.find_one({"id": contractor_id}, {"_id": 0})
+    if not contractor:
+        raise HTTPException(status_code=404, detail="Contractor not found")
+
+    zip_codes = contractor.get("service_zip_codes", [])
+    query = {}
+    if zip_codes:
+        query = {"zip_code": {"$in": zip_codes}}
+    leads = await db.leads.find(query, {"_id": 0}).to_list(100)
+    return {"leads": leads}
+
+
+# --- Seed Data ---
+
+@api_router.post("/seed")
+async def seed_data():
+    count = await db.contractors.count_documents({})
+    if count > 0:
+        return {"message": "Data already seeded", "count": count}
+
+    sample_contractors = [
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@elitebath.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Elite Bath & Kitchen Remodeling",
+            "specialties": ["Bathroom", "Kitchen", "Shower"],
+            "service_zip_codes": ["100", "101", "102", "10001", "10002"],
+            "phone": "(212) 555-0101",
+            "description": "NYC's premier bathroom and kitchen renovation specialists with 15+ years of experience.",
+            "photos": [],
+            "latitude": 40.7484,
+            "longitude": -73.9967,
+            "rating": 4.8,
+            "review_count": 127,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@suncoastreno.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Suncoast Renovation Group",
+            "specialties": ["Pool Deck", "Patio", "Kitchen"],
+            "service_zip_codes": ["331", "330", "33101", "33109"],
+            "phone": "(305) 555-0202",
+            "description": "South Florida's top outdoor living and renovation company specializing in pool decks and patios.",
+            "photos": [],
+            "latitude": 25.7617,
+            "longitude": -80.1918,
+            "rating": 4.6,
+            "review_count": 89,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@bayarearemodel.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Bay Area Remodel Pros",
+            "specialties": ["Kitchen", "Bathroom", "Shower"],
+            "service_zip_codes": ["941", "940", "94102", "94103"],
+            "phone": "(415) 555-0303",
+            "description": "Award-winning renovation firm serving the San Francisco Bay Area with modern design solutions.",
+            "photos": [],
+            "latitude": 37.7749,
+            "longitude": -122.4194,
+            "rating": 4.9,
+            "review_count": 203,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@windycityreno.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Windy City Renovations",
+            "specialties": ["Bathroom", "Kitchen", "Patio"],
+            "service_zip_codes": ["606", "600", "60601", "60602"],
+            "phone": "(312) 555-0404",
+            "description": "Chicago's trusted renovation partner for kitchens, bathrooms, and outdoor spaces.",
+            "photos": [],
+            "latitude": 41.8819,
+            "longitude": -87.6278,
+            "rating": 4.7,
+            "review_count": 156,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@lonestardesign.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Lone Star Design & Build",
+            "specialties": ["Kitchen", "Pool Deck", "Patio", "Bathroom"],
+            "service_zip_codes": ["752", "750", "75201", "75202"],
+            "phone": "(214) 555-0505",
+            "description": "Full-service renovation company in Dallas-Fort Worth specializing in luxury home transformations.",
+            "photos": [],
+            "latitude": 32.7767,
+            "longitude": -96.7970,
+            "rating": 4.5,
+            "review_count": 94,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+    ]
+
+    await db.contractors.insert_many(sample_contractors)
+    return {"message": "Seeded 5 contractors", "count": 5}
+
+
+# ==================== APP CONFIG ====================
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -77,12 +489,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup():
+    # Create indexes
+    await db.contractors.create_index("email", unique=True)
+    await db.contractors.create_index("service_zip_codes")
+    await db.projects.create_index("id")
+    await db.leads.create_index("contractor_id")
+    logger.info("AI Renovation Visualizer API started")
+
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
