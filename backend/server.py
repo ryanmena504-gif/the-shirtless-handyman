@@ -12,11 +12,11 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 from datetime import datetime, timezone
 
-from auth import hash_password, verify_password, create_token, decode_token
-from cost_estimator import estimate_cost
-
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+from auth import hash_password, verify_password, create_token, decode_token
+from cost_estimator import estimate_cost
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -310,12 +310,13 @@ async def update_my_profile(data: ContractorUpdate, contractor_id: str = Depends
 
 @api_router.get("/contractors/search")
 async def search_contractors(zip_code: str, project_type: str = ""):
+    projection = {"_id": 0, "password_hash": 0}
     query = {"service_zip_codes": {"$in": [zip_code, zip_code[:3]]}}
-    contractors = await db.contractors.find(query, {"_id": 0, "password_hash": 0}).to_list(50)
+    contractors = await db.contractors.find(query, projection).to_list(50)
 
     # If no results by zip, get all contractors
     if not contractors:
-        contractors = await db.contractors.find({}, {"_id": 0, "password_hash": 0}).to_list(20)
+        contractors = await db.contractors.find({}, projection).to_list(20)
 
     user_coords = get_zip_coords(zip_code)
 
@@ -361,9 +362,10 @@ async def create_lead(data: LeadCreate):
 
 @api_router.get("/leads")
 async def get_leads(contractor_id: str = Depends(decode_token)):
+    lead_projection = {"_id": 0}
     leads = await db.leads.find(
-        {"contractor_id": contractor_id}, {"_id": 0}
-    ).to_list(100)
+        {"contractor_id": contractor_id}, lead_projection
+    ).sort("created_at", -1).to_list(100)
     return {"leads": leads}
 
 
@@ -378,7 +380,8 @@ async def get_all_leads(contractor_id: str = Depends(decode_token)):
     query = {}
     if zip_codes:
         query = {"zip_code": {"$in": zip_codes}}
-    leads = await db.leads.find(query, {"_id": 0}).to_list(100)
+    lead_projection = {"_id": 0}
+    leads = await db.leads.find(query, lead_projection).sort("created_at", -1).to_list(100)
     return {"leads": leads}
 
 
