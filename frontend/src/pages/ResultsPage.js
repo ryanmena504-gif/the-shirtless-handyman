@@ -39,7 +39,7 @@ export default function ResultsPage() {
     setGenerating(true);
     setError(null);
     try {
-      const res = await axios.post(`${API}/projects/${projectId}/generate`);
+      const res = await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 180000 });
       setProject(res.data);
       if (res.data.designs?.length > 0) {
         setSelectedDesign(0);
@@ -50,7 +50,12 @@ export default function ResultsPage() {
       setContractors(cRes.data.contractors || []);
       setUserLocation(cRes.data.user_location);
     } catch (err) {
-      setError("Design generation failed. Please try again.");
+      const detail = err.response?.data?.detail || "";
+      if (detail.includes("budget")) {
+        setError("AI generation budget exceeded. Please add balance to your Universal Key at Profile > Universal Key > Add Balance.");
+      } else {
+        setError("Design generation failed. Please try again.");
+      }
       toast.error("Generation failed");
     } finally {
       setGenerating(false);
