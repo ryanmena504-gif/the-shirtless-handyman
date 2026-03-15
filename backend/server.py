@@ -112,29 +112,29 @@ def get_zip_coords(zip_code: str):
 
 STYLE_PROMPTS = {
     "Bathroom": [
-        {"name": "Modern Spa Bathroom", "prompt": "Professional interior design photo of a luxurious modern spa bathroom renovation with freestanding soaking tub, rainfall shower head, natural stone tiles, warm LED lighting, live plants, wooden vanity with vessel sink, large mirror, minimalist clean aesthetic, high-end residential design, 8k quality"},
-        {"name": "Large Format Tile Shower", "prompt": "Professional interior design photo of a stunning large format tile bathroom renovation with floor-to-ceiling marble-look porcelain tiles, frameless glass shower enclosure, linear drain, recessed niches with accent lighting, floating vanity, contemporary fixtures in brushed gold, luxurious residential design, 8k quality"},
-        {"name": "Microcement Seamless Bathroom", "prompt": "Professional interior design photo of an elegant microcement seamless bathroom renovation with continuous concrete-look walls and floor, integrated shower area, wall-mounted toilet, floating oak vanity, round mirror with backlight, industrial-chic pendant lights, sophisticated minimal residential design, 8k quality"},
+        {"name": "Modern Spa Renovation", "prompt": "Redesign this exact room as a modern spa bathroom renovation. Keep the same room layout, dimensions, walls, and camera perspective. Replace surfaces with natural stone tiles, add a freestanding soaking tub, rainfall shower head, warm LED lighting, live plants, wooden vanity with vessel sink, and a large mirror. Photorealistic renovation of this specific room."},
+        {"name": "Luxury Tile Renovation", "prompt": "Redesign this exact room as a luxury tile bathroom renovation. Keep the same room layout, dimensions, walls, and camera perspective. Apply floor-to-ceiling marble-look porcelain large format tiles, add a frameless glass shower enclosure, linear drain, recessed niches with accent lighting, floating vanity, and contemporary brushed gold fixtures. Photorealistic renovation of this specific room."},
+        {"name": "Seamless Microcement Renovation", "prompt": "Redesign this exact room as a seamless microcement bathroom renovation. Keep the same room layout, dimensions, walls, and camera perspective. Apply continuous microcement concrete-look finish to walls and floor, add an integrated shower area, wall-mounted toilet, floating oak vanity, round backlit mirror, and industrial-chic pendant lights. Photorealistic renovation of this specific room."},
     ],
     "Shower": [
-        {"name": "Walk-in Rainfall Shower", "prompt": "Professional interior design photo of a luxury walk-in rainfall shower renovation with large format natural stone tiles, frameless glass panel, multiple shower heads including rainfall and handheld, built-in bench, recessed niches with ambient lighting, brushed nickel fixtures, spa-like atmosphere, 8k quality"},
-        {"name": "Steam Shower Suite", "prompt": "Professional interior design photo of a premium steam shower suite renovation with floor-to-ceiling mosaic tiles, built-in steam generator, aromatherapy system, chromotherapy LED lights, teak wood bench, body jets, frameless glass enclosure, luxurious spa design, 8k quality"},
-        {"name": "Curbless Modern Shower", "prompt": "Professional interior design photo of a sleek curbless modern shower renovation with linear drain, large format porcelain tiles continuous from bathroom floor, minimalist glass partition, wall-mounted fixtures in matte black, floating shelf niche, clean lines, accessible luxury design, 8k quality"},
+        {"name": "Modern Spa Renovation", "prompt": "Redesign this exact room as a luxury walk-in spa shower renovation. Keep the same room layout, dimensions, and camera perspective. Add large format natural stone tiles, frameless glass panels, rainfall and handheld shower heads, a built-in bench, recessed niches with ambient lighting, and brushed nickel fixtures. Photorealistic renovation of this specific room."},
+        {"name": "Luxury Tile Renovation", "prompt": "Redesign this exact room as a luxury tile shower renovation. Keep the same room layout, dimensions, and camera perspective. Apply floor-to-ceiling mosaic and large format tiles, add body jets, chromotherapy LED lights, a teak wood bench, and frameless glass enclosure. Photorealistic renovation of this specific room."},
+        {"name": "Seamless Microcement Renovation", "prompt": "Redesign this exact room as a seamless microcement shower renovation. Keep the same room layout, dimensions, and camera perspective. Apply continuous microcement to walls and floor with a curbless linear drain, minimalist glass partition, matte black wall-mounted fixtures, and a floating shelf niche. Photorealistic renovation of this specific room."},
     ],
     "Kitchen": [
-        {"name": "Contemporary Chef Kitchen", "prompt": "Professional interior design photo of a stunning contemporary chef kitchen renovation with large waterfall island in white quartz, custom cabinetry in sage green, professional-grade stainless appliances, herringbone backsplash, pendant lights over island, hardwood floors, open shelving, high-end residential design, 8k quality"},
-        {"name": "Modern Farmhouse Kitchen", "prompt": "Professional interior design photo of a beautiful modern farmhouse kitchen renovation with shaker-style white cabinets, butcher block island, subway tile backsplash, apron-front sink, brass fixtures, open shelving with ceramics, pendant lighting, reclaimed wood accents, warm inviting residential design, 8k quality"},
-        {"name": "Luxury Minimalist Kitchen", "prompt": "Professional interior design photo of a luxury minimalist kitchen renovation with handleless cabinets in warm walnut and white, integrated appliances, waterfall marble island, hidden storage solutions, under-cabinet LED lighting, statement range hood, floor-to-ceiling windows, ultra-modern residential design, 8k quality"},
+        {"name": "Modern Spa-Inspired Renovation", "prompt": "Redesign this exact room as a contemporary chef kitchen renovation. Keep the same room layout, dimensions, and camera perspective. Add a large waterfall quartz island, custom sage green cabinetry, professional-grade stainless appliances, herringbone backsplash, pendant lights, hardwood floors, and open shelving. Photorealistic renovation of this specific room."},
+        {"name": "Luxury Tile Renovation", "prompt": "Redesign this exact room as a luxury tiled kitchen renovation. Keep the same room layout, dimensions, and camera perspective. Apply stunning marble-look backsplash tiles, add shaker-style white cabinets, butcher block island, apron-front sink, brass fixtures, and pendant lighting. Photorealistic renovation of this specific room."},
+        {"name": "Seamless Minimalist Renovation", "prompt": "Redesign this exact room as a seamless minimalist kitchen renovation. Keep the same room layout, dimensions, and camera perspective. Add handleless walnut and white cabinets, integrated appliances, waterfall marble island, hidden storage, under-cabinet LED lighting, and a statement range hood. Photorealistic renovation of this specific room."},
     ],
     "Pool Deck": [
-        {"name": "Resort-Style Pool Deck", "prompt": "Professional landscape design photo of a resort-style pool deck renovation with travertine pavers, infinity-edge pool, built-in hot tub, outdoor kitchen area, palm trees and tropical landscaping, lounge chairs with umbrellas, fire pit, string lights, luxury residential exterior design, 8k quality"},
-        {"name": "Modern Geometric Pool Deck", "prompt": "Professional landscape design photo of a modern geometric pool deck renovation with large format concrete pavers, rectangular pool with LED lighting, raised planters with ornamental grasses, built-in seating, pergola with retractable shade, minimalist water features, contemporary residential exterior design, 8k quality"},
-        {"name": "Natural Stone Pool Deck", "prompt": "Professional landscape design photo of a natural stone pool deck renovation with flagstone pavers, freeform pool with waterfall feature, mature landscaping, outdoor fireplace, covered cabana with ceiling fan, stone walls, lush greenery, elegant residential exterior design, 8k quality"},
+        {"name": "Modern Spa Renovation", "prompt": "Redesign this exact outdoor space as a resort-style pool deck renovation. Keep the same layout, dimensions, and camera perspective. Add travertine pavers, an infinity-edge pool, built-in hot tub, outdoor kitchen area, tropical landscaping, lounge chairs, and string lights. Photorealistic renovation of this specific space."},
+        {"name": "Luxury Tile Renovation", "prompt": "Redesign this exact outdoor space as a modern geometric pool deck renovation. Keep the same layout, dimensions, and camera perspective. Add large format concrete pavers, a rectangular pool with LED lighting, raised planters, built-in seating, and a pergola with retractable shade. Photorealistic renovation of this specific space."},
+        {"name": "Seamless Natural Stone Renovation", "prompt": "Redesign this exact outdoor space as a natural stone pool deck renovation. Keep the same layout, dimensions, and camera perspective. Add flagstone pavers, a freeform pool with waterfall, mature landscaping, an outdoor fireplace, and a covered cabana. Photorealistic renovation of this specific space."},
     ],
     "Patio": [
-        {"name": "Outdoor Living Room Patio", "prompt": "Professional landscape design photo of an outdoor living room patio renovation with covered pergola, built-in L-shaped sofa with cushions, coffee table, outdoor TV, ceiling fans, string lights, stone fireplace, container gardens, composite decking, cozy residential exterior design, 8k quality"},
-        {"name": "Mediterranean Courtyard Patio", "prompt": "Professional landscape design photo of a Mediterranean courtyard patio renovation with terracotta tile flooring, arched pergola with climbing vines, central fountain, wrought iron furniture, mosaic accent table, olive trees in terracotta pots, warm-toned stucco walls, romantic residential exterior design, 8k quality"},
-        {"name": "Modern Rooftop Patio", "prompt": "Professional landscape design photo of a modern rooftop patio renovation with porcelain tile pavers, sectional sofa, dining area with planter walls, built-in bar, city skyline views, ambient lighting, artificial turf accent, wind-resistant planters, sophisticated urban residential design, 8k quality"},
+        {"name": "Modern Spa Renovation", "prompt": "Redesign this exact outdoor space as a modern outdoor living room patio renovation. Keep the same layout, dimensions, and camera perspective. Add a covered pergola, built-in L-shaped sofa, outdoor TV, ceiling fans, string lights, a stone fireplace, and composite decking. Photorealistic renovation of this specific space."},
+        {"name": "Luxury Tile Renovation", "prompt": "Redesign this exact outdoor space as a Mediterranean courtyard patio renovation. Keep the same layout, dimensions, and camera perspective. Add terracotta tile flooring, an arched pergola with climbing vines, a central fountain, wrought iron furniture, and olive trees in terracotta pots. Photorealistic renovation of this specific space."},
+        {"name": "Seamless Modern Renovation", "prompt": "Redesign this exact outdoor space as a modern rooftop patio renovation. Keep the same layout, dimensions, and camera perspective. Add porcelain tile pavers, a sectional sofa, dining area with planter walls, built-in bar, ambient lighting, and artificial turf accent. Photorealistic renovation of this specific space."},
     ],
 }
 
@@ -205,11 +205,10 @@ def _run_generation_sync(project_id: str, project: dict):
     """Run generation in a separate thread with its own event loop and DB client."""
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    # Create a new mongo client for this thread
     thread_client = AsyncIOMotorClient(mongo_url)
     thread_db = thread_client[os.environ['DB_NAME']]
     try:
-        loop.run_until_complete(_run_generation(project_id, project, thread_db))
+        _do_generation(project_id, project, thread_db, loop)
     except Exception as e:
         logger.error(f"Generation thread error: {e}")
         loop.run_until_complete(
@@ -223,52 +222,72 @@ def _run_generation_sync(project_id: str, project: dict):
         loop.close()
 
 
-async def _run_generation(project_id: str, project: dict, thread_db):
+def _do_generation(project_id: str, project: dict, thread_db, loop):
+    import litellm
+    from emergentintegrations.llm.utils import get_integration_proxy_url
+
     project_type = project["project_type"]
     styles = STYLE_PROMPTS.get(project_type, STYLE_PROMPTS["Bathroom"])
 
-    try:
-        from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+    # Get the original image bytes
+    original_image_data = project.get("original_image", "")
+    image_bytes = None
+    if original_image_data.startswith("data:"):
+        b64_part = original_image_data.split(",", 1)[1]
+        image_bytes = base64.b64decode(b64_part)
 
-        api_key = os.environ.get("EMERGENT_LLM_KEY", "")
-        image_gen = OpenAIImageGeneration(api_key=api_key)
-
-        async def gen_one(style):
-            images = await image_gen.generate_images(
-                prompt=style["prompt"],
-                model="gpt-image-1",
-                number_of_images=1,
+    if not image_bytes:
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"status": "failed", "error": "No original image found"}},
             )
-            if images and len(images) > 0:
-                return {
-                    "name": style["name"],
-                    "image": f"data:image/png;base64,{base64.b64encode(images[0]).decode('utf-8')}",
-                }
-            return None
-
-        results = await asyncio.gather(*[gen_one(s) for s in styles], return_exceptions=True)
-        designs = []
-        for r in results:
-            if isinstance(r, dict) and r is not None:
-                designs.append(r)
-            elif isinstance(r, Exception):
-                logger.error(f"Image generation error: {r}")
-
-    except Exception as e:
-        logger.error(f"AI generation failed: {e}")
-        await thread_db.projects.update_one(
-            {"id": project_id},
-            {"$set": {"status": "failed", "error": str(e)}},
         )
         return
+
+    api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+    proxy_url = get_integration_proxy_url() + "/llm"
+
+    designs = []
+    for style in styles:
+        try:
+            response = litellm.image_edit(
+                image=image_bytes,
+                prompt=style["prompt"],
+                model="openai/gpt-image-1",
+                api_key=api_key,
+                api_base=proxy_url,
+                quality="low",
+                n=1,
+                timeout=180,
+            )
+            if response and response.data:
+                img = response.data[0]
+                if hasattr(img, 'b64_json') and img.b64_json:
+                    designs.append({
+                        "name": style["name"],
+                        "image": f"data:image/png;base64,{img.b64_json}",
+                    })
+                elif hasattr(img, 'url') and img.url:
+                    import requests
+                    img_response = requests.get(img.url, timeout=30)
+                    designs.append({
+                        "name": style["name"],
+                        "image": f"data:image/png;base64,{base64.b64encode(img_response.content).decode('utf-8')}",
+                    })
+            logger.info(f"Generated: {style['name']} for project {project_id}")
+        except Exception as e:
+            logger.error(f"Image edit error for {style['name']}: {e}")
 
     # Calculate cost estimate
     cost = estimate_cost(project_type, project["zip_code"])
 
     status = "completed" if len(designs) > 0 else "failed"
-    await thread_db.projects.update_one(
-        {"id": project_id},
-        {"$set": {"designs": designs, "cost_estimate": cost, "status": status}},
+    loop.run_until_complete(
+        thread_db.projects.update_one(
+            {"id": project_id},
+            {"$set": {"designs": designs, "cost_estimate": cost, "status": status}},
+        )
     )
     logger.info(f"Generation complete for {project_id}: {len(designs)} designs")
 
