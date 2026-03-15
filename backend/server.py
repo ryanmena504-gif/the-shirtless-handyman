@@ -60,8 +60,10 @@ class LeadCreate(BaseModel):
     name: str
     phone: str
     email: str
-    project_description: str
     zip_code: str
+    project_description: str = ""
+    selected_design_style: str = ""
+    room_photo: str = ""
     project_id: Optional[str] = None
     contractor_id: Optional[str] = None
 

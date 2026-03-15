@@ -10,18 +10,16 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Image as ImageIcon, Paintbrush } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zipCode }) => {
+export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zipCode, selectedDesignStyle, roomPhoto }) => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
     email: "",
-    project_description: "",
     zip_code: zipCode || "",
   });
   const [loading, setLoading] = useState(false);
@@ -37,6 +35,8 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
     try {
       await axios.post(`${API}/leads`, {
         ...form,
+        selected_design_style: selectedDesignStyle || "",
+        room_photo: roomPhoto || "",
         project_id: projectId || "",
         contractor_id: contractor?.id || "",
       });
@@ -51,7 +51,7 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
 
   const handleClose = () => {
     setSubmitted(false);
-    setForm({ name: "", phone: "", email: "", project_description: "", zip_code: zipCode || "" });
+    setForm({ name: "", phone: "", email: "", zip_code: zipCode || "" });
     onOpenChange(false);
   };
 
@@ -89,6 +89,34 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Attached context: design style + room photo thumbnail */}
+            {(selectedDesignStyle || roomPhoto) && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/50 border border-border/40" data-testid="lead-context-preview">
+                {roomPhoto && (
+                  <img
+                    src={roomPhoto}
+                    alt="Your room"
+                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                    data-testid="lead-room-photo-preview"
+                  />
+                )}
+                <div className="min-w-0">
+                  {selectedDesignStyle && (
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                      <Paintbrush className="w-3.5 h-3.5 text-[#D97757] flex-shrink-0" />
+                      <span className="truncate">{selectedDesignStyle}</span>
+                    </div>
+                  )}
+                  {roomPhoto && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                      <ImageIcon className="w-3 h-3 flex-shrink-0" />
+                      <span>Room photo attached</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="lead-name">Full Name *</Label>
               <Input
@@ -131,22 +159,10 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
               <Input
                 id="lead-zip"
                 data-testid="lead-zip-input"
-                placeholder="10001"
+                placeholder="70115"
                 value={form.zip_code}
                 onChange={(e) => setForm({ ...form, zip_code: e.target.value })}
                 className="h-11 rounded-lg"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lead-desc">Project Description</Label>
-              <Textarea
-                id="lead-desc"
-                data-testid="lead-description-input"
-                placeholder="Tell us about your renovation project..."
-                value={form.project_description}
-                onChange={(e) => setForm({ ...form, project_description: e.target.value })}
-                className="rounded-lg resize-none"
-                rows={3}
               />
             </div>
             <Button

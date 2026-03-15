@@ -372,7 +372,9 @@ export default function ResultsPage() {
         onOpenChange={setQuoteModalOpen}
         contractor={selectedContractor}
         projectId={projectId}
-        zipCode={zipCode}
+        zipCode={zipCode || project?.zip_code || ""}
+        selectedDesignStyle={selectedDesign !== null && project?.designs?.[selectedDesign] ? project.designs[selectedDesign].name : ""}
+        roomPhoto={project?.original_image || ""}
       />
     </div>
   );
