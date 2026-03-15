@@ -40,6 +40,20 @@ export default function ResultsPage() {
     setGenerating(true);
     setError(null);
     try {
+      // First check if project already has results
+      const checkRes = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
+      if (checkRes.data.status === "completed" && checkRes.data.designs?.length > 0) {
+        setProject(checkRes.data);
+        setSelectedDesign(0);
+        setGenerating(false);
+        // Fetch contractors
+        const zip = zipCode || checkRes.data.zip_code || "10001";
+        const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}`);
+        setContractors(cRes.data.contractors || []);
+        setUserLocation(cRes.data.user_location);
+        return;
+      }
+
       // Trigger generation (returns immediately)
       await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 15000 });
 

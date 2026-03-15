@@ -186,6 +186,10 @@ async def generate_designs(project_id: str):
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
+    # If already completed, return existing results
+    if project.get("status") == "completed" and len(project.get("designs", [])) > 0:
+        return {"id": project_id, "status": "completed", "designs": project["designs"], "cost_estimate": project.get("cost_estimate")}
+
     if project.get("status") == "generating":
         return {"id": project_id, "status": "generating"}
 
