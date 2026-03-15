@@ -4,12 +4,13 @@ import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { ContractorMap } from "../components/ContractorMap";
 import { LeadCaptureModal } from "../components/LeadCaptureModal";
+import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
 import {
   Sparkles, DollarSign, Wrench, Package, TrendingUp,
-  Star, MapPin, Phone, CheckCircle, AlertCircle
+  Star, MapPin, Phone, CheckCircle, AlertCircle, ArrowLeftRight
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -169,40 +170,41 @@ export default function ResultsPage() {
             </div>
           )}
 
-          {/* Designs Grid */}
+          {/* Designs with Before/After Sliders */}
           {!generating && project?.designs?.length > 0 && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16" data-testid="designs-grid">
+              <div className="space-y-10 mb-16" data-testid="designs-grid">
                 {project.designs.map((design, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedDesign(i)}
-                    className={`design-card rounded-2xl overflow-hidden border-2 text-left transition-all duration-300 ${
-                      selectedDesign === i
-                        ? "border-[#D97757] shadow-[0_0_20px_rgba(217,119,87,0.3)]"
-                        : "border-border/40 hover:border-primary/30"
-                    }`}
-                    data-testid={`design-card-${i}`}
-                  >
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={design.image}
-                        alt={design.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium text-foreground">{design.name}</h3>
-                        {selectedDesign === i && (
-                          <CheckCircle className="w-5 h-5 text-[#D97757]" />
-                        )}
+                  <div key={i} data-testid={`design-block-${i}`}>
+                    {/* Design header row */}
+                    <button
+                      onClick={() => setSelectedDesign(i)}
+                      className={`w-full flex items-center justify-between p-4 rounded-xl mb-4 transition-all duration-300 text-left ${
+                        selectedDesign === i
+                          ? "bg-[#D97757]/10 border-2 border-[#D97757]"
+                          : "bg-white border-2 border-border/40 hover:border-primary/30"
+                      }`}
+                      data-testid={`design-card-${i}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-semibold text-[#D97757] tracking-wide uppercase w-14">Style {i + 1}</span>
+                        <h3 className="text-lg font-medium text-foreground" style={{ fontFamily: "'Fraunces', serif" }}>{design.name}</h3>
                       </div>
-                      <Badge variant="secondary" className="text-xs bg-accent text-accent-foreground">
-                        Style {i + 1}
-                      </Badge>
-                    </div>
-                  </button>
+                      {selectedDesign === i && (
+                        <CheckCircle className="w-5 h-5 text-[#D97757] flex-shrink-0" />
+                      )}
+                    </button>
+
+                    {/* Before / After slider for this design */}
+                    {project.original_image && (
+                      <BeforeAfterSlider
+                        beforeImage={project.original_image}
+                        afterImage={design.image}
+                        beforeLabel="Original"
+                        afterLabel={design.name}
+                      />
+                    )}
+                  </div>
                 ))}
               </div>
 
