@@ -176,6 +176,46 @@ async def generate_designs(project_id: str):
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
+    if project.get("status") == "generating":
+        return {"id": project_id, "status": "generating"}
+
+    # Mark as generating and return immediately
+    await db.projects.update_one(
+        {"id": project_id},
+        {"$set": {"status": "generating"}},
+    )
+
+    # Run generation in a separate thread to avoid blocking the event loop
+    import threading
+    thread = threading.Thread(target=_run_generation_sync, args=(project_id, project), daemon=True)
+    thread.start()
+
+    return {"id": project_id, "status": "generating"}
+
+
+def _run_generation_sync(project_id: str, project: dict):
+    """Run generation in a separate thread with its own event loop and DB client."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    # Create a new mongo client for this thread
+    thread_client = AsyncIOMotorClient(mongo_url)
+    thread_db = thread_client[os.environ['DB_NAME']]
+    try:
+        loop.run_until_complete(_run_generation(project_id, project, thread_db))
+    except Exception as e:
+        logger.error(f"Generation thread error: {e}")
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"status": "failed", "error": str(e)}},
+            )
+        )
+    finally:
+        thread_client.close()
+        loop.close()
+
+
+async def _run_generation(project_id: str, project: dict, thread_db):
     project_type = project["project_type"]
     styles = STYLE_PROMPTS.get(project_type, STYLE_PROMPTS["Bathroom"])
 
@@ -208,22 +248,21 @@ async def generate_designs(project_id: str):
 
     except Exception as e:
         logger.error(f"AI generation failed: {e}")
-        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
+        await thread_db.projects.update_one(
+            {"id": project_id},
+            {"$set": {"status": "failed", "error": str(e)}},
+        )
+        return
 
     # Calculate cost estimate
     cost = estimate_cost(project_type, project["zip_code"])
 
-    await db.projects.update_one(
+    status = "completed" if len(designs) > 0 else "failed"
+    await thread_db.projects.update_one(
         {"id": project_id},
-        {"$set": {"designs": designs, "cost_estimate": cost, "status": "completed"}},
+        {"$set": {"designs": designs, "cost_estimate": cost, "status": status}},
     )
-
-    return {
-        "id": project_id,
-        "designs": designs,
-        "cost_estimate": cost,
-        "status": "completed",
-    }
+    logger.info(f"Generation complete for {project_id}: {len(designs)} designs")
 
 
 @api_router.get("/projects/{project_id}")

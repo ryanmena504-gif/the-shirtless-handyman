@@ -39,25 +39,72 @@ export default function ResultsPage() {
     setGenerating(true);
     setError(null);
     try {
-      const res = await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 180000 });
-      setProject(res.data);
-      if (res.data.designs?.length > 0) {
-        setSelectedDesign(0);
-      }
-      // Fetch contractors
-      const zip = zipCode || "10001";
-      const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}`);
-      setContractors(cRes.data.contractors || []);
-      setUserLocation(cRes.data.user_location);
+      // Trigger generation (returns immediately)
+      await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 15000 });
+
+      // Poll for completion
+      const pollInterval = 3000;
+      const maxAttempts = 60; // 3 minutes max
+      let attempts = 0;
+
+      const poll = async () => {
+        attempts++;
+        try {
+          const res = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
+          const data = res.data;
+
+          if (data.status === "completed" && data.designs?.length > 0) {
+            setProject(data);
+            setSelectedDesign(0);
+            setGenerating(false);
+
+            // Fetch contractors
+            const zip = zipCode || data.zip_code || "10001";
+            const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}`);
+            setContractors(cRes.data.contractors || []);
+            setUserLocation(cRes.data.user_location);
+            return;
+          }
+
+          if (data.status === "failed") {
+            const errMsg = data.error || "Design generation failed.";
+            if (errMsg.includes("budget")) {
+              setError("AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance.");
+            } else {
+              setError("Design generation failed. Please try again.");
+            }
+            setGenerating(false);
+            return;
+          }
+
+          // Still generating
+          if (attempts < maxAttempts) {
+            setTimeout(poll, pollInterval);
+          } else {
+            setError("Generation is taking longer than expected. Please refresh the page.");
+            setGenerating(false);
+          }
+        } catch {
+          if (attempts < maxAttempts) {
+            setTimeout(poll, pollInterval);
+          } else {
+            setError("Could not reach the server. Please try again.");
+            setGenerating(false);
+          }
+        }
+      };
+
+      // Start polling after a brief delay
+      setTimeout(poll, 2000);
+
     } catch (err) {
       const detail = err.response?.data?.detail || "";
       if (detail.includes("budget")) {
-        setError("AI generation budget exceeded. Please add balance to your Universal Key at Profile > Universal Key > Add Balance.");
+        setError("AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance.");
       } else {
-        setError("Design generation failed. Please try again.");
+        setError("Failed to start design generation. Please try again.");
       }
       toast.error("Generation failed");
-    } finally {
       setGenerating(false);
     }
   };
