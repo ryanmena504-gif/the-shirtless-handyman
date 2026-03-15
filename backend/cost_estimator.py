@@ -21,6 +21,7 @@ REGIONAL_MULTIPLIERS = {
     "981": 1.25,  # Seattle
     "021": 1.3,  # Boston
     "200": 1.25,  # DC
+    "701": 1.1, "700": 1.05,  # New Orleans
 }
 
 
