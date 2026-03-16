@@ -29,6 +29,11 @@ Build a web app called "AI Renovation Visualizer" that helps homeowners upload a
 - [x] Budget selection UI with 4 styled option cards
 - [x] Backend stores budget in project and enhances AI prompts based on budget tier
 - [x] AI prompts now include budget-specific materials, features, and style guidance
+- [x] **Interactive Material Explorer** - Click zones on AI-generated designs to explore materials
+- [x] 5 clickable zones: Walls, Floors, Fixtures, Countertops, Lighting
+- [x] Slide-out panel shows material name, finish type, cost per sqft
+- [x] Panel displays contractors who specialize in that material type
+- [x] Materials mapped for Bathroom, Kitchen, Pool Deck, and Patio renovation styles
 
 ### March 14, 2026
 - [x] Home page with hero, how-it-works, categories, CTA sections
@@ -47,7 +52,7 @@ Build a web app called "AI Renovation Visualizer" that helps homeowners upload a
 
 ## Test Results (March 16, 2026)
 - Backend: 100% (11/11 tests passed - budget feature)
-- Frontend: 100% (5/5 UI tests passed - budget feature)
+- Frontend: 100% (7/7 tests passed - material explorer feature)
 
 ## Prioritized Backlog
 ### P0 (Critical)
