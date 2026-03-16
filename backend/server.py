@@ -457,6 +457,57 @@ async def get_all_leads(contractor_id: str = Depends(decode_token)):
     return {"leads": leads}
 
 
+# --- Admin Routes ---
+
+class AdminLogin(BaseModel):
+    password: str
+
+@api_router.post("/admin/login")
+async def admin_login(data: AdminLogin):
+    admin_pw = os.environ.get("ADMIN_PASSWORD", "")
+    if not admin_pw or data.password != admin_pw:
+        raise HTTPException(status_code=401, detail="Invalid admin password")
+    token = create_token("admin")
+    return {"token": token, "role": "admin"}
+
+@api_router.get("/admin/leads")
+async def admin_get_all_leads(admin_id: str = Depends(decode_token)):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    lead_projection = {"_id": 0}
+    leads = await db.leads.find({}, lead_projection).sort("created_at", -1).to_list(500)
+    # Enrich with contractor names
+    for lead in leads:
+        if lead.get("contractor_id"):
+            c = await db.contractors.find_one({"id": lead["contractor_id"]}, {"_id": 0, "company_name": 1})
+            lead["contractor_name"] = c["company_name"] if c else "Unknown"
+    return {"leads": leads, "total": len(leads)}
+
+@api_router.get("/admin/contractors")
+async def admin_get_all_contractors(admin_id: str = Depends(decode_token)):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    contractors = await db.contractors.find({}, {"_id": 0, "password_hash": 0}).sort("created_at", -1).to_list(100)
+    return {"contractors": contractors, "total": len(contractors)}
+
+@api_router.get("/admin/stats")
+async def admin_get_stats(admin_id: str = Depends(decode_token)):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    total_leads = await db.leads.count_documents({})
+    new_leads = await db.leads.count_documents({"status": "new"})
+    total_contractors = await db.contractors.count_documents({})
+    total_projects = await db.projects.count_documents({})
+    completed_projects = await db.projects.count_documents({"status": "completed"})
+    return {
+        "total_leads": total_leads,
+        "new_leads": new_leads,
+        "total_contractors": total_contractors,
+        "total_projects": total_projects,
+        "completed_projects": completed_projects,
+    }
+
+
 # --- Seed Data ---
 
 @api_router.post("/seed")

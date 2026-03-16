@@ -7,6 +7,7 @@ import ResultsPage from "./pages/ResultsPage";
 import ContractorLoginPage from "./pages/ContractorLoginPage";
 import ContractorRegisterPage from "./pages/ContractorRegisterPage";
 import ContractorDashboardPage from "./pages/ContractorDashboardPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/contractor/login" element={<ContractorLoginPage />} />
         <Route path="/contractor/register" element={<ContractorRegisterPage />} />
         <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );

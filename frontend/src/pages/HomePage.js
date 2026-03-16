@@ -198,6 +198,13 @@ export default function HomePage() {
             >
               Contractor Login
             </button>
+            <button
+              onClick={() => navigate("/admin")}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="footer-admin-link"
+            >
+              Admin
+            </button>
           </div>
         </div>
       </footer>
