@@ -233,6 +233,12 @@ export default function ResultsPage() {
                         afterImage={design.image}
                         beforeLabel="Original"
                         afterLabel={design.name}
+                        designName={design.name}
+                        contractors={contractors}
+                        onRequestQuote={(contractor) => {
+                          setSelectedContractor(contractor);
+                          setQuoteModalOpen(true);
+                        }}
                       />
                     )}
                   </div>
