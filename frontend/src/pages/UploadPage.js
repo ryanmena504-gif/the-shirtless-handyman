@@ -19,6 +19,13 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const PROJECT_TYPES = ["Bathroom", "Shower", "Kitchen", "Pool Deck", "Patio"];
 
+const BUDGET_OPTIONS = [
+  { value: "under_5k", label: "Under $5,000", description: "Budget-friendly updates" },
+  { value: "5k_10k", label: "$5,000 - $10,000", description: "Mid-range refresh" },
+  { value: "10k_20k", label: "$10,000 - $20,000", description: "Substantial remodel" },
+  { value: "20k_plus", label: "$20,000+", description: "Luxury transformation" },
+];
+
 export default function UploadPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +35,7 @@ export default function UploadPage() {
   const [preview, setPreview] = useState(null);
   const [zipCode, setZipCode] = useState("");
   const [projectType, setProjectType] = useState(location.state?.projectType || "");
+  const [budget, setBudget] = useState("");
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e) => {
@@ -55,6 +63,7 @@ export default function UploadPage() {
     if (!file) { toast.error("Please upload a photo"); return; }
     if (!zipCode) { toast.error("Please enter your ZIP code"); return; }
     if (!projectType) { toast.error("Please select a project type"); return; }
+    if (!budget) { toast.error("Please select your budget range"); return; }
 
     setUploading(true);
     try {
@@ -62,6 +71,7 @@ export default function UploadPage() {
       formData.append("photo", file);
       formData.append("zip_code", zipCode);
       formData.append("project_type", projectType);
+      formData.append("budget", budget);
 
       const res = await axios.post(`${API}/projects/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -69,7 +79,7 @@ export default function UploadPage() {
 
       toast.success("Photo uploaded! Generating designs...");
       navigate(`/results/${res.data.id}`, {
-        state: { projectType, zipCode },
+        state: { projectType, zipCode, budget },
       });
     } catch {
       toast.error("Upload failed. Please try again.");
@@ -200,10 +210,35 @@ export default function UploadPage() {
               </div>
             </div>
 
+            {/* Budget Selection */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Budget Range</Label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {BUDGET_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setBudget(opt.value)}
+                    data-testid={`budget-${opt.value}`}
+                    className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                      budget === opt.value
+                        ? "border-primary bg-primary/10 shadow-md"
+                        : "border-border/60 hover:border-primary/40 hover:bg-muted/50"
+                    }`}
+                  >
+                    <p className={`text-sm font-semibold ${budget === opt.value ? "text-primary" : "text-foreground"}`}>
+                      {opt.label}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">{opt.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Submit */}
             <Button
               onClick={handleSubmit}
-              disabled={uploading || !file || !zipCode || !projectType}
+              disabled={uploading || !file || !zipCode || !projectType || !budget}
               className="w-full h-14 rounded-full bg-primary text-primary-foreground text-base font-medium btn-pill shadow-lg shadow-primary/20 disabled:opacity-50"
               data-testid="upload-submit-btn"
             >

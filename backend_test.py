@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 
 class AIRenovationAPITester:
-    def __init__(self, base_url="https://design-before-build.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://design-reveal.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.contractor_id = None

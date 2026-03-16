@@ -72,11 +72,36 @@ class ProjectResponse(BaseModel):
     id: str
     project_type: str
     zip_code: str
+    budget: Optional[str] = None
     status: str
     created_at: str
     original_image: Optional[str] = None
     designs: List[dict] = []
     cost_estimate: Optional[dict] = None
+
+# Budget-aware prompt modifiers
+BUDGET_MODIFIERS = {
+    "under_5k": {
+        "materials": "using budget-friendly, affordable materials like laminate, ceramic tiles, and painted MDF",
+        "features": "with DIY-friendly upgrades, paint refreshes, and affordable hardware swaps",
+        "style": "focusing on cosmetic updates and smart value improvements",
+    },
+    "5k_10k": {
+        "materials": "using mid-range quality materials like porcelain tiles, solid surface countertops, and quality wood-look vinyl",
+        "features": "with updated fixtures, new lighting, and quality finishes",
+        "style": "balancing style and value with practical upgrades",
+    },
+    "10k_20k": {
+        "materials": "using high-quality materials like natural stone, quartz countertops, and hardwood",
+        "features": "with premium fixtures, custom cabinetry details, and designer lighting",
+        "style": "delivering a substantial transformation with lasting quality",
+    },
+    "20k_plus": {
+        "materials": "using luxury materials like imported marble, custom millwork, and designer tiles",
+        "features": "with high-end smart home features, spa-quality fixtures, and bespoke details",
+        "style": "creating an exceptional, magazine-worthy luxury space",
+    },
+}
 
 # ==================== ZIP CODE UTILITIES ====================
 
@@ -152,7 +177,8 @@ async def root():
 async def upload_project(
     photo: UploadFile = File(...),
     zip_code: str = Form(...),
-    project_type: str = Form(...)
+    project_type: str = Form(...),
+    budget: str = Form(...)
 ):
     image_data = await photo.read()
     image_base64 = base64.b64encode(image_data).decode("utf-8")
@@ -163,6 +189,7 @@ async def upload_project(
         "id": project_id,
         "project_type": project_type,
         "zip_code": zip_code,
+        "budget": budget,
         "original_image": f"data:{content_type};base64,{image_base64}",
         "status": "uploaded",
         "designs": [],
@@ -175,6 +202,7 @@ async def upload_project(
         "id": project_id,
         "project_type": project_type,
         "zip_code": zip_code,
+        "budget": budget,
         "status": "uploaded",
         "created_at": project["created_at"],
     }
@@ -233,7 +261,11 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
     from emergentintegrations.llm.utils import get_integration_proxy_url
 
     project_type = project["project_type"]
+    budget = project.get("budget", "10k_20k")  # Default to mid-high if not set
     styles = STYLE_PROMPTS.get(project_type, STYLE_PROMPTS["Bathroom"])
+    
+    # Get budget modifier for prompt enhancement
+    budget_mod = BUDGET_MODIFIERS.get(budget, BUDGET_MODIFIERS["10k_20k"])
 
     # Get the original image bytes
     original_image_data = project.get("original_image", "")
@@ -257,9 +289,12 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
     designs = []
     for style in styles:
         try:
+            # Enhance the prompt with budget-specific context
+            budget_enhanced_prompt = f"{style['prompt']} Design this renovation {budget_mod['materials']}, {budget_mod['features']}, {budget_mod['style']}."
+            
             response = litellm.image_edit(
                 image=image_bytes,
-                prompt=style["prompt"],
+                prompt=budget_enhanced_prompt,
                 model="openai/gpt-image-1",
                 api_key=api_key,
                 api_base=proxy_url,
@@ -281,7 +316,7 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
                         "name": style["name"],
                         "image": f"data:image/png;base64,{base64.b64encode(img_response.content).decode('utf-8')}",
                     })
-            logger.info(f"Generated: {style['name']} for project {project_id}")
+            logger.info(f"Generated: {style['name']} for project {project_id} (budget: {budget})")
         except Exception as e:
             logger.error(f"Image edit error for {style['name']}: {e}")
 
