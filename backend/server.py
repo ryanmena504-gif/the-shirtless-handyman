@@ -306,7 +306,57 @@ async def get_project(project_id: str):
     return project
 
 
-# --- Contractor Routes ---
+# --- Share Routes ---
+
+@api_router.post("/shares")
+async def create_share(project_id: str = Form(...)):
+    project = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    if not project or project.get("status") != "completed":
+        raise HTTPException(status_code=400, detail="Project not ready for sharing")
+
+    # Check if share already exists for this project
+    existing = await db.shares.find_one({"project_id": project_id}, {"_id": 0})
+    if existing:
+        return {"share_id": existing["id"], "project_id": project_id}
+
+    share_id = str(uuid.uuid4())[:8]
+    share = {
+        "id": share_id,
+        "project_id": project_id,
+        "original_image": project.get("original_image", ""),
+        "designs": [{"name": d["name"], "image": d["image"], "votes": 0} for d in project.get("designs", [])],
+        "project_type": project.get("project_type", ""),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.shares.insert_one(share)
+    return {"share_id": share_id, "project_id": project_id}
+
+
+@api_router.get("/shares/{share_id}")
+async def get_share(share_id: str):
+    share = await db.shares.find_one({"id": share_id}, {"_id": 0})
+    if not share:
+        raise HTTPException(status_code=404, detail="Share not found")
+    return share
+
+
+class VoteData(BaseModel):
+    design_index: int
+
+@api_router.post("/shares/{share_id}/vote")
+async def vote_design(share_id: str, data: VoteData):
+    share = await db.shares.find_one({"id": share_id}, {"_id": 0})
+    if not share:
+        raise HTTPException(status_code=404, detail="Share not found")
+    if data.design_index < 0 or data.design_index >= len(share.get("designs", [])):
+        raise HTTPException(status_code=400, detail="Invalid design index")
+
+    await db.shares.update_one(
+        {"id": share_id},
+        {"$inc": {f"designs.{data.design_index}.votes": 1}},
+    )
+    updated = await db.shares.find_one({"id": share_id}, {"_id": 0})
+    return {"votes": [d["votes"] for d in updated["designs"]]}
 
 @api_router.post("/contractors/register")
 async def register_contractor(data: ContractorRegister):
@@ -623,6 +673,8 @@ async def startup():
     await db.contractors.create_index("service_zip_codes")
     await db.projects.create_index("id")
     await db.leads.create_index("contractor_id")
+    await db.shares.create_index("id")
+    await db.shares.create_index("project_id")
     logger.info("AI Renovation Visualizer API started")
 
 

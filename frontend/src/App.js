@@ -8,6 +8,7 @@ import ContractorLoginPage from "./pages/ContractorLoginPage";
 import ContractorRegisterPage from "./pages/ContractorRegisterPage";
 import ContractorDashboardPage from "./pages/ContractorDashboardPage";
 import AdminPage from "./pages/AdminPage";
+import SharePage from "./pages/SharePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/contractor/register" element={<ContractorRegisterPage />} />
         <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/share/:shareId" element={<SharePage />} />
       </Routes>
     </BrowserRouter>
   );

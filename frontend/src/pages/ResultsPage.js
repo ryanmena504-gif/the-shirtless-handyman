@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { ContractorMap } from "../components/ContractorMap";
@@ -10,7 +10,7 @@ import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
 import {
   Sparkles, DollarSign, Wrench, Package, TrendingUp,
-  Star, MapPin, Phone, CheckCircle, AlertCircle, ArrowLeftRight
+  Star, MapPin, Phone, CheckCircle, AlertCircle, ArrowLeftRight, Share2
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -30,6 +30,9 @@ export default function ResultsPage() {
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [selectedContractor, setSelectedContractor] = useState(null);
+  const [sharing, setSharing] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     generateDesigns();
@@ -126,6 +129,20 @@ export default function ResultsPage() {
 
   const cost = project?.cost_estimate;
 
+  const handleShare = async () => {
+    setSharing(true);
+    try {
+      const formData = new FormData();
+      formData.append("project_id", projectId);
+      const res = await axios.post(`${API}/shares`, formData, { timeout: 10000 });
+      navigate(`/share/${res.data.share_id}`);
+    } catch {
+      toast.error("Failed to create share link");
+    } finally {
+      setSharing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background" data-testid="results-page">
       <Navbar />
@@ -220,6 +237,28 @@ export default function ResultsPage() {
                     )}
                   </div>
                 ))}
+              </div>
+
+              {/* Share Button */}
+              <div className="flex justify-center mb-16" data-testid="share-section">
+                <Button
+                  onClick={handleShare}
+                  disabled={sharing}
+                  className="rounded-full h-12 px-8 bg-[#D97757] text-white hover:bg-[#C56545] btn-pill shadow-lg shadow-[#D97757]/20 text-sm font-medium"
+                  data-testid="share-renovation-btn"
+                >
+                  {sharing ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Creating share link...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Share2 className="w-4 h-4" />
+                      Share My Renovation Ideas
+                    </span>
+                  )}
+                </Button>
               </div>
 
               {/* Cost Estimate */}
