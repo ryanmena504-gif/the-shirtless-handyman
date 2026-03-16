@@ -15,16 +15,29 @@ Build a web app called "AI Renovation Visualizer" that helps homeowners upload a
 2. **Contractors**: Want to receive leads, manage their profile, and connect with homeowners
 
 ## Core Requirements
-- Room photo upload with ZIP code, project type, and budget selection
+- Room photo upload with ZIP code, room type selection (14 types), and budget selection
 - Budget-aware AI-generated 3 renovation styles per project
 - Cost estimation based on project type + regional factors
+- Interactive material explorer with PDF export
 - Contractor map showing nearby professionals
 - Lead capture form for quote requests
 - Contractor registration, login, profile management, lead viewing
 
 ## What's Been Implemented
 
-### March 16, 2026
+### March 16, 2026 (Session 2)
+- [x] **Save Materials List as PDF** - Professional branded PDF with room dimensions
+- [x] Dimension inputs (length × width × height) calculate material quantities
+- [x] PDF includes materials, finishes, costs, contractor info, and quote section
+- [x] Accessible from Material Explorer panel and below each design
+- [x] **Expanded Room Selection** - 14 room types in 3 categories
+- [x] Interior Rooms: Bathroom, Kitchen, Living Room, Bedroom, Kids Room, Home Office
+- [x] Functional Rooms: Garage, Laundry Room, Basement, Mudroom
+- [x] Outdoor Areas: Patio, Pool Deck, Backyard, Outdoor Kitchen
+- [x] Visual card UI with icons replacing dropdown selector
+- [x] All room types have AI prompts and cost estimates defined
+
+### March 16, 2026 (Session 1)
 - [x] **Budget-Aware Design Feature** - Users select budget range (Under $5k, $5k-$10k, $10k-$20k, $20k+)
 - [x] Budget selection UI with 4 styled option cards
 - [x] Backend stores budget in project and enhances AI prompts based on budget tier
@@ -33,7 +46,7 @@ Build a web app called "AI Renovation Visualizer" that helps homeowners upload a
 - [x] 5 clickable zones: Walls, Floors, Fixtures, Countertops, Lighting
 - [x] Slide-out panel shows material name, finish type, cost per sqft
 - [x] Panel displays contractors who specialize in that material type
-- [x] Materials mapped for Bathroom, Kitchen, Pool Deck, and Patio renovation styles
+- [x] Materials mapped for all renovation styles
 
 ### March 14, 2026
 - [x] Home page with hero, how-it-works, categories, CTA sections
@@ -51,8 +64,8 @@ Build a web app called "AI Renovation Visualizer" that helps homeowners upload a
 - [x] Full design system (Fraunces + DM Sans, Deep Jungle Green + Terracotta)
 
 ## Test Results (March 16, 2026)
-- Backend: 100% (11/11 tests passed - budget feature)
-- Frontend: 100% (7/7 tests passed - material explorer feature)
+- Backend: 100% (10/10 tests passed - room types & PDF)
+- Frontend: 100% (all features verified)
 
 ## Prioritized Backlog
 ### P0 (Critical)
