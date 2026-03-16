@@ -9,7 +9,8 @@ export const BeforeAfterSlider = ({
   afterLabel = "After",
   designName = "",
   contractors = [],
-  onRequestQuote = () => {}
+  onRequestQuote = () => {},
+  onSaveMaterialsList = () => {}
 }) => {
   const containerRef = useRef(null);
   const [sliderPos, setSliderPos] = useState(50);
@@ -133,6 +134,7 @@ export const BeforeAfterSlider = ({
           designName={designName}
           contractors={contractors}
           onRequestQuote={onRequestQuote}
+          onSaveMaterialsList={onSaveMaterialsList}
           isVisible={showMaterialExplorer}
         />
       </div>

@@ -2,11 +2,23 @@ import random
 
 # Base cost ranges by project type (low, high) in USD
 BASE_COSTS = {
+    # Interior Rooms
     "Bathroom": {"labor": (3000, 12000), "material": (2000, 13000)},
-    "Shower": {"labor": (2000, 8000), "material": (1000, 7000)},
     "Kitchen": {"labor": (5000, 25000), "material": (5000, 25000)},
-    "Pool Deck": {"labor": (3000, 15000), "material": (2000, 15000)},
+    "Living Room": {"labor": (2000, 10000), "material": (3000, 15000)},
+    "Bedroom": {"labor": (1500, 8000), "material": (2000, 10000)},
+    "Kids Room": {"labor": (1500, 7000), "material": (1500, 8000)},
+    "Home Office": {"labor": (1500, 8000), "material": (2000, 12000)},
+    # Functional Rooms
+    "Garage": {"labor": (2000, 10000), "material": (1500, 8000)},
+    "Laundry Room": {"labor": (1500, 6000), "material": (1000, 5000)},
+    "Basement": {"labor": (5000, 25000), "material": (4000, 20000)},
+    "Mudroom": {"labor": (1500, 6000), "material": (1000, 5000)},
+    # Outdoor Areas
     "Patio": {"labor": (2000, 10000), "material": (1000, 10000)},
+    "Pool Deck": {"labor": (3000, 15000), "material": (2000, 15000)},
+    "Backyard": {"labor": (3000, 20000), "material": (2000, 15000)},
+    "Outdoor Kitchen": {"labor": (5000, 20000), "material": (5000, 25000)},
 }
 
 # Regional cost multipliers based on ZIP code prefix

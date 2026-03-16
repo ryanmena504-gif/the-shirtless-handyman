@@ -5,19 +5,48 @@ import { Navbar } from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
 import { toast } from "sonner";
-import { Upload, Camera, X, ArrowRight, MapPin } from "lucide-react";
+import { 
+  Upload, Camera, X, ArrowRight, MapPin,
+  Bath, UtensilsCrossed, Sofa, Bed, Baby, Briefcase,
+  Car, WashingMachine, Warehouse, DoorOpen,
+  TreePine, Waves, Flower2, Flame
+} from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-const PROJECT_TYPES = ["Bathroom", "Shower", "Kitchen", "Pool Deck", "Patio"];
+// Room categories with icons
+const ROOM_CATEGORIES = [
+  {
+    category: "Interior Rooms",
+    rooms: [
+      { value: "Bathroom", label: "Bathroom", icon: Bath, description: "Tubs, showers, vanities" },
+      { value: "Kitchen", label: "Kitchen", icon: UtensilsCrossed, description: "Cabinets, counters, appliances" },
+      { value: "Living Room", label: "Living Room", icon: Sofa, description: "Main living spaces" },
+      { value: "Bedroom", label: "Bedroom", icon: Bed, description: "Master & guest rooms" },
+      { value: "Kids Room", label: "Kids Room / Nursery", icon: Baby, description: "Children's spaces" },
+      { value: "Home Office", label: "Home Office", icon: Briefcase, description: "Work from home spaces" },
+    ],
+  },
+  {
+    category: "Functional Rooms",
+    rooms: [
+      { value: "Garage", label: "Garage", icon: Car, description: "Storage & workshop" },
+      { value: "Laundry Room", label: "Laundry Room", icon: WashingMachine, description: "Utility spaces" },
+      { value: "Basement", label: "Basement", icon: Warehouse, description: "Below-grade spaces" },
+      { value: "Mudroom", label: "Mudroom", icon: DoorOpen, description: "Entry & storage" },
+    ],
+  },
+  {
+    category: "Outdoor Areas",
+    rooms: [
+      { value: "Patio", label: "Patio", icon: TreePine, description: "Covered outdoor living" },
+      { value: "Pool Deck", label: "Pool Deck", icon: Waves, description: "Poolside areas" },
+      { value: "Backyard", label: "Backyard", icon: Flower2, description: "Landscaping & gardens" },
+      { value: "Outdoor Kitchen", label: "Outdoor Kitchen", icon: Flame, description: "Outdoor cooking spaces" },
+    ],
+  },
+];
 
 const BUDGET_OPTIONS = [
   { value: "under_5k", label: "Under $5,000", description: "Budget-friendly updates" },
@@ -172,41 +201,65 @@ export default function UploadPage() {
               )}
             </div>
 
-            {/* Form Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="zip-code" className="text-sm font-medium">ZIP Code</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="zip-code"
-                    data-testid="zip-code-input"
-                    placeholder="10001"
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    className="h-12 pl-10 rounded-lg border-border/60 focus:border-primary focus:ring-1 focus:ring-primary/20"
-                    maxLength={5}
-                  />
+            {/* Room Type Selection - Visual Cards */}
+            <div className="space-y-6">
+              <Label className="text-sm font-medium">Select Room Type</Label>
+              {ROOM_CATEGORIES.map((cat) => (
+                <div key={cat.category} className="space-y-3">
+                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                    {cat.category}
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {cat.rooms.map((room) => {
+                      const Icon = room.icon;
+                      const isSelected = projectType === room.value;
+                      return (
+                        <button
+                          key={room.value}
+                          type="button"
+                          onClick={() => setProjectType(room.value)}
+                          data-testid={`room-type-${room.value.toLowerCase().replace(/\s+/g, "-")}`}
+                          className={`p-4 rounded-xl border-2 text-left transition-all duration-200 group ${
+                            isSelected
+                              ? "border-primary bg-primary/10 shadow-md"
+                              : "border-border/60 hover:border-primary/40 hover:bg-muted/50"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                              isSelected ? "bg-primary text-white" : "bg-muted group-hover:bg-primary/10"
+                            }`}>
+                              <Icon className={`w-5 h-5 ${isSelected ? "text-white" : "text-muted-foreground group-hover:text-primary"}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-semibold truncate ${isSelected ? "text-primary" : "text-foreground"}`}>
+                                {room.label}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{room.description}</p>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Project Type</Label>
-                <Select value={projectType} onValueChange={setProjectType}>
-                  <SelectTrigger
-                    className="h-12 rounded-lg border-border/60"
-                    data-testid="project-type-select"
-                  >
-                    <SelectValue placeholder="Select project type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PROJECT_TYPES.map((t) => (
-                      <SelectItem key={t} value={t} data-testid={`project-type-${t.toLowerCase().replace(" ", "-")}`}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            {/* ZIP Code */}
+            <div className="space-y-2">
+              <Label htmlFor="zip-code" className="text-sm font-medium">ZIP Code</Label>
+              <div className="relative max-w-xs">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="zip-code"
+                  data-testid="zip-code-input"
+                  placeholder="10001"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  className="h-12 pl-10 rounded-lg border-border/60 focus:border-primary focus:ring-1 focus:ring-primary/20"
+                  maxLength={5}
+                />
               </div>
             </div>
 

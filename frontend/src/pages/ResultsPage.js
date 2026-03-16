@@ -5,12 +5,13 @@ import { Navbar } from "../components/Navbar";
 import { ContractorMap } from "../components/ContractorMap";
 import { LeadCaptureModal } from "../components/LeadCaptureModal";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
+import MaterialsListPDF from "../components/MaterialsListPDF";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
 import {
   Sparkles, DollarSign, Wrench, Package, TrendingUp,
-  Star, MapPin, Phone, CheckCircle, AlertCircle, ArrowLeftRight, Share2
+  Star, MapPin, Phone, CheckCircle, AlertCircle, ArrowLeftRight, Share2, FileDown
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -31,6 +32,8 @@ export default function ResultsPage() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [selectedContractor, setSelectedContractor] = useState(null);
   const [sharing, setSharing] = useState(false);
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
+  const [pdfDesignName, setPdfDesignName] = useState("");
 
   const navigate = useNavigate();
 
@@ -239,8 +242,28 @@ export default function ResultsPage() {
                           setSelectedContractor(contractor);
                           setQuoteModalOpen(true);
                         }}
+                        onSaveMaterialsList={() => {
+                          setPdfDesignName(design.name);
+                          setPdfModalOpen(true);
+                        }}
                       />
                     )}
+
+                    {/* Save Materials List Button (below design) */}
+                    <div className="flex justify-center mt-4">
+                      <Button
+                        onClick={() => {
+                          setPdfDesignName(design.name);
+                          setPdfModalOpen(true);
+                        }}
+                        variant="outline"
+                        className="rounded-full border-primary/40 text-primary hover:bg-primary/5"
+                        data-testid={`save-materials-btn-${i}`}
+                      >
+                        <FileDown className="w-4 h-4 mr-2" />
+                        Save Materials List
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -436,6 +459,15 @@ export default function ResultsPage() {
         zipCode={zipCode || project?.zip_code || ""}
         selectedDesignStyle={selectedDesign !== null && project?.designs?.[selectedDesign] ? project.designs[selectedDesign].name : ""}
         roomPhoto={project?.original_image || ""}
+      />
+
+      <MaterialsListPDF
+        isOpen={pdfModalOpen}
+        onClose={() => setPdfModalOpen(false)}
+        designName={pdfDesignName}
+        projectType={project?.project_type || ""}
+        zipCode={zipCode || project?.zip_code || ""}
+        contractor={selectedContractor}
       />
     </div>
   );

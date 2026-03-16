@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Layers, DollarSign, Hammer, MapPin, Phone, Star, ChevronRight } from "lucide-react";
+import { X, Layers, DollarSign, Hammer, MapPin, Phone, Star, ChevronRight, FileDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 
@@ -531,7 +531,7 @@ const MaterialZone = ({ zone, isActive, onClick }) => {
   );
 };
 
-const MaterialPanel = ({ material, zone, contractors, onClose, onRequestQuote }) => {
+const MaterialPanel = ({ material, zone, contractors, onClose, onRequestQuote, onSaveMaterialsList }) => {
   if (!material) return null;
 
   const matchingContractors = contractors.filter(c => 
@@ -605,6 +605,17 @@ const MaterialPanel = ({ material, zone, contractors, onClose, onRequestQuote })
             {material.description}
           </p>
         </div>
+
+        {/* Save Materials List Button */}
+        <Button
+          onClick={onSaveMaterialsList}
+          variant="outline"
+          className="w-full rounded-full border-primary text-primary hover:bg-primary/5"
+          data-testid="save-materials-list-panel-btn"
+        >
+          <FileDown className="w-4 h-4 mr-2" />
+          Save All Materials as PDF
+        </Button>
 
         {/* Matching Contractors */}
         {matchingContractors.length > 0 && (
@@ -718,6 +729,7 @@ export const MaterialExplorer = ({
   designName, 
   contractors = [],
   onRequestQuote,
+  onSaveMaterialsList,
   isVisible = true 
 }) => {
   const [activeZone, setActiveZone] = useState(null);
@@ -797,6 +809,10 @@ export const MaterialExplorer = ({
           onRequestQuote={(contractor) => {
             handleClosePanel();
             onRequestQuote(contractor);
+          }}
+          onSaveMaterialsList={() => {
+            handleClosePanel();
+            onSaveMaterialsList();
           }}
         />
       )}
