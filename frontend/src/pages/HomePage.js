@@ -181,7 +181,7 @@ export default function HomePage() {
       <footer className="border-t border-border/40 py-12 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} RenovateAI. All rights reserved.
+            &copy; {new Date().getFullYear()} Seamless Bath. All rights reserved.
           </p>
           <div className="flex gap-6">
             <button

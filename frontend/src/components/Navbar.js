@@ -23,7 +23,7 @@ export const Navbar = () => {
             <Hammer className="w-4 h-4 text-primary-foreground" />
           </div>
           <span className="font-semibold text-lg tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>
-            RenovateAI
+            Seamless Bath
           </span>
         </Link>
 

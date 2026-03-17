@@ -97,7 +97,7 @@ export default function SharePage() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Hammer className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-lg tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>RenovateAI</span>
+            <span className="font-semibold text-lg tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>Seamless Bath</span>
           </button>
           <Button
             onClick={() => navigate("/upload")}
@@ -260,7 +260,7 @@ export default function SharePage() {
 
       {/* Footer */}
       <footer className="border-t border-border/40 py-8 px-6 text-center">
-        <p className="text-sm text-muted-foreground">Powered by <span className="font-semibold text-foreground">RenovateAI</span></p>
+        <p className="text-sm text-muted-foreground">Powered by <span className="font-semibold text-foreground">Seamless Bath</span></p>
       </footer>
     </div>
   );
