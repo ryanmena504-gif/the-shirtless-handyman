@@ -9,26 +9,26 @@ import {
 
 // Material data mapped by renovation style and zone (same as MaterialExplorer)
 const STYLE_MATERIALS = {
-  "Modern Spa Renovation": {
-    walls: { name: "Natural Stone Tile", finish: "Honed matte", costPerSqFt: { low: 15, high: 35 }, specialty: "Tile" },
-    floors: { name: "Heated Porcelain Tile", finish: "Textured slip-resistant", costPerSqFt: { low: 12, high: 28 }, specialty: "Tile" },
-    fixtures: { name: "Freestanding Soaking Tub", finish: "Matte white acrylic", costPerSqFt: { unit: "$2,500 - $6,000" }, specialty: "Bathroom" },
-    countertops: { name: "Floating Wood Vanity", finish: "Natural oak with waterproof seal", costPerSqFt: { low: 45, high: 120 }, specialty: "Kitchen" },
-    lighting: { name: "Recessed LED Lighting", finish: "Warm white 2700K", costPerSqFt: { unit: "$150 - $400 per fixture" }, specialty: "Bathroom" },
+  "Modern Luxury Spa": {
+    walls: { name: "Honed Travertine Stone", finish: "Natural matte with filled veins", costPerSqFt: { low: 18, high: 45 }, specialty: "Tile" },
+    floors: { name: "Heated Limestone Tile", finish: "Tumbled natural stone with radiant heat", costPerSqFt: { low: 20, high: 50 }, specialty: "Tile" },
+    fixtures: { name: "Freestanding Soaking Tub", finish: "Matte white solid surface", costPerSqFt: { unit: "$3,500 - $8,000" }, specialty: "Bathroom" },
+    countertops: { name: "Teak Wood Vanity", finish: "Natural oiled teak with waterproof seal", costPerSqFt: { low: 85, high: 200 }, specialty: "Bathroom" },
+    lighting: { name: "Warm Ambient LED System", finish: "2700K dimmable with backlit mirror", costPerSqFt: { unit: "$800 - $2,500 complete" }, specialty: "Bathroom" },
   },
-  "Luxury Tile Renovation": {
-    walls: { name: "Marble-Look Porcelain", finish: "Polished glazed", costPerSqFt: { low: 18, high: 45 }, specialty: "Tile" },
-    floors: { name: "Mosaic Accent Tile", finish: "Mixed polished & matte", costPerSqFt: { low: 20, high: 55 }, specialty: "Tile" },
-    fixtures: { name: "Frameless Glass Shower", finish: "Clear tempered glass with brushed gold hardware", costPerSqFt: { unit: "$1,800 - $4,500" }, specialty: "Shower" },
-    countertops: { name: "Quartz Countertop", finish: "Polished Calacatta", costPerSqFt: { low: 65, high: 150 }, specialty: "Kitchen" },
-    lighting: { name: "Crystal Pendant Lights", finish: "Brushed gold with clear crystals", costPerSqFt: { unit: "$300 - $1,200 per fixture" }, specialty: "Bathroom" },
+  "Bold Contemporary": {
+    walls: { name: "Charcoal Porcelain Slab", finish: "Matte black large format", costPerSqFt: { low: 22, high: 55 }, specialty: "Tile" },
+    floors: { name: "Black Marble Tile", finish: "Polished Nero Marquina", costPerSqFt: { low: 25, high: 65 }, specialty: "Tile" },
+    fixtures: { name: "Sculptural Matte Black Tub", finish: "Solid surface matte black", costPerSqFt: { unit: "$5,000 - $12,000" }, specialty: "Bathroom" },
+    countertops: { name: "Calacatta & Black Contrast Vanity", finish: "White marble top with black base", costPerSqFt: { low: 95, high: 220 }, specialty: "Bathroom" },
+    lighting: { name: "Dramatic LED Accent System", finish: "Strategic spotlights with LED strips", costPerSqFt: { unit: "$1,200 - $3,500 complete" }, specialty: "Bathroom" },
   },
-  "Seamless Microcement Renovation": {
-    walls: { name: "Microcement", finish: "Seamless matte concrete", costPerSqFt: { low: 12, high: 30 }, specialty: "Microcement" },
-    floors: { name: "Microcement Floor", finish: "Sealed matte with anti-slip", costPerSqFt: { low: 14, high: 35 }, specialty: "Microcement" },
-    fixtures: { name: "Wall-Mounted Toilet", finish: "Matte white ceramic", costPerSqFt: { unit: "$800 - $2,000" }, specialty: "Bathroom" },
-    countertops: { name: "Concrete Vanity Top", finish: "Sealed natural gray", costPerSqFt: { low: 75, high: 175 }, specialty: "Kitchen" },
-    lighting: { name: "Industrial Pendant", finish: "Matte black metal", costPerSqFt: { unit: "$200 - $600 per fixture" }, specialty: "Bathroom" },
+  "Seamless Microcement": {
+    walls: { name: "Microcement Wall Finish", finish: "Seamless matte in warm gray", costPerSqFt: { low: 14, high: 35 }, specialty: "Microcement" },
+    floors: { name: "Microcement Floor System", finish: "Continuous matte with anti-slip seal", costPerSqFt: { low: 16, high: 40 }, specialty: "Microcement" },
+    fixtures: { name: "Integrated Wall-Mount Suite", finish: "Matte white ceramic wall-hung", costPerSqFt: { unit: "$2,500 - $5,500 complete" }, specialty: "Bathroom" },
+    countertops: { name: "Microcement Integrated Vanity", finish: "Continuous surface with molded sink", costPerSqFt: { low: 90, high: 200 }, specialty: "Microcement" },
+    lighting: { name: "Recessed Minimal Lighting", finish: "Trimless LED with indirect glow", costPerSqFt: { unit: "$600 - $1,800 complete" }, specialty: "Bathroom" },
   },
 };
 
