@@ -540,6 +540,22 @@ async def update_my_profile(data: ContractorUpdate, contractor_id: str = Depends
     return contractor
 
 
+# Project type to specialty routing for lead prioritization
+PROJECT_TYPE_ROUTING = {
+    # Bathroom/Shower -> prioritize Seamless Bathrooms LLC and bathroom specialists
+    "Bathroom": ["Seamless Bathrooms", "Microcement", "Tile", "Bathroom"],
+    "Shower": ["Seamless Bathrooms", "Microcement", "Tile", "Bathroom"],
+    # Kitchen -> general contractors
+    "Kitchen": ["General Contractor", "Kitchen", "Remodeling"],
+    # Garage -> epoxy flooring specialists
+    "Garage": ["Epoxy Flooring", "Concrete", "Garage"],
+    # Outdoor areas -> landscapers and concrete contractors
+    "Patio": ["Landscaping", "Concrete", "Outdoor", "Hardscape"],
+    "Pool Deck": ["Landscaping", "Concrete", "Pool", "Outdoor"],
+    "Backyard": ["Landscaping", "Hardscape", "Outdoor"],
+    "Outdoor Kitchen": ["Outdoor", "Concrete", "Landscaping", "Kitchen"],
+}
+
 @api_router.get("/contractors/search")
 async def search_contractors(zip_code: str, project_type: str = ""):
     projection = {"_id": 0, "password_hash": 0}
@@ -552,6 +568,7 @@ async def search_contractors(zip_code: str, project_type: str = ""):
 
     user_coords = get_zip_coords(zip_code)
 
+    # Calculate distance for each contractor
     for c in contractors:
         clat = c.get("latitude", 0)
         clng = c.get("longitude", 0)
@@ -565,7 +582,35 @@ async def search_contractors(zip_code: str, project_type: str = ""):
         else:
             c["distance_miles"] = 0
 
-    contractors.sort(key=lambda x: x.get("distance_miles", 999))
+    # Apply project-type based routing/prioritization
+    if project_type and project_type in PROJECT_TYPE_ROUTING:
+        priority_specialties = PROJECT_TYPE_ROUTING[project_type]
+        
+        def get_priority_score(contractor):
+            """Lower score = higher priority"""
+            specialties = contractor.get("specialties", [])
+            company_name = contractor.get("company_name", "").lower()
+            
+            # Check for priority matches
+            for idx, priority in enumerate(priority_specialties):
+                priority_lower = priority.lower()
+                # Check company name first (highest priority)
+                if priority_lower in company_name:
+                    return idx * 10  # Company name match gets top priority
+                # Check specialties
+                for spec in specialties:
+                    if priority_lower in spec.lower() or spec.lower() in priority_lower:
+                        return (idx + 1) * 10 + 5
+            
+            # No priority match - use distance only (high number)
+            return 1000 + contractor.get("distance_miles", 999)
+        
+        # Sort by priority score first, then by distance
+        contractors.sort(key=lambda x: (get_priority_score(x), x.get("distance_miles", 999)))
+    else:
+        # Default sort by distance only
+        contractors.sort(key=lambda x: x.get("distance_miles", 999))
+    
     return {"contractors": contractors, "user_location": {"lat": user_coords[0], "lng": user_coords[1]}}
 
 
@@ -677,31 +722,50 @@ async def seed_data():
         return {"message": "Data already seeded", "count": count}
 
     sample_contractors = [
+        # PRIORITY: Seamless Bathrooms LLC - for Bathroom/Shower projects
         {
             "id": str(uuid.uuid4()),
-            "email": "info@crescentcityreno.com",
+            "email": "info@seamlessbathrooms.com",
             "password_hash": hash_password("password123"),
-            "company_name": "Crescent City Renovations",
-            "specialties": ["Bathroom", "Kitchen", "Shower"],
-            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130"],
-            "phone": "(504) 555-0101",
-            "description": "New Orleans' trusted renovation experts. From French Quarter charm to modern Uptown elegance, we transform kitchens and bathrooms with local craftsmanship.",
+            "company_name": "Seamless Bathrooms LLC",
+            "specialties": ["Seamless Bathrooms", "Microcement", "Bathroom", "Shower", "Tile"],
+            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130", "70124", "70125"],
+            "phone": "(504) 555-0001",
+            "description": "New Orleans' premier seamless bathroom specialists. We transform bathrooms with microcement, luxury tile, and modern spa designs. Grout-free, waterproof, stunning results.",
             "photos": [],
             "latitude": 29.9546,
             "longitude": -90.0701,
             "rating": 4.9,
+            "review_count": 247,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        },
+        # General Contractor - for Kitchen projects
+        {
+            "id": str(uuid.uuid4()),
+            "email": "info@crescentcityreno.com",
+            "password_hash": hash_password("password123"),
+            "company_name": "Crescent City General Contractors",
+            "specialties": ["General Contractor", "Kitchen", "Remodeling", "Bathroom"],
+            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130"],
+            "phone": "(504) 555-0101",
+            "description": "Full-service general contracting for kitchen remodels, additions, and whole-home renovations. Licensed and insured in Louisiana.",
+            "photos": [],
+            "latitude": 29.9520,
+            "longitude": -90.0750,
+            "rating": 4.8,
             "review_count": 184,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
+        # Epoxy Flooring Specialist - for Garage projects
         {
             "id": str(uuid.uuid4()),
-            "email": "info@nolaoutdoorliving.com",
+            "email": "info@nolaepoxypros.com",
             "password_hash": hash_password("password123"),
-            "company_name": "NOLA Outdoor Living",
-            "specialties": ["Pool Deck", "Patio", "Kitchen"],
+            "company_name": "NOLA Epoxy Pros",
+            "specialties": ["Epoxy Flooring", "Garage", "Concrete", "Industrial Flooring"],
             "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70124", "70125", "70126", "70131"],
             "phone": "(504) 555-0202",
-            "description": "Specializing in outdoor living spaces built for the New Orleans climate. Custom pool decks, patios, and outdoor kitchens with hurricane-rated materials.",
+            "description": "Professional epoxy floor coatings for garages, workshops, and commercial spaces. Metallic finishes, chip systems, and industrial-grade solutions.",
             "photos": [],
             "latitude": 29.9369,
             "longitude": -90.0332,
@@ -709,31 +773,33 @@ async def seed_data():
             "review_count": 112,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
+        # Landscaping & Concrete - for Outdoor projects
         {
             "id": str(uuid.uuid4()),
-            "email": "info@bigeasybuilders.com",
+            "email": "info@bigeasylandscaping.com",
             "password_hash": hash_password("password123"),
-            "company_name": "Big Easy Builders",
-            "specialties": ["Kitchen", "Bathroom", "Patio", "Shower"],
+            "company_name": "Big Easy Landscaping & Hardscape",
+            "specialties": ["Landscaping", "Hardscape", "Concrete", "Patio", "Outdoor"],
             "service_zip_codes": ["701", "700", "70116", "70117", "70118", "70119", "70124", "70127", "70128"],
             "phone": "(504) 555-0303",
-            "description": "Full-service home renovation company serving the Greater New Orleans area. Licensed, insured, and experienced with historic and modern homes.",
+            "description": "Complete outdoor living transformations - patios, pool decks, outdoor kitchens, landscaping, and decorative concrete. Built for New Orleans climate.",
             "photos": [],
             "latitude": 29.9624,
             "longitude": -90.0586,
             "rating": 4.6,
-            "review_count": 97,
+            "review_count": 156,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
+        # Pool & Outdoor Specialist
         {
             "id": str(uuid.uuid4()),
             "email": "info@gardendistrict.com",
             "password_hash": hash_password("password123"),
-            "company_name": "Garden District Design & Build",
-            "specialties": ["Bathroom", "Kitchen", "Shower"],
+            "company_name": "Garden District Pool & Patio",
+            "specialties": ["Pool", "Concrete", "Landscaping", "Outdoor", "Pool Deck"],
             "service_zip_codes": ["701", "700", "70115", "70118", "70125", "70130", "70113"],
             "phone": "(504) 555-0404",
-            "description": "Luxury renovation specialists in the Garden District and Uptown New Orleans. We blend historic preservation with modern design for stunning results.",
+            "description": "Luxury pool decks, patios, and outdoor living spaces in the Garden District and Uptown. Travertine, pavers, and custom concrete designs.",
             "photos": [],
             "latitude": 29.9260,
             "longitude": -90.1004,
@@ -741,26 +807,27 @@ async def seed_data():
             "review_count": 143,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
+        # Additional General Contractor
         {
             "id": str(uuid.uuid4()),
             "email": "info@bayouremodelingco.com",
             "password_hash": hash_password("password123"),
             "company_name": "Bayou Remodeling Co.",
-            "specialties": ["Pool Deck", "Patio", "Bathroom", "Kitchen"],
+            "specialties": ["General Contractor", "Kitchen", "Bathroom", "Remodeling"],
             "service_zip_codes": ["701", "700", "70112", "70114", "70126", "70127", "70128", "70131", "70148"],
             "phone": "(504) 555-0505",
-            "description": "From Lakeview to the Westbank, Bayou Remodeling delivers quality renovations across New Orleans. Expert in pool decks, patios, and whole-home remodels.",
+            "description": "From Lakeview to the Westbank, quality kitchen and bath remodels across Greater New Orleans. 20+ years experience.",
             "photos": [],
             "latitude": 30.0037,
             "longitude": -90.1084,
             "rating": 4.5,
-            "review_count": 78,
+            "review_count": 98,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
     ]
 
     await db.contractors.insert_many(sample_contractors)
-    return {"message": "Seeded 5 New Orleans contractors", "count": 5}
+    return {"message": "Seeded 6 contractors with specialty routing", "count": 6}
 
 
 # ==================== APP CONFIG ====================

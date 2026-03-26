@@ -52,9 +52,10 @@ export default function ResultsPage() {
         setProject(checkRes.data);
         setSelectedDesign(0);
         setGenerating(false);
-        // Fetch contractors
+        // Fetch contractors with project type for routing
         const zip = zipCode || checkRes.data.zip_code || "10001";
-        const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}`);
+        const projectType = checkRes.data.project_type || "";
+        const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}&project_type=${encodeURIComponent(projectType)}`);
         setContractors(cRes.data.contractors || []);
         setUserLocation(cRes.data.user_location);
         return;
@@ -79,9 +80,10 @@ export default function ResultsPage() {
             setSelectedDesign(0);
             setGenerating(false);
 
-            // Fetch contractors
+            // Fetch contractors with project type for routing
             const zip = zipCode || data.zip_code || "10001";
-            const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}`);
+            const projectType = data.project_type || "";
+            const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}&project_type=${encodeURIComponent(projectType)}`);
             setContractors(cRes.data.contractors || []);
             setUserLocation(cRes.data.user_location);
             return;
