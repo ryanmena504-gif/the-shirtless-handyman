@@ -299,12 +299,35 @@ async def generate_designs(project_id: str):
         {"$set": {"status": "generating"}},
     )
 
-    # Run generation in a separate thread to avoid blocking the event loop
+    # Run both analysis and generation in parallel threads
     import threading
-    thread = threading.Thread(target=_run_generation_sync, args=(project_id, project), daemon=True)
-    thread.start()
+    analysis_thread = threading.Thread(target=_run_analysis_sync, args=(project_id, project), daemon=True)
+    generation_thread = threading.Thread(target=_run_generation_sync, args=(project_id, project), daemon=True)
+    analysis_thread.start()
+    generation_thread.start()
 
     return {"id": project_id, "status": "generating"}
+
+
+def _run_analysis_sync(project_id: str, project: dict):
+    """Run analysis in a separate thread with its own event loop and DB client."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    thread_client = AsyncIOMotorClient(mongo_url)
+    thread_db = thread_client[os.environ['DB_NAME']]
+    try:
+        _run_analysis(project_id, project, thread_db, loop)
+    except Exception as e:
+        logger.error(f"Analysis thread error: {e}")
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"analysis_status": "failed", "analysis_error": str(e)}},
+            )
+        )
+    finally:
+        thread_client.close()
+        loop.close()
 
 
 def _run_generation_sync(project_id: str, project: dict):
@@ -406,6 +429,179 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
         )
     )
     logger.info(f"Generation complete for {project_id}: {len(designs)} designs")
+
+
+# --- Room Analysis with AI Vision ---
+
+ROOM_ANALYSIS_PROMPTS = {
+    "Bathroom": """Analyze this bathroom photo as a professional renovation contractor. Provide a detailed assessment including:
+
+DETECTED CONDITIONS:
+- Surface wear (tile condition, grout, caulk, paint)
+- Signs of moisture damage or potential water issues
+- Outdated fixtures, materials, or design elements
+- Layout inefficiencies or poor space utilization
+- Lighting quality and placement issues
+- Ventilation concerns
+
+RECOMMENDED FIXES:
+- Waterproofing improvements needed
+- Material upgrades (tiles, countertops, fixtures)
+- Layout enhancements for better functionality
+- Lighting improvements
+- Ventilation solutions
+
+Provide honest, professional contractor-style observations. Be specific about what you see.""",
+
+    "Kitchen": """Analyze this kitchen photo as a professional renovation contractor. Provide a detailed assessment including:
+
+DETECTED CONDITIONS:
+- Cabinet condition (wear, outdated style, functionality)
+- Countertop condition and material quality
+- Appliance age and efficiency concerns
+- Layout inefficiencies (work triangle, storage)
+- Lighting adequacy and placement
+- Flooring condition and suitability
+
+RECOMMENDED FIXES:
+- Cabinet refacing vs replacement needs
+- Countertop material upgrades
+- Appliance updates for efficiency
+- Layout improvements for workflow
+- Lighting enhancements
+- Storage solutions
+
+Provide honest, professional contractor-style observations. Be specific about what you see.""",
+
+    "default": """Analyze this room photo as a professional renovation contractor. Provide a detailed assessment including:
+
+DETECTED CONDITIONS:
+- Surface conditions (walls, floors, ceiling)
+- Signs of wear, damage, or deterioration
+- Outdated materials or design elements
+- Layout inefficiencies
+- Lighting quality issues
+- Any structural or safety concerns visible
+
+RECOMMENDED FIXES:
+- Material upgrades needed
+- Surface repairs or replacements
+- Layout improvements
+- Lighting enhancements
+- Design updates for modern functionality
+
+Provide honest, professional contractor-style observations. Be specific about what you see."""
+}
+
+def _run_analysis(project_id: str, project: dict, thread_db, loop):
+    """Run AI-powered room analysis in background thread."""
+    import litellm
+    from emergentintegrations.llm.utils import get_integration_proxy_url
+
+    project_type = project["project_type"]
+    
+    # Get the original image
+    original_image_data = project.get("original_image", "")
+    if not original_image_data.startswith("data:"):
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"analysis_status": "failed", "analysis_error": "No image found"}},
+            )
+        )
+        return
+
+    api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+    proxy_url = get_integration_proxy_url() + "/llm"
+
+    # Get appropriate analysis prompt
+    analysis_prompt = ROOM_ANALYSIS_PROMPTS.get(project_type, ROOM_ANALYSIS_PROMPTS["default"])
+    
+    # Build the vision request
+    full_prompt = f"""{analysis_prompt}
+
+After your analysis, format your response EXACTLY as JSON with this structure:
+{{
+    "detected_conditions": [
+        {{"category": "Surface Wear", "severity": "moderate|minor|significant", "description": "specific observation"}},
+        {{"category": "Outdated Materials", "severity": "moderate|minor|significant", "description": "specific observation"}},
+        ...more conditions
+    ],
+    "recommended_fixes": [
+        {{"priority": "high|medium|low", "fix": "specific recommendation", "reason": "why this is needed"}},
+        ...more fixes
+    ],
+    "cost_impact": {{
+        "basic_repair": {{"low": 0, "high": 0, "description": "what's included"}},
+        "mid_level_renovation": {{"low": 0, "high": 0, "description": "what's included"}},
+        "full_upgrade": {{"low": 0, "high": 0, "description": "what's included"}}
+    }},
+    "overall_assessment": "2-3 sentence professional summary of the room's condition and renovation potential"
+}}
+
+Provide realistic cost estimates in USD based on typical {project_type.lower()} renovation costs."""
+
+    try:
+        response = litellm.completion(
+            model="openai/gpt-4o",
+            api_key=api_key,
+            api_base=proxy_url,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": full_prompt},
+                        {"type": "image_url", "image_url": {"url": original_image_data}}
+                    ]
+                }
+            ],
+            max_tokens=2000,
+            timeout=60,
+        )
+        
+        analysis_text = response.choices[0].message.content
+        
+        # Try to parse JSON from response
+        import json
+        import re
+        
+        # Extract JSON from response (might be wrapped in markdown code blocks)
+        json_match = re.search(r'\{[\s\S]*\}', analysis_text)
+        if json_match:
+            analysis_data = json.loads(json_match.group())
+        else:
+            # Fallback if JSON parsing fails
+            analysis_data = {
+                "detected_conditions": [
+                    {"category": "General Assessment", "severity": "moderate", "description": analysis_text[:500]}
+                ],
+                "recommended_fixes": [
+                    {"priority": "medium", "fix": "Professional inspection recommended", "reason": "Detailed analysis needed"}
+                ],
+                "cost_impact": {
+                    "basic_repair": {"low": 1000, "high": 3000, "description": "Minor repairs and touch-ups"},
+                    "mid_level_renovation": {"low": 5000, "high": 15000, "description": "Moderate updates"},
+                    "full_upgrade": {"low": 15000, "high": 40000, "description": "Complete renovation"}
+                },
+                "overall_assessment": "A professional on-site inspection is recommended for detailed assessment."
+            }
+        
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"analysis": analysis_data, "analysis_status": "completed"}},
+            )
+        )
+        logger.info(f"Analysis complete for {project_id}")
+        
+    except Exception as e:
+        logger.error(f"Analysis error for {project_id}: {e}")
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"analysis_status": "failed", "analysis_error": str(e)}},
+            )
+        )
 
 
 @api_router.get("/projects/{project_id}")

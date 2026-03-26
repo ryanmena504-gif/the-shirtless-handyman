@@ -6,6 +6,7 @@ import { ContractorMap } from "../components/ContractorMap";
 import { LeadCaptureModal } from "../components/LeadCaptureModal";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import MaterialsListPDF from "../components/MaterialsListPDF";
+import RoomAnalysis from "../components/RoomAnalysis";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export default function ResultsPage() {
   const [sharing, setSharing] = useState(false);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [pdfDesignName, setPdfDesignName] = useState("");
+  const [analysisLoading, setAnalysisLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -52,6 +54,8 @@ export default function ResultsPage() {
         setProject(checkRes.data);
         setSelectedDesign(0);
         setGenerating(false);
+        // Check if analysis is done
+        setAnalysisLoading(checkRes.data.analysis_status !== "completed");
         // Fetch contractors with project type for routing
         const zip = zipCode || checkRes.data.zip_code || "10001";
         const projectType = checkRes.data.project_type || "";
@@ -75,10 +79,21 @@ export default function ResultsPage() {
           const res = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
           const data = res.data;
 
+          // Update analysis status
+          if (data.analysis_status === "completed") {
+            setAnalysisLoading(false);
+          }
+          
+          // Update project data to show analysis as it completes
+          if (data.analysis) {
+            setProject(prev => prev ? { ...prev, analysis: data.analysis, analysis_status: data.analysis_status } : data);
+          }
+
           if (data.status === "completed" && data.designs?.length > 0) {
             setProject(data);
             setSelectedDesign(0);
             setGenerating(false);
+            setAnalysisLoading(data.analysis_status !== "completed");
 
             // Fetch contractors with project type for routing
             const zip = zipCode || data.zip_code || "10001";
@@ -204,6 +219,15 @@ export default function ResultsPage() {
                 Try Again
               </Button>
             </div>
+          )}
+
+          {/* Room Analysis - Shows before designs */}
+          {!generating && project && (
+            <RoomAnalysis 
+              analysis={project.analysis}
+              projectType={project.project_type}
+              isLoading={analysisLoading && !project.analysis}
+            />
           )}
 
           {/* Designs with Before/After Sliders */}
