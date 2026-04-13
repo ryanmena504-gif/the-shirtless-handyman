@@ -6,7 +6,6 @@ import { ContractorMap } from "../components/ContractorMap";
 import { LeadCaptureModal } from "../components/LeadCaptureModal";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import MaterialsListPDF from "../components/MaterialsListPDF";
-import RoomAnalysis from "../components/RoomAnalysis";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
@@ -35,7 +34,6 @@ export default function ResultsPage() {
   const [sharing, setSharing] = useState(false);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [pdfDesignName, setPdfDesignName] = useState("");
-  const [analysisLoading, setAnalysisLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -54,8 +52,6 @@ export default function ResultsPage() {
         setProject(checkRes.data);
         setSelectedDesign(0);
         setGenerating(false);
-        // Check if analysis is done
-        setAnalysisLoading(checkRes.data.analysis_status !== "completed");
         // Fetch contractors with project type for routing
         const zip = zipCode || checkRes.data.zip_code || "10001";
         const projectType = checkRes.data.project_type || "";
@@ -79,21 +75,10 @@ export default function ResultsPage() {
           const res = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
           const data = res.data;
 
-          // Update analysis status
-          if (data.analysis_status === "completed") {
-            setAnalysisLoading(false);
-          }
-          
-          // Update project data to show analysis as it completes
-          if (data.analysis) {
-            setProject(prev => prev ? { ...prev, analysis: data.analysis, analysis_status: data.analysis_status } : data);
-          }
-
           if (data.status === "completed" && data.designs?.length > 0) {
             setProject(data);
             setSelectedDesign(0);
             setGenerating(false);
-            setAnalysisLoading(data.analysis_status !== "completed");
 
             // Fetch contractors with project type for routing
             const zip = zipCode || data.zip_code || "10001";
@@ -173,7 +158,7 @@ export default function ResultsPage() {
           {/* Header */}
           <div className="mb-12">
             <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
-              Step 2 of 3
+              Step 3 of 3
             </p>
             <h1
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"
@@ -219,15 +204,6 @@ export default function ResultsPage() {
                 Try Again
               </Button>
             </div>
-          )}
-
-          {/* Room Analysis - Shows before designs */}
-          {!generating && project && (
-            <RoomAnalysis 
-              analysis={project.analysis}
-              projectType={project.project_type}
-              isLoading={analysisLoading && !project.analysis}
-            />
           )}
 
           {/* Designs with Before/After Sliders */}
@@ -376,6 +352,85 @@ export default function ResultsPage() {
                     Local Contractors Near You
                   </h2>
                 </div>
+
+                {/* Suggested Contractor Highlight */}
+                {contractors.length > 0 && contractors[0].is_suggested && (
+                  <div
+                    className="mb-6 relative overflow-hidden rounded-2xl border-2 border-[#D97757]/40 bg-gradient-to-r from-[#D97757]/5 via-white to-[#D97757]/5"
+                    data-testid="suggested-contractor-card"
+                  >
+                    {contractors[0].is_easter_egg && (
+                      <div className="absolute top-0 right-0 bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-xl">
+                        Local Legend
+                      </div>
+                    )}
+                    <div className="p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge className="bg-[#D97757] text-white text-xs font-semibold px-2.5 py-0.5">
+                            Suggested for You
+                          </Badge>
+                        </div>
+                        <h3
+                          className="text-xl md:text-2xl font-medium text-foreground mb-2"
+                          style={{ fontFamily: "'Fraunces', serif" }}
+                          data-testid="suggested-contractor-name"
+                        >
+                          {contractors[0].company_name}
+                        </h3>
+                        <div className="flex items-center gap-1 mb-3">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < Math.round(contractors[0].rating || 0) ? "fill-[#D97757] text-[#D97757]" : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                          <span className="text-sm text-muted-foreground ml-1.5">
+                            {contractors[0].rating} ({contractors[0].review_count} reviews)
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                          {contractors[0].description}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {contractors[0].specialties?.map((s) => (
+                            <Badge key={s} variant="secondary" className="text-xs bg-accent text-accent-foreground">
+                              {s}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          {contractors[0].phone && (
+                            <span className="flex items-center gap-1.5">
+                              <Phone className="w-4 h-4" />
+                              {contractors[0].phone}
+                            </span>
+                          )}
+                          {contractors[0].distance_miles > 0 && (
+                            <span className="flex items-center gap-1.5">
+                              <MapPin className="w-4 h-4" />
+                              {contractors[0].distance_miles} miles away
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <Button
+                          onClick={() => {
+                            setSelectedContractor(contractors[0]);
+                            setQuoteModalOpen(true);
+                          }}
+                          className="rounded-full h-12 px-8 bg-[#D97757] text-white hover:bg-[#C56545] btn-pill shadow-lg shadow-[#D97757]/20 text-sm font-medium"
+                          data-testid="suggested-contractor-quote-btn"
+                        >
+                          Request Quote
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <ContractorMap
                   contractors={contractors}

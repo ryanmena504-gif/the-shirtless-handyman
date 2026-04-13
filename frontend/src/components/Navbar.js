@@ -37,6 +37,14 @@ export const Navbar = () => {
           >
             Start Project
           </Button>
+          <Button
+            variant="ghost"
+            className="rounded-full text-sm font-medium"
+            onClick={() => navigate("/portfolio")}
+            data-testid="nav-portfolio-btn"
+          >
+            Our Work
+          </Button>
           {token ? (
             <Button
               variant="ghost"
@@ -88,6 +96,14 @@ export const Navbar = () => {
             data-testid="mobile-start-btn"
           >
             Start Project
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/portfolio"); setMobileOpen(false); }}
+            data-testid="mobile-portfolio-btn"
+          >
+            Our Work
           </Button>
           {token ? (
             <Button

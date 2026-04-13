@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { 
-  Upload, Camera, X, ArrowRight, MapPin,
+  Upload, Camera, X, ArrowRight, MapPin, Star, Plus,
   Bath, UtensilsCrossed, Sofa, Bed, Baby, Briefcase,
   Car, WashingMachine, Warehouse, DoorOpen,
   TreePine, Waves, Flower2, Flame
@@ -15,7 +15,6 @@ import {
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-// Room categories with icons
 const ROOM_CATEGORIES = [
   {
     category: "Interior Rooms",
@@ -60,36 +59,58 @@ export default function UploadPage() {
   const location = useLocation();
   const fileRef = useRef(null);
 
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  // Multi-image state: array of { file, preview }
+  const [images, setImages] = useState([]);
+  const [primaryIndex, setPrimaryIndex] = useState(0);
   const [zipCode, setZipCode] = useState("");
   const [projectType, setProjectType] = useState(location.state?.projectType || "");
   const [budget, setBudget] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e) => {
-    const f = e.target.files?.[0];
-    if (f) {
-      setFile(f);
+  const MAX_IMAGES = 3;
+
+  const addFiles = (fileList) => {
+    const newFiles = Array.from(fileList).filter(f => f.type.startsWith("image/"));
+    const remaining = MAX_IMAGES - images.length;
+    const toAdd = newFiles.slice(0, remaining);
+
+    toAdd.forEach((f) => {
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
+      reader.onloadend = () => {
+        setImages((prev) => {
+          if (prev.length >= MAX_IMAGES) return prev;
+          return [...prev, { file: f, preview: reader.result }];
+        });
+      };
       reader.readAsDataURL(f);
+    });
+
+    if (newFiles.length > remaining) {
+      toast.info(`Maximum ${MAX_IMAGES} photos allowed`);
     }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files) addFiles(e.target.files);
+    e.target.value = "";
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const f = e.dataTransfer.files?.[0];
-    if (f && f.type.startsWith("image/")) {
-      setFile(f);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(f);
-    }
+    if (e.dataTransfer.files) addFiles(e.dataTransfer.files);
+  };
+
+  const removeImage = (idx) => {
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+    setPrimaryIndex((prev) => {
+      if (idx === prev) return 0;
+      if (idx < prev) return prev - 1;
+      return prev;
+    });
   };
 
   const handleSubmit = async () => {
-    if (!file) { toast.error("Please upload a photo"); return; }
+    if (images.length === 0) { toast.error("Please upload at least one photo"); return; }
     if (!zipCode) { toast.error("Please enter your ZIP code"); return; }
     if (!projectType) { toast.error("Please select a project type"); return; }
     if (!budget) { toast.error("Please select your budget range"); return; }
@@ -97,17 +118,25 @@ export default function UploadPage() {
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("photo", file);
+      formData.append("photo", images[primaryIndex].file);
       formData.append("zip_code", zipCode);
       formData.append("project_type", projectType);
       formData.append("budget", budget);
+      formData.append("primary_index", "0");
+
+      // Add additional photos (everything except primary)
+      images.forEach((img, i) => {
+        if (i !== primaryIndex) {
+          formData.append("additional_photos", img.file);
+        }
+      });
 
       const res = await axios.post(`${API}/projects/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Photo uploaded! Generating designs...");
-      navigate(`/results/${res.data.id}`, {
+      toast.success("Photos uploaded! Analyzing your room...");
+      navigate(`/analysis/${res.data.id}`, {
         state: { projectType, zipCode, budget },
       });
     } catch {
@@ -135,32 +164,75 @@ export default function UploadPage() {
               Upload your room
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Take a photo of the room you'd like to renovate, and our AI will generate stunning design options.
+              Upload up to 3 photos of the room you'd like to renovate. Select one as the primary image for AI redesign — additional angles help improve the analysis.
             </p>
           </div>
 
           {/* Upload Zone */}
           <div className="space-y-8">
             <div>
-              <Label className="text-sm font-medium mb-3 block">Room Photo</Label>
-              {preview ? (
-                <div className="relative rounded-2xl overflow-hidden border border-border/40 animate-scale-in">
-                  <img
-                    src={preview}
-                    alt="Room preview"
-                    className="w-full h-[400px] object-cover"
-                    data-testid="upload-preview-image"
-                  />
-                  <button
-                    onClick={() => { setFile(null); setPreview(null); }}
-                    className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-                    data-testid="upload-remove-btn"
-                    aria-label="Remove photo"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+              <Label className="text-sm font-medium mb-3 block">Room Photos (up to 3)</Label>
+              
+              {/* Image thumbnails grid */}
+              {images.length > 0 && (
+                <div className="grid grid-cols-3 gap-4 mb-4" data-testid="image-previews">
+                  {images.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className={`relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-200 group ${
+                        idx === primaryIndex
+                          ? "border-[#D97757] shadow-lg shadow-[#D97757]/20 ring-2 ring-[#D97757]/30"
+                          : "border-border/40 hover:border-primary/40"
+                      }`}
+                      onClick={() => setPrimaryIndex(idx)}
+                      data-testid={`image-preview-${idx}`}
+                    >
+                      <img
+                        src={img.preview}
+                        alt={`Room angle ${idx + 1}`}
+                        className="w-full h-[160px] object-cover"
+                      />
+                      {/* Primary badge */}
+                      {idx === primaryIndex && (
+                        <div className="absolute top-2 left-2 bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Star className="w-3 h-3 fill-white" />
+                          Primary
+                        </div>
+                      )}
+                      {/* Remove button */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); removeImage(idx); }}
+                        className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors opacity-0 group-hover:opacity-100"
+                        data-testid={`remove-image-${idx}`}
+                        aria-label="Remove photo"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                      {/* Click to set primary hint */}
+                      {idx !== primaryIndex && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm text-white text-[10px] text-center py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          Click to set as primary
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Add more slot */}
+                  {images.length < MAX_IMAGES && (
+                    <button
+                      onClick={() => fileRef.current?.click()}
+                      className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 h-[160px] flex flex-col items-center justify-center gap-2 hover:bg-primary/10 transition-colors cursor-pointer"
+                      data-testid="add-more-photos-btn"
+                    >
+                      <Plus className="w-6 h-6 text-primary/60" />
+                      <span className="text-xs text-primary/60 font-medium">Add Photo</span>
+                    </button>
+                  )}
                 </div>
-              ) : (
+              )}
+
+              {/* Dropzone (only when no images yet) */}
+              {images.length === 0 && (
                 <div
                   className="blueprint-grid border-2 border-dashed border-primary/30 bg-primary/5 rounded-3xl p-12 text-center hover:bg-primary/10 transition-colors cursor-pointer"
                   onClick={() => fileRef.current?.click()}
@@ -168,24 +240,16 @@ export default function UploadPage() {
                   onDrop={handleDrop}
                   data-testid="upload-dropzone"
                 >
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                    data-testid="upload-file-input"
-                  />
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                       <Camera className="w-7 h-7 text-primary" />
                     </div>
                     <div>
                       <p className="text-base font-medium text-foreground mb-1">
-                        Drag & drop your room photo here
+                        Drag & drop your room photos here
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        or click to browse. JPG, PNG up to 10MB
+                        or click to browse. Upload 1-3 photos. JPG, PNG up to 10MB each
                       </p>
                     </div>
                     <Button
@@ -198,6 +262,23 @@ export default function UploadPage() {
                     </Button>
                   </div>
                 </div>
+              )}
+
+              {/* Hidden file input - always allow multiple */}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={handleFileChange}
+                data-testid="upload-file-input"
+              />
+
+              {images.length > 1 && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  The <span className="text-[#D97757] font-semibold">primary</span> photo will be used for AI redesign. Additional photos provide context for better analysis.
+                </p>
               )}
             </div>
 
@@ -291,14 +372,14 @@ export default function UploadPage() {
             {/* Submit */}
             <Button
               onClick={handleSubmit}
-              disabled={uploading || !file || !zipCode || !projectType || !budget}
+              disabled={uploading || images.length === 0 || !zipCode || !projectType || !budget}
               className="w-full h-14 rounded-full bg-primary text-primary-foreground text-base font-medium btn-pill shadow-lg shadow-primary/20 disabled:opacity-50"
               data-testid="upload-submit-btn"
             >
               {uploading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Uploading...
+                  Uploading {images.length} photo{images.length > 1 ? "s" : ""}...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">

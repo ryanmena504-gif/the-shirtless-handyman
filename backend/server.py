@@ -76,6 +76,7 @@ class ProjectResponse(BaseModel):
     status: str
     created_at: str
     original_image: Optional[str] = None
+    additional_images: List[str] = []
     designs: List[dict] = []
     cost_estimate: Optional[dict] = None
 
@@ -124,6 +125,7 @@ ZIP_COORDINATES = {
     "70126": (30.0150, -89.9940), "70127": (30.0350, -89.9580),
     "70128": (30.0480, -89.9260), "70130": (29.9430, -90.0740),
     "70131": (29.8940, -90.0180), "70148": (30.0288, -90.0687),
+    "70123": (29.9100, -90.0500),
 }
 
 def get_zip_coords(zip_code: str):
@@ -250,11 +252,25 @@ async def upload_project(
     photo: UploadFile = File(...),
     zip_code: str = Form(...),
     project_type: str = Form(...),
-    budget: str = Form(...)
+    budget: str = Form(...),
+    primary_index: int = Form(0),
+    additional_photos: List[UploadFile] = File(default=[]),
 ):
     image_data = await photo.read()
     image_base64 = base64.b64encode(image_data).decode("utf-8")
     content_type = photo.content_type or "image/jpeg"
+
+    # Build list of all images (primary first, then additional)
+    all_images = [f"data:{content_type};base64,{image_base64}"]
+    for extra in additional_photos:
+        extra_data = await extra.read()
+        extra_b64 = base64.b64encode(extra_data).decode("utf-8")
+        extra_ct = extra.content_type or "image/jpeg"
+        all_images.append(f"data:{extra_ct};base64,{extra_b64}")
+
+    # Clamp primary_index
+    if primary_index < 0 or primary_index >= len(all_images):
+        primary_index = 0
 
     project_id = str(uuid.uuid4())
     project = {
@@ -262,7 +278,8 @@ async def upload_project(
         "project_type": project_type,
         "zip_code": zip_code,
         "budget": budget,
-        "original_image": f"data:{content_type};base64,{image_base64}",
+        "original_image": all_images[primary_index],
+        "additional_images": [img for i, img in enumerate(all_images) if i != primary_index],
         "status": "uploaded",
         "designs": [],
         "cost_estimate": None,
@@ -511,14 +528,22 @@ def _run_analysis(project_id: str, project: dict, thread_db, loop):
         )
         return
 
+    # Gather additional images for richer context
+    additional_images = project.get("additional_images", [])
+
     api_key = os.environ.get("EMERGENT_LLM_KEY", "")
     proxy_url = get_integration_proxy_url() + "/llm"
 
     # Get appropriate analysis prompt
     analysis_prompt = ROOM_ANALYSIS_PROMPTS.get(project_type, ROOM_ANALYSIS_PROMPTS["default"])
+
+    num_photos = 1 + len(additional_images)
+    multi_photo_note = ""
+    if additional_images:
+        multi_photo_note = f"\n\nYou are provided {num_photos} photos of the same room from different angles. Use ALL photos to form a comprehensive assessment. The first image is the primary angle."
     
     # Build the vision request
-    full_prompt = f"""{analysis_prompt}
+    full_prompt = f"""{analysis_prompt}{multi_photo_note}
 
 After your analysis, format your response EXACTLY as JSON with this structure:
 {{
@@ -541,6 +566,13 @@ After your analysis, format your response EXACTLY as JSON with this structure:
 
 Provide realistic cost estimates in USD based on typical {project_type.lower()} renovation costs."""
 
+    # Build content array with all images
+    content_parts = [{"type": "text", "text": full_prompt}]
+    content_parts.append({"type": "image_url", "image_url": {"url": original_image_data}})
+    for extra_img in additional_images:
+        if extra_img.startswith("data:"):
+            content_parts.append({"type": "image_url", "image_url": {"url": extra_img}})
+
     try:
         response = litellm.completion(
             model="openai/gpt-4o",
@@ -549,10 +581,7 @@ Provide realistic cost estimates in USD based on typical {project_type.lower()} 
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        {"type": "text", "text": full_prompt},
-                        {"type": "image_url", "image_url": {"url": original_image_data}}
-                    ]
+                    "content": content_parts
                 }
             ],
             max_tokens=2000,
@@ -752,6 +781,26 @@ PROJECT_TYPE_ROUTING = {
     "Outdoor Kitchen": ["Outdoor", "Concrete", "Landscaping", "Kitchen"],
 }
 
+# Easter egg ZIP code for the Shirtless Handyman
+SHIRTLESS_HANDYMAN_ZIP = "70123"
+
+SHIRTLESS_HANDYMAN_PROFILE = {
+    "id": "shirtless-handyman-easter-egg",
+    "company_name": "The Shirtless Handyman",
+    "email": "ryan@shirtlesshandyman.com",
+    "specialties": ["Handyman", "General Contractor", "Bathroom", "Kitchen", "Remodeling", "Interior"],
+    "service_zip_codes": ["70123", "701"],
+    "phone": "(504) 555-RYAN",
+    "description": "Ryan Mena — your local shirtless handyman and high-end interior specialist. From quick fixes to full luxury renovations, no job too big or small. Serving the Westbank and all of Greater New Orleans.",
+    "photos": [],
+    "latitude": 29.9100,
+    "longitude": -90.0500,
+    "rating": 5.0,
+    "review_count": 999,
+    "distance_miles": 0.1,
+    "is_easter_egg": True,
+}
+
 @api_router.get("/contractors/search")
 async def search_contractors(zip_code: str, project_type: str = ""):
     projection = {"_id": 0, "password_hash": 0}
@@ -806,6 +855,15 @@ async def search_contractors(zip_code: str, project_type: str = ""):
     else:
         # Default sort by distance only
         contractors.sort(key=lambda x: x.get("distance_miles", 999))
+
+    # Easter egg: Shirtless Handyman for ZIP 70123
+    if zip_code == SHIRTLESS_HANDYMAN_ZIP:
+        handyman = dict(SHIRTLESS_HANDYMAN_PROFILE)
+        contractors.insert(0, handyman)
+
+    # Mark the top contractor as suggested
+    if contractors:
+        contractors[0]["is_suggested"] = True
     
     return {"contractors": contractors, "user_location": {"lat": user_coords[0], "lng": user_coords[1]}}
 
@@ -900,13 +958,75 @@ async def admin_get_stats(admin_id: str = Depends(decode_token)):
     total_contractors = await db.contractors.count_documents({})
     total_projects = await db.projects.count_documents({})
     completed_projects = await db.projects.count_documents({"status": "completed"})
+    total_portfolio = await db.portfolio.count_documents({})
     return {
         "total_leads": total_leads,
         "new_leads": new_leads,
         "total_contractors": total_contractors,
         "total_projects": total_projects,
         "completed_projects": completed_projects,
+        "total_portfolio": total_portfolio,
     }
+
+
+# --- Portfolio Routes ---
+
+@api_router.post("/admin/portfolio")
+async def admin_upload_portfolio(
+    admin_id: str = Depends(decode_token),
+    before_photo: UploadFile = File(...),
+    after_photo: UploadFile = File(...),
+    title: str = Form(""),
+    description: str = Form(""),
+    room_type: str = Form(""),
+):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+    before_data = await before_photo.read()
+    before_b64 = base64.b64encode(before_data).decode("utf-8")
+    before_ct = before_photo.content_type or "image/jpeg"
+
+    after_data = await after_photo.read()
+    after_b64 = base64.b64encode(after_data).decode("utf-8")
+    after_ct = after_photo.content_type or "image/jpeg"
+
+    item_id = str(uuid.uuid4())
+    item = {
+        "id": item_id,
+        "title": title or "Renovation Project",
+        "description": description,
+        "room_type": room_type,
+        "before_image": f"data:{before_ct};base64,{before_b64}",
+        "after_image": f"data:{after_ct};base64,{after_b64}",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.portfolio.insert_one(item)
+    return {"id": item_id, "message": "Portfolio item added"}
+
+
+@api_router.get("/admin/portfolio")
+async def admin_get_portfolio(admin_id: str = Depends(decode_token)):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    items = await db.portfolio.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return {"items": items, "total": len(items)}
+
+
+@api_router.delete("/admin/portfolio/{item_id}")
+async def admin_delete_portfolio(item_id: str, admin_id: str = Depends(decode_token)):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    result = await db.portfolio.delete_one({"id": item_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Portfolio item not found")
+    return {"message": "Portfolio item deleted"}
+
+
+@api_router.get("/portfolio")
+async def get_public_portfolio():
+    items = await db.portfolio.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return {"items": items}
 
 
 # --- Seed Data ---
@@ -1048,6 +1168,7 @@ async def startup():
     await db.leads.create_index("contractor_id")
     await db.shares.create_index("id")
     await db.shares.create_index("project_id")
+    await db.portfolio.create_index("id")
     logger.info("AI Renovation Visualizer API started")
 
 

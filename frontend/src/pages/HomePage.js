@@ -150,6 +150,33 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* See Our Work CTA */}
+      <section className="py-16 px-6 md:px-12 bg-white" data-testid="our-work-section">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
+            Real Results
+          </p>
+          <h2
+            className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
+            style={{ fontFamily: "'Fraunces', serif" }}
+          >
+            See our completed projects
+          </h2>
+          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+            Browse real before and after photos from renovation jobs we've completed.
+          </p>
+          <Button
+            onClick={() => navigate("/portfolio")}
+            variant="outline"
+            className="rounded-full h-12 px-8 border-[#D97757]/40 text-[#D97757] hover:bg-[#D97757]/5 text-sm font-medium"
+            data-testid="home-see-our-work-btn"
+          >
+            See Our Work
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24 md:py-32 px-6 md:px-12" data-testid="cta-section">
         <div className="max-w-7xl mx-auto">

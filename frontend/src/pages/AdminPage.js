@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import {
   Shield, Lock, BarChart3, FileText, Users, Briefcase,
   Mail, Phone, MapPin, Calendar, Paintbrush, Image as ImageIcon,
-  LogOut, ChevronDown, ChevronUp
+  LogOut, ChevronDown, ChevronUp, Upload, X, Trash2, Camera
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -27,6 +27,15 @@ export default function AdminPage() {
   const [contractors, setContractors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedLead, setExpandedLead] = useState(null);
+  const [portfolio, setPortfolio] = useState([]);
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
+  const [beforeFile, setBeforeFile] = useState(null);
+  const [afterFile, setAfterFile] = useState(null);
+  const [beforePreview, setBeforePreview] = useState(null);
+  const [afterPreview, setAfterPreview] = useState(null);
+  const [portfolioTitle, setPortfolioTitle] = useState("");
+  const [portfolioDesc, setPortfolioDesc] = useState("");
+  const [portfolioRoomType, setPortfolioRoomType] = useState("");
 
   const token = localStorage.getItem("admin_token");
 
@@ -59,14 +68,16 @@ export default function AdminPage() {
     const t = localStorage.getItem("admin_token");
     const headers = { Authorization: `Bearer ${t}` };
     try {
-      const [statsRes, leadsRes, contractorsRes] = await Promise.all([
+      const [statsRes, leadsRes, contractorsRes, portfolioRes] = await Promise.all([
         axios.get(`${API}/admin/stats`, { headers }),
         axios.get(`${API}/admin/leads`, { headers }),
         axios.get(`${API}/admin/contractors`, { headers }),
+        axios.get(`${API}/admin/portfolio`, { headers }),
       ]);
       setStats(statsRes.data);
       setLeads(leadsRes.data.leads || []);
       setContractors(contractorsRes.data.contractors || []);
+      setPortfolio(portfolioRes.data.items || []);
     } catch {
       toast.error("Failed to load admin data");
       localStorage.removeItem("admin_token");
@@ -82,6 +93,7 @@ export default function AdminPage() {
     setStats(null);
     setLeads([]);
     setContractors([]);
+    setPortfolio([]);
   };
 
   // Login screen
@@ -213,6 +225,15 @@ export default function AdminPage() {
             >
               <Briefcase className="w-4 h-4 mr-1.5" />
               Contractors ({contractors.length})
+            </Button>
+            <Button
+              variant={tab === "portfolio" ? "default" : "ghost"}
+              className={`rounded-full text-sm ${tab === "portfolio" ? "bg-primary text-primary-foreground" : ""}`}
+              onClick={() => setTab("portfolio")}
+              data-testid="admin-tab-portfolio"
+            >
+              <Camera className="w-4 h-4 mr-1.5" />
+              Portfolio ({portfolio.length})
             </Button>
           </div>
 
@@ -351,6 +372,214 @@ export default function AdminPage() {
                   </div>
                 ))
               )}
+            </div>
+          )}
+
+          {/* Portfolio Tab */}
+          {!loading && tab === "portfolio" && (
+            <div className="space-y-8" data-testid="admin-portfolio-section">
+              {/* Upload Form */}
+              <div className="bg-white border border-border/40 rounded-2xl p-6">
+                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-[#D97757]" />
+                  Upload Before & After Photos
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Before photo */}
+                    <div>
+                      <Label className="text-sm font-medium mb-2 block">Before Photo</Label>
+                      {beforePreview ? (
+                        <div className="relative rounded-xl overflow-hidden border border-border/40">
+                          <img src={beforePreview} alt="Before" className="w-full h-40 object-cover" />
+                          <button
+                            onClick={() => { setBeforeFile(null); setBeforePreview(null); }}
+                            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70"
+                            data-testid="admin-remove-before"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                          <div className="absolute bottom-2 left-2 bg-black/50 text-white text-[10px] px-2 py-0.5 rounded-full">Before</div>
+                        </div>
+                      ) : (
+                        <label className="flex flex-col items-center justify-center h-40 rounded-xl border-2 border-dashed border-border/60 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors" data-testid="admin-before-upload">
+                          <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
+                          <span className="text-xs text-muted-foreground">Click to upload</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) {
+                                setBeforeFile(f);
+                                const reader = new FileReader();
+                                reader.onloadend = () => setBeforePreview(reader.result);
+                                reader.readAsDataURL(f);
+                              }
+                            }}
+                          />
+                        </label>
+                      )}
+                    </div>
+                    {/* After photo */}
+                    <div>
+                      <Label className="text-sm font-medium mb-2 block">After Photo</Label>
+                      {afterPreview ? (
+                        <div className="relative rounded-xl overflow-hidden border border-border/40">
+                          <img src={afterPreview} alt="After" className="w-full h-40 object-cover" />
+                          <button
+                            onClick={() => { setAfterFile(null); setAfterPreview(null); }}
+                            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70"
+                            data-testid="admin-remove-after"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                          <div className="absolute bottom-2 left-2 bg-[#D97757] text-white text-[10px] px-2 py-0.5 rounded-full">After</div>
+                        </div>
+                      ) : (
+                        <label className="flex flex-col items-center justify-center h-40 rounded-xl border-2 border-dashed border-border/60 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors" data-testid="admin-after-upload">
+                          <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
+                          <span className="text-xs text-muted-foreground">Click to upload</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) {
+                                setAfterFile(f);
+                                const reader = new FileReader();
+                                reader.onloadend = () => setAfterPreview(reader.result);
+                                reader.readAsDataURL(f);
+                              }
+                            }}
+                          />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Title</Label>
+                      <Input
+                        data-testid="admin-portfolio-title"
+                        placeholder="e.g. Master Bathroom Remodel"
+                        value={portfolioTitle}
+                        onChange={(e) => setPortfolioTitle(e.target.value)}
+                        className="h-10 rounded-lg"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Room Type</Label>
+                      <Input
+                        data-testid="admin-portfolio-room-type"
+                        placeholder="e.g. Bathroom"
+                        value={portfolioRoomType}
+                        onChange={(e) => setPortfolioRoomType(e.target.value)}
+                        className="h-10 rounded-lg"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Description</Label>
+                      <Input
+                        data-testid="admin-portfolio-desc"
+                        placeholder="Brief description"
+                        value={portfolioDesc}
+                        onChange={(e) => setPortfolioDesc(e.target.value)}
+                        className="h-10 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    disabled={!beforeFile || !afterFile || portfolioUploading}
+                    onClick={async () => {
+                      setPortfolioUploading(true);
+                      try {
+                        const t = localStorage.getItem("admin_token");
+                        const fd = new FormData();
+                        fd.append("before_photo", beforeFile);
+                        fd.append("after_photo", afterFile);
+                        fd.append("title", portfolioTitle || "Renovation Project");
+                        fd.append("description", portfolioDesc);
+                        fd.append("room_type", portfolioRoomType);
+                        await axios.post(`${API}/admin/portfolio`, fd, {
+                          headers: { Authorization: `Bearer ${t}`, "Content-Type": "multipart/form-data" },
+                        });
+                        toast.success("Portfolio item uploaded!");
+                        setBeforeFile(null); setAfterFile(null);
+                        setBeforePreview(null); setAfterPreview(null);
+                        setPortfolioTitle(""); setPortfolioDesc(""); setPortfolioRoomType("");
+                        fetchAll();
+                      } catch {
+                        toast.error("Upload failed");
+                      } finally {
+                        setPortfolioUploading(false);
+                      }
+                    }}
+                    className="rounded-full bg-primary text-primary-foreground btn-pill"
+                    data-testid="admin-portfolio-upload-btn"
+                  >
+                    {portfolioUploading ? "Uploading..." : "Upload Portfolio Item"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Portfolio items list */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Uploaded Portfolio ({portfolio.length})
+                </h3>
+                {portfolio.length === 0 ? (
+                  <div className="bg-white border border-border/40 rounded-2xl p-12 text-center">
+                    <ImageIcon className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">No portfolio items yet. Upload your first before & after photos above.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {portfolio.map((item) => (
+                      <div key={item.id} className="bg-white border border-border/40 rounded-2xl overflow-hidden" data-testid={`admin-portfolio-item-${item.id}`}>
+                        <div className="grid grid-cols-2">
+                          <div className="relative">
+                            <img src={item.before_image} alt="Before" className="w-full h-32 object-cover" />
+                            <div className="absolute bottom-1 left-1 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded">Before</div>
+                          </div>
+                          <div className="relative">
+                            <img src={item.after_image} alt="After" className="w-full h-32 object-cover" />
+                            <div className="absolute bottom-1 left-1 bg-[#D97757] text-white text-[10px] px-1.5 py-0.5 rounded">After</div>
+                          </div>
+                        </div>
+                        <div className="p-4 flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                            {item.room_type && <Badge className="text-xs bg-accent text-accent-foreground mt-1">{item.room_type}</Badge>}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full"
+                            onClick={async () => {
+                              const t = localStorage.getItem("admin_token");
+                              try {
+                                await axios.delete(`${API}/admin/portfolio/${item.id}`, {
+                                  headers: { Authorization: `Bearer ${t}` },
+                                });
+                                toast.success("Portfolio item deleted");
+                                fetchAll();
+                              } catch {
+                                toast.error("Delete failed");
+                              }
+                            }}
+                            data-testid={`admin-portfolio-delete-${item.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
