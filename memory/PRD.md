@@ -1,105 +1,65 @@
-# AI Renovation Visualizer - PRD
+# Seamless Bath - AI Renovation Visualizer
 
-## Original Problem Statement
-Build a web app called "AI Renovation Visualizer" that helps homeowners upload a photo of a room, see AI-generated renovation redesigns, estimate renovation cost based on location, and connect with nearby contractors.
+## Product Overview
+AI-powered web app that lets homeowners upload room photos, get AI-generated renovation designs, cost estimates, and connect with local contractors.
 
-## Architecture
-- **Frontend**: React + Tailwind + Shadcn UI + Leaflet + Framer Motion
-- **Backend**: FastAPI + MongoDB (Motor async driver)
-- **AI**: OpenAI GPT Image 1 via Emergent LLM key (emergentintegrations library)
-- **Auth**: JWT-based for contractors
-- **Maps**: Leaflet/OpenStreetMap
+## Core User Flow
+1. **Upload Page** - Upload 1-3 room photos (select primary for AI edit), pick room type (14 options), set budget, enter ZIP
+2. **Analysis Page** - AI-detected conditions, recommended improvements, cost ranges  
+3. **Results Page** - 3 AI-generated designs with before/after sliders, Material Explorer, PDF export, suggested contractor highlight, contractor map
 
-## User Personas
-1. **Homeowners**: Want to visualize renovations before committing, get cost estimates, and find contractors
-2. **Contractors**: Want to receive leads, manage their profile, and connect with homeowners
+## Tech Stack
+- **Frontend:** React, TailwindCSS, Shadcn/UI, Leaflet maps
+- **Backend:** FastAPI, Motor (MongoDB async), background threads for AI tasks
+- **AI:** OpenAI GPT Image 1 (image editing), GPT-4o (vision analysis) via Emergent LLM Key
+- **Database:** MongoDB
 
-## Core Requirements
-- Room photo upload with ZIP code, room type selection (14 types), and budget selection
-- Budget-aware AI-generated 3 renovation styles per project
-- Cost estimation based on project type + regional factors
-- Interactive material explorer with PDF export
-- Contractor map showing nearby professionals
-- Lead capture form for quote requests
-- Contractor registration, login, profile management, lead viewing
+## Implemented Features (as of 2026-04-13)
+- [x] 3-step UI flow: Upload → Analysis → Results
+- [x] Multi-image upload (1-3 photos, primary selection)
+- [x] 14 room type visual cards with tailored AI prompts
+- [x] Budget-aware AI design generation (4 tiers)
+- [x] Strict room layout preservation in AI prompts
+- [x] 3 distinct AI renovation styles per room type
+- [x] Before/After sliders for each design
+- [x] Interactive Material Explorer (clickable zones)
+- [x] PDF Materials List export
+- [x] Project Analysis intermediate page with conditions/improvements/costs
+- [x] Specialty-based contractor lead routing
+- [x] Suggested Contractor highlight card on Results page
+- [x] Easter egg: ZIP 70123 → "The Shirtless Handyman" (Ryan Mena)
+- [x] Portfolio page (/portfolio) for real before/after job photos
+- [x] Admin portfolio upload (before/after pairs with title/description/room type)
+- [x] Admin dashboard with stats, leads, contractors, portfolio tabs
+- [x] Contractor registration/login/dashboard
+- [x] Lead capture modal with room photo + design style context
+- [x] Share designs with voting
+- [x] "Seamless Bath" branding throughout
+- [x] "Our Work" nav link + "See Our Work" homepage section
 
-## What's Been Implemented
+## Key Data Models
+- `projects`: id, zip_code, project_type, budget, original_image, additional_images[], status, designs[], cost_estimate, analysis
+- `contractors`: id, company_name, specialties[], service_zip_codes[], rating, phone, email
+- `leads`: id, name, phone, email, zip_code, contractor_id, project_id, status
+- `portfolio`: id, title, description, room_type, before_image, after_image
+- `shares`: id, project_id, designs[], original_image
 
-### March 26, 2026
-- [x] **Project Analysis Step** - New dedicated page between Upload and Results
-- [x] Shows "Step 2 of 3" with professional contractor assessment card
-- [x] Detected Conditions: 5 room-specific issues with severity indicators (red/amber/green)
-- [x] Recommended Improvements: 5 actionable upgrade suggestions with icons
-- [x] Estimated Project Range: 3 cost tiers (Basic, Mid-Range, Full Upgrade) based on budget
-- [x] Dynamic content generated from room type and budget selection
-- [x] Animated loading state while analysis processes
-- [x] "Continue to Design Options" button navigates to results
-- [x] **Lead Routing by Project Type**
-- [x] Bathroom/Shower → Seamless Bathrooms LLC prioritized
-- [x] Kitchen → General Contractors first
-- [x] Garage → Epoxy Flooring specialists first
-- [x] Outdoor → Landscapers/Concrete contractors first
-- [x] **Enhanced AI Prompts** - Room-specific renovation elements
-- [x] 3 Distinct Bathroom Styles: Modern Luxury Spa, Bold Contemporary, Seamless Microcement
-- [x] 6 Specialty Contractors seeded with routing logic
+## API Endpoints
+- POST /api/projects/upload (multi-image)
+- POST /api/projects/{id}/generate
+- GET /api/projects/{id}
+- GET /api/contractors/search?zip_code=&project_type=
+- POST /api/leads
+- GET /api/portfolio (public)
+- POST /api/admin/portfolio (upload)
+- DELETE /api/admin/portfolio/{id}
+- GET /api/admin/stats
+- GET /api/admin/leads
+- GET /api/admin/contractors
 
-### March 16, 2026 (Session 2)
-- [x] **Save Materials List as PDF** - Professional branded PDF with room dimensions
-- [x] Dimension inputs (length × width × height) calculate material quantities
-- [x] PDF includes materials, finishes, costs, contractor info, and quote section
-- [x] Accessible from Material Explorer panel and below each design
-- [x] **Expanded Room Selection** - 14 room types in 3 categories
-- [x] Interior Rooms: Bathroom, Kitchen, Living Room, Bedroom, Kids Room, Home Office
-- [x] Functional Rooms: Garage, Laundry Room, Basement, Mudroom
-- [x] Outdoor Areas: Patio, Pool Deck, Backyard, Outdoor Kitchen
-- [x] Visual card UI with icons replacing dropdown selector
-- [x] All room types have AI prompts and cost estimates defined
-
-### March 16, 2026 (Session 1)
-- [x] **Budget-Aware Design Feature** - Users select budget range (Under $5k, $5k-$10k, $10k-$20k, $20k+)
-- [x] Budget selection UI with 4 styled option cards
-- [x] Backend stores budget in project and enhances AI prompts based on budget tier
-- [x] AI prompts now include budget-specific materials, features, and style guidance
-- [x] **Interactive Material Explorer** - Click zones on AI-generated designs to explore materials
-- [x] 5 clickable zones: Walls, Floors, Fixtures, Countertops, Lighting
-- [x] Slide-out panel shows material name, finish type, cost per sqft
-- [x] Panel displays contractors who specialize in that material type
-- [x] Materials mapped for all renovation styles
-
-### March 14, 2026
-- [x] Home page with hero, how-it-works, categories, CTA sections
-- [x] Upload page with drag-drop photo, ZIP code, project type selector
-- [x] Results page with 3 AI-generated designs, cost estimate, contractor map
-- [x] Before/After slider component for design comparison
-- [x] Shareable results page with voting functionality
-- [x] Contractor login & registration with JWT auth
-- [x] Contractor dashboard with profile editing & leads viewing
-- [x] Lead capture modal with form submission
-- [x] Admin panel for viewing all leads
-- [x] Leaflet contractor map with custom markers
-- [x] 5 sample contractors seeded (New Orleans area)
-- [x] Cost estimation algorithm with regional multipliers
-- [x] Full design system (Fraunces + DM Sans, Deep Jungle Green + Terracotta)
-
-## Test Results (March 16, 2026)
-- Backend: 100% (10/10 tests passed - room types & PDF)
-- Frontend: 100% (all features verified)
-
-## Prioritized Backlog
-### P0 (Critical)
-- None remaining
-
-### P1 (High)
-- Contractor photo upload for portfolio
-- Email notifications for new leads
-
-### P2 (Medium)
-- Contractor reviews and ratings system
-- Multi-image upload support
-- Real ZIP code geocoding API integration
-
-### Future/Backlog
-- Refactor backend/server.py into separate modules (routes, models, services)
-- Add contractor portfolio photo upload
-- Implement email notifications (SendGrid/Resend) for new leads
-- Add real ZIP code geocoding API for accurate distance calculations
+## Backlog
+- [ ] P1: Refactor server.py into modular files (routes/, models/, services/)
+- [ ] P2: Contractor portfolio photo upload (from contractor dashboard)
+- [ ] P2: Email notifications for new leads (SendGrid/Resend)
+- [ ] P2: Real ZIP code geocoding API for accurate distance calculations
+- [ ] P2: Integrate handyman business branding more deeply with Seamless Bath
