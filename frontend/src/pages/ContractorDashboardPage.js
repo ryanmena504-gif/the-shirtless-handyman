@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navbar } from "../components/Navbar";
@@ -26,16 +26,7 @@ export default function ContractorDashboardPage() {
 
   const token = localStorage.getItem("contractor_token");
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/contractor/login");
-      return;
-    }
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const headers = { Authorization: `Bearer ${token}` };
@@ -52,7 +43,15 @@ export default function ContractorDashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, navigate]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/contractor/login");
+      return;
+    }
+    fetchData();
+  }, [token, navigate, fetchData]);
 
   const handleSaveProfile = async () => {
     if (!profile) return;

@@ -39,8 +39,7 @@ export default function ResultsPage() {
 
   useEffect(() => {
     generateDesigns();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId]);
+  }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const generateDesigns = async () => {
     setGenerating(true);
@@ -211,7 +210,7 @@ export default function ResultsPage() {
             <>
               <div className="space-y-10 mb-16" data-testid="designs-grid">
                 {project.designs.map((design, i) => (
-                  <div key={i} data-testid={`design-block-${i}`}>
+                  <div key={design.name} data-testid={`design-block-${i}`}>
                     {/* Design header row */}
                     <button
                       onClick={() => setSelectedDesign(i)}

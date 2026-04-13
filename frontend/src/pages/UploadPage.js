@@ -178,7 +178,7 @@ export default function UploadPage() {
                 <div className="grid grid-cols-3 gap-4 mb-4" data-testid="image-previews">
                   {images.map((img, idx) => (
                     <div
-                      key={idx}
+                      key={img.file.name + idx}
                       className={`relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-200 group ${
                         idx === primaryIndex
                           ? "border-[#D97757] shadow-lg shadow-[#D97757]/20 ring-2 ring-[#D97757]/30"

@@ -514,40 +514,15 @@ RECOMMENDED FIXES:
 Provide honest, professional contractor-style observations. Be specific about what you see."""
 }
 
-def _run_analysis(project_id: str, project: dict, thread_db, loop):
-    """Run AI-powered room analysis in background thread."""
-    import litellm
-    from emergentintegrations.llm.utils import get_integration_proxy_url
-
-    project_type = project["project_type"]
-    
-    # Get the original image
-    original_image_data = project.get("original_image", "")
-    if not original_image_data.startswith("data:"):
-        loop.run_until_complete(
-            thread_db.projects.update_one(
-                {"id": project_id},
-                {"$set": {"analysis_status": "failed", "analysis_error": "No image found"}},
-            )
-        )
-        return
-
-    # Gather additional images for richer context
-    additional_images = project.get("additional_images", [])
-
-    api_key = os.environ.get("EMERGENT_LLM_KEY", "")
-    proxy_url = get_integration_proxy_url() + "/llm"
-
-    # Get appropriate analysis prompt
+def _build_analysis_prompt(project_type, additional_images):
+    """Build the analysis prompt with multi-photo context if applicable."""
     analysis_prompt = ROOM_ANALYSIS_PROMPTS.get(project_type, ROOM_ANALYSIS_PROMPTS["default"])
-
-    num_photos = 1 + len(additional_images)
     multi_photo_note = ""
     if additional_images:
+        num_photos = 1 + len(additional_images)
         multi_photo_note = f"\n\nYou are provided {num_photos} photos of the same room from different angles. Use ALL photos to form a comprehensive assessment. The first image is the primary angle."
     
-    # Build the vision request
-    full_prompt = f"""{analysis_prompt}{multi_photo_note}
+    return f"""{analysis_prompt}{multi_photo_note}
 
 After your analysis, format your response EXACTLY as JSON with this structure:
 {{
@@ -570,55 +545,72 @@ After your analysis, format your response EXACTLY as JSON with this structure:
 
 Provide realistic cost estimates in USD based on typical {project_type.lower()} renovation costs."""
 
-    # Build content array with all images
-    content_parts = [{"type": "text", "text": full_prompt}]
-    content_parts.append({"type": "image_url", "image_url": {"url": original_image_data}})
+
+def _build_vision_content(prompt, original_image, additional_images):
+    """Build the vision API content array with text and image parts."""
+    parts = [{"type": "text", "text": prompt}]
+    parts.append({"type": "image_url", "image_url": {"url": original_image}})
     for extra_img in additional_images:
         if extra_img.startswith("data:"):
-            content_parts.append({"type": "image_url", "image_url": {"url": extra_img}})
+            parts.append({"type": "image_url", "image_url": {"url": extra_img}})
+    return parts
+
+
+def _parse_analysis_response(analysis_text):
+    """Parse JSON from AI analysis response, with fallback."""
+    import json
+    import re
+    json_match = re.search(r'\{[\s\S]*\}', analysis_text)
+    if json_match:
+        return json.loads(json_match.group())
+    return {
+        "detected_conditions": [
+            {"category": "General Assessment", "severity": "moderate", "description": analysis_text[:500]}
+        ],
+        "recommended_fixes": [
+            {"priority": "medium", "fix": "Professional inspection recommended", "reason": "Detailed analysis needed"}
+        ],
+        "cost_impact": {
+            "basic_repair": {"low": 1000, "high": 3000, "description": "Minor repairs and touch-ups"},
+            "mid_level_renovation": {"low": 5000, "high": 15000, "description": "Moderate updates"},
+            "full_upgrade": {"low": 15000, "high": 40000, "description": "Complete renovation"}
+        },
+        "overall_assessment": "A professional on-site inspection is recommended for detailed assessment."
+    }
+
+
+def _run_analysis(project_id: str, project: dict, thread_db, loop):
+    """Run AI-powered room analysis in background thread."""
+    import litellm
+    from emergentintegrations.llm.utils import get_integration_proxy_url
+
+    original_image_data = project.get("original_image", "")
+    if not original_image_data.startswith("data:"):
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"analysis_status": "failed", "analysis_error": "No image found"}},
+            )
+        )
+        return
+
+    additional_images = project.get("additional_images", [])
+    api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+    proxy_url = get_integration_proxy_url() + "/llm"
+
+    full_prompt = _build_analysis_prompt(project["project_type"], additional_images)
+    content_parts = _build_vision_content(full_prompt, original_image_data, additional_images)
 
     try:
         response = litellm.completion(
             model="openai/gpt-4o",
             api_key=api_key,
             api_base=proxy_url,
-            messages=[
-                {
-                    "role": "user",
-                    "content": content_parts
-                }
-            ],
+            messages=[{"role": "user", "content": content_parts}],
             max_tokens=2000,
             timeout=60,
         )
-        
-        analysis_text = response.choices[0].message.content
-        
-        # Try to parse JSON from response
-        import json
-        import re
-        
-        # Extract JSON from response (might be wrapped in markdown code blocks)
-        json_match = re.search(r'\{[\s\S]*\}', analysis_text)
-        if json_match:
-            analysis_data = json.loads(json_match.group())
-        else:
-            # Fallback if JSON parsing fails
-            analysis_data = {
-                "detected_conditions": [
-                    {"category": "General Assessment", "severity": "moderate", "description": analysis_text[:500]}
-                ],
-                "recommended_fixes": [
-                    {"priority": "medium", "fix": "Professional inspection recommended", "reason": "Detailed analysis needed"}
-                ],
-                "cost_impact": {
-                    "basic_repair": {"low": 1000, "high": 3000, "description": "Minor repairs and touch-ups"},
-                    "mid_level_renovation": {"low": 5000, "high": 15000, "description": "Moderate updates"},
-                    "full_upgrade": {"low": 15000, "high": 40000, "description": "Complete renovation"}
-                },
-                "overall_assessment": "A professional on-site inspection is recommended for detailed assessment."
-            }
-        
+        analysis_data = _parse_analysis_response(response.choices[0].message.content)
         loop.run_until_complete(
             thread_db.projects.update_one(
                 {"id": project_id},
@@ -626,7 +618,6 @@ Provide realistic cost estimates in USD based on typical {project_type.lower()} 
             )
         )
         logger.info(f"Analysis complete for {project_id}")
-        
     except Exception as e:
         logger.error(f"Analysis error for {project_id}: {e}")
         loop.run_until_complete(
@@ -805,65 +796,65 @@ SHIRTLESS_HANDYMAN_PROFILE = {
     "is_easter_egg": True,
 }
 
+import math
+
+def _calc_distance_miles(lat1, lng1, lat2, lng2):
+    """Calculate distance in miles between two coordinates using Haversine formula."""
+    dlat = math.radians(lat2 - lat1)
+    dlng = math.radians(lng2 - lng1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2
+    return round(2 * math.asin(math.sqrt(a)) * 3956, 1)
+
+
+def _get_priority_score(contractor, priority_specialties):
+    """Lower score = higher priority. Matches company name first, then specialties."""
+    specialties = contractor.get("specialties", [])
+    company_name = contractor.get("company_name", "").lower()
+    for idx, priority in enumerate(priority_specialties):
+        priority_lower = priority.lower()
+        if priority_lower in company_name:
+            return idx * 10
+        for spec in specialties:
+            if priority_lower in spec.lower() or spec.lower() in priority_lower:
+                return (idx + 1) * 10 + 5
+    return 1000 + contractor.get("distance_miles", 999)
+
+
+def _enrich_contractor_distances(contractors, user_coords):
+    """Add distance_miles to each contractor based on user coordinates."""
+    for c in contractors:
+        clat, clng = c.get("latitude", 0), c.get("longitude", 0)
+        if clat and clng:
+            c["distance_miles"] = _calc_distance_miles(user_coords[0], user_coords[1], clat, clng)
+        else:
+            c["distance_miles"] = 0
+
+
+def _sort_contractors(contractors, project_type):
+    """Sort contractors by specialty routing or distance."""
+    if project_type and project_type in PROJECT_TYPE_ROUTING:
+        priority_specialties = PROJECT_TYPE_ROUTING[project_type]
+        contractors.sort(key=lambda x: (_get_priority_score(x, priority_specialties), x.get("distance_miles", 999)))
+    else:
+        contractors.sort(key=lambda x: x.get("distance_miles", 999))
+
+
 @api_router.get("/contractors/search")
 async def search_contractors(zip_code: str, project_type: str = ""):
     projection = {"_id": 0, "password_hash": 0}
     query = {"service_zip_codes": {"$in": [zip_code, zip_code[:3]]}}
     contractors = await db.contractors.find(query, projection).to_list(50)
 
-    # If no results by zip, get all contractors
     if not contractors:
         contractors = await db.contractors.find({}, projection).to_list(20)
 
     user_coords = get_zip_coords(zip_code)
-
-    # Calculate distance for each contractor
-    for c in contractors:
-        clat = c.get("latitude", 0)
-        clng = c.get("longitude", 0)
-        if clat and clng:
-            import math
-            dlat = math.radians(clat - user_coords[0])
-            dlng = math.radians(clng - user_coords[1])
-            a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(user_coords[0])) * math.cos(math.radians(clat)) * math.sin(dlng / 2) ** 2
-            c_val = 2 * math.asin(math.sqrt(a))
-            c["distance_miles"] = round(c_val * 3956, 1)
-        else:
-            c["distance_miles"] = 0
-
-    # Apply project-type based routing/prioritization
-    if project_type and project_type in PROJECT_TYPE_ROUTING:
-        priority_specialties = PROJECT_TYPE_ROUTING[project_type]
-        
-        def get_priority_score(contractor):
-            """Lower score = higher priority"""
-            specialties = contractor.get("specialties", [])
-            company_name = contractor.get("company_name", "").lower()
-            
-            # Check for priority matches
-            for idx, priority in enumerate(priority_specialties):
-                priority_lower = priority.lower()
-                # Check company name first (highest priority)
-                if priority_lower in company_name:
-                    return idx * 10  # Company name match gets top priority
-                # Check specialties
-                for spec in specialties:
-                    if priority_lower in spec.lower() or spec.lower() in priority_lower:
-                        return (idx + 1) * 10 + 5
-            
-            # No priority match - use distance only (high number)
-            return 1000 + contractor.get("distance_miles", 999)
-        
-        # Sort by priority score first, then by distance
-        contractors.sort(key=lambda x: (get_priority_score(x), x.get("distance_miles", 999)))
-    else:
-        # Default sort by distance only
-        contractors.sort(key=lambda x: x.get("distance_miles", 999))
+    _enrich_contractor_distances(contractors, user_coords)
+    _sort_contractors(contractors, project_type)
 
     # Easter egg: Shirtless Handyman for ZIP 70123
     if zip_code == SHIRTLESS_HANDYMAN_ZIP:
-        handyman = dict(SHIRTLESS_HANDYMAN_PROFILE)
-        contractors.insert(0, handyman)
+        contractors.insert(0, dict(SHIRTLESS_HANDYMAN_PROFILE))
 
     # Mark the top contractor as suggested
     if contractors:

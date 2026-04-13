@@ -324,7 +324,7 @@ export default function AnalysisPage() {
                     const Icon = condition.icon;
                     return (
                       <div 
-                        key={idx}
+                        key={condition.text}
                         className={`flex items-start gap-3 p-3 rounded-xl ${severityStyles[condition.severity]}`}
                         data-testid={`condition-${idx}`}
                       >
@@ -347,7 +347,7 @@ export default function AnalysisPage() {
                     const Icon = improvement.icon;
                     return (
                       <div 
-                        key={idx}
+                        key={improvement.text}
                         className="flex items-start gap-3 p-3 rounded-xl bg-primary/5 border border-primary/10"
                         data-testid={`improvement-${idx}`}
                       >

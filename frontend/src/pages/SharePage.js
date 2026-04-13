@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
@@ -20,12 +20,7 @@ export default function SharePage() {
   const [votes, setVotes] = useState([]);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    fetchShare();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shareId]);
-
-  const fetchShare = async () => {
+  const fetchShare = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/shares/${shareId}`);
       setShare(res.data);
@@ -35,7 +30,11 @@ export default function SharePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [shareId]);
+
+  useEffect(() => {
+    fetchShare();
+  }, [fetchShare]);
 
   const handleVote = async (idx) => {
     if (votedIndex !== null) return;
@@ -134,7 +133,7 @@ export default function SharePage() {
               const isWinner = totalVotes > 0 && votes[i] === Math.max(...votes);
 
               return (
-                <div key={i} className="animate-fade-in-up opacity-0" style={{ animationDelay: `${i * 0.15}s` }} data-testid={`share-design-${i}`}>
+                <div key={`design-${design.name}`} className="animate-fade-in-up opacity-0" style={{ animationDelay: `${i * 0.15}s` }} data-testid={`share-design-${i}`}>
                   {/* Style label */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">

@@ -108,7 +108,7 @@ class TestContractorSearch:
         assert len(contractors) > 0, "Expected at least one contractor"
         
         # First contractor should have is_suggested=true
-        assert contractors[0].get('is_suggested') == True, f"First contractor should have is_suggested=true, got {contractors[0].get('is_suggested')}"
+        assert contractors[0].get('is_suggested') is True, f"First contractor should have is_suggested=true, got {contractors[0].get('is_suggested')}"
         print(f"PASS: Contractor search returns is_suggested=true on first contractor: {contractors[0]['company_name']}")
 
     def test_easter_egg_zip_70123_shirtless_handyman(self):
@@ -121,8 +121,8 @@ class TestContractorSearch:
         
         first_contractor = contractors[0]
         assert first_contractor['company_name'] == "The Shirtless Handyman", f"Expected 'The Shirtless Handyman', got {first_contractor['company_name']}"
-        assert first_contractor.get('is_easter_egg') == True, "Expected is_easter_egg=true"
-        assert first_contractor.get('is_suggested') == True, "Expected is_suggested=true"
+        assert first_contractor.get('is_easter_egg') is True, "Expected is_easter_egg=true"
+        assert first_contractor.get('is_suggested') is True, "Expected is_suggested=true"
         print(f"PASS: Easter egg ZIP 70123 returns 'The Shirtless Handyman' with is_easter_egg=true")
 
     def test_regular_zip_no_easter_egg(self):
