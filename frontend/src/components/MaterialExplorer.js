@@ -640,7 +640,7 @@ const MaterialPanel = ({ material, zone, contractors, onClose, onRequestQuote, o
                       <div className="flex items-center gap-1 mt-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
-                            key={i}
+                            key={`me-star-${c.id}-${i}`}
                             className={`w-3 h-3 ${
                               i < Math.round(c.rating || 0) ? "fill-[#D97757] text-[#D97757]" : "text-gray-300"
                             }`}

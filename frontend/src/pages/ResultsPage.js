@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navbar } from "../components/Navbar";
@@ -36,21 +36,15 @@ export default function ResultsPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    generateDesigns();
-  }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const generateDesigns = async () => {
+  const generateDesigns = useCallback(async () => {
     setGenerating(true);
     setError(null);
     try {
-      // First check if project already has results
       const checkRes = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
       if (checkRes.data.status === "completed" && checkRes.data.designs?.length > 0) {
         setProject(checkRes.data);
         setSelectedDesign(0);
         setGenerating(false);
-        // Fetch contractors with project type for routing
         const zip = zipCode || checkRes.data.zip_code || "10001";
         const projectType = checkRes.data.project_type || "";
         const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}&project_type=${encodeURIComponent(projectType)}`);
@@ -59,12 +53,10 @@ export default function ResultsPage() {
         return;
       }
 
-      // Trigger generation (returns immediately)
       await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 15000 });
 
-      // Poll for completion
       const pollInterval = 3000;
-      const maxAttempts = 60; // 3 minutes max
+      const maxAttempts = 60;
       let attempts = 0;
 
       const poll = async () => {
@@ -77,8 +69,6 @@ export default function ResultsPage() {
             setProject(data);
             setSelectedDesign(0);
             setGenerating(false);
-
-            // Fetch contractors with project type for routing
             const zip = zipCode || data.zip_code || "10001";
             const projectType = data.project_type || "";
             const cRes = await axios.get(`${API}/contractors/search?zip_code=${zip}&project_type=${encodeURIComponent(projectType)}`);
@@ -98,7 +88,6 @@ export default function ResultsPage() {
             return;
           }
 
-          // Still generating
           if (attempts < maxAttempts) {
             setTimeout(poll, pollInterval);
           } else {
@@ -115,7 +104,6 @@ export default function ResultsPage() {
         }
       };
 
-      // Start polling after a brief delay
       setTimeout(poll, 2000);
 
     } catch (err) {
@@ -128,7 +116,11 @@ export default function ResultsPage() {
       toast.error("Generation failed");
       setGenerating(false);
     }
-  };
+  }, [projectId, zipCode]);
+
+  useEffect(() => {
+    generateDesigns();
+  }, [generateDesigns]);
 
   const cost = project?.cost_estimate;
 
@@ -333,7 +325,7 @@ export default function ResultsPage() {
                         <div className="flex items-center gap-1 mb-3">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
-                              key={i}
+                              key={`star-suggested-${i}`}
                               className={`w-4 h-4 ${
                                 i < Math.round(contractors[0].rating || 0) ? "fill-[#D97757] text-[#D97757]" : "text-gray-300"
                               }`}
@@ -405,7 +397,7 @@ export default function ResultsPage() {
                       <div className="flex items-center gap-1 mb-2">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
-                            key={i}
+                            key={`star-${c.id}-${i}`}
                             className={`w-3.5 h-3.5 ${
                               i < Math.round(c.rating || 0) ? "fill-[#D97757] text-[#D97757]" : "text-gray-300"
                             }`}

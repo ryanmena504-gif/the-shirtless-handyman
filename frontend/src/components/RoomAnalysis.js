@@ -131,7 +131,7 @@ const RoomAnalysis = ({ analysis, projectType, isLoading }) => {
             <div className="space-y-2">
               {visibleConditions.map((condition, idx) => (
                 <div
-                  key={idx}
+                  key={condition.category + condition.description}
                   className={`flex items-start gap-3 p-3 rounded-lg border ${severityColors[condition.severity] || severityColors.moderate}`}
                   data-testid={`condition-${idx}`}
                 >
@@ -171,7 +171,7 @@ const RoomAnalysis = ({ analysis, projectType, isLoading }) => {
             <div className="space-y-2">
               {visibleFixes.map((fix, idx) => (
                 <div
-                  key={idx}
+                  key={fix.fix + fix.priority}
                   className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/40"
                   data-testid={`fix-${idx}`}
                 >

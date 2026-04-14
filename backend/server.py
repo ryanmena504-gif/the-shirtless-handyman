@@ -201,24 +201,52 @@ def _run_generation_sync(project_id: str, project: dict):
         loop.close()
 
 
-def _do_generation(project_id: str, project: dict, thread_db, loop):
+def _extract_image_bytes(image_data_uri):
+    """Extract raw bytes from a data URI image."""
+    if not image_data_uri.startswith("data:"):
+        return None
+    b64_part = image_data_uri.split(",", 1)[1]
+    return base64.b64decode(b64_part)
+
+
+def _generate_single_design(style, image_bytes, budget_mod, preservation_suffix, api_key, proxy_url):
+    """Generate a single design variant using the AI image editor. Returns dict or None."""
     import litellm
+
+    full_prompt = f"{style['prompt']} {budget_mod['materials']}, {budget_mod['features']}, {budget_mod['style']}.{preservation_suffix}"
+
+    response = litellm.image_edit(
+        image=image_bytes,
+        prompt=full_prompt,
+        model="openai/gpt-image-1",
+        api_key=api_key,
+        api_base=proxy_url,
+        quality="low",
+        n=1,
+        timeout=180,
+    )
+    if not response or not response.data:
+        return None
+
+    img = response.data[0]
+    if hasattr(img, 'b64_json') and img.b64_json:
+        return {"name": style["name"], "image": f"data:image/png;base64,{img.b64_json}"}
+    if hasattr(img, 'url') and img.url:
+        import requests as req
+        img_response = req.get(img.url, timeout=30)
+        return {"name": style["name"], "image": f"data:image/png;base64,{base64.b64encode(img_response.content).decode('utf-8')}"}
+    return None
+
+
+def _do_generation(project_id: str, project: dict, thread_db, loop):
     from emergentintegrations.llm.utils import get_integration_proxy_url
 
     project_type = project["project_type"]
-    budget = project.get("budget", "10k_20k")  # Default to mid-high if not set
+    budget = project.get("budget", "10k_20k")
     styles = STYLE_PROMPTS.get(project_type, STYLE_PROMPTS["Bathroom"])
-    
-    # Get budget modifier for prompt enhancement
     budget_mod = BUDGET_MODIFIERS.get(budget, BUDGET_MODIFIERS["10k_20k"])
 
-    # Get the original image bytes
-    original_image_data = project.get("original_image", "")
-    image_bytes = None
-    if original_image_data.startswith("data:"):
-        b64_part = original_image_data.split(",", 1)[1]
-        image_bytes = base64.b64decode(b64_part)
-
+    image_bytes = _extract_image_bytes(project.get("original_image", ""))
     if not image_bytes:
         loop.run_until_complete(
             thread_db.projects.update_one(
@@ -230,48 +258,20 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
 
     api_key = os.environ.get("EMERGENT_LLM_KEY", "")
     proxy_url = get_integration_proxy_url() + "/llm"
-
-    # Reinforcement suffix to ensure room preservation
     preservation_suffix = " IMPORTANT: This must look like the SAME room after renovation. Preserve the exact camera angle, room shape, wall positions, door locations, and window placements from the original photo. Only change materials, finishes, fixtures, and decor."
 
     designs = []
     for style in styles:
         try:
-            # Enhance the prompt with budget-specific context and preservation reminder
-            full_prompt = f"{style['prompt']} {budget_mod['materials']}, {budget_mod['features']}, {budget_mod['style']}.{preservation_suffix}"
-            
-            response = litellm.image_edit(
-                image=image_bytes,
-                prompt=full_prompt,
-                model="openai/gpt-image-1",
-                api_key=api_key,
-                api_base=proxy_url,
-                quality="low",
-                n=1,
-                timeout=180,
-            )
-            if response and response.data:
-                img = response.data[0]
-                if hasattr(img, 'b64_json') and img.b64_json:
-                    designs.append({
-                        "name": style["name"],
-                        "image": f"data:image/png;base64,{img.b64_json}",
-                    })
-                elif hasattr(img, 'url') and img.url:
-                    import requests
-                    img_response = requests.get(img.url, timeout=30)
-                    designs.append({
-                        "name": style["name"],
-                        "image": f"data:image/png;base64,{base64.b64encode(img_response.content).decode('utf-8')}",
-                    })
+            result = _generate_single_design(style, image_bytes, budget_mod, preservation_suffix, api_key, proxy_url)
+            if result:
+                designs.append(result)
             logger.info(f"Generated: {style['name']} for project {project_id} (budget: {budget})")
         except Exception as e:
             logger.error(f"Image edit error for {style['name']}: {e}")
 
-    # Calculate cost estimate
     cost = estimate_cost(project_type, project["zip_code"])
-
-    status = "completed" if len(designs) > 0 else "failed"
+    status = "completed" if designs else "failed"
     loop.run_until_complete(
         thread_db.projects.update_one(
             {"id": project_id},

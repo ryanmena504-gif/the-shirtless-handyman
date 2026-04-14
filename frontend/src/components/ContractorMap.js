@@ -59,7 +59,7 @@ export const ContractorMap = ({ contractors = [], userLocation, onRequestQuote }
                 <div className="flex items-center gap-1 mb-1">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
-                      key={i}
+                      key={`map-star-${c.id}-${i}`}
                       className={`w-3 h-3 ${i < Math.round(c.rating || 0) ? "fill-[#D97757] text-[#D97757]" : "text-gray-300"}`}
                     />
                   ))}

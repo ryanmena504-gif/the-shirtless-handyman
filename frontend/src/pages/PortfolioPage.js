@@ -22,8 +22,8 @@ export default function PortfolioPage() {
     try {
       const res = await axios.get(`${API}/portfolio`);
       setItems(res.data.items || []);
-    } catch {
-      // Silently handle - empty portfolio is fine
+    } catch (err) {
+      console.error("Failed to load portfolio:", err);
     } finally {
       setLoading(false);
     }

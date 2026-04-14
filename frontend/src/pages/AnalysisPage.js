@@ -224,26 +224,28 @@ export default function AnalysisPage() {
   const analysisData = ROOM_ANALYSIS_DATA[projectType] || ROOM_ANALYSIS_DATA.Bathroom;
   const costData = COST_RANGES[projectType]?.[budget] || COST_RANGES.default[budget] || COST_RANGES.default["10k_20k"];
 
-  // Simulate analysis progress
+  // Simulate analysis progress (runs once on mount — state setters are stable)
   useEffect(() => {
-    const steps = [
-      { delay: 800, step: 1 },   // Scanning image
-      { delay: 1500, step: 2 },  // Detecting conditions
-      { delay: 2200, step: 3 },  // Generating recommendations
-      { delay: 2800, step: 4 },  // Calculating costs
-      { delay: 3500, step: 5 },  // Complete
+    const timers = [
+      { delay: 800, step: 1 },
+      { delay: 1500, step: 2 },
+      { delay: 2200, step: 3 },
+      { delay: 2800, step: 4 },
+      { delay: 3500, step: 5 },
     ];
 
-    steps.forEach(({ delay, step }) => {
+    const ids = timers.map(({ delay, step }) =>
       setTimeout(() => {
         setCurrentStep(step);
         if (step === 5) {
           setIsAnalyzing(false);
           setAnalysisComplete(true);
         }
-      }, delay);
-    });
-  }, []);
+      }, delay)
+    );
+
+    return () => ids.forEach(clearTimeout);
+  }, [setCurrentStep, setIsAnalyzing, setAnalysisComplete]);
 
   const handleContinue = () => {
     navigate(`/results/${projectId}`, {
