@@ -3,41 +3,156 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
+        <meta name="theme-color" content="#1A3C34" />
+
+        <!-- Primary SEO Meta Tags -->
+        <title>The Shirtless Handyman | Seamless Surface Renovations | Ryan Mena</title>
+        <meta name="description" content="The Shirtless Handyman — high-end seamless surface renovations by Ryan Mena. Microcement, tadelakt, venetian plaster, rockscape walls & more. Serving Greater New Orleans. Upload a photo, see your renovation before you build it." />
+        <meta name="keywords" content="shirtless handyman, seamless bath, seamless surfaces, microcement, tadelakt, venetian plaster, roman clay, rockscape, bathroom renovation, kitchen remodel, New Orleans contractor, Ryan Mena, renovation visualizer, AI renovation, home remodel" />
+        <meta name="author" content="Ryan Mena — The Shirtless Handyman" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://theshirtlesshandyman.com" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://theshirtlesshandyman.com" />
+        <meta property="og:title" content="The Shirtless Handyman | Seamless Surface Renovations" />
+        <meta property="og:description" content="High-end seamless surface renovations — microcement, tadelakt, venetian plaster, rockscape accent walls. Upload a room photo, get AI-generated designs instantly. Serving Greater New Orleans." />
+        <meta property="og:site_name" content="The Shirtless Handyman" />
+        <meta property="og:locale" content="en_US" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="The Shirtless Handyman | Seamless Surface Renovations" />
+        <meta name="twitter:description" content="See your renovation before you build it. AI-powered seamless surface design by Ryan Mena. Microcement, tadelakt, venetian plaster & rockscape." />
+
+        <!-- Geo Tags (New Orleans area) -->
+        <meta name="geo.region" content="US-LA" />
+        <meta name="geo.placename" content="New Orleans" />
+
+        <!-- Robots -->
+        <meta name="robots" content="index, follow" />
+
+        <!-- Structured Data: Local Business (JSON-LD) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "HomeAndConstructionBusiness",
+            "name": "The Shirtless Handyman",
+            "alternateName": "Seamless Bath",
+            "description": "High-end seamless surface renovations — microcement, tadelakt, venetian plaster, Roman clay, rockscape accent walls, and more. AI-powered renovation visualization. Serving Greater New Orleans.",
+            "url": "https://theshirtlesshandyman.com",
+            "telephone": "(504) 555-RYAN",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "New Orleans",
+                "addressRegion": "LA",
+                "postalCode": "70123",
+                "addressCountry": "US"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 29.9100,
+                "longitude": -90.0500
+            },
+            "areaServed": {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 29.9511,
+                    "longitude": -90.0715
+                },
+                "geoRadius": "50 mi"
+            },
+            "founder": {
+                "@type": "Person",
+                "name": "Ryan Mena"
+            },
+            "knowsAbout": [
+                "Microcement",
+                "Tadelakt",
+                "Venetian Plaster",
+                "Roman Clay",
+                "Marmorino",
+                "Stucco Lustro",
+                "Grassello di Calce",
+                "Beton Cire",
+                "Cocciopesto",
+                "Microterrazzo",
+                "Micro Quartz",
+                "Rockscape Accent Walls",
+                "Seamless Epoxy Flooring",
+                "Lime Wash",
+                "Bathroom Renovation",
+                "Kitchen Remodel",
+                "Interior Design"
+            ],
+            "serviceType": [
+                "Seamless Surface Installation",
+                "Bathroom Renovation",
+                "Kitchen Remodeling",
+                "Interior Renovation",
+                "Rockscape Accent Walls",
+                "Pool Deck Resurfacing",
+                "Outdoor Kitchen Construction"
+            ],
+            "priceRange": "$$$",
+            "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "opens": "07:00",
+                "closes": "18:00"
+            }
+        }
+        </script>
+
+        <!-- Structured Data: WebSite (enables sitelinks search) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "The Shirtless Handyman",
+            "url": "https://theshirtlesshandyman.com",
+            "description": "AI-powered seamless surface renovation visualizer by Ryan Mena",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://theshirtlesshandyman.com/upload",
+                "query-input": "required name=room_type"
+            }
+        }
+        </script>
+
+        <!-- Structured Data: Service -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "AI Renovation Visualization",
+            "description": "Upload a photo of your room and instantly see AI-generated seamless surface renovation designs. Get cost estimates and connect with local contractors.",
+            "provider": {
+                "@type": "HomeAndConstructionBusiness",
+                "name": "The Shirtless Handyman"
+            },
+            "areaServed": {
+                "@type": "State",
+                "name": "Louisiana"
+            },
+            "serviceType": "Home Renovation Visualization"
+        }
+        </script>
+
+        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-        -->
-        <!--
-        Notice the use of %PUBLIC_URL% in the tags above.
-        It will be replaced with the URL of the `public` folder during the build.
-        Only files inside the `public` folder can be referenced from the HTML.
 
-        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-        work correctly both with client-side routing and a non-root public URL.
-        Learn how to configure a non-root public URL by running `npm run build`.
-        -->
-        <title>Emergent | Fullstack App</title>
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
         <script>
             !(function (t, e) {
                 var o, n, p, r;
@@ -102,7 +217,7 @@
             })(document, window.posthog || []);
             posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
                 api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
+                person_profiles: "identified_only",
                 session_recording: {
                     recordCrossOriginIframes: true,
                     capturePerformance: false,
