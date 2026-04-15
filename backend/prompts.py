@@ -215,7 +215,7 @@ SHIRTLESS_HANDYMAN_PROFILE = {
     "email": "ryan@shirtlesshandyman.com",
     "specialties": ["Handyman", "General Contractor", "Bathroom", "Kitchen", "Remodeling", "Interior"],
     "service_zip_codes": ["70123", "701"],
-    "phone": "(504) 555-RYAN",
+    "phone": "(504) 264-4919",
     "description": "Ryan Mena — your local shirtless handyman and high-end interior specialist. From quick fixes to full luxury renovations, no job too big or small. Serving the Westbank and all of Greater New Orleans.",
     "photos": [],
     "latitude": 29.9100,
