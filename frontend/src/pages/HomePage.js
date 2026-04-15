@@ -37,7 +37,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest font-semibold text-white/70 mb-4 animate-fade-in-up opacity-0 stagger-1">
-                AI-Powered Home Renovation
+                The Shirtless Handyman — Seamless Surfaces
               </p>
               <h1
                 className="text-5xl md:text-7xl font-light tracking-tight leading-[1.1] text-white mb-6 animate-fade-in-up opacity-0 stagger-2"
@@ -208,7 +208,7 @@ export default function HomePage() {
       <footer className="border-t border-border/40 py-12 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Seamless Bath. All rights reserved.
+            &copy; {new Date().getFullYear()} The Shirtless Handyman. All rights reserved.
           </p>
           <div className="flex gap-6">
             <button

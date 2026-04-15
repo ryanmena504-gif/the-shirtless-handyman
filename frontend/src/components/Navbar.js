@@ -22,9 +22,14 @@ export const Navbar = () => {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <Hammer className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-lg tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>
-            Seamless Bath
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="font-semibold text-lg tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>
+              The Shirtless Handyman
+            </span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium -mt-0.5">
+              Seamless Surfaces
+            </span>
+          </div>
         </Link>
 
         {/* Desktop nav */}
