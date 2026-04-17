@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
-import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
 
@@ -473,32 +473,168 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== BOTTOM CTA ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="cta-section">
+      {/* ===== PRICING ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="pricing-section">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-[#0E0E0E] rounded-3xl p-12 md:p-20 text-center relative overflow-hidden">
-            <div className="relative z-10">
-              <h2
-                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4"
+          <div className="text-center mb-6">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
+              Pricing
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Straight pricing. No surprises.
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+              Every project is different — the AI tool helps you and us understand the scope before we talk numbers. Here's the general range.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
+            {/* Tier 1 */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-handyman">
+              <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
+                <Wrench className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <h3
+                className="text-xl font-medium text-foreground mb-1"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Got a project? Text it to Ryan.
-              </h2>
-              <p className="text-base text-white/50 mb-10 max-w-lg mx-auto">
-                Send a photo, a description, or just an idea. No sales pitch — just straight answers on what it'll take and what it'll cost.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <a href={SMS_LINK} data-testid="cta-text-btn">
-                  <Button className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Text {PHONE}
+                Small Jobs
+              </h3>
+              <p className="text-xs text-muted-foreground mb-5">Handyman & repairs</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">$150 <span className="text-base font-normal text-muted-foreground">— $500</span></p>
+              <p className="text-xs text-muted-foreground mb-6">Per job</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                {["Drywall patches & paint touch-ups", "Fixture & hardware installs", "Door and trim repairs", "Pressure washing", "Caulking & sealing"].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a href={SMS_LINK} className="mt-auto">
+                <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
+                  Text for a Quote
+                </Button>
+              </a>
+            </div>
+
+            {/* Tier 2 — highlighted */}
+            <div className="bg-[#0E0E0E] border-2 border-[#D97757]/40 rounded-2xl p-8 flex flex-col relative" data-testid="pricing-surface">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                <span className="px-4 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider">
+                  Most Popular
+                </span>
+              </div>
+              <div className="w-11 h-11 rounded-xl bg-[#D97757]/15 flex items-center justify-center mb-5">
+                <Paintbrush className="w-5 h-5 text-[#D97757]" />
+              </div>
+              <h3
+                className="text-xl font-medium text-white mb-1"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Surface Upgrades
+              </h3>
+              <p className="text-xs text-white/40 mb-5">Single room or area</p>
+              <p className="text-3xl font-semibold text-white mb-1">$2,000 <span className="text-base font-normal text-white/40">— $8,000</span></p>
+              <p className="text-xs text-white/40 mb-6">Per room / zone</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                {["Shower or tub surround in tadelakt", "Bathroom walls in microcement", "Kitchen backsplash in venetian plaster", "Single accent or rockscape wall", "Floor coating for one room"].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-white/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0 mt-1.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                onClick={() => navigate("/upload")}
+                className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Preview with AI Tool
+              </Button>
+            </div>
+
+            {/* Tier 3 */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-full">
+              <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
+                <Home className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <h3
+                className="text-xl font-medium text-foreground mb-1"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Full Transformations
+              </h3>
+              <p className="text-xs text-muted-foreground mb-5">Multi-room seamless overhaul</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">$8,000<span className="text-base font-normal text-muted-foreground">+</span></p>
+              <p className="text-xs text-muted-foreground mb-6">Full project scope</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                {["Entire bathroom seamless conversion", "Kitchen walls, counters & floors", "Multiple rooms wall-to-wall", "Pool deck + outdoor kitchen", "Custom rockscape feature walls"].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a href={SMS_LINK} className="mt-auto">
+                <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
+                  Text for a Custom Quote
+                </Button>
+              </a>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground mt-8 max-w-md mx-auto">
+            Not sure which tier? Upload a photo to the AI tool — it'll show you the scope and give you a cost estimate before you commit to anything.
+          </p>
+        </div>
+      </section>
+
+      {/* ===== CLOSING CTA ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="closing-cta-section">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-[#0E0E0E] rounded-3xl overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#D97757]/10 via-transparent to-transparent" />
+            <div className="relative z-10 p-12 md:p-20">
+              <div className="max-w-2xl mx-auto text-center">
+                <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-5">
+                  Your Space. Seamless.
+                </p>
+                <h2
+                  className="text-3xl md:text-5xl font-light tracking-tight text-white mb-6 leading-tight"
+                  style={{ fontFamily: "'Fraunces', serif" }}
+                >
+                  See your space before<br />you build it.
+                </h2>
+                <p className="text-base text-white/50 mb-4 max-w-lg mx-auto leading-relaxed">
+                  Seamless microcement. Tadelakt. Venetian plaster. Rockscape walls. No grout, no seams, no compromises — applied to bathrooms, kitchens, floors, pool decks, and every surface in between.
+                </p>
+                <p className="text-base text-white/50 mb-10 max-w-lg mx-auto leading-relaxed">
+                  Upload a photo right now and let our AI show you exactly what your space could look like. Or text Ryan your project — he'll give you a straight answer.
+                </p>
+
+                <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+                  <Button
+                    onClick={() => navigate("/upload")}
+                    className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                    data-testid="closing-upload-btn"
+                  >
+                    <Upload className="w-5 h-5 mr-2" />
+                    Upload Your Photo Now
                   </Button>
-                </a>
-                <a href={TEL_LINK} data-testid="cta-call-btn">
-                  <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium">
-                    <Phone className="w-5 h-5 mr-2" />
-                    Call Instead
-                  </Button>
+                  <a href={SMS_LINK} data-testid="closing-text-btn">
+                    <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      Text {PHONE}
+                    </Button>
+                  </a>
+                </div>
+
+                <a href={TEL_LINK} className="text-sm text-white/30 hover:text-white/60 underline underline-offset-2 transition-colors">
+                  Or call {PHONE}
                 </a>
               </div>
             </div>
