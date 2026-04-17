@@ -24,8 +24,8 @@ export default function ContractorLoginPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/contractors/login`, { email, password });
-      localStorage.setItem("contractor_token", res.data.token);
+      const res = await axios.post(`${API}/contractors/login`, { email, password }, { withCredentials: true });
+      localStorage.setItem("contractor_token", "authenticated");
       localStorage.setItem("contractor_info", JSON.stringify(res.data.contractor));
       toast.success("Welcome back!");
       navigate("/contractor/dashboard");

@@ -99,11 +99,11 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
             {submitted ? "Request Sent!" : "Request a Quote"}
           </DialogTitle>
           <DialogDescription>
-            {submitted
-              ? "A contractor will reach out to you shortly."
-              : contractor
-              ? `Get a quote from ${contractor.company_name}`
-              : "Fill in your details and we'll connect you with a contractor"}
+            {(() => {
+              if (submitted) return "A contractor will reach out to you shortly.";
+              if (contractor) return `Get a quote from ${contractor.company_name}`;
+              return "Fill in your details and we'll connect you with a contractor";
+            })()}
           </DialogDescription>
         </DialogHeader>
 

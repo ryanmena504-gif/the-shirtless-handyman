@@ -45,8 +45,8 @@ export default function ContractorRegisterPage() {
         ...form,
         specialties,
         service_zip_codes: form.service_zip_codes.split(",").map((s) => s.trim()).filter(Boolean),
-      });
-      localStorage.setItem("contractor_token", res.data.token);
+      }, { withCredentials: true });
+      localStorage.setItem("contractor_token", "authenticated");
       localStorage.setItem("contractor_info", JSON.stringify(res.data.contractor));
       toast.success("Registration successful! Welcome aboard.");
       navigate("/contractor/dashboard");

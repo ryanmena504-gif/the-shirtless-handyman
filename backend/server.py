@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, Request
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -15,7 +16,7 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from auth import hash_password, verify_password, create_token, decode_token
+from auth import hash_password, verify_password, create_token, decode_token, set_auth_cookie, clear_auth_cookie
 from cost_estimator import estimate_cost
 from models.schemas import (
     ContractorRegister, ContractorLogin, ContractorUpdate,
@@ -480,14 +481,16 @@ async def register_contractor(data: ContractorRegister):
     await db.contractors.insert_one(contractor)
 
     token = create_token(contractor_id)
-    return {
+    response = JSONResponse(content={
         "token": token,
         "contractor": {
             "id": contractor_id,
             "email": data.email,
             "company_name": data.company_name,
         },
-    }
+    })
+    set_auth_cookie(response, token)
+    return response
 
 
 @api_router.post("/contractors/login")
@@ -497,14 +500,16 @@ async def login_contractor(data: ContractorLogin):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_token(contractor["id"])
-    return {
+    response = JSONResponse(content={
         "token": token,
         "contractor": {
             "id": contractor["id"],
             "email": contractor["email"],
             "company_name": contractor["company_name"],
         },
-    }
+    })
+    set_auth_cookie(response, token)
+    return response
 
 
 @api_router.get("/contractors/me")
@@ -513,6 +518,13 @@ async def get_my_profile(contractor_id: str = Depends(decode_token)):
     if not contractor:
         raise HTTPException(status_code=404, detail="Contractor not found")
     return contractor
+
+
+@api_router.post("/auth/logout")
+async def logout():
+    response = JSONResponse(content={"message": "Logged out"})
+    clear_auth_cookie(response)
+    return response
 
 
 @api_router.put("/contractors/me")
@@ -647,7 +659,9 @@ async def admin_login(data: AdminLogin):
     if not admin_pw or data.password != admin_pw:
         raise HTTPException(status_code=401, detail="Invalid admin password")
     token = create_token("admin")
-    return {"token": token, "role": "admin"}
+    response = JSONResponse(content={"token": token, "role": "admin"})
+    set_auth_cookie(response, token)
+    return response
 
 @api_router.get("/admin/leads")
 async def admin_get_all_leads(admin_id: str = Depends(decode_token)):
@@ -752,118 +766,83 @@ async def get_public_portfolio():
 # --- Seed Data ---
 
 @api_router.post("/seed")
+def _build_contractor(email, company_name, specialties, service_zips, phone, description, lat, lng, rating, reviews):
+    """Build a contractor seed document."""
+    return {
+        "id": str(uuid.uuid4()),
+        "email": email,
+        "password_hash": hash_password("password123"),
+        "company_name": company_name,
+        "specialties": specialties,
+        "service_zip_codes": service_zips,
+        "phone": phone,
+        "description": description,
+        "photos": [],
+        "latitude": lat,
+        "longitude": lng,
+        "rating": rating,
+        "review_count": reviews,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def _get_seed_contractors():
+    """Return the list of seed contractor documents."""
+    nola_zips = ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130"]
+    return [
+        _build_contractor(
+            "info@seamlessbathrooms.com", "Seamless Bathrooms LLC",
+            ["Seamless Bathrooms", "Microcement", "Bathroom", "Shower", "Tile"],
+            nola_zips + ["70124", "70125"],
+            "(504) 555-0001", "New Orleans' premier seamless bathroom specialists. We transform bathrooms with microcement, luxury tile, and modern spa designs. Grout-free, waterproof, stunning results.",
+            29.9546, -90.0701, 4.9, 247,
+        ),
+        _build_contractor(
+            "info@crescentcityreno.com", "Crescent City General Contractors",
+            ["General Contractor", "Kitchen", "Remodeling", "Bathroom"],
+            nola_zips,
+            "(504) 555-0101", "Full-service general contracting for kitchen remodels, additions, and whole-home renovations. Licensed and insured in Louisiana.",
+            29.9520, -90.0750, 4.8, 184,
+        ),
+        _build_contractor(
+            "info@nolaepoxypros.com", "NOLA Epoxy Pros",
+            ["Epoxy Flooring", "Garage", "Concrete", "Industrial Flooring"],
+            ["701", "700", "70112", "70113", "70114", "70115", "70124", "70125", "70126", "70131"],
+            "(504) 555-0202", "Professional epoxy floor coatings for garages, workshops, and commercial spaces. Metallic finishes, chip systems, and industrial-grade solutions.",
+            29.9369, -90.0332, 4.7, 112,
+        ),
+        _build_contractor(
+            "info@bigeasylandscaping.com", "Big Easy Landscaping & Hardscape",
+            ["Landscaping", "Hardscape", "Concrete", "Patio", "Outdoor"],
+            ["701", "700", "70116", "70117", "70118", "70119", "70124", "70127", "70128"],
+            "(504) 555-0303", "Complete outdoor living transformations - patios, pool decks, outdoor kitchens, landscaping, and decorative concrete. Built for New Orleans climate.",
+            29.9624, -90.0586, 4.6, 156,
+        ),
+        _build_contractor(
+            "info@gardendistrict.com", "Garden District Pool & Patio",
+            ["Pool", "Concrete", "Landscaping", "Outdoor", "Pool Deck"],
+            ["701", "700", "70115", "70118", "70125", "70130", "70113"],
+            "(504) 555-0404", "Luxury pool decks, patios, and outdoor living spaces in the Garden District and Uptown. Travertine, pavers, and custom concrete designs.",
+            29.9260, -90.1004, 4.8, 143,
+        ),
+        _build_contractor(
+            "info@bayouremodelingco.com", "Bayou Remodeling Co.",
+            ["General Contractor", "Kitchen", "Bathroom", "Remodeling"],
+            ["701", "700", "70112", "70114", "70126", "70127", "70128", "70131", "70148"],
+            "(504) 555-0505", "From Lakeview to the Westbank, quality kitchen and bath remodels across Greater New Orleans. 20+ years experience.",
+            30.0037, -90.1084, 4.5, 98,
+        ),
+    ]
+
+
 async def seed_data():
     count = await db.contractors.count_documents({})
     if count > 0:
         return {"message": "Data already seeded", "count": count}
 
-    sample_contractors = [
-        # PRIORITY: Seamless Bathrooms LLC - for Bathroom/Shower projects
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@seamlessbathrooms.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "Seamless Bathrooms LLC",
-            "specialties": ["Seamless Bathrooms", "Microcement", "Bathroom", "Shower", "Tile"],
-            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130", "70124", "70125"],
-            "phone": "(504) 555-0001",
-            "description": "New Orleans' premier seamless bathroom specialists. We transform bathrooms with microcement, luxury tile, and modern spa designs. Grout-free, waterproof, stunning results.",
-            "photos": [],
-            "latitude": 29.9546,
-            "longitude": -90.0701,
-            "rating": 4.9,
-            "review_count": 247,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        # General Contractor - for Kitchen projects
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@crescentcityreno.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "Crescent City General Contractors",
-            "specialties": ["General Contractor", "Kitchen", "Remodeling", "Bathroom"],
-            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130"],
-            "phone": "(504) 555-0101",
-            "description": "Full-service general contracting for kitchen remodels, additions, and whole-home renovations. Licensed and insured in Louisiana.",
-            "photos": [],
-            "latitude": 29.9520,
-            "longitude": -90.0750,
-            "rating": 4.8,
-            "review_count": 184,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        # Epoxy Flooring Specialist - for Garage projects
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@nolaepoxypros.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "NOLA Epoxy Pros",
-            "specialties": ["Epoxy Flooring", "Garage", "Concrete", "Industrial Flooring"],
-            "service_zip_codes": ["701", "700", "70112", "70113", "70114", "70115", "70124", "70125", "70126", "70131"],
-            "phone": "(504) 555-0202",
-            "description": "Professional epoxy floor coatings for garages, workshops, and commercial spaces. Metallic finishes, chip systems, and industrial-grade solutions.",
-            "photos": [],
-            "latitude": 29.9369,
-            "longitude": -90.0332,
-            "rating": 4.7,
-            "review_count": 112,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        # Landscaping & Concrete - for Outdoor projects
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@bigeasylandscaping.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "Big Easy Landscaping & Hardscape",
-            "specialties": ["Landscaping", "Hardscape", "Concrete", "Patio", "Outdoor"],
-            "service_zip_codes": ["701", "700", "70116", "70117", "70118", "70119", "70124", "70127", "70128"],
-            "phone": "(504) 555-0303",
-            "description": "Complete outdoor living transformations - patios, pool decks, outdoor kitchens, landscaping, and decorative concrete. Built for New Orleans climate.",
-            "photos": [],
-            "latitude": 29.9624,
-            "longitude": -90.0586,
-            "rating": 4.6,
-            "review_count": 156,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        # Pool & Outdoor Specialist
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@gardendistrict.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "Garden District Pool & Patio",
-            "specialties": ["Pool", "Concrete", "Landscaping", "Outdoor", "Pool Deck"],
-            "service_zip_codes": ["701", "700", "70115", "70118", "70125", "70130", "70113"],
-            "phone": "(504) 555-0404",
-            "description": "Luxury pool decks, patios, and outdoor living spaces in the Garden District and Uptown. Travertine, pavers, and custom concrete designs.",
-            "photos": [],
-            "latitude": 29.9260,
-            "longitude": -90.1004,
-            "rating": 4.8,
-            "review_count": 143,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        # Additional General Contractor
-        {
-            "id": str(uuid.uuid4()),
-            "email": "info@bayouremodelingco.com",
-            "password_hash": hash_password("password123"),
-            "company_name": "Bayou Remodeling Co.",
-            "specialties": ["General Contractor", "Kitchen", "Bathroom", "Remodeling"],
-            "service_zip_codes": ["701", "700", "70112", "70114", "70126", "70127", "70128", "70131", "70148"],
-            "phone": "(504) 555-0505",
-            "description": "From Lakeview to the Westbank, quality kitchen and bath remodels across Greater New Orleans. 20+ years experience.",
-            "photos": [],
-            "latitude": 30.0037,
-            "longitude": -90.1084,
-            "rating": 4.5,
-            "review_count": 98,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-    ]
-
-    await db.contractors.insert_many(sample_contractors)
-    return {"message": "Seeded 6 contractors with specialty routing", "count": 6}
+    contractors = _get_seed_contractors()
+    await db.contractors.insert_many(contractors)
+    return {"message": f"Seeded {len(contractors)} contractors with specialty routing", "count": len(contractors)}
 
 
 # ==================== APP CONFIG ====================

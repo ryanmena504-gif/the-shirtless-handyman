@@ -31,14 +31,13 @@ export default function AdminPage() {
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
-    const t = localStorage.getItem("admin_token");
-    const headers = { Authorization: `Bearer ${t}` };
     try {
+      const opts = { withCredentials: true };
       const [statsRes, leadsRes, contractorsRes, portfolioRes] = await Promise.all([
-        axios.get(`${API}/admin/stats`, { headers }),
-        axios.get(`${API}/admin/leads`, { headers }),
-        axios.get(`${API}/admin/contractors`, { headers }),
-        axios.get(`${API}/admin/portfolio`, { headers }),
+        axios.get(`${API}/admin/stats`, opts),
+        axios.get(`${API}/admin/leads`, opts),
+        axios.get(`${API}/admin/contractors`, opts),
+        axios.get(`${API}/admin/portfolio`, opts),
       ]);
       setStats(statsRes.data);
       setLeads(leadsRes.data.leads || []);
@@ -64,8 +63,8 @@ export default function AdminPage() {
     e.preventDefault();
     setLoggingIn(true);
     try {
-      const res = await axios.post(`${API}/admin/login`, { password });
-      localStorage.setItem("admin_token", res.data.token);
+      await axios.post(`${API}/admin/login`, { password }, { withCredentials: true });
+      localStorage.setItem("admin_token", "authenticated");
       setAuthenticated(true);
       toast.success("Welcome, Admin");
       fetchAll();
@@ -76,7 +75,8 @@ export default function AdminPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
     localStorage.removeItem("admin_token");
     setAuthenticated(false);
     setStats(null);

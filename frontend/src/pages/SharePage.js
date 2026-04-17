@@ -161,11 +161,11 @@ export default function SharePage() {
                       onClick={() => handleVote(i)}
                       disabled={votedIndex !== null}
                       className={`rounded-full h-10 px-6 text-sm font-medium btn-pill transition-all ${
-                        votedIndex === i
-                          ? "bg-[#D97757] text-white shadow-lg shadow-[#D97757]/30"
-                          : votedIndex !== null
-                          ? "bg-muted text-muted-foreground"
-                          : "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                        (() => {
+                          if (votedIndex === i) return "bg-[#D97757] text-white shadow-lg shadow-[#D97757]/30";
+                          if (votedIndex !== null) return "bg-muted text-muted-foreground";
+                          return "bg-primary text-primary-foreground shadow-lg shadow-primary/20";
+                        })()
                       }`}
                       data-testid={`vote-btn-${i}`}
                     >

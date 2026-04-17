@@ -32,7 +32,6 @@ export const AdminPortfolioTab = ({ portfolio, onRefresh }) => {
   const handleUpload = async () => {
     setUploading(true);
     try {
-      const t = localStorage.getItem("admin_token");
       const fd = new FormData();
       fd.append("before_photo", beforeFile);
       fd.append("after_photo", afterFile);
@@ -40,7 +39,8 @@ export const AdminPortfolioTab = ({ portfolio, onRefresh }) => {
       fd.append("description", desc);
       fd.append("room_type", roomType);
       await axios.post(`${API}/admin/portfolio`, fd, {
-        headers: { Authorization: `Bearer ${t}`, "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
       toast.success("Portfolio item uploaded!");
       setBeforeFile(null); setAfterFile(null);
@@ -55,11 +55,8 @@ export const AdminPortfolioTab = ({ portfolio, onRefresh }) => {
   };
 
   const handleDelete = async (itemId) => {
-    const t = localStorage.getItem("admin_token");
     try {
-      await axios.delete(`${API}/admin/portfolio/${itemId}`, {
-        headers: { Authorization: `Bearer ${t}` },
-      });
+      await axios.delete(`${API}/admin/portfolio/${itemId}`, { withCredentials: true });
       toast.success("Portfolio item deleted");
       onRefresh();
     } catch {

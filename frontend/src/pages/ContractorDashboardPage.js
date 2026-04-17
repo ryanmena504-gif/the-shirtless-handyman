@@ -29,10 +29,9 @@ export default function ContractorDashboardPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const headers = { Authorization: `Bearer ${token}` };
       const [profileRes, leadsRes] = await Promise.all([
-        axios.get(`${API}/contractors/me`, { headers }),
-        axios.get(`${API}/leads/all`, { headers }),
+        axios.get(`${API}/contractors/me`, { withCredentials: true }),
+        axios.get(`${API}/leads/all`, { withCredentials: true }),
       ]);
       setProfile(profileRes.data);
       setLeads(leadsRes.data.leads || []);
@@ -43,7 +42,7 @@ export default function ContractorDashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [token, navigate]);
+  }, [navigate]);
 
   useEffect(() => {
     if (!token) {
@@ -51,20 +50,19 @@ export default function ContractorDashboardPage() {
       return;
     }
     fetchData();
-  }, [token, navigate, fetchData]);
+  }, [navigate, fetchData]);
 
   const handleSaveProfile = async () => {
     if (!profile) return;
     setSaving(true);
     try {
-      const headers = { Authorization: `Bearer ${token}` };
       await axios.put(`${API}/contractors/me`, {
         company_name: profile.company_name,
         phone: profile.phone,
         description: profile.description,
         specialties: profile.specialties,
         service_zip_codes: profile.service_zip_codes,
-      }, { headers });
+      }, { withCredentials: true });
       toast.success("Profile updated successfully");
     } catch {
       toast.error("Failed to update profile");
@@ -73,7 +71,8 @@ export default function ContractorDashboardPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
     localStorage.removeItem("contractor_token");
     localStorage.removeItem("contractor_info");
     navigate("/contractor/login");

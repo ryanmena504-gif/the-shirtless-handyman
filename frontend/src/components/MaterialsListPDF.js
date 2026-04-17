@@ -3,6 +3,7 @@ import { jsPDF } from "jspdf";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { toast } from "sonner";
 import { 
   FileDown, X, Ruler, Calculator, Building2, Phone, Mail 
 } from "lucide-react";
@@ -269,8 +270,8 @@ const MaterialsListPDF = ({
       const fileName = `SeamlessBath_Materials_${projectType?.replace(/\s+/g, "_") || "Project"}_${new Date().toISOString().split('T')[0]}.pdf`;
       doc.save(fileName);
       
-    } catch (error) {
-      console.error("PDF generation error:", error);
+    } catch {
+      toast.error("Failed to generate PDF. Please try again.");
     } finally {
       setGenerating(false);
     }
