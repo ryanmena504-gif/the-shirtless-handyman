@@ -815,31 +815,27 @@ export default function HomePage() {
           <div className="bg-[#0E0E0E] rounded-3xl overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-[#D97757]/10 via-transparent to-transparent" />
             <div className="relative z-10 p-12 md:p-20">
-              <div className="max-w-2xl mx-auto text-center">
-                <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-5">
-                  Your Space. Seamless.
-                </p>
+              <div className="max-w-xl mx-auto text-center">
+
                 <h2
-                  className="text-3xl md:text-5xl font-light tracking-tight text-white mb-6 leading-tight"
+                  className="text-3xl md:text-5xl font-light tracking-tight text-white mb-5 leading-tight"
                   style={{ fontFamily: "'Fraunces', serif" }}
                 >
-                  See your space before<br />you build it.
+                  Stop imagining it.<br />See it.
                 </h2>
-                <p className="text-base text-white/50 mb-4 max-w-lg mx-auto leading-relaxed">
-                  Seamless microcement. Tadelakt. Venetian plaster. Rockscape walls. No grout, no seams, no compromises — applied to bathrooms, kitchens, floors, pool decks, and every surface in between.
-                </p>
-                <p className="text-base text-white/50 mb-10 max-w-lg mx-auto leading-relaxed">
-                  Upload a photo right now and The Seamless Studio will show you exactly what your space could look like. Or text Ryan your project — he'll give you a straight answer.
+
+                <p className="text-base text-white/50 mb-10 max-w-md mx-auto leading-relaxed">
+                  One photo. Sixty seconds. Three seamless surface designs for your space — free. Or text Ryan right now and get a straight answer today.
                 </p>
 
-                <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
                   <Button
                     onClick={() => navigate("/upload")}
                     className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
                     data-testid="closing-upload-btn"
                   >
                     <Upload className="w-5 h-5 mr-2" />
-                    Try Seamless Studio Free
+                    Show Us Your Room
                   </Button>
                   <a href={SMS_LINK} data-testid="closing-text-btn">
                     <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
@@ -849,9 +845,9 @@ export default function HomePage() {
                   </a>
                 </div>
 
-                <a href={TEL_LINK} className="text-sm text-white/30 hover:text-white/60 underline underline-offset-2 transition-colors">
-                  Or call {PHONE}
-                </a>
+                <p className="text-xs text-white/25">
+                  Free preview. No account needed. Takes 60 seconds.
+                </p>
               </div>
             </div>
           </div>
