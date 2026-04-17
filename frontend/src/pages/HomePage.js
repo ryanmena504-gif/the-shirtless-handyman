@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
-import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
 
@@ -158,6 +158,81 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== TRUST ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-white" data-testid="trust-section">
+        <div className="max-w-7xl mx-auto">
+
+          {/* Result statements */}
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-20">
+            {[
+              "No grout. Ever.",
+              "One surface. Zero seams.",
+              "Waterproof from day one.",
+            ].map((statement) => (
+              <div key={statement} className="text-center">
+                <p
+                  className="text-xl md:text-2xl font-light text-foreground tracking-tight"
+                  style={{ fontFamily: "'Fraunces', serif" }}
+                >
+                  {statement}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Trust bullets — 2 rows of 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6 mb-20">
+            {[
+              { icon: CheckCircle, text: "Clean jobsite, every time — we leave it better than we found it" },
+              { icon: Clock, text: "On time, on budget — no drawn-out timelines or surprise costs" },
+              { icon: ShieldCheck, text: "Licensed, insured, and personally accountable for every project" },
+              { icon: Star, text: "5-star craftsmanship — we don't cut corners on materials or labor" },
+              { icon: Phone, text: "Direct line to Ryan — no call centers, no runaround" },
+              { icon: Gem, text: "High-end results at fair prices — premium doesn't have to mean overpriced" },
+            ].map((item) => (
+              <div key={item.text} className="flex items-start gap-3">
+                <item.icon className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "Ryan did our entire master bath in microcement. No more grout to scrub, and it looks like a luxury hotel. Best money we've spent on the house.",
+                name: "Sarah M.",
+                detail: "Bathroom remodel — Metairie, LA",
+              },
+              {
+                quote: "We were nervous about doing something different. The Seamless Studio let us see exactly what it would look like before we committed. Turned out even better in person.",
+                name: "Marcus & Tina D.",
+                detail: "Kitchen surfaces — Harvey, LA",
+              },
+              {
+                quote: "The rockscape wall in our living room is insane. Everyone who walks in asks about it. Ryan built it exactly like the preview showed.",
+                name: "Jason R.",
+                detail: "Feature wall — Gretna, LA",
+              },
+            ].map((t) => (
+              <div key={t.name} className="bg-[#FAFAF9] border border-border/40 rounded-2xl p-7">
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map((s) => (
+                    <Star key={`testimonial-star-${t.name}-${s}`} className="w-3.5 h-3.5 fill-[#D97757] text-[#D97757]" />
+                  ))}
+                </div>
+                <p className="text-sm text-foreground leading-relaxed mb-5 italic">"{t.quote}"</p>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                  <p className="text-xs text-muted-foreground">{t.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== WHAT ARE SEAMLESS SURFACES ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12" data-testid="seamless-explainer-section">
         <div className="max-w-7xl mx-auto">
@@ -221,75 +296,131 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== ROCKSCAPE FEATURE WALLS ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E] overflow-hidden" data-testid="rockscape-section">
+      {/* ===== PREMIUM POSITIONING ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E] overflow-hidden" data-testid="premium-section">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Image */}
-            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
-              <img
-                src="https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85"
-                alt="Sculpted rockscape accent wall with dramatic backlighting"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <span className="inline-block px-3 py-1.5 rounded-full bg-[#D97757] text-white text-xs font-bold uppercase tracking-wider">
-                  Signature Service
-                </span>
+
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+              Premium Craftsmanship
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4 leading-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              This is not a cheap fix.<br />This is a high-value upgrade.
+            </h2>
+            <p className="text-sm text-white/45 max-w-xl mx-auto">
+              Seamless surfaces and rockscape walls are luxury finishes — hand-applied, custom-designed, and built to outlast anything tile or grout could ever offer.
+            </p>
+          </div>
+
+          {/* Two-column: Seamless Surfaces + Rockscape */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+
+            {/* Seamless Surfaces */}
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 flex flex-col">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-[#D97757]/15 flex items-center justify-center">
+                  <Layers className="w-5 h-5 text-[#D97757]" />
+                </div>
+                <h3
+                  className="text-xl font-medium text-white"
+                  style={{ fontFamily: "'Fraunces', serif" }}
+                >
+                  Seamless Surfaces
+                </h3>
               </div>
-            </div>
-
-            {/* Content */}
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-                Custom Rockscape Walls
+              <p className="text-sm text-white/50 leading-relaxed mb-6">
+                Microcement, tadelakt, venetian plaster, and beton cire — applied by hand over your existing surfaces. No demolition. No grout. Just one continuous, waterproof plane that transforms the entire feel of a room.
               </p>
-              <h2
-                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-6 leading-tight"
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                A wall that stops people<br />in their tracks.
-              </h2>
-              <p className="text-base text-white/60 leading-relaxed mb-6">
-                Our rockscape walls are hand-sculpted from shaped foam blocks, coated in microaggregate to create a surface that looks and feels like carved natural stone. Backlit, textured, and completely custom — each one is a one-of-a-kind statement piece.
-              </p>
-              <p className="text-base text-white/60 leading-relaxed mb-8">
-                Behind the bed. Behind the bar. Around the fireplace. In the entryway. Anywhere you want jaws to drop.
-              </p>
-
-              <div className="space-y-4 mb-10">
+              <div className="space-y-3 mb-8 flex-1">
                 {[
-                  "Hand-sculpted to your space — no two are alike",
-                  "Microaggregate finish for authentic rock texture",
-                  "LED backlighting for dramatic effect",
-                  "Bedrooms, living rooms, restaurants, lobbies",
-                  "Preview it first with The Seamless Studio",
+                  "Custom color-matched to your vision",
+                  "Rated for wet zones — showers, pools, kitchens",
+                  "Applied over existing tile, concrete, or drywall",
+                  "10+ year lifespan with minimal maintenance",
+                  "Modern European aesthetic that never dates",
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
+                  <div key={item} className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
-                    <span className="text-sm text-white/70">{item}</span>
+                    <span className="text-sm text-white/60">{item}</span>
                   </div>
                 ))}
               </div>
+              <Button
+                onClick={() => navigate("/upload")}
+                className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
+                data-testid="premium-surfaces-btn"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Preview in The Seamless Studio
+              </Button>
+            </div>
 
-              <div className="flex flex-wrap gap-4">
-                <Button
-                  onClick={() => navigate("/upload")}
-                  className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-                  data-testid="rockscape-visualize-btn"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Preview in The Seamless Studio
-                </Button>
-                <a href={SMS_LINK} data-testid="rockscape-text-btn">
-                  <Button variant="outline" className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium">
+            {/* Rockscape Walls */}
+            <div className="relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col">
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85"
+                  alt="Sculpted rockscape accent wall"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E] via-transparent to-transparent" />
+                <div className="absolute top-4 right-4">
+                  <span className="px-3 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider">
+                    Signature Piece
+                  </span>
+                </div>
+              </div>
+              <div className="p-8 md:p-10 flex flex-col flex-1">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-[#D97757]/15 flex items-center justify-center">
+                    <Gem className="w-5 h-5 text-[#D97757]" />
+                  </div>
+                  <h3
+                    className="text-xl font-medium text-white"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    Custom Rockscape Walls
+                  </h3>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed mb-6">
+                  Hand-sculpted foam blocks, coated in microaggregate to look and feel like carved natural stone. Backlit, textured, and completely one-of-a-kind. A statement piece that turns any room into a destination.
+                </p>
+                <div className="space-y-3 mb-8 flex-1">
+                  {[
+                    "Sculpted to fit your exact wall and space",
+                    "Microaggregate finish — authentic rock texture",
+                    "Integrated LED backlighting available",
+                    "Bedrooms, living rooms, restaurants, lobbies",
+                    "Lightweight — installs on any standard wall",
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-2.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
+                      <span className="text-sm text-white/60">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href={SMS_LINK} className="mt-auto" data-testid="premium-rockscape-btn">
+                  <Button variant="outline" className="w-full h-11 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium">
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Request a Custom Design
+                    Request a Custom Rockscape Design
                   </Button>
                 </a>
               </div>
             </div>
+          </div>
+
+          {/* Durability bar */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
+            <p
+              className="text-lg md:text-xl font-light text-white/80 tracking-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              "Luxury that lasts. Every surface we install is waterproof, mold-resistant, UV-stable, and designed to look better with age — not worse."
+            </p>
           </div>
         </div>
       </section>
