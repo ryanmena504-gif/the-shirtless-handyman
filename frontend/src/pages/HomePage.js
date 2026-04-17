@@ -49,7 +49,7 @@ export default function HomePage() {
           alt="Seamless microcement shower wall"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/30" />
 
         <div className="relative z-10 h-full flex items-center min-h-[95vh]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
@@ -62,48 +62,47 @@ export default function HomePage() {
                 className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.08] text-white mb-6 animate-fade-in-up opacity-0 stagger-2"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Walls Without Grout.<br />
-                Surfaces Without Limits.
+                See Your Space In<br />
+                Seamless Surfaces — Instantly.
               </h1>
 
               <p className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-lg animate-fade-in-up opacity-0 stagger-3">
-                We coat bathrooms, kitchens, pool decks, and entire rooms in seamless microcement and luxury plaster finishes — waterproof, grout-free, and built to last. Plus full handyman services for everything else.
+                Upload a photo of any room — bathroom, kitchen, floors, walls, pool deck, patio — and watch our AI transform it with seamless microcement, tadelakt, and luxury plaster finishes. No grout. No limits. No guesswork.
               </p>
 
               {/* Benefits pills */}
               <div className="flex flex-wrap gap-3 mb-10 animate-fade-in-up opacity-0 stagger-3">
                 <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <Droplets className="w-3.5 h-3.5 text-[#D97757]" /> Waterproof
+                  <Droplets className="w-3.5 h-3.5 text-[#D97757]" /> 100% Waterproof
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#D97757]" /> Zero Grout
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#D97757]" /> Zero Grout Lines
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <Paintbrush className="w-3.5 h-3.5 text-[#D97757]" /> Modern Luxury
+                  <Paintbrush className="w-3.5 h-3.5 text-[#D97757]" /> Modern Luxury Finish
                 </span>
               </div>
 
-              {/* CTAs */}
+              {/* CTAs — AI tool is primary */}
               <div className="flex flex-wrap gap-4 animate-fade-in-up opacity-0 stagger-4">
+                <Button
+                  onClick={() => navigate("/upload")}
+                  className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                  data-testid="hero-cta-btn"
+                >
+                  <Upload className="w-5 h-5 mr-2" />
+                  Upload Your Photo — See the Transformation
+                </Button>
                 <a href={SMS_LINK} data-testid="hero-text-cta">
-                  <Button className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
+                  <Button variant="outline" className="h-14 px-10 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium">
                     <MessageCircle className="w-5 h-5 mr-2" />
                     Text Your Project
                   </Button>
                 </a>
-                <Button
-                  variant="outline"
-                  onClick={() => navigate("/upload")}
-                  className="h-14 px-10 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium"
-                  data-testid="hero-visualize-btn"
-                >
-                  See It Before You Build It
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
               </div>
 
               <p className="text-sm text-white/40 mt-6 animate-fade-in-up opacity-0 stagger-4">
-                Or call directly: <a href={TEL_LINK} className="text-white/60 hover:text-white underline underline-offset-2">{PHONE}</a>
+                Or call Ryan directly: <a href={TEL_LINK} className="text-white/60 hover:text-white underline underline-offset-2">{PHONE}</a>
               </p>
             </div>
           </div>
@@ -180,20 +179,22 @@ export default function HomePage() {
       <section className="relative py-20 md:py-28 px-6 md:px-12 overflow-hidden" data-testid="visualizer-section">
         <img src={SURFACE_BG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-            AI Renovation Visualizer
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            See your room in seamless surfaces<br />before we touch a wall.
-          </h2>
-          <p className="text-muted-foreground mb-14 max-w-xl">
-            Upload a photo, pick your room type, and our AI generates 3 seamless surface designs — microcement, tadelakt, venetian plaster, and more.
-          </p>
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
+              AI Renovation Visualizer
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Snap a photo. See it transformed.<br />Takes 60 seconds.
+            </h2>
+            <p className="text-muted-foreground max-w-xl">
+              Point your phone at any bathroom, kitchen, floor, wall, patio, or pool deck. Our AI instantly redesigns it with seamless surfaces — microcement, tadelakt, venetian plaster, rockscape walls, and more. Three design options. Real cost estimates. No commitment.
+            </p>
+          </div>
 
-          <div id="how-it-works" className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div id="how-it-works" className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
             {STEPS.map((step, i) => (
               <div
                 key={step.title}
@@ -210,14 +211,23 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-10 text-center">
+          <div className="bg-primary/5 border border-primary/20 rounded-3xl p-10 md:p-14 text-center">
+            <h3
+              className="text-2xl md:text-3xl font-light tracking-tight text-foreground mb-3"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Ready to see the difference?
+            </h3>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              Upload your photo and watch your space come to life in seamless surfaces. It's free, fast, and might change how you see your home.
+            </p>
             <Button
               onClick={() => navigate("/upload")}
-              className="h-14 px-10 rounded-full bg-primary text-primary-foreground text-base font-medium btn-pill shadow-lg shadow-primary/20"
+              className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
               data-testid="visualizer-cta-btn"
             >
-              Try the AI Visualizer
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <Upload className="w-5 h-5 mr-2" />
+              Upload Your Photo — See the Transformation
             </Button>
           </div>
         </div>
