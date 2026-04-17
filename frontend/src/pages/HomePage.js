@@ -1,28 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
-import { ArrowRight, Upload, Sparkles, DollarSign, Users, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
-
-const SURFACE_BG = "https://images.unsplash.com/photo-1762117360868-d4e757073d45?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjb25jcmV0ZSUyMHdhbGwlMjBsdXh1cnklMjBpbnRlcmlvciUyMHJlbm92YXRpb258ZW58MHx8fHwxNzc2NDUyMzQ5fDA&ixlib=rb-4.1.0&q=85";
 
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
 const TEL_LINK = "tel:5042644919";
-
-const STEPS = [
-  { icon: Upload, title: "Upload Your Room", desc: "Snap a photo of any space you want transformed" },
-  { icon: Sparkles, title: "AI Generates Designs", desc: "See 3 seamless surface renovation styles for your room" },
-  { icon: DollarSign, title: "Get Cost Estimate", desc: "Instant pricing based on your project and location" },
-  { icon: Users, title: "Connect with Ryan", desc: "Text your project directly — no middleman" },
-];
-
-const CATEGORIES = [
-  { name: "Kitchen", image: "https://images.unsplash.com/photo-1668026694348-b73c5eb5e299?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwaW50ZXJpb3IlMjBkZXNpZ258ZW58MHx8fHwxNzczNTMwMzgwfDA&ixlib=rb-4.1.0&q=85" },
-  { name: "Bathroom", image: "https://images.unsplash.com/photo-1758448018619-4cbe2250b9ad?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiYXRocm9vbSUyMHJlbm92YXRpb258ZW58MHx8fHwxNzczNTMwMzgxfDA&ixlib=rb-4.1.0&q=85" },
-  { name: "Patio", image: "https://images.unsplash.com/photo-1763479142678-8e29f4edb538?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxiYWNreWFyZCUyMHBhdGlvJTIwcG9vbCUyMGRlc2lnbnxlbnwwfHx8fDE3NzM1MzAzODF8MA&ixlib=rb-4.1.0&q=85" },
-];
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -335,97 +320,124 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== AI VISUALIZER ===== */}
-      <section className="relative py-20 md:py-28 px-6 md:px-12 overflow-hidden" data-testid="visualizer-section">
-        <img src={SURFACE_BG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10" />
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="max-w-2xl mb-14">
+      {/* ===== HOW IT WORKS (simplified) ===== */}
+      <section id="how-it-works" className="py-20 md:py-28 px-6 md:px-12" data-testid="how-it-works-section">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-              AI Renovation Visualizer
+              How It Works
             </p>
             <h2
-              className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
+              className="text-3xl md:text-4xl font-light tracking-tight text-foreground"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Snap a photo. See it transformed.<br />Takes 60 seconds.
+              Four steps. That's it.
             </h2>
-            <p className="text-muted-foreground max-w-xl">
-              Point your phone at any bathroom, kitchen, floor, wall, patio, or pool deck. Our AI instantly redesigns it with seamless surfaces — microcement, tadelakt, venetian plaster, rockscape walls, and more. Three design options. Real cost estimates. No commitment.
-            </p>
           </div>
 
-          <div id="how-it-works" className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.title}
-                className="bg-white border border-border/40 rounded-2xl p-7 hover:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] transition-shadow duration-500 hover:-translate-y-1 group"
-                data-testid={`step-card-${i}`}
-              >
-                <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  <step.icon className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 md:gap-0">
+            {[
+              { num: "01", icon: Upload, title: "Upload your space", desc: "Snap a photo of any room, wall, floor, or outdoor area." },
+              { num: "02", icon: Sparkles, title: "See it redesigned", desc: "AI shows you 3 seamless surface options — instantly." },
+              { num: "03", icon: DollarSign, title: "Get a quote", desc: "Real cost estimates based on your project and location." },
+              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text Ryan, lock in a date, and we make it real." },
+            ].map((step, i) => (
+              <div key={step.title} className="relative flex flex-col items-center text-center px-6 py-8" data-testid={`step-${i}`}>
+                {/* Connector line */}
+                {i < 3 && (
+                  <div className="hidden md:block absolute top-[52px] left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-border/60" />
+                )}
+                <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-5 relative z-10">
+                  <step.icon className="w-5 h-5 text-foreground" />
                 </div>
-                <div className="text-xs font-bold text-[#D97757] mb-2">0{i + 1}</div>
-                <h3 className="text-base font-semibold mb-1.5 text-foreground">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+                <span className="text-xs font-bold text-[#D97757] mb-2">{step.num}</span>
+                <h3 className="text-base font-semibold text-foreground mb-1.5">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">{step.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="bg-primary/5 border border-primary/20 rounded-3xl p-10 md:p-14 text-center">
-            <h3
-              className="text-2xl md:text-3xl font-light tracking-tight text-foreground mb-3"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              Ready to see the difference?
-            </h3>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Upload your photo and watch your space come to life in seamless surfaces. It's free, fast, and might change how you see your home.
-            </p>
+          <div className="text-center mt-10">
             <Button
               onClick={() => navigate("/upload")}
               className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-              data-testid="visualizer-cta-btn"
+              data-testid="how-it-works-cta"
             >
               <Upload className="w-5 h-5 mr-2" />
-              Upload Your Photo — See the Transformation
+              Upload Your Photo Now
             </Button>
           </div>
         </div>
       </section>
 
-      {/* ===== CATEGORIES ===== */}
-      <section className="py-20 md:py-28 bg-[#F5F5F4] px-6 md:px-12" data-testid="categories-section">
+      {/* ===== GALLERY — What the AI shows = what we build ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="gallery-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-            Project Types
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-14"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            What would you like<br />to transform?
-          </h2>
+          <div className="text-center mb-16">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
+              From Screen to Reality
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              What you see in the tool<br />can be built in real life.
+            </h2>
+            <p className="text-sm text-white/45 max-w-lg mx-auto">
+              Our AI designs with the exact same finishes we install. Every surface you preview is something we can put on your walls, floors, and counters.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {CATEGORIES.map((cat) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                title: "Bathrooms",
+                desc: "Tadelakt showers, micro quartz wet zones, seamless vanity walls",
+                image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHw0fHxwb2xpc2hlZCUyMGNvbmNyZXRlJTIwbHV4dXJ5JTIwYmF0aHJvb20lMjBtaW5pbWFsfGVufDB8fHx8MTc3NjQ1MjM2Mnww&ixlib=rb-4.1.0&q=85",
+                type: "Bathroom",
+              },
+              {
+                title: "Floors",
+                desc: "Microcement, beton cire, and microterrazzo — wall to wall, no seams",
+                image: "https://images.unsplash.com/photo-1758957530781-4ff54e09bee2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxwb2xpc2hlZCUyMGNvbmNyZXRlJTIwZmxvb3IlMjBpbnRlcmlvciUyMG9wZW4lMjBwbGFuJTIwbW9kZXJufGVufDB8fHx8MTc3NjQ1Mzc3Mnww&ixlib=rb-4.1.0&q=85",
+                type: "Living Room",
+              },
+              {
+                title: "Feature Walls",
+                desc: "Rockscape, venetian plaster, marmorino — the focal point of any room",
+                image: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85",
+                type: "Bedroom",
+              },
+              {
+                title: "Outdoor Spaces",
+                desc: "Pool decks, patios, outdoor kitchens — sealed against sun and rain",
+                image: "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvdXRkb29yJTIwcGF0aW8lMjBjb25jcmV0ZSUyMHBvb2wlMjBkZWNrJTIwbHV4dXJ5fGVufDB8fHx8MTc3NjQ1Mzc2Nnww&ixlib=rb-4.1.0&q=85",
+                type: "Pool Deck",
+              },
+            ].map((cat) => (
               <button
-                key={cat.name}
-                onClick={() => navigate("/upload", { state: { projectType: cat.name } })}
-                className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer"
-                data-testid={`category-${cat.name.toLowerCase()}`}
+                key={cat.title}
+                onClick={() => navigate("/upload", { state: { projectType: cat.type } })}
+                className="group relative rounded-2xl overflow-hidden aspect-[3/4] cursor-pointer"
+                data-testid={`gallery-${cat.title.toLowerCase().replace(/\s/g, "-")}`}
               >
                 <img
                   src={cat.image}
-                  alt={cat.name}
+                  alt={cat.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
-                  <h3 className="text-2xl font-light text-white" style={{ fontFamily: "'Fraunces', serif" }}>
-                    {cat.name}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3
+                    className="text-xl font-medium text-white mb-1.5"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    {cat.title}
                   </h3>
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-[#D97757] transition-colors duration-300">
-                    <ChevronRight className="w-5 h-5 text-white" />
+                  <p className="text-xs text-white/60 leading-relaxed mb-4">{cat.desc}</p>
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#D97757]">
+                    <Upload className="w-3.5 h-3.5" />
+                    Try in AI Tool
                   </div>
                 </div>
               </button>
