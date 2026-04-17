@@ -250,6 +250,9 @@ export default function HomePage() {
             <p className="text-muted-foreground leading-relaxed">
               Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what The Seamless Studio designs for your space.
             </p>
+            <p className="text-muted-foreground leading-relaxed mt-4">
+              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — we handle it all right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for microcement in New Orleans or seamless surface contractors near you, you just found them.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
@@ -601,6 +604,88 @@ export default function HomePage() {
             See Our Work
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
+        </div>
+      </section>
+
+      {/* ===== CONTRACTOR PARTNERS ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="contractor-partner-section">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left — pitch */}
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+                For Contractors & Remodelers
+              </p>
+              <h2
+                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-6 leading-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Add seamless surfaces<br />to your next project.
+              </h2>
+              <p className="text-base text-white/60 leading-relaxed mb-4">
+                You run the remodel. We install the surfaces. Your client gets a higher-end finish, you increase the project value, and nobody has to learn a new trade.
+              </p>
+              <p className="text-base text-white/60 leading-relaxed mb-8">
+                We partner with general contractors, bathroom remodelers, kitchen builders, and design firms across Greater New Orleans. You bring the project — we bring the microcement, tadelakt, venetian plaster, and rockscape installs.
+              </p>
+
+              <div className="space-y-4 mb-10">
+                {[
+                  { title: "Increase project value", desc: "Seamless surfaces are a premium upsell your clients will love — higher ticket, same timeline." },
+                  { title: "No extra training needed", desc: "We handle the entire surface installation. You stay focused on your scope." },
+                  { title: "White-label available", desc: "We work under your brand or ours — whatever makes the project smoother." },
+                  { title: "Fast turnaround", desc: "Most surface installs complete in 2–5 days depending on scope." },
+                ].map((item) => (
+                  <div key={item.title} className="flex items-start gap-3">
+                    <CheckCircle className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-white">{item.title}</p>
+                      <p className="text-xs text-white/40">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <a href={SMS_LINK} data-testid="partner-text-btn">
+                  <Button className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Text Ryan to Partner
+                  </Button>
+                </a>
+                <Button
+                  onClick={() => navigate("/contractor/register")}
+                  variant="outline"
+                  className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium"
+                  data-testid="partner-register-btn"
+                >
+                  Create a Contractor Account
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Right — quick stats / value props */}
+            <div className="space-y-6">
+              {[
+                { metric: "2–5 days", label: "Average surface install time" },
+                { metric: "$2K–$8K", label: "Added project value per room" },
+                { metric: "15+", label: "Seamless finish types available" },
+                { metric: "0", label: "Grout lines. Forever." },
+              ].map((stat) => (
+                <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center gap-6">
+                  <p
+                    className="text-3xl md:text-4xl font-light text-[#D97757] min-w-[100px]"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    {stat.metric}
+                  </p>
+                  <p className="text-sm text-white/50">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
