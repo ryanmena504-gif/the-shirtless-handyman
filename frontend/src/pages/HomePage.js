@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
-import { ArrowRight, Upload, Sparkles, DollarSign, Users, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, DollarSign, Users, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
 
@@ -10,12 +10,6 @@ const SURFACE_BG = "https://images.unsplash.com/photo-1762117360868-d4e757073d45
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
 const TEL_LINK = "tel:5042644919";
-
-const BENEFITS = [
-  { icon: Droplets, title: "100% Waterproof", desc: "Shower walls, pool decks, kitchens — sealed tight with zero grout to fail." },
-  { icon: ShieldCheck, title: "Zero Grout. Zero Mold.", desc: "One continuous surface means nothing to scrub, nothing to replace." },
-  { icon: Paintbrush, title: "High-End Modern Look", desc: "Microcement, tadelakt, venetian plaster — luxury finishes that last." },
-];
 
 const SERVICES = [
   { title: "Seamless Surfaces", items: ["Microcement walls & floors", "Tadelakt showers", "Venetian plaster", "Rockscape accent walls", "Microterrazzo patios", "Pool deck resurfacing"] },
@@ -109,35 +103,146 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== BENEFITS ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="benefits-section">
+      {/* ===== THE PROBLEM ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="problem-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-            Why Seamless
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-light tracking-tight text-white mb-14"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            Grout is dead. The future is seamless.
-          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            {/* Pain points */}
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+                Sound Familiar?
+              </p>
+              <h2
+                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-8 leading-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                You know your space needs work.<br />
+                You just can't see the finish line.
+              </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {BENEFITS.map((b) => (
-              <div key={b.title} className="group" data-testid={`benefit-${b.title.toLowerCase().replace(/\s/g, "-")}`}>
-                <div className="w-12 h-12 rounded-xl bg-[#D97757]/15 flex items-center justify-center mb-5 group-hover:bg-[#D97757] transition-colors duration-300">
-                  <b.icon className="w-5 h-5 text-[#D97757] group-hover:text-white transition-colors duration-300" />
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <AlertCircle className="w-4 h-4 text-white/40" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-white mb-1">Can't picture the upgrade</h3>
+                    <p className="text-sm text-white/45 leading-relaxed">You know you want something better — but choosing materials from a swatch book doesn't tell you how it'll actually look in your space.</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{b.title}</h3>
-                <p className="text-sm leading-relaxed text-white/50">{b.desc}</p>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <AlertCircle className="w-4 h-4 text-white/40" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-white mb-1">Scared of wasting money</h3>
+                    <p className="text-sm text-white/45 leading-relaxed">Renovations aren't cheap. Committing thousands without seeing the result? That keeps people stuck for years.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <AlertCircle className="w-4 h-4 text-white/40" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-white mb-1">Tired of grout, mold, and outdated finishes</h3>
+                    <p className="text-sm text-white/45 leading-relaxed">Scrubbing grout lines that turn black. Caulk that peels. Tile that looks like it's from 2005. You deserve better.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Solution transition */}
+            <div className="bg-gradient-to-br from-[#D97757]/10 to-[#D97757]/5 border border-[#D97757]/20 rounded-3xl p-10 md:p-12">
+              <div className="w-14 h-14 rounded-2xl bg-[#D97757] flex items-center justify-center mb-6">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <h3
+                className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4 leading-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Now you can see your upgrade before you commit a single dollar.
+              </h3>
+              <p className="text-sm text-white/60 leading-relaxed mb-8">
+                Our AI takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of our premium finishes. Three design options. Real cost estimates. In about 60 seconds.
+              </p>
+              <Button
+                onClick={() => navigate("/upload")}
+                className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                data-testid="problem-cta-btn"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Upload a Photo — See It Transformed
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WHAT ARE SEAMLESS SURFACES ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="seamless-explainer-section">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+              The Future of Surfaces
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4 leading-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              What are seamless surfaces?<br />
+              And why is this what our AI shows you?
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what our AI renovation tool designs for your space.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
+            {[
+              { title: "Bathrooms & Showers", desc: "Waterproof micro quartz and tadelakt replace every tile and grout line with a single seamless shell. Walk-in showers, tub surrounds, vanity walls — all one surface.", icon: Droplets },
+              { title: "Floors & Walls", desc: "Microcement flows wall-to-wall, room-to-room. No joints, no transitions, no seams. Warm underfoot, cool to the eye. Works on concrete, tile, even wood subfloors.", icon: Layers },
+              { title: "Kitchens & Counters", desc: "Beton cire countertops with waterfall edges. Venetian plaster backsplashes that go from counter to ceiling. Zero grout to scrub, ever.", icon: ShieldCheck },
+              { title: "Outdoor & Pool Areas", desc: "Microterrazzo pool decks. Cocciopesto patios. Rockscape accent walls made from sculpted foam and microaggregate. Built for sun, rain, and bare feet.", icon: Paintbrush },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="bg-white border border-border/40 rounded-2xl p-7 hover:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-1 group"
+              >
+                <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5 group-hover:bg-[#D97757] transition-colors duration-300">
+                  <item.icon className="w-5 h-5 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+                </div>
+                <h3 className="text-base font-semibold mb-2 text-foreground">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
               </div>
             ))}
+          </div>
+
+          {/* Surface types */}
+          <div className="bg-[#F5F5F4] rounded-3xl p-8 md:p-12">
+            <h3
+              className="text-xl font-medium text-foreground mb-6"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Finishes we install — and what the AI shows you
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {[
+                "Microcement", "Tadelakt", "Venetian Plaster", "Roman Clay", "Marmorino",
+                "Stucco Lustro", "Grassello di Calce", "Beton Cire", "Cocciopesto", "Microterrazzo",
+                "Micro Quartz", "Lime Wash", "Seamless Epoxy", "Rockscape Walls", "Solid Surface",
+              ].map((finish) => (
+                <div key={finish} className="flex items-center gap-2.5 px-4 py-3 bg-white rounded-xl border border-border/40">
+                  <span className="w-2 h-2 rounded-full bg-[#D97757] flex-shrink-0" />
+                  <span className="text-sm text-foreground font-medium">{finish}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ===== SERVICES ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="services-section">
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-white" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
             What We Do
@@ -153,7 +258,7 @@ export default function HomePage() {
             {SERVICES.map((svc) => (
               <div
                 key={svc.title}
-                className="bg-white border border-border/40 rounded-2xl p-8 hover:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] transition-shadow duration-500"
+                className="bg-[#FAFAF9] border border-border/40 rounded-2xl p-8 hover:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] transition-shadow duration-500"
               >
                 <h3
                   className="text-xl font-medium text-foreground mb-6"
