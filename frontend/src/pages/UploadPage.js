@@ -155,16 +155,16 @@ export default function UploadPage() {
           {/* Header */}
           <div className="mb-12">
             <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
-              Step 1 of 3
+              The Seamless Studio — Step 1 of 3
             </p>
             <h1
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Upload your room
+              Show us your room
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Upload up to 3 photos of the room you'd like to renovate. Select one as the primary image for AI redesign — additional angles help improve the analysis.
+              Upload up to 3 photos of the room you'd like to transform. Select one as the primary image for redesign — additional angles help improve the analysis.
             </p>
           </div>
 

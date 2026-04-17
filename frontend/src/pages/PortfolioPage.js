@@ -133,7 +133,7 @@ export default function PortfolioPage() {
                   Ready for your own transformation?
                 </h2>
                 <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
-                  Upload a photo of your room and let our AI show you what's possible.
+                  Upload a photo of your room and let The Seamless Studio show you what's possible.
                 </p>
                 <Button
                   onClick={() => navigate("/upload")}

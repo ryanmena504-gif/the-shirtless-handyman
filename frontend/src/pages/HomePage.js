@@ -41,7 +41,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-lg animate-fade-in-up opacity-0 stagger-3">
-                Upload a photo of any room — bathroom, kitchen, floors, walls, pool deck, patio — and watch our AI transform it with seamless microcement, tadelakt, and luxury plaster finishes. No grout. No limits. No guesswork.
+                Upload a photo of any room — bathroom, kitchen, floors, walls, pool deck, patio — and The Seamless Studio transforms it with seamless microcement, tadelakt, and luxury plaster finishes. No grout. No limits. No guesswork.
               </p>
 
               {/* Benefits pills */}
@@ -57,7 +57,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              {/* CTAs — AI tool is primary */}
+              {/* CTAs — Seamless Studio is primary */}
               <div className="flex flex-wrap gap-4 animate-fade-in-up opacity-0 stagger-4">
                 <Button
                   onClick={() => navigate("/upload")}
@@ -65,7 +65,7 @@ export default function HomePage() {
                   data-testid="hero-cta-btn"
                 >
                   <Upload className="w-5 h-5 mr-2" />
-                  Upload Your Photo — See the Transformation
+                  Show Us Your Room
                 </Button>
                 <a href={SMS_LINK} data-testid="hero-text-cta">
                   <Button variant="outline" className="h-14 px-10 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium">
@@ -143,7 +143,7 @@ export default function HomePage() {
                 Now you can see your upgrade before you commit a single dollar.
               </h3>
               <p className="text-sm text-white/60 leading-relaxed mb-8">
-                Our AI takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of our premium finishes. Three design options. Real cost estimates. In about 60 seconds.
+                Our Seamless Studio takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of our premium finishes. Three design options. Real cost estimates. In about 60 seconds.
               </p>
               <Button
                 onClick={() => navigate("/upload")}
@@ -151,7 +151,7 @@ export default function HomePage() {
                 data-testid="problem-cta-btn"
               >
                 <Upload className="w-4 h-4 mr-2" />
-                Upload a Photo — See It Transformed
+                Show Us Your Room
               </Button>
             </div>
           </div>
@@ -170,10 +170,10 @@ export default function HomePage() {
               style={{ fontFamily: "'Fraunces', serif" }}
             >
               What are seamless surfaces?<br />
-              And why is this what our AI shows you?
+              And why does The Seamless Studio show them?
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what our AI renovation tool designs for your space.
+              Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what The Seamless Studio designs for your space.
             </p>
           </div>
 
@@ -203,7 +203,7 @@ export default function HomePage() {
               className="text-xl font-medium text-foreground mb-6"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Finishes we install — and what the AI shows you
+              Finishes we install — and what The Seamless Studio shows you
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {[
@@ -264,7 +264,7 @@ export default function HomePage() {
                   "Microaggregate finish for authentic rock texture",
                   "LED backlighting for dramatic effect",
                   "Bedrooms, living rooms, restaurants, lobbies",
-                  "Preview it first with our AI renovation tool",
+                  "Preview it first with The Seamless Studio",
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
@@ -280,7 +280,7 @@ export default function HomePage() {
                   data-testid="rockscape-visualize-btn"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Preview a Rockscape Wall in Your Space
+                  Preview in The Seamless Studio
                 </Button>
                 <a href={SMS_LINK} data-testid="rockscape-text-btn">
                   <Button variant="outline" className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium">
@@ -338,7 +338,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-0 md:gap-0">
             {[
               { num: "01", icon: Upload, title: "Upload your space", desc: "Snap a photo of any room, wall, floor, or outdoor area." },
-              { num: "02", icon: Sparkles, title: "See it redesigned", desc: "AI shows you 3 seamless surface options — instantly." },
+              { num: "02", icon: Sparkles, title: "See it redesigned", desc: "The Seamless Studio shows you 3 seamless surface options — instantly." },
               { num: "03", icon: DollarSign, title: "Get a quote", desc: "Real cost estimates based on your project and location." },
               { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text Ryan, lock in a date, and we make it real." },
             ].map((step, i) => (
@@ -364,7 +364,7 @@ export default function HomePage() {
               data-testid="how-it-works-cta"
             >
               <Upload className="w-5 h-5 mr-2" />
-              Upload Your Photo Now
+              Try Seamless Studio Free
             </Button>
           </div>
         </div>
@@ -384,7 +384,7 @@ export default function HomePage() {
               What you see in the tool<br />can be built in real life.
             </h2>
             <p className="text-sm text-white/45 max-w-lg mx-auto">
-              Our AI designs with the exact same finishes we install. Every surface you preview is something we can put on your walls, floors, and counters.
+              Our Seamless Studio designs with the exact same finishes we install. Every surface you preview is something we can put on your walls, floors, and counters.
             </p>
           </div>
 
@@ -437,7 +437,7 @@ export default function HomePage() {
                   <p className="text-xs text-white/60 leading-relaxed mb-4">{cat.desc}</p>
                   <div className="flex items-center gap-2 text-xs font-semibold text-[#D97757]">
                     <Upload className="w-3.5 h-3.5" />
-                    Try in AI Tool
+                    Try in Seamless Studio
                   </div>
                 </div>
               </button>
@@ -487,7 +487,7 @@ export default function HomePage() {
               Straight pricing. No surprises.
             </h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Every project is different — the AI tool helps you and us understand the scope before we talk numbers. Here's the general range.
+              Every project is different — The Seamless Studio helps you and us understand the scope before we talk numbers. Here's the general range.
             </p>
           </div>
 
@@ -553,7 +553,7 @@ export default function HomePage() {
                 className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
               >
                 <Upload className="w-4 h-4 mr-2" />
-                Preview with AI Tool
+                Try Seamless Studio Free
               </Button>
             </div>
 
@@ -588,7 +588,7 @@ export default function HomePage() {
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-8 max-w-md mx-auto">
-            Not sure which tier? Upload a photo to the AI tool — it'll show you the scope and give you a cost estimate before you commit to anything.
+            Not sure which tier? Try The Seamless Studio — it'll show you the scope and give you a cost estimate before you commit to anything.
           </p>
         </div>
       </section>
@@ -613,7 +613,7 @@ export default function HomePage() {
                   Seamless microcement. Tadelakt. Venetian plaster. Rockscape walls. No grout, no seams, no compromises — applied to bathrooms, kitchens, floors, pool decks, and every surface in between.
                 </p>
                 <p className="text-base text-white/50 mb-10 max-w-lg mx-auto leading-relaxed">
-                  Upload a photo right now and let our AI show you exactly what your space could look like. Or text Ryan your project — he'll give you a straight answer.
+                  Upload a photo right now and The Seamless Studio will show you exactly what your space could look like. Or text Ryan your project — he'll give you a straight answer.
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
@@ -623,7 +623,7 @@ export default function HomePage() {
                     data-testid="closing-upload-btn"
                   >
                     <Upload className="w-5 h-5 mr-2" />
-                    Upload Your Photo Now
+                    Try Seamless Studio Free
                   </Button>
                   <a href={SMS_LINK} data-testid="closing-text-btn">
                     <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
