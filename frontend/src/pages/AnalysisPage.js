@@ -261,13 +261,13 @@ export default function AnalysisPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <p className="text-sm font-semibold text-[#D97757] uppercase tracking-widest mb-2">
-            Step 2 of 3
+            The Seamless Studio — Step 2 of 3
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3" style={{ fontFamily: "'Fraunces', serif" }}>
-            Project Analysis
+            Scanning Your Space
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Our AI has inspected your {projectType.toLowerCase()} photo to identify potential renovation needs.
+            We're analyzing your {projectType.toLowerCase()} to identify what needs work — and what seamless surfaces will look best.
           </p>
         </div>
 
@@ -282,7 +282,7 @@ export default function AnalysisPage() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-white" style={{ fontFamily: "'Fraunces', serif" }}>
-                  Professional Assessment
+                  Room Assessment
                 </h2>
                 <p className="text-sm text-white/80">{projectType} Renovation Analysis</p>
               </div>
@@ -295,10 +295,10 @@ export default function AnalysisPage() {
               <div className="flex flex-col items-center gap-4 mb-8">
                 <Loader2 className="w-10 h-10 text-primary animate-spin" />
                 <p className="text-sm text-muted-foreground">
-                  {currentStep === 1 && "Scanning image..."}
-                  {currentStep === 2 && "Detecting conditions..."}
-                  {currentStep === 3 && "Generating recommendations..."}
-                  {currentStep === 4 && "Calculating cost estimates..."}
+                  {currentStep === 1 && "Reading your room..."}
+                  {currentStep === 2 && "Spotting what needs attention..."}
+                  {currentStep === 3 && "Picking the best surfaces for your space..."}
+                  {currentStep === 4 && "Crunching the numbers..."}
                 </p>
               </div>
               <div className="space-y-3">
@@ -422,7 +422,7 @@ export default function AnalysisPage() {
               className="rounded-full px-8 bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
               data-testid="continue-to-designs-btn"
             >
-              <span>Continue to Design Options</span>
+              <span>Show Me the Designs</span>
               <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
           </div>

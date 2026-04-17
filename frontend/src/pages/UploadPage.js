@@ -164,7 +164,7 @@ export default function UploadPage() {
               Show us your room
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Upload up to 3 photos of the room you'd like to transform. Select one as the primary image for redesign — additional angles help improve the analysis.
+              Snap a photo of any space — bathroom, kitchen, living room, patio, you name it. Upload up to 3 angles. Pick one as the main shot, and we'll handle the rest.
             </p>
           </div>
 
@@ -246,10 +246,10 @@ export default function UploadPage() {
                     </div>
                     <div>
                       <p className="text-base font-medium text-foreground mb-1">
-                        Drag & drop your room photos here
+                        Drop your room photos here
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        or click to browse. Upload 1-3 photos. JPG, PNG up to 10MB each
+                        or click to browse. 1–3 photos. JPG, PNG up to 10MB each.
                       </p>
                     </div>
                     <Button
@@ -379,11 +379,11 @@ export default function UploadPage() {
               {uploading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Uploading {images.length} photo{images.length > 1 ? "s" : ""}...
+                  Uploading — hang tight...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  Generate AI Designs
+                  See My Room Transformed
                   <ArrowRight className="w-5 h-5" />
                 </span>
               )}

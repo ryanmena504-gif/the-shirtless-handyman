@@ -12,7 +12,7 @@ import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
 import {
   Sparkles, Wrench, TrendingUp,
-  Star, MapPin, Phone, CheckCircle, AlertCircle, Share2, FileDown
+  Star, MapPin, Phone, CheckCircle, AlertCircle, Share2, FileDown, MessageCircle
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -148,16 +148,16 @@ export default function ResultsPage() {
           {/* Header */}
           <div className="mb-12">
             <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
-              Step 3 of 3
+              The Seamless Studio — Step 3 of 3
             </p>
             <h1
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Your renovation designs
+              Your space, transformed.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Our AI has generated personalized renovation options for your space.
+              Here's what your room looks like in seamless surfaces. Slide to compare, explore materials, and request a quote when you're ready.
             </p>
           </div>
 
@@ -170,10 +170,10 @@ export default function ResultsPage() {
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-medium text-foreground mb-2" style={{ fontFamily: "'Fraunces', serif" }}>
-                  Generating your designs...
+                  Building your designs...
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Our AI is creating 3 unique renovation styles. This may take a minute.
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                  The Seamless Studio is creating 3 custom surface designs for your space. This usually takes about a minute — the results are worth it.
                 </p>
               </div>
             </div>
@@ -471,6 +471,48 @@ export default function ResultsPage() {
               >
                 Retry Generation
               </Button>
+            </div>
+          )}
+
+          {/* Lead Capture CTA — after designs load */}
+          {!generating && project?.designs?.length > 0 && (
+            <div className="mt-8 mb-8" data-testid="results-lead-cta">
+              <div className="bg-[#0E0E0E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D97757]/10 via-transparent to-transparent" />
+                <div className="relative z-10 max-w-2xl mx-auto text-center">
+                  <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+                    Like What You See?
+                  </p>
+                  <h3
+                    className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    This isn't just a preview —<br />we can build this.
+                  </h3>
+                  <p className="text-sm text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
+                    Every surface you just saw is something we install. Text Ryan the design you like, get a fast quote, and we'll make your space seamless for real.
+                  </p>
+                  <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
+                    <Button
+                      onClick={() => {
+                        setSelectedContractor(contractors[0] || null);
+                        setQuoteModalOpen(true);
+                      }}
+                      className="h-13 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                      data-testid="results-get-quote-btn"
+                    >
+                      Get My Price
+                    </Button>
+                    <a href="sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20used%20The%20Seamless%20Studio%20and%20I%20like%20what%20I%20see.%20Can%20we%20talk%3F">
+                      <Button variant="outline" className="h-13 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium w-full sm:w-auto" data-testid="results-text-btn">
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        Text 504-264-4919
+                      </Button>
+                    </a>
+                  </div>
+                  <p className="text-xs text-white/25">Free preview. Fast quote. No obligation.</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
