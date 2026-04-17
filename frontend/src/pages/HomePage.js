@@ -11,11 +11,6 @@ const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
 const TEL_LINK = "tel:5042644919";
 
-const SERVICES = [
-  { title: "Seamless Surfaces", items: ["Microcement walls & floors", "Tadelakt showers", "Venetian plaster", "Rockscape accent walls", "Microterrazzo patios", "Pool deck resurfacing"] },
-  { title: "Handyman Services", items: ["Drywall & patching", "Fixture installs", "Door & trim work", "Pressure washing", "Painting", "General repairs"] },
-];
-
 const STEPS = [
   { icon: Upload, title: "Upload Your Room", desc: "Snap a photo of any space you want transformed" },
   { icon: Sparkles, title: "AI Generates Designs", desc: "See 3 seamless surface renovation styles for your room" },
@@ -241,42 +236,102 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== SERVICES ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-white" data-testid="services-section">
+      {/* ===== ROCKSCAPE FEATURE WALLS ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E] overflow-hidden" data-testid="rockscape-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-            What We Do
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-14"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            High-end surfaces.<br />Everyday handyman work.
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {SERVICES.map((svc) => (
-              <div
-                key={svc.title}
-                className="bg-[#FAFAF9] border border-border/40 rounded-2xl p-8 hover:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] transition-shadow duration-500"
-              >
-                <h3
-                  className="text-xl font-medium text-foreground mb-6"
-                  style={{ fontFamily: "'Fraunces', serif" }}
-                >
-                  {svc.title}
-                </h3>
-                <ul className="space-y-3">
-                  {svc.items.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Image */}
+            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+              <img
+                src="https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85"
+                alt="Sculpted rockscape accent wall with dramatic backlighting"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <span className="inline-block px-3 py-1.5 rounded-full bg-[#D97757] text-white text-xs font-bold uppercase tracking-wider">
+                  Signature Service
+                </span>
               </div>
-            ))}
+            </div>
+
+            {/* Content */}
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+                Custom Rockscape Walls
+              </p>
+              <h2
+                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-6 leading-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                A wall that stops people<br />in their tracks.
+              </h2>
+              <p className="text-base text-white/60 leading-relaxed mb-6">
+                Our rockscape walls are hand-sculpted from shaped foam blocks, coated in microaggregate to create a surface that looks and feels like carved natural stone. Backlit, textured, and completely custom — each one is a one-of-a-kind statement piece.
+              </p>
+              <p className="text-base text-white/60 leading-relaxed mb-8">
+                Behind the bed. Behind the bar. Around the fireplace. In the entryway. Anywhere you want jaws to drop.
+              </p>
+
+              <div className="space-y-4 mb-10">
+                {[
+                  "Hand-sculpted to your space — no two are alike",
+                  "Microaggregate finish for authentic rock texture",
+                  "LED backlighting for dramatic effect",
+                  "Bedrooms, living rooms, restaurants, lobbies",
+                  "Preview it first with our AI renovation tool",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
+                    <span className="text-sm text-white/70">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={() => navigate("/upload")}
+                  className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                  data-testid="rockscape-visualize-btn"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Preview a Rockscape Wall in Your Space
+                </Button>
+                <a href={SMS_LINK} data-testid="rockscape-text-btn">
+                  <Button variant="outline" className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Request a Custom Design
+                  </Button>
+                </a>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* ===== HANDYMAN (secondary) ===== */}
+      <section className="py-14 px-6 md:px-12 bg-[#FAFAF9] border-y border-border/40" data-testid="handyman-section">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-muted-foreground/60 mb-2">
+              Also Available
+            </p>
+            <h3
+              className="text-xl md:text-2xl font-light tracking-tight text-foreground mb-3"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Need a handyman? We do that too.
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
+              Drywall patches, fixture installs, door and trim work, painting, pressure washing, and general repairs. Our main focus is seamless surfaces — but we're happy to help with the small stuff while we're there.
+            </p>
+          </div>
+          <a href={SMS_LINK} className="flex-shrink-0" data-testid="handyman-text-btn">
+            <Button variant="outline" className="h-11 px-6 rounded-full border-border/60 text-foreground hover:bg-accent text-sm font-medium">
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Text Ryan — {PHONE}
+            </Button>
+          </a>
         </div>
       </section>
 
