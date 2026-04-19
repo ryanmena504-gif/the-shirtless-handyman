@@ -766,22 +766,22 @@ async def get_public_portfolio():
 # --- Seed Data ---
 
 @api_router.post("/seed")
-def _build_contractor(email, company_name, specialties, service_zips, phone, description, lat, lng, rating, reviews):
-    """Build a contractor seed document."""
+def _build_contractor(cfg):
+    """Build a contractor seed document from a config dict."""
     return {
         "id": str(uuid.uuid4()),
-        "email": email,
+        "email": cfg["email"],
         "password_hash": hash_password("password123"),
-        "company_name": company_name,
-        "specialties": specialties,
-        "service_zip_codes": service_zips,
-        "phone": phone,
-        "description": description,
+        "company_name": cfg["company_name"],
+        "specialties": cfg["specialties"],
+        "service_zip_codes": cfg["service_zips"],
+        "phone": cfg["phone"],
+        "description": cfg["description"],
         "photos": [],
-        "latitude": lat,
-        "longitude": lng,
-        "rating": rating,
-        "review_count": reviews,
+        "latitude": cfg["lat"],
+        "longitude": cfg["lng"],
+        "rating": cfg["rating"],
+        "review_count": cfg["reviews"],
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -789,50 +789,15 @@ def _build_contractor(email, company_name, specialties, service_zips, phone, des
 def _get_seed_contractors():
     """Return the list of seed contractor documents."""
     nola_zips = ["701", "700", "70112", "70113", "70114", "70115", "70116", "70117", "70118", "70119", "70130"]
-    return [
-        _build_contractor(
-            "info@seamlessbathrooms.com", "Seamless Bathrooms LLC",
-            ["Seamless Bathrooms", "Microcement", "Bathroom", "Shower", "Tile"],
-            nola_zips + ["70124", "70125"],
-            "(504) 555-0001", "New Orleans' premier seamless bathroom specialists. We transform bathrooms with microcement, luxury tile, and modern spa designs. Grout-free, waterproof, stunning results.",
-            29.9546, -90.0701, 4.9, 247,
-        ),
-        _build_contractor(
-            "info@crescentcityreno.com", "Crescent City General Contractors",
-            ["General Contractor", "Kitchen", "Remodeling", "Bathroom"],
-            nola_zips,
-            "(504) 555-0101", "Full-service general contracting for kitchen remodels, additions, and whole-home renovations. Licensed and insured in Louisiana.",
-            29.9520, -90.0750, 4.8, 184,
-        ),
-        _build_contractor(
-            "info@nolaepoxypros.com", "NOLA Epoxy Pros",
-            ["Epoxy Flooring", "Garage", "Concrete", "Industrial Flooring"],
-            ["701", "700", "70112", "70113", "70114", "70115", "70124", "70125", "70126", "70131"],
-            "(504) 555-0202", "Professional epoxy floor coatings for garages, workshops, and commercial spaces. Metallic finishes, chip systems, and industrial-grade solutions.",
-            29.9369, -90.0332, 4.7, 112,
-        ),
-        _build_contractor(
-            "info@bigeasylandscaping.com", "Big Easy Landscaping & Hardscape",
-            ["Landscaping", "Hardscape", "Concrete", "Patio", "Outdoor"],
-            ["701", "700", "70116", "70117", "70118", "70119", "70124", "70127", "70128"],
-            "(504) 555-0303", "Complete outdoor living transformations - patios, pool decks, outdoor kitchens, landscaping, and decorative concrete. Built for New Orleans climate.",
-            29.9624, -90.0586, 4.6, 156,
-        ),
-        _build_contractor(
-            "info@gardendistrict.com", "Garden District Pool & Patio",
-            ["Pool", "Concrete", "Landscaping", "Outdoor", "Pool Deck"],
-            ["701", "700", "70115", "70118", "70125", "70130", "70113"],
-            "(504) 555-0404", "Luxury pool decks, patios, and outdoor living spaces in the Garden District and Uptown. Travertine, pavers, and custom concrete designs.",
-            29.9260, -90.1004, 4.8, 143,
-        ),
-        _build_contractor(
-            "info@bayouremodelingco.com", "Bayou Remodeling Co.",
-            ["General Contractor", "Kitchen", "Bathroom", "Remodeling"],
-            ["701", "700", "70112", "70114", "70126", "70127", "70128", "70131", "70148"],
-            "(504) 555-0505", "From Lakeview to the Westbank, quality kitchen and bath remodels across Greater New Orleans. 20+ years experience.",
-            30.0037, -90.1084, 4.5, 98,
-        ),
+    configs = [
+        {"email": "info@seamlessbathrooms.com", "company_name": "Seamless Bathrooms LLC", "specialties": ["Seamless Bathrooms", "Microcement", "Bathroom", "Shower", "Tile"], "service_zips": nola_zips + ["70124", "70125"], "phone": "(504) 555-0001", "description": "New Orleans' premier seamless bathroom specialists. We transform bathrooms with microcement, luxury tile, and modern spa designs. Grout-free, waterproof, stunning results.", "lat": 29.9546, "lng": -90.0701, "rating": 4.9, "reviews": 247},
+        {"email": "info@crescentcityreno.com", "company_name": "Crescent City General Contractors", "specialties": ["General Contractor", "Kitchen", "Remodeling", "Bathroom"], "service_zips": nola_zips, "phone": "(504) 555-0101", "description": "Full-service general contracting for kitchen remodels, additions, and whole-home renovations. Licensed and insured in Louisiana.", "lat": 29.9520, "lng": -90.0750, "rating": 4.8, "reviews": 184},
+        {"email": "info@nolaepoxypros.com", "company_name": "NOLA Epoxy Pros", "specialties": ["Epoxy Flooring", "Garage", "Concrete", "Industrial Flooring"], "service_zips": ["701", "700", "70112", "70113", "70114", "70115", "70124", "70125", "70126", "70131"], "phone": "(504) 555-0202", "description": "Professional epoxy floor coatings for garages, workshops, and commercial spaces. Metallic finishes, chip systems, and industrial-grade solutions.", "lat": 29.9369, "lng": -90.0332, "rating": 4.7, "reviews": 112},
+        {"email": "info@bigeasylandscaping.com", "company_name": "Big Easy Landscaping & Hardscape", "specialties": ["Landscaping", "Hardscape", "Concrete", "Patio", "Outdoor"], "service_zips": ["701", "700", "70116", "70117", "70118", "70119", "70124", "70127", "70128"], "phone": "(504) 555-0303", "description": "Complete outdoor living transformations - patios, pool decks, outdoor kitchens, landscaping, and decorative concrete. Built for New Orleans climate.", "lat": 29.9624, "lng": -90.0586, "rating": 4.6, "reviews": 156},
+        {"email": "info@gardendistrict.com", "company_name": "Garden District Pool & Patio", "specialties": ["Pool", "Concrete", "Landscaping", "Outdoor", "Pool Deck"], "service_zips": ["701", "700", "70115", "70118", "70125", "70130", "70113"], "phone": "(504) 555-0404", "description": "Luxury pool decks, patios, and outdoor living spaces in the Garden District and Uptown. Travertine, pavers, and custom concrete designs.", "lat": 29.9260, "lng": -90.1004, "rating": 4.8, "reviews": 143},
+        {"email": "info@bayouremodelingco.com", "company_name": "Bayou Remodeling Co.", "specialties": ["General Contractor", "Kitchen", "Bathroom", "Remodeling"], "service_zips": ["701", "700", "70112", "70114", "70126", "70127", "70128", "70131", "70148"], "phone": "(504) 555-0505", "description": "From Lakeview to the Westbank, quality kitchen and bath remodels across Greater New Orleans. 20+ years experience.", "lat": 30.0037, "lng": -90.1084, "rating": 4.5, "reviews": 98},
     ]
+    return [_build_contractor(c) for c in configs]
 
 
 async def seed_data():

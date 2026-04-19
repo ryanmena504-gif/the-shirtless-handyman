@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../lib/AuthContext";
 import { Navbar } from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -10,12 +10,11 @@ import { Checkbox } from "../components/ui/checkbox";
 import { toast } from "sonner";
 import { UserPlus, Building2, Mail, Lock, Phone, MapPin } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 const SPECIALTY_OPTIONS = ["Bathroom", "Shower", "Kitchen", "Pool Deck", "Patio"];
 
 export default function ContractorRegisterPage() {
   const navigate = useNavigate();
+  const { registerContractor } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -41,13 +40,11 @@ export default function ContractorRegisterPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/contractors/register`, {
+      await registerContractor({
         ...form,
         specialties,
         service_zip_codes: form.service_zip_codes.split(",").map((s) => s.trim()).filter(Boolean),
-      }, { withCredentials: true });
-      localStorage.setItem("contractor_token", "authenticated");
-      localStorage.setItem("contractor_info", JSON.stringify(res.data.contractor));
+      });
       toast.success("Registration successful! Welcome aboard.");
       navigate("/contractor/dashboard");
     } catch (err) {

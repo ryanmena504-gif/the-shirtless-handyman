@@ -301,29 +301,42 @@ export default function UploadPage() {
                       const Icon = room.icon;
                       const isSelected = projectType === room.value;
                       const isFeatured = room.featured;
+
+                      const cardClass = (() => {
+                        if (isSelected) return "border-[#D97757] bg-[#D97757]/10 shadow-md shadow-[#D97757]/10";
+                        if (isFeatured) return "border-[#D97757]/40 bg-[#D97757]/5 hover:border-[#D97757] hover:bg-[#D97757]/10";
+                        return "border-border/60 hover:border-primary/40 hover:bg-muted/50";
+                      })();
+
+                      const iconBgClass = (() => {
+                        if (isSelected) return "bg-[#D97757] text-white";
+                        if (isFeatured) return "bg-[#D97757]/15";
+                        return "bg-muted group-hover:bg-primary/10";
+                      })();
+
+                      const iconClass = (() => {
+                        if (isSelected) return "text-white";
+                        if (isFeatured) return "text-[#D97757]";
+                        return "text-muted-foreground group-hover:text-primary";
+                      })();
+
+                      const labelClass = (isSelected || isFeatured) ? "text-[#D97757]" : "text-foreground";
+
                       return (
                         <button
                           key={room.value}
                           type="button"
                           onClick={() => setProjectType(room.value)}
                           data-testid={`room-type-${room.value.toLowerCase().replace(/\s+/g, "-")}`}
-                          className={`p-4 rounded-xl border-2 text-left transition-all duration-200 group ${
-                            isSelected
-                              ? "border-[#D97757] bg-[#D97757]/10 shadow-md shadow-[#D97757]/10"
-                              : isFeatured
-                              ? "border-[#D97757]/40 bg-[#D97757]/5 hover:border-[#D97757] hover:bg-[#D97757]/10"
-                              : "border-border/60 hover:border-primary/40 hover:bg-muted/50"
-                          }`}
+                          className={`p-4 rounded-xl border-2 text-left transition-all duration-200 group ${cardClass}`}
                         >
                           <div className="flex items-start gap-3">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                              isSelected ? "bg-[#D97757] text-white" : isFeatured ? "bg-[#D97757]/15" : "bg-muted group-hover:bg-primary/10"
-                            }`}>
-                              <Icon className={`w-5 h-5 ${isSelected ? "text-white" : isFeatured ? "text-[#D97757]" : "text-muted-foreground group-hover:text-primary"}`} />
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${iconBgClass}`}>
+                              <Icon className={`w-5 h-5 ${iconClass}`} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className={`text-sm font-semibold truncate ${isSelected ? "text-[#D97757]" : isFeatured ? "text-[#D97757]" : "text-foreground"}`}>
+                                <p className={`text-sm font-semibold truncate ${labelClass}`}>
                                   {room.label}
                                 </p>
                                 {isFeatured && !isSelected && (

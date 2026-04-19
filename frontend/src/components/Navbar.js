@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../lib/AuthContext";
 import { Button } from "../components/ui/button";
 import { Menu, X, Hammer, LogIn, LayoutDashboard } from "lucide-react";
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem("contractor_token");
+  const { contractorAuth } = useAuth();
 
   return (
     <nav
@@ -50,7 +51,7 @@ export const Navbar = () => {
           >
             Our Work
           </Button>
-          {token ? (
+          {contractorAuth ? (
             <Button
               variant="ghost"
               className="rounded-full text-sm font-medium"
@@ -110,7 +111,7 @@ export const Navbar = () => {
           >
             Our Work
           </Button>
-          {token ? (
+          {contractorAuth ? (
             <Button
               variant="ghost"
               className="w-full justify-start rounded-lg"

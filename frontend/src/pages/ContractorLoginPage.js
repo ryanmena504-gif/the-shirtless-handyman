@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../lib/AuthContext";
 import { Navbar } from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,10 +8,9 @@ import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { LogIn, Mail, Lock } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 export default function ContractorLoginPage() {
   const navigate = useNavigate();
+  const { loginContractor } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,9 +23,7 @@ export default function ContractorLoginPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/contractors/login`, { email, password }, { withCredentials: true });
-      localStorage.setItem("contractor_token", "authenticated");
-      localStorage.setItem("contractor_info", JSON.stringify(res.data.contractor));
+      await loginContractor(email, password);
       toast.success("Welcome back!");
       navigate("/contractor/dashboard");
     } catch {

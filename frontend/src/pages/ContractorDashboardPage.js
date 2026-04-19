@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../lib/AuthContext";
 import { Navbar } from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -18,13 +19,12 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function ContractorDashboardPage() {
   const navigate = useNavigate();
+  const { contractorAuth, logoutContractor, checkContractorAuth } = useAuth();
   const [tab, setTab] = useState("profile");
   const [profile, setProfile] = useState(null);
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  const token = localStorage.getItem("contractor_token");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -36,21 +36,29 @@ export default function ContractorDashboardPage() {
       setProfile(profileRes.data);
       setLeads(leadsRes.data.leads || []);
     } catch {
-      toast.error("Failed to load dashboard data");
-      localStorage.removeItem("contractor_token");
+      toast.error("Session expired. Please log in again.");
+      await logoutContractor();
       navigate("/contractor/login");
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, [navigate, logoutContractor]);
 
   useEffect(() => {
-    if (!token) {
-      navigate("/contractor/login");
-      return;
+    const init = async () => {
+      const valid = await checkContractorAuth();
+      if (!valid) {
+        navigate("/contractor/login");
+        return;
+      }
+      fetchData();
+    };
+    if (!contractorAuth) {
+      init();
+    } else {
+      fetchData();
     }
-    fetchData();
-  }, [navigate, fetchData]);
+  }, [contractorAuth, checkContractorAuth, navigate, fetchData]);
 
   const handleSaveProfile = async () => {
     if (!profile) return;
@@ -72,9 +80,7 @@ export default function ContractorDashboardPage() {
   };
 
   const handleLogout = async () => {
-    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
-    localStorage.removeItem("contractor_token");
-    localStorage.removeItem("contractor_info");
+    await logoutContractor();
     navigate("/contractor/login");
   };
 

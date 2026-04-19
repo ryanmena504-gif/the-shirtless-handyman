@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { useAuth } from "../lib/AuthContext";
 import { Navbar } from "../components/Navbar";
 import { AdminLeadsList } from "../components/AdminLeadsList";
 import { AdminContractorsList } from "../components/AdminContractorsList";
@@ -17,6 +18,7 @@ import {
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function AdminPage() {
+  const { adminAuth, loginAdmin, logoutAdmin, checkAdminAuth } = useAuth();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
@@ -26,8 +28,6 @@ export default function AdminPage() {
   const [contractors, setContractors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [portfolio, setPortfolio] = useState([]);
-
-  const token = localStorage.getItem("admin_token");
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -44,27 +44,35 @@ export default function AdminPage() {
       setContractors(contractorsRes.data.contractors || []);
       setPortfolio(portfolioRes.data.items || []);
     } catch {
-      toast.error("Failed to load admin data");
-      localStorage.removeItem("admin_token");
+      toast.error("Session expired");
+      await logoutAdmin();
       setAuthenticated(false);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [logoutAdmin]);
 
   useEffect(() => {
-    if (token) {
+    const init = async () => {
+      const valid = await checkAdminAuth();
+      if (valid) {
+        setAuthenticated(true);
+        fetchAll();
+      }
+    };
+    if (adminAuth) {
       setAuthenticated(true);
       fetchAll();
+    } else {
+      init();
     }
-  }, [token, fetchAll]);
+  }, [adminAuth, checkAdminAuth, fetchAll]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoggingIn(true);
     try {
-      await axios.post(`${API}/admin/login`, { password }, { withCredentials: true });
-      localStorage.setItem("admin_token", "authenticated");
+      await loginAdmin(password);
       setAuthenticated(true);
       toast.success("Welcome, Admin");
       fetchAll();
@@ -76,8 +84,7 @@ export default function AdminPage() {
   };
 
   const handleLogout = async () => {
-    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
-    localStorage.removeItem("admin_token");
+    await logoutAdmin();
     setAuthenticated(false);
     setStats(null);
     setLeads([]);
