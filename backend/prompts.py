@@ -128,6 +128,11 @@ STYLE_PROMPTS = {
         {"name": "Microcement & Rockscape BBQ", "prompt": PRESERVATION_PREFIX + SEAMLESS_RULE + "Transform this outdoor kitchen with seamless microcement on all countertops and island cladding — no tiles, no grout. On the back wall or feature area, create a rockscape surround made from sculpted textured forms with microaggregate finish creating a dramatic stone-like cooking alcove. Floors in continuous microterrazzo. Pendant lighting, dining seating area. Keep the exact same space boundaries and access points."},
         {"name": "Beton Cire & Cocciopesto Kitchen", "prompt": PRESERVATION_PREFIX + SEAMLESS_RULE + "Transform this outdoor kitchen with beton cire (polished cement) on all countertops creating a smooth industrial-chic seamless surface — no tiles, no grout. Floors in continuous cocciopesto (warm earthy terracotta-lime seamless surface) for a Mediterranean feel. Sleek stainless steel built-in appliances, seamless integrated storage, LED strip lighting under counters, clean-lined outdoor furniture. Keep the exact same space boundaries and access points."},
     ],
+    "Feature Wall": [
+        {"name": "Full Rockscape Statement Wall", "prompt": PRESERVATION_PREFIX + SEAMLESS_RULE + "Transform this space by creating a dramatic full rockscape feature wall on the main focal wall. Hand-sculpted textured forms made from shaped foam blocks coated in microaggregate — creating a surface that looks and feels like carved natural stone with deep organic textures, ridges, and shadow lines. Add integrated LED backlighting behind and within the rock forms for a dramatic ambient glow. The surrounding walls should be finished in smooth microcement in a warm neutral tone to contrast the rough rockscape texture. Floors in continuous microcement. Keep all other walls, doors, windows, and room dimensions exactly as they are."},
+        {"name": "Venetian Plaster & Rockscape Accent", "prompt": PRESERVATION_PREFIX + SEAMLESS_RULE + "Transform this space with polished venetian plaster on all surrounding walls creating a luminous, depth-filled surface — and on the main focal wall, create a dramatic rockscape accent panel made from sculpted textured forms with microaggregate finish. The contrast between the ultra-smooth venetian plaster and the rough organic rock texture creates a stunning visual tension. Add subtle LED backlighting to the rockscape panel. Floors in continuous beton cire. Keep all other walls, doors, windows, and room dimensions exactly as they are."},
+        {"name": "Marmorino & Sculpted Stone Feature", "prompt": PRESERVATION_PREFIX + SEAMLESS_RULE + "Transform this space with Marmorino plaster (marble-dust lime plaster with translucent depth) on all surrounding walls — and on the main focal wall, create a large sculpted stone feature made from shaped foam blocks coated in microaggregate, designed to look like a natural rock face emerging from the wall. Integrate warm LED backlighting at the edges where the rockscape meets the smooth Marmorino. Floors in continuous microterrazzo. The rockscape should feel like a natural geological formation brought indoors. Keep all other walls, doors, windows, and room dimensions exactly as they are."},
+    ],
 }
 
 ROOM_ANALYSIS_PROMPTS = {
@@ -187,6 +192,24 @@ RECOMMENDED FIXES:
 - Lighting enhancements
 - Design updates for modern functionality
 
+Provide honest, professional contractor-style observations. Be specific about what you see.""",
+
+    "Feature Wall": """Analyze this wall/room photo as a professional feature wall installer. Provide a detailed assessment including:
+
+DETECTED CONDITIONS:
+- Current wall surface condition (drywall, paint, existing texture)
+- Wall dimensions and available focal area
+- Lighting conditions and potential for backlighting
+- Surrounding surfaces and how they'd contrast with a feature wall
+- Any existing elements to work around (outlets, vents, built-ins)
+
+RECOMMENDED FIXES:
+- Wall preparation needed before feature installation
+- Ideal feature wall type for this space (rockscape, venetian plaster accent, etc.)
+- Lighting upgrades to enhance the feature
+- Complementary finishes for surrounding walls
+- Furniture/decor adjustments to showcase the feature
+
 Provide honest, professional contractor-style observations. Be specific about what you see."""
 }
 
@@ -204,6 +227,8 @@ PROJECT_TYPE_ROUTING = {
     "Pool Deck": ["Landscaping", "Concrete", "Pool", "Outdoor"],
     "Backyard": ["Landscaping", "Hardscape", "Outdoor"],
     "Outdoor Kitchen": ["Outdoor", "Concrete", "Landscaping", "Kitchen"],
+    # Feature Wall / Rockscape -> seamless specialists
+    "Feature Wall": ["Seamless Bathrooms", "Microcement", "Interior", "General Contractor"],
 }
 
 # Easter egg ZIP code for the Shirtless Handyman

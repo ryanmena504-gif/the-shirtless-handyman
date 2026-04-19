@@ -10,7 +10,7 @@ import {
   Upload, Camera, X, ArrowRight, MapPin, Star, Plus,
   Bath, UtensilsCrossed, Sofa, Bed, Baby, Briefcase,
   Car, WashingMachine, Warehouse, DoorOpen,
-  TreePine, Waves, Flower2, Flame
+  TreePine, Waves, Flower2, Flame, Mountain
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -43,6 +43,12 @@ const ROOM_CATEGORIES = [
       { value: "Pool Deck", label: "Pool Deck", icon: Waves, description: "Poolside areas" },
       { value: "Backyard", label: "Backyard", icon: Flower2, description: "Landscaping & gardens" },
       { value: "Outdoor Kitchen", label: "Outdoor Kitchen", icon: Flame, description: "Outdoor cooking spaces" },
+    ],
+  },
+  {
+    category: "Specialty",
+    rooms: [
+      { value: "Feature Wall", label: "Feature Wall / Rockscape", icon: Mountain, description: "Accent walls & rockscape" },
     ],
   },
 ];

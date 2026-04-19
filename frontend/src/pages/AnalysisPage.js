@@ -157,6 +157,22 @@ const ROOM_ANALYSIS_DATA = {
       { icon: Wrench, text: "Build rockscape fire pit surround or accent wall" },
     ],
   },
+  "Feature Wall": {
+    conditions: [
+      { icon: Paintbrush, text: "Current wall surface is flat and unremarkable", severity: "moderate" },
+      { icon: Lightbulb, text: "No accent lighting to highlight a focal wall", severity: "moderate" },
+      { icon: Layout, text: "Room lacks a clear visual anchor point", severity: "minor" },
+      { icon: Calendar, text: "Wall finish may be outdated or generic", severity: "minor" },
+      { icon: Zap, text: "Existing outlets or vents may need rerouting", severity: "minor" },
+    ],
+    improvements: [
+      { icon: Paintbrush, text: "Install a custom rockscape feature wall with microaggregate finish" },
+      { icon: Lightbulb, text: "Add integrated LED backlighting for dramatic effect" },
+      { icon: Wrench, text: "Finish surrounding walls in smooth microcement or venetian plaster" },
+      { icon: Layout, text: "Rearrange furniture to showcase the feature wall" },
+      { icon: Shield, text: "Seal all surfaces for long-term durability" },
+    ],
+  },
 };
 
 // Cost ranges by room type and budget tier
@@ -196,6 +212,12 @@ const COST_RANGES = {
     "5k_10k": { basic: [3000, 5000], mid: [5000, 8000], full: [8000, 10000] },
     "10k_20k": { basic: [5000, 10000], mid: [10000, 15000], full: [15000, 20000] },
     "20k_plus": { basic: [10000, 15000], mid: [15000, 30000], full: [30000, 50000] },
+  },
+  "Feature Wall": {
+    under_5k: { basic: [2000, 3000], mid: [3000, 4500], full: [4500, 5000] },
+    "5k_10k": { basic: [3500, 5000], mid: [5000, 7500], full: [7500, 10000] },
+    "10k_20k": { basic: [5000, 8000], mid: [8000, 14000], full: [14000, 20000] },
+    "20k_plus": { basic: [8000, 15000], mid: [15000, 25000], full: [25000, 40000] },
   },
 };
 
