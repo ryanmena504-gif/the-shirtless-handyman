@@ -17,6 +17,12 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const ROOM_CATEGORIES = [
   {
+    category: "Specialty",
+    rooms: [
+      { value: "Feature Wall", label: "Feature Wall / Rockscape", icon: Mountain, description: "Accent walls & rockscape", featured: true },
+    ],
+  },
+  {
     category: "Interior Rooms",
     rooms: [
       { value: "Bathroom", label: "Bathroom", icon: Bath, description: "Tubs, showers, vanities" },
@@ -43,12 +49,6 @@ const ROOM_CATEGORIES = [
       { value: "Pool Deck", label: "Pool Deck", icon: Waves, description: "Poolside areas" },
       { value: "Backyard", label: "Backyard", icon: Flower2, description: "Landscaping & gardens" },
       { value: "Outdoor Kitchen", label: "Outdoor Kitchen", icon: Flame, description: "Outdoor cooking spaces" },
-    ],
-  },
-  {
-    category: "Specialty",
-    rooms: [
-      { value: "Feature Wall", label: "Feature Wall / Rockscape", icon: Mountain, description: "Accent walls & rockscape" },
     ],
   },
 ];
@@ -296,10 +296,11 @@ export default function UploadPage() {
                   <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
                     {cat.category}
                   </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <div className={`grid gap-3 ${cat.rooms.length === 1 ? "grid-cols-1" : "grid-cols-2 md:grid-cols-3"}`}>
                     {cat.rooms.map((room) => {
                       const Icon = room.icon;
                       const isSelected = projectType === room.value;
+                      const isFeatured = room.featured;
                       return (
                         <button
                           key={room.value}
@@ -308,20 +309,29 @@ export default function UploadPage() {
                           data-testid={`room-type-${room.value.toLowerCase().replace(/\s+/g, "-")}`}
                           className={`p-4 rounded-xl border-2 text-left transition-all duration-200 group ${
                             isSelected
-                              ? "border-primary bg-primary/10 shadow-md"
+                              ? "border-[#D97757] bg-[#D97757]/10 shadow-md shadow-[#D97757]/10"
+                              : isFeatured
+                              ? "border-[#D97757]/40 bg-[#D97757]/5 hover:border-[#D97757] hover:bg-[#D97757]/10"
                               : "border-border/60 hover:border-primary/40 hover:bg-muted/50"
                           }`}
                         >
                           <div className="flex items-start gap-3">
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                              isSelected ? "bg-primary text-white" : "bg-muted group-hover:bg-primary/10"
+                              isSelected ? "bg-[#D97757] text-white" : isFeatured ? "bg-[#D97757]/15" : "bg-muted group-hover:bg-primary/10"
                             }`}>
-                              <Icon className={`w-5 h-5 ${isSelected ? "text-white" : "text-muted-foreground group-hover:text-primary"}`} />
+                              <Icon className={`w-5 h-5 ${isSelected ? "text-white" : isFeatured ? "text-[#D97757]" : "text-muted-foreground group-hover:text-primary"}`} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className={`text-sm font-semibold truncate ${isSelected ? "text-primary" : "text-foreground"}`}>
-                                {room.label}
-                              </p>
+                              <div className="flex items-center gap-2">
+                                <p className={`text-sm font-semibold truncate ${isSelected ? "text-[#D97757]" : isFeatured ? "text-[#D97757]" : "text-foreground"}`}>
+                                  {room.label}
+                                </p>
+                                {isFeatured && !isSelected && (
+                                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#D97757] text-white flex-shrink-0">
+                                    Signature
+                                  </span>
+                                )}
+                              </div>
                               <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{room.description}</p>
                             </div>
                           </div>
