@@ -862,7 +862,7 @@ export default function HomePage() {
               &copy; {new Date().getFullYear()} The Shirtless Handyman. All rights reserved.
             </p>
             <p className="text-xs text-muted-foreground/60 mt-1">
-              Serving Greater New Orleans &middot; {PHONE}
+              Serving Greater New Orleans &middot; {PHONE} &middot; ryanmena@theshirtlesshandyman.com
             </p>
           </div>
           <div className="flex gap-6">

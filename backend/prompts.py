@@ -237,7 +237,7 @@ SHIRTLESS_HANDYMAN_ZIP = "70123"
 SHIRTLESS_HANDYMAN_PROFILE = {
     "id": "shirtless-handyman-easter-egg",
     "company_name": "The Shirtless Handyman",
-    "email": "ryan@shirtlesshandyman.com",
+    "email": "ryanmena@theshirtlesshandyman.com",
     "specialties": ["Handyman", "General Contractor", "Bathroom", "Kitchen", "Remodeling", "Interior"],
     "service_zip_codes": ["70123", "701"],
     "phone": "(504) 264-4919",
