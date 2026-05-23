@@ -16,7 +16,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logoutAdmin = useCallback(async () => {
-    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
+    try {
+      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
+    } catch (err) {
+      // Network failure shouldn't block local logout; log for visibility.
+      console.warn("Admin logout request failed:", err?.message || err);
+    }
     setAdminAuth(false);
   }, []);
 
@@ -35,7 +40,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logoutContractor = useCallback(async () => {
-    try { await axios.post(`${API}/auth/logout`, {}, { withCredentials: true }); } catch {}
+    try {
+      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
+    } catch (err) {
+      // Network failure shouldn't block local logout; log for visibility.
+      console.warn("Contractor logout request failed:", err?.message || err);
+    }
     setContractorAuth(false);
     setContractorInfo(null);
   }, []);

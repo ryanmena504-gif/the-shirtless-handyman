@@ -338,23 +338,35 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
     logger.info(f"Generation complete for {project_id}: {len(designs)} designs (status={status})")
 
 
+# Ordered list of (keywords, message) tuples for mapping LLM errors → user-friendly messages.
+# Each row is checked in order; first match wins.
+_GENERATION_ERROR_PATTERNS = (
+    (("budget", "insufficient", "balance", "credit"),
+     "AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance."),
+    (("401", "403", "unauthorized", "forbidden", "invalid api key", "authentication"),
+     "AI service authentication failed. The Universal LLM Key may be missing or expired on the deployed environment."),
+    (("timeout", "timed out", "504", "deadline"),
+     "AI generation timed out. Please try again with a smaller photo."),
+    (("rate limit", "429", "too many requests"),
+     "AI service is busy right now. Please wait a moment and try again."),
+    (("content policy", "safety", "moderation", "rejected"),
+     "The AI couldn't process this photo due to content guidelines. Try a different room photo."),
+    (("connection",),
+     "Couldn't reach the AI service. Please try again in a moment."),
+)
+_CONNECTION_ERROR_NAMES = {"ConnectionError", "ConnectError"}
+_GENERIC_GENERATION_ERROR = "Design generation failed. Please try again."
+
+
 def _friendly_generation_error(exc: Exception) -> str:
     """Map low-level exceptions to user-friendly messages."""
     msg = str(exc).lower()
-    name = type(exc).__name__
-    if any(k in msg for k in ["budget", "insufficient", "balance", "credit"]):
-        return "AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance."
-    if any(k in msg for k in ["401", "403", "unauthorized", "forbidden", "invalid api key", "authentication"]):
-        return "AI service authentication failed. The Universal LLM Key may be missing or expired on the deployed environment."
-    if any(k in msg for k in ["timeout", "timed out", "504", "deadline"]):
-        return "AI generation timed out. Please try again with a smaller photo."
-    if any(k in msg for k in ["rate limit", "429", "too many requests"]):
-        return "AI service is busy right now. Please wait a moment and try again."
-    if any(k in msg for k in ["content policy", "safety", "moderation", "rejected"]):
-        return "The AI couldn't process this photo due to content guidelines. Try a different room photo."
-    if "connection" in msg or name in ("ConnectionError", "ConnectError"):
+    for keywords, friendly in _GENERATION_ERROR_PATTERNS:
+        if any(k in msg for k in keywords):
+            return friendly
+    if type(exc).__name__ in _CONNECTION_ERROR_NAMES:
         return "Couldn't reach the AI service. Please try again in a moment."
-    return "Design generation failed. Please try again."
+    return _GENERIC_GENERATION_ERROR
 
 
 # --- Room Analysis with AI Vision ---
