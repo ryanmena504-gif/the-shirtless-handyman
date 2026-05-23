@@ -79,6 +79,46 @@ async def root():
     return {"message": "AI Renovation Visualizer API"}
 
 
+@api_router.get("/health/ai")
+async def ai_health_check():
+    """Quick check whether the AI image-edit pipeline is reachable from the deployed env.
+
+    Returns ok=true if EMERGENT_LLM_KEY is configured and a tiny image_edit call succeeds.
+    Use this on the deployed site to diagnose generation failures without uploading photos.
+    """
+    api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+    if not api_key:
+        return {"ok": False, "stage": "config", "error": "EMERGENT_LLM_KEY is missing on this environment"}
+    try:
+        import litellm
+        from emergentintegrations.llm.utils import get_integration_proxy_url
+        proxy_url = get_integration_proxy_url() + "/llm"
+        # 1x1 transparent PNG
+        tiny_png = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        )
+        resp = await asyncio.to_thread(
+            litellm.image_edit,
+            image=tiny_png,
+            prompt="make it red",
+            model="openai/gpt-image-1",
+            api_key=api_key,
+            api_base=proxy_url,
+            quality="low",
+            n=1,
+            timeout=45,
+        )
+        ok = bool(resp and resp.data)
+        return {"ok": ok, "stage": "image_edit", "proxy_url": proxy_url}
+    except Exception as e:  # pragma: no cover - diagnostic
+        return {
+            "ok": False,
+            "stage": "image_edit",
+            "error_type": type(e).__name__,
+            "error": str(e)[:500],
+        }
+
+
 # --- Project Routes ---
 
 @api_router.post("/projects/upload")
@@ -144,10 +184,10 @@ async def generate_designs(project_id: str):
     if project.get("status") == "generating":
         return {"id": project_id, "status": "generating"}
 
-    # Mark as generating and return immediately
+    # Mark as generating and clear any previous error and return immediately
     await db.projects.update_one(
         {"id": project_id},
-        {"$set": {"status": "generating"}},
+        {"$set": {"status": "generating"}, "$unset": {"error": "", "error_detail": ""}},
     )
 
     # Run both analysis and generation in parallel threads
@@ -258,10 +298,21 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
         return
 
     api_key = os.environ.get("EMERGENT_LLM_KEY", "")
+    if not api_key:
+        loop.run_until_complete(
+            thread_db.projects.update_one(
+                {"id": project_id},
+                {"$set": {"status": "failed", "error": "AI service is not configured. Please contact support."}},
+            )
+        )
+        logger.error(f"EMERGENT_LLM_KEY missing for project {project_id}")
+        return
+
     proxy_url = get_integration_proxy_url() + "/llm"
     preservation_suffix = " IMPORTANT: This must look like the SAME room after renovation. Preserve the exact camera angle, room shape, wall positions, door locations, and window placements from the original photo. Only change materials, finishes, fixtures, and decor."
 
     designs = []
+    last_error = None
     for style in styles:
         try:
             result = _generate_single_design(style, image_bytes, budget_mod, preservation_suffix, api_key, proxy_url)
@@ -269,17 +320,41 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
                 designs.append(result)
             logger.info(f"Generated: {style['name']} for project {project_id} (budget: {budget})")
         except Exception as e:
-            logger.error(f"Image edit error for {style['name']}: {e}")
+            last_error = e
+            logger.error(f"Image edit error for {style['name']}: {type(e).__name__}: {e}")
 
     cost = estimate_cost(project_type, project["zip_code"])
     status = "completed" if designs else "failed"
+    update_fields = {"designs": designs, "cost_estimate": cost, "status": status}
+    if status == "failed" and last_error is not None:
+        update_fields["error"] = _friendly_generation_error(last_error)
+        update_fields["error_detail"] = f"{type(last_error).__name__}: {str(last_error)[:500]}"
     loop.run_until_complete(
         thread_db.projects.update_one(
             {"id": project_id},
-            {"$set": {"designs": designs, "cost_estimate": cost, "status": status}},
+            {"$set": update_fields},
         )
     )
-    logger.info(f"Generation complete for {project_id}: {len(designs)} designs")
+    logger.info(f"Generation complete for {project_id}: {len(designs)} designs (status={status})")
+
+
+def _friendly_generation_error(exc: Exception) -> str:
+    """Map low-level exceptions to user-friendly messages."""
+    msg = str(exc).lower()
+    name = type(exc).__name__
+    if any(k in msg for k in ["budget", "insufficient", "balance", "credit"]):
+        return "AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance."
+    if any(k in msg for k in ["401", "403", "unauthorized", "forbidden", "invalid api key", "authentication"]):
+        return "AI service authentication failed. The Universal LLM Key may be missing or expired on the deployed environment."
+    if any(k in msg for k in ["timeout", "timed out", "504", "deadline"]):
+        return "AI generation timed out. Please try again with a smaller photo."
+    if any(k in msg for k in ["rate limit", "429", "too many requests"]):
+        return "AI service is busy right now. Please wait a moment and try again."
+    if any(k in msg for k in ["content policy", "safety", "moderation", "rejected"]):
+        return "The AI couldn't process this photo due to content guidelines. Try a different room photo."
+    if "connection" in msg or name in ("ConnectionError", "ConnectError"):
+        return "Couldn't reach the AI service. Please try again in a moment."
+    return "Design generation failed. Please try again."
 
 
 # --- Room Analysis with AI Vision ---

@@ -33,12 +33,16 @@ export default function ResultsPage() {
   const [sharing, setSharing] = useState(false);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [pdfDesignName, setPdfDesignName] = useState("");
+  const [errorDetail, setErrorDetail] = useState(null);
+  const [showErrorDetail, setShowErrorDetail] = useState(false);
 
   const navigate = useNavigate();
 
   const generateDesigns = useCallback(async () => {
     setGenerating(true);
     setError(null);
+    setErrorDetail(null);
+    setShowErrorDetail(false);
     try {
       const checkRes = await axios.get(`${API}/projects/${projectId}`, { timeout: 10000 });
       if (checkRes.data.status === "completed" && checkRes.data.designs?.length > 0) {
@@ -78,12 +82,9 @@ export default function ResultsPage() {
           }
 
           if (data.status === "failed") {
-            const errMsg = data.error || "Design generation failed.";
-            if (errMsg.includes("budget")) {
-              setError("AI generation budget exceeded. Please add balance at Profile > Universal Key > Add Balance.");
-            } else {
-              setError("Design generation failed. Please try again.");
-            }
+            const errMsg = data.error || "Design generation failed. Please try again.";
+            setError(errMsg);
+            setErrorDetail(data.error_detail || null);
             setGenerating(false);
             return;
           }
@@ -185,7 +186,7 @@ export default function ResultsPage() {
               <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
                 <AlertCircle className="w-8 h-8 text-destructive" />
               </div>
-              <p className="text-muted-foreground">{error}</p>
+              <p className="text-muted-foreground text-center max-w-md px-4" data-testid="error-message">{error}</p>
               <Button
                 onClick={generateDesigns}
                 className="rounded-full bg-primary text-primary-foreground btn-pill"
@@ -193,6 +194,25 @@ export default function ResultsPage() {
               >
                 Try Again
               </Button>
+              {errorDetail && (
+                <div className="text-center mt-2">
+                  <button
+                    onClick={() => setShowErrorDetail((v) => !v)}
+                    className="text-xs text-muted-foreground underline hover:text-foreground"
+                    data-testid="toggle-error-detail-btn"
+                  >
+                    {showErrorDetail ? "Hide" : "Show"} technical details
+                  </button>
+                  {showErrorDetail && (
+                    <pre
+                      className="mt-3 px-4 py-3 bg-muted rounded-md text-xs text-left max-w-lg overflow-auto whitespace-pre-wrap break-words"
+                      data-testid="error-detail"
+                    >
+                      {errorDetail}
+                    </pre>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
