@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ExitIntentModal } from "./ExitIntentModal";
 import { StickyMobileCTA } from "./StickyMobileCTA";
@@ -7,16 +8,33 @@ import { SocialProofToast } from "./SocialProofToast";
 const LEADGEN_ROUTES = ["/", "/upload", "/portfolio"];
 const LEADGEN_PREFIXES = ["/results", "/analysis", "/share"];
 
+// Routes where ANY 3rd-party homeowner-targeted overlay (Klaviyo signup, etc.) must be hidden.
+const OPERATOR_PREFIXES = ["/admin", "/contractor"];
+
 /**
  * LeadGenWidgets — global overlay that mounts the sticky CTA, exit-intent modal,
- * and social-proof toast on homeowner-facing pages only. Admin/contractor routes
- * are intentionally excluded so we don't bug logged-in operators.
+ * and social-proof toast on homeowner-facing pages only.
+ *
+ * Also gates the Klaviyo signup form by toggling a body data-attribute so CSS
+ * can hide Klaviyo's auto-injected overlays on operator (admin/contractor) routes
+ * and while our own ExitIntentModal is open.
  */
 export const LeadGenWidgets = () => {
   const { pathname } = useLocation();
   const onLeadGenRoute =
     LEADGEN_ROUTES.includes(pathname) ||
     LEADGEN_PREFIXES.some((p) => pathname.startsWith(p));
+  const onOperatorRoute = OPERATOR_PREFIXES.some((p) => pathname.startsWith(p));
+
+  useEffect(() => {
+    // Tag the body with the current scope so CSS in App.css can suppress Klaviyo
+    // signup forms on operator routes without removing the analytics tracking.
+    if (typeof document === "undefined") return;
+    document.body.dataset.scope = onOperatorRoute ? "operator" : "homeowner";
+    return () => {
+      // No teardown needed — next route will overwrite it.
+    };
+  }, [onOperatorRoute]);
 
   if (!onLeadGenRoute) return null;
 

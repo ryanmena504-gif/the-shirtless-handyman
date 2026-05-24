@@ -1,3 +1,19 @@
+/* === Suppress Klaviyo signup forms on operator routes (admin / contractor dashboards)
+   so logged-in operators don't get the homeowner-targeted popup overlay. */
+body[data-scope="operator"] .klaviyo-form,
+body[data-scope="operator"] [class*="kl-private"],
+body[data-scope="operator"] [data-klaviyo-form],
+body[data-scope="operator"] [id^="component_"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide horizontal scrollbar on filter pill rows */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+
 /* Entrance animations */
 @keyframes fadeInUp {
     from {

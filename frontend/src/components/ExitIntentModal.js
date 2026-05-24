@@ -19,6 +19,14 @@ export const ExitIntentModal = () => {
   const trigger = useCallback(() => {
     if (typeof window === "undefined") return;
     if (window.sessionStorage.getItem(STORAGE_KEY)) return;
+    // Don't stack on top of an already-visible Klaviyo signup form.
+    const klaviyoOpen = document.querySelector(
+      ".klaviyo-form-version-cid_1 [role='dialog'], .klaviyo-form [aria-modal='true']"
+    );
+    if (klaviyoOpen) {
+      window.sessionStorage.setItem(STORAGE_KEY, "1");
+      return;
+    }
     window.sessionStorage.setItem(STORAGE_KEY, "1");
     setOpen(true);
   }, []);

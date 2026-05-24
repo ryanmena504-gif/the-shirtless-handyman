@@ -58,9 +58,23 @@ Env vars (currently empty pending user setup):
 - Fixed pre-existing latent bug: `@api_router.post("/seed")` was decorating the wrong function — moved to a dedicated `seed_endpoint`.
 
 ## Verification Status
-- Iteration 6 (2026-05-24): All 7 backend tests passed; every frontend lead-gen widget verified on desktop + mobile. Zero critical / integration / UI bugs. Minor cosmetic findings resolved.
+- Iteration 6 (2026-05-24): Initial lead-gen layer — 7/7 backend tests passed.
+- **Iteration 7 (2026-05-24): P1 + P2 wave — 9/9 backend tests passed, frontend LeadsInbox + regression on all lead-gen widgets verified. Two design issues found and immediately resolved:**
+  - Klaviyo signup overlay was leaking onto operator routes → fixed via `body[data-scope=operator]` CSS gate.
+  - ExitIntentModal could stack on top of an open Klaviyo form → ExitIntentModal now checks for an active Klaviyo dialog before opening.
 - `/api/health/ai` returns `ok:true`.
 - `/api/leads/quick` validation passes (400 on empty, 200 on valid).
+- `/api/contractors/search?zip_code=89109` resolved Las Vegas via zippopotam.us (real API) and cached in `zip_cache` Mongo collection.
+
+### 2026-05-24 (P1 + P2 wave)
+- **P1.1** `send_homeowner_autoreply` — friendly SMS auto-reply to the homeowner the second they submit ("Hey {first_name}, Ryan got your quote request, I'll text you personally within the hour. Reply STOP to opt out."). Wired into `notify_new_lead` alongside email + SMS-to-Ryan. Graceful skip when Twilio creds are missing.
+- **P1.2** Mobile-first contractor `LeadsInbox` component — sticky search bar, 4 status filter pills (All/New/Contacted/Closed) with live counts, lead cards with one-tap Call/Text/Email actions and inline status-update buttons. Backed by new `PATCH /api/leads/{lead_id}/status` endpoint (admin can update any, contractor only their service-ZIP/assigned leads).
+- **P1.3** Klaviyo nurture wiring — `identifyLead()` helper in `lib/tracking.js` pushes `$email`, `$phone_number`, `$first_name`, `$last_name`, `$zip`, `project_type`, `source` to Klaviyo onsite SDK on every lead submission. Klaviyo signup overlay is gated to homeowner routes only.
+- **P2.1** Real ZIP geocoding — `get_zip_coords_async` falls through static map → MongoDB `zip_cache` → zippopotam.us free API (no key) → static fallback. Caches lat/lng/city/state/cached_at.
+- **P2.2** Admin leads N+1 fix — batch-fetch contractor names in a single `$in` query.
+- **P2.3** `MaterialsListPDF.generatePDF()` complexity-36 split into 6 focused render helpers (`renderPdfHeader`, `renderProjectDetails`, `renderMaterialsTable`, `computeZoneCost`, `renderContractorSection`, `renderQuoteSection`, `renderFooter`). Behavior unchanged, code now testable section-by-section.
+
+## Verification Status
 
 ## Pending — User Action Required (Production)
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
