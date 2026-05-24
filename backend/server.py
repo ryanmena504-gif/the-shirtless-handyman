@@ -894,7 +894,6 @@ async def get_public_portfolio():
 
 # --- Seed Data ---
 
-@api_router.post("/seed")
 def _build_contractor(cfg):
     """Build a contractor seed document from a config dict."""
     return {
@@ -937,6 +936,12 @@ async def seed_data():
     contractors = _get_seed_contractors()
     await db.contractors.insert_many(contractors)
     return {"message": f"Seeded {len(contractors)} contractors with specialty routing", "count": len(contractors)}
+
+
+@api_router.post("/seed")
+async def seed_endpoint():
+    """Idempotent seed endpoint for first-run setup."""
+    return await seed_data()
 
 
 # ==================== APP CONFIG ====================

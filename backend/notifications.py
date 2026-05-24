@@ -62,8 +62,11 @@ async def send_lead_email(lead: dict) -> bool:
     to_email = os.environ.get("LEAD_NOTIFICATION_EMAIL", "").strip()
     from_email = os.environ.get("RESEND_FROM_EMAIL", "onboarding@resend.dev").strip()
 
-    if not api_key or not to_email:
-        logger.warning("Lead email skipped — RESEND_API_KEY or LEAD_NOTIFICATION_EMAIL not configured")
+    if not api_key:
+        logger.warning("Lead email skipped — RESEND_API_KEY is not configured")
+        return False
+    if not to_email:
+        logger.warning("Lead email skipped — LEAD_NOTIFICATION_EMAIL is not configured")
         return False
 
     try:
