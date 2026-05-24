@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { ArrowRight, Phone } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { trackEvent } from "../lib/tracking";
+import { trackEvent, identifyLead } from "../lib/tracking";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -40,6 +40,7 @@ export const InstantQuoteForm = ({
         source,
       });
       trackEvent("quick_lead_submitted", { source });
+      identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source });
       setDone(true);
       toast.success("Got it! Ryan will text you within an hour.");
       onSubmitted?.();

@@ -50,13 +50,201 @@ const ZONE_LABELS = {
   lighting: "Lighting",
 };
 
-const MaterialsListPDF = ({ 
-  designName, 
+// PDF brand colors (R,G,B)
+const PRIMARY_RGB = [26, 60, 52];   // Deep Jungle Green
+const ACCENT_RGB = [217, 119, 87];  // Terracotta
+
+function calcQuantitiesFromDimensions({ length, width, height }) {
+  const l = parseFloat(length) || 0;
+  const w = parseFloat(width) || 0;
+  const h = parseFloat(height) || 8;
+  return {
+    floorSqFt: l * w,
+    wallSqFt: 2 * (l + w) * h,
+    countertopSqFt: Math.min(l * 3, 30),
+  };
+}
+
+function renderPdfHeader(doc, pageWidth) {
+  doc.setFillColor(...PRIMARY_RGB);
+  doc.rect(0, 0, pageWidth, 35, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("The Shirtless Handyman", 20, 20);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text("Materials Shopping List", 20, 28);
+  doc.setFontSize(8);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - 50, 20);
+}
+
+function renderProjectDetails(doc, { designName, projectType, zipCode, dimensions, quantities }) {
+  let y = 50;
+  doc.setTextColor(...PRIMARY_RGB);
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Project Details", 20, y);
+  y += 10;
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(60, 60, 60);
+  doc.text(`Design Style: ${designName || "Custom Design"}`, 20, y);
+  y += 6;
+  doc.text(`Room Type: ${projectType || "N/A"}`, 20, y);
+  y += 6;
+  doc.text(`Location: ZIP ${zipCode || "N/A"}`, 20, y);
+  if (dimensions.length && dimensions.width) {
+    y += 6;
+    doc.text(`Room Dimensions: ${dimensions.length}' × ${dimensions.width}' × ${dimensions.height || 8}'`, 20, y);
+    y += 6;
+    doc.text(`Floor Area: ${quantities.floorSqFt.toFixed(0)} sq ft | Wall Area: ${quantities.wallSqFt.toFixed(0)} sq ft`, 20, y);
+  }
+  return y;
+}
+
+function computeZoneCost(zone, mat, quantities) {
+  if (mat.costPerSqFt.unit) {
+    return { text: mat.costPerSqFt.unit, low: 0, high: 0 };
+  }
+  const sqFtByZone = {
+    floors: quantities.floorSqFt,
+    walls: quantities.wallSqFt,
+    countertops: quantities.countertopSqFt,
+  };
+  const sqFt = sqFtByZone[zone] ?? quantities.floorSqFt * 0.1;
+  if (sqFt <= 0) {
+    return {
+      text: `$${mat.costPerSqFt.low} - $${mat.costPerSqFt.high}/sqft`,
+      low: 0,
+      high: 0,
+    };
+  }
+  const low = mat.costPerSqFt.low * sqFt;
+  const high = mat.costPerSqFt.high * sqFt;
+  return { text: `$${low.toFixed(0)} - $${high.toFixed(0)}`, low, high };
+}
+
+function renderMaterialsTable(doc, materials, pageWidth, startY, quantities) {
+  let y = startY + 15;
+  doc.setFillColor(...ACCENT_RGB);
+  doc.rect(20, y, pageWidth - 40, 8, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text("Zone", 25, y + 6);
+  doc.text("Material", 55, y + 6);
+  doc.text("Finish", 105, y + 6);
+  doc.text("Est. Cost", 155, y + 6);
+
+  y += 12;
+  doc.setTextColor(60, 60, 60);
+  doc.setFont("helvetica", "normal");
+
+  let totalLow = 0;
+  let totalHigh = 0;
+  Object.entries(materials).forEach(([zone, mat], index) => {
+    if (index % 2 === 0) {
+      doc.setFillColor(245, 245, 245);
+      doc.rect(20, y - 4, pageWidth - 40, 12, "F");
+    }
+    doc.setFontSize(9);
+    doc.text(ZONE_LABELS[zone] || zone, 25, y + 2);
+    doc.text(mat.name.substring(0, 25), 55, y + 2);
+    doc.text(mat.finish.substring(0, 25), 105, y + 2);
+    const { text, low, high } = computeZoneCost(zone, mat, quantities);
+    totalLow += low;
+    totalHigh += high;
+    doc.text(text, 155, y + 2);
+    y += 12;
+  });
+
+  if (totalLow > 0) {
+    y += 5;
+    doc.setFillColor(...PRIMARY_RGB);
+    doc.rect(20, y - 4, pageWidth - 40, 12, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.text("ESTIMATED MATERIALS TOTAL", 25, y + 3);
+    doc.text(`$${totalLow.toFixed(0)} - $${totalHigh.toFixed(0)}`, 155, y + 3);
+  }
+  return y;
+}
+
+function renderContractorSection(doc, contractor, startY) {
+  if (!contractor) return startY;
+  let y = startY + 25;
+  doc.setTextColor(...ACCENT_RGB);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Recommended Contractor", 20, y);
+  y += 10;
+  doc.setTextColor(60, 60, 60);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text(contractor.company_name, 20, y);
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  if (contractor.phone) {
+    doc.text(`Phone: ${contractor.phone}`, 20, y);
+    y += 6;
+  }
+  if (contractor.email) {
+    doc.text(`Email: ${contractor.email}`, 20, y);
+    y += 6;
+  }
+  if (contractor.specialties?.length) {
+    doc.text(`Specialties: ${contractor.specialties.join(", ")}`, 20, y);
+  }
+  return y;
+}
+
+function renderQuoteSection(doc, pageWidth, startY) {
+  const y = startY + 25;
+  doc.setDrawColor(...PRIMARY_RGB);
+  doc.setLineWidth(0.5);
+  doc.rect(20, y, pageWidth - 40, 40);
+  doc.setTextColor(...PRIMARY_RGB);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("Contractor Quote Section", 25, y + 8);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(100, 100, 100);
+  doc.text("Quote Amount: $________________", 25, y + 18);
+  doc.text("Labor: $________________", 25, y + 26);
+  doc.text("Materials: $________________", 100, y + 26);
+  doc.text("Timeline: ________________ weeks", 25, y + 34);
+  doc.text("Valid Until: ________________", 100, y + 34);
+}
+
+function renderFooter(doc, pageWidth) {
+  const footerY = doc.internal.pageSize.getHeight() - 15;
+  doc.setFillColor(245, 245, 245);
+  doc.rect(0, footerY - 5, pageWidth, 20, "F");
+  doc.setTextColor(120, 120, 120);
+  doc.setFontSize(8);
+  doc.text(
+    "Generated by The Shirtless Handyman - Seamless Surface Renovations",
+    pageWidth / 2,
+    footerY,
+    { align: "center" }
+  );
+  doc.text(
+    "Costs are estimates only. Actual prices may vary based on location, supplier, and project specifics.",
+    pageWidth / 2,
+    footerY + 5,
+    { align: "center" }
+  );
+}
+
+const MaterialsListPDF = ({
+  designName,
   projectType,
   zipCode,
   contractor = null,
   isOpen,
-  onClose 
+  onClose,
 }) => {
   const [dimensions, setDimensions] = useState({ length: "", width: "", height: "" });
   const [generating, setGenerating] = useState(false);
@@ -74,202 +262,24 @@ const MaterialsListPDF = ({
 
   const materials = getMaterials();
 
-  const calculateQuantities = () => {
-    const l = parseFloat(dimensions.length) || 0;
-    const w = parseFloat(dimensions.width) || 0;
-    const h = parseFloat(dimensions.height) || 8;
-
-    const floorSqFt = l * w;
-    const wallSqFt = 2 * (l + w) * h;
-    const countertopSqFt = Math.min(l * 3, 30); // Estimate counter space
-
-    return { floorSqFt, wallSqFt, countertopSqFt };
-  };
-
   const generatePDF = () => {
     setGenerating(true);
-    
     try {
       const doc = new jsPDF();
-      const quantities = calculateQuantities();
       const pageWidth = doc.internal.pageSize.getWidth();
-      
-      // Colors
-      const primaryColor = [26, 60, 52]; // Deep Jungle Green
-      const accentColor = [217, 119, 87]; // Terracotta
-      
-      // Header with logo area
-      doc.setFillColor(...primaryColor);
-      doc.rect(0, 0, pageWidth, 35, 'F');
-      
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(24);
-      doc.setFont("helvetica", "bold");
-      doc.text("The Shirtless Handyman", 20, 20);
-      
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.text("Materials Shopping List", 20, 28);
-      
-      // Date
-      doc.setFontSize(8);
-      doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - 50, 20);
-      
-      // Project Info Section
-      let y = 50;
-      doc.setTextColor(...primaryColor);
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("Project Details", 20, y);
-      
-      y += 10;
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(60, 60, 60);
-      doc.text(`Design Style: ${designName || "Custom Design"}`, 20, y);
-      y += 6;
-      doc.text(`Room Type: ${projectType || "N/A"}`, 20, y);
-      y += 6;
-      doc.text(`Location: ZIP ${zipCode || "N/A"}`, 20, y);
-      
-      if (dimensions.length && dimensions.width) {
-        y += 6;
-        doc.text(`Room Dimensions: ${dimensions.length}' × ${dimensions.width}' × ${dimensions.height || 8}'`, 20, y);
-        y += 6;
-        doc.text(`Floor Area: ${quantities.floorSqFt.toFixed(0)} sq ft | Wall Area: ${quantities.wallSqFt.toFixed(0)} sq ft`, 20, y);
-      }
-      
-      // Materials Table
-      y += 15;
-      doc.setFillColor(...accentColor);
-      doc.rect(20, y, pageWidth - 40, 8, 'F');
-      
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.text("Zone", 25, y + 6);
-      doc.text("Material", 55, y + 6);
-      doc.text("Finish", 105, y + 6);
-      doc.text("Est. Cost", 155, y + 6);
-      
-      y += 12;
-      doc.setTextColor(60, 60, 60);
-      doc.setFont("helvetica", "normal");
-      
-      let totalLow = 0;
-      let totalHigh = 0;
-      
-      Object.entries(materials).forEach(([zone, mat], index) => {
-        // Alternate row backgrounds
-        if (index % 2 === 0) {
-          doc.setFillColor(245, 245, 245);
-          doc.rect(20, y - 4, pageWidth - 40, 12, 'F');
-        }
-        
-        doc.setFontSize(9);
-        doc.text(ZONE_LABELS[zone] || zone, 25, y + 2);
-        doc.text(mat.name.substring(0, 25), 55, y + 2);
-        doc.text(mat.finish.substring(0, 25), 105, y + 2);
-        
-        let costText = "";
-        let zoneCostLow = 0;
-        let zoneCostHigh = 0;
-        
-        if (mat.costPerSqFt.unit) {
-          costText = mat.costPerSqFt.unit;
-        } else {
-          // Calculate based on zone and dimensions
-          let sqFt = 0;
-          if (zone === "floors") sqFt = quantities.floorSqFt;
-          else if (zone === "walls") sqFt = quantities.wallSqFt;
-          else if (zone === "countertops") sqFt = quantities.countertopSqFt;
-          else sqFt = quantities.floorSqFt * 0.1; // Estimate for fixtures/lighting
-          
-          if (sqFt > 0) {
-            zoneCostLow = mat.costPerSqFt.low * sqFt;
-            zoneCostHigh = mat.costPerSqFt.high * sqFt;
-            costText = `$${zoneCostLow.toFixed(0)} - $${zoneCostHigh.toFixed(0)}`;
-            totalLow += zoneCostLow;
-            totalHigh += zoneCostHigh;
-          } else {
-            costText = `$${mat.costPerSqFt.low} - $${mat.costPerSqFt.high}/sqft`;
-          }
-        }
-        
-        doc.text(costText, 155, y + 2);
-        y += 12;
+      const quantities = calcQuantitiesFromDimensions(dimensions);
+
+      renderPdfHeader(doc, pageWidth);
+      const afterDetailsY = renderProjectDetails(doc, {
+        designName, projectType, zipCode, dimensions, quantities,
       });
-      
-      // Total estimate
-      if (totalLow > 0) {
-        y += 5;
-        doc.setFillColor(...primaryColor);
-        doc.rect(20, y - 4, pageWidth - 40, 12, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFont("helvetica", "bold");
-        doc.text("ESTIMATED MATERIALS TOTAL", 25, y + 3);
-        doc.text(`$${totalLow.toFixed(0)} - $${totalHigh.toFixed(0)}`, 155, y + 3);
-      }
-      
-      // Contractor Info Section (if provided)
-      if (contractor) {
-        y += 25;
-        doc.setTextColor(...accentColor);
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text("Recommended Contractor", 20, y);
-        
-        y += 10;
-        doc.setTextColor(60, 60, 60);
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text(contractor.company_name, 20, y);
-        
-        y += 6;
-        doc.setFont("helvetica", "normal");
-        if (contractor.phone) doc.text(`Phone: ${contractor.phone}`, 20, y);
-        y += 6;
-        if (contractor.email) doc.text(`Email: ${contractor.email}`, 20, y);
-        y += 6;
-        if (contractor.specialties?.length) {
-          doc.text(`Specialties: ${contractor.specialties.join(", ")}`, 20, y);
-        }
-      }
-      
-      // Quote Request Section
-      y += 25;
-      doc.setDrawColor(...primaryColor);
-      doc.setLineWidth(0.5);
-      doc.rect(20, y, pageWidth - 40, 40);
-      
-      doc.setTextColor(...primaryColor);
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.text("Contractor Quote Section", 25, y + 8);
-      
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text("Quote Amount: $________________", 25, y + 18);
-      doc.text("Labor: $________________", 25, y + 26);
-      doc.text("Materials: $________________", 100, y + 26);
-      doc.text("Timeline: ________________ weeks", 25, y + 34);
-      doc.text("Valid Until: ________________", 100, y + 34);
-      
-      // Footer
-      const footerY = doc.internal.pageSize.getHeight() - 15;
-      doc.setFillColor(245, 245, 245);
-      doc.rect(0, footerY - 5, pageWidth, 20, 'F');
-      
-      doc.setTextColor(120, 120, 120);
-      doc.setFontSize(8);
-      doc.text("Generated by The Shirtless Handyman - Seamless Surface Renovations", pageWidth / 2, footerY, { align: "center" });
-      doc.text("Costs are estimates only. Actual prices may vary based on location, supplier, and project specifics.", pageWidth / 2, footerY + 5, { align: "center" });
-      
-      // Save the PDF
+      const afterTableY = renderMaterialsTable(doc, materials, pageWidth, afterDetailsY, quantities);
+      const afterContractorY = renderContractorSection(doc, contractor, afterTableY);
+      renderQuoteSection(doc, pageWidth, afterContractorY);
+      renderFooter(doc, pageWidth);
+
       const fileName = `SeamlessBath_Materials_${projectType?.replace(/\s+/g, "_") || "Project"}_${new Date().toISOString().split('T')[0]}.pdf`;
       doc.save(fileName);
-      
     } catch {
       toast.error("Failed to generate PDF. Please try again.");
     } finally {

@@ -56,6 +56,16 @@ def _build_lead_sms(lead: dict) -> str:
     return f"🚨 New SH lead: {name} · {phone} · ZIP {zip_code} · {ptype}. Respond fast."
 
 
+def _build_homeowner_autoreply(lead: dict) -> str:
+    """Build the friendly homeowner auto-reply SMS body sent right after submission."""
+    first_name = (lead.get("name") or "there").split()[0][:20]
+    return (
+        f"Hey {first_name}, Ryan from The Shirtless Handyman here — got your "
+        f"quote request. I'll text you personally within the hour. "
+        f"Reply STOP to opt out."
+    )
+
+
 async def send_lead_email(lead: dict) -> bool:
     """Send the lead notification via Resend. Returns True on success."""
     api_key = os.environ.get("RESEND_API_KEY", "").strip()
@@ -114,6 +124,53 @@ async def send_lead_sms(lead: dict) -> bool:
         return False
 
 
+def _normalize_phone(raw: str) -> str:
+    """Best-effort E.164 normalization for US numbers."""
+    digits = "".join(ch for ch in (raw or "") if ch.isdigit())
+    if not digits:
+        return ""
+    if digits.startswith("1") and len(digits) == 11:
+        return f"+{digits}"
+    if len(digits) == 10:
+        return f"+1{digits}"
+    if raw.startswith("+"):
+        return raw
+    return f"+{digits}"
+
+
+async def send_homeowner_autoreply(lead: dict) -> bool:
+    """Send a friendly auto-reply SMS to the homeowner's own phone the moment they submit."""
+    sid = os.environ.get("TWILIO_ACCOUNT_SID", "").strip()
+    token = os.environ.get("TWILIO_AUTH_TOKEN", "").strip()
+    from_num = os.environ.get("TWILIO_FROM_NUMBER", "").strip()
+    to_num = _normalize_phone(lead.get("phone", ""))
+
+    if not (sid and token and from_num):
+        logger.warning("Homeowner auto-reply skipped — Twilio not configured")
+        return False
+    if not to_num:
+        logger.info("Homeowner auto-reply skipped — lead phone missing/invalid")
+        return False
+
+    try:
+        from twilio.rest import Client
+        client = Client(sid, token)
+        body = _build_homeowner_autoreply(lead)
+        msg = await asyncio.to_thread(
+            lambda: client.messages.create(body=body, from_=from_num, to=to_num)
+        )
+        logger.info(f"Homeowner auto-reply sent (sid={msg.sid}) to {to_num}")
+        return True
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Homeowner auto-reply failed: {type(e).__name__}: {e}")
+        return False
+
+
 async def notify_new_lead(lead: dict) -> None:
-    """Fire-and-forget: send both email and SMS notifications in parallel."""
-    await asyncio.gather(send_lead_email(lead), send_lead_sms(lead), return_exceptions=True)
+    """Fire-and-forget: email Ryan + SMS Ryan + SMS auto-reply to homeowner — all in parallel."""
+    await asyncio.gather(
+        send_lead_email(lead),
+        send_lead_sms(lead),
+        send_homeowner_autoreply(lead),
+        return_exceptions=True,
+    )

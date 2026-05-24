@@ -9,6 +9,7 @@ import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
+import { LeadsInbox } from "../components/LeadsInbox";
 import { toast } from "sonner";
 import {
   LayoutDashboard, User, FileText, Save, LogOut,
@@ -285,52 +286,12 @@ export default function ContractorDashboardPage() {
 
           {/* Leads Tab */}
           {tab === "leads" && (
-            <div className="space-y-4" data-testid="leads-list">
-              {leads.length === 0 ? (
-                <div className="bg-white border border-border/40 rounded-2xl p-12 text-center">
-                  <FileText className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No leads yet. They'll appear here when homeowners request quotes.</p>
-                </div>
-              ) : (
-                leads.map((lead) => (
-                  <div
-                    key={lead.id}
-                    className="bg-white border border-border/40 rounded-2xl p-6 hover:shadow-sm transition-shadow"
-                    data-testid={`lead-card-${lead.id}`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-foreground">{lead.name}</h3>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
-                          <span className="flex items-center gap-1">
-                            <Mail className="w-3 h-3" /> {lead.email}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Phone className="w-3 h-3" /> {lead.phone}
-                          </span>
-                        </div>
-                      </div>
-                      <Badge
-                        className={lead.status === "new" ? "bg-[#D97757] text-white" : "bg-accent text-accent-foreground"}
-                      >
-                        {lead.status}
-                      </Badge>
-                    </div>
-                    {lead.project_description && (
-                      <p className="text-sm text-muted-foreground mb-2">{lead.project_description}</p>
-                    )}
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" /> ZIP: {lead.zip_code}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {new Date(lead.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+            <LeadsInbox
+              leads={leads}
+              onLeadUpdated={(id, status) =>
+                setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)))
+              }
+            />
           )}
         </div>
       </div>

@@ -74,6 +74,50 @@ def get_zip_coords(zip_code: str):
             return (coords[0] + 0.02, coords[1] + 0.02)
     return (39.8283, -98.5795)  # Center of US
 
+
+async def get_zip_coords_async(zip_code: str):
+    """ZIP -> (lat, lng) with MongoDB cache + zippopotam.us fallback.
+
+    Order of resolution:
+      1) Static ZIP_COORDINATES map (instant, no I/O)
+      2) MongoDB `zip_cache` collection (persistent cache of prior API responses)
+      3) zippopotam.us free public API (no key) — cached for next time
+      4) Static prefix-match fallback
+    """
+    if not zip_code or not zip_code.strip():
+        return (39.8283, -98.5795)
+    zip_code = zip_code.strip()[:5]
+    if zip_code in ZIP_COORDINATES:
+        return ZIP_COORDINATES[zip_code]
+
+    cached = await db.zip_cache.find_one({"zip": zip_code}, {"_id": 0, "lat": 1, "lng": 1})
+    if cached:
+        return (cached["lat"], cached["lng"])
+
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=4) as client:
+            resp = await client.get(f"https://api.zippopotam.us/us/{zip_code}")
+            if resp.status_code == 200:
+                payload = resp.json()
+                place = (payload.get("places") or [{}])[0]
+                lat = float(place.get("latitude", 0))
+                lng = float(place.get("longitude", 0))
+                if lat and lng:
+                    await db.zip_cache.update_one(
+                        {"zip": zip_code},
+                        {"$set": {"zip": zip_code, "lat": lat, "lng": lng,
+                                  "city": place.get("place name", ""),
+                                  "state": place.get("state abbreviation", ""),
+                                  "cached_at": datetime.now(timezone.utc).isoformat()}},
+                        upsert=True,
+                    )
+                    return (lat, lng)
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"ZIP geocoding failed for {zip_code}: {type(e).__name__}: {e}")
+
+    return get_zip_coords(zip_code)
+
 # ==================== ROUTES ====================
 
 @api_router.get("/")
@@ -677,7 +721,7 @@ async def search_contractors(zip_code: str, project_type: str = ""):
     if not contractors:
         contractors = await db.contractors.find({}, projection).to_list(20)
 
-    user_coords = get_zip_coords(zip_code)
+    user_coords = await get_zip_coords_async(zip_code)
     _enrich_contractor_distances(contractors, user_coords)
     _sort_contractors(contractors, project_type)
 
@@ -780,6 +824,42 @@ async def get_all_leads(contractor_id: str = Depends(decode_token)):
     return {"leads": leads}
 
 
+class LeadStatusUpdate(BaseModel):
+    status: str  # "new" | "contacted" | "closed"
+
+
+@api_router.patch("/leads/{lead_id}/status")
+async def update_lead_status(lead_id: str, data: LeadStatusUpdate, principal_id: str = Depends(decode_token)):
+    """Contractor or admin updates a lead status. Used by the contractor mobile inbox."""
+    allowed = {"new", "contacted", "closed"}
+    if data.status not in allowed:
+        raise HTTPException(status_code=400, detail=f"Status must be one of {sorted(allowed)}")
+
+    # Build authorization filter: admin can update any lead, contractor only their own.
+    if principal_id == "admin":
+        filter_q = {"id": lead_id}
+    else:
+        # Contractor can update leads either explicitly assigned to them or in their ZIPs.
+        contractor = await db.contractors.find_one({"id": principal_id}, {"_id": 0, "service_zip_codes": 1})
+        if not contractor:
+            raise HTTPException(status_code=403, detail="Not authorized")
+        filter_q = {
+            "id": lead_id,
+            "$or": [
+                {"contractor_id": principal_id},
+                {"zip_code": {"$in": contractor.get("service_zip_codes", [])}},
+            ],
+        }
+
+    result = await db.leads.update_one(
+        filter_q,
+        {"$set": {"status": data.status, "updated_at": datetime.now(timezone.utc).isoformat()}},
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found or not accessible")
+    return {"id": lead_id, "status": data.status}
+
+
 # --- Admin Routes ---
 
 @api_router.post("/admin/login")
@@ -798,11 +878,19 @@ async def admin_get_all_leads(admin_id: str = Depends(decode_token)):
         raise HTTPException(status_code=403, detail="Admin access required")
     lead_projection = {"_id": 0}
     leads = await db.leads.find({}, lead_projection).sort("created_at", -1).to_list(500)
-    # Enrich with contractor names
+    # Batch-fetch contractor names in a single query (avoids N+1).
+    contractor_ids = list({lead.get("contractor_id") for lead in leads if lead.get("contractor_id")})
+    contractors_map = {}
+    if contractor_ids:
+        contractors = await db.contractors.find(
+            {"id": {"$in": contractor_ids}},
+            {"_id": 0, "id": 1, "company_name": 1},
+        ).to_list(len(contractor_ids))
+        contractors_map = {c["id"]: c["company_name"] for c in contractors}
     for lead in leads:
-        if lead.get("contractor_id"):
-            c = await db.contractors.find_one({"id": lead["contractor_id"]}, {"_id": 0, "company_name": 1})
-            lead["contractor_name"] = c["company_name"] if c else "Unknown"
+        cid = lead.get("contractor_id")
+        if cid:
+            lead["contractor_name"] = contractors_map.get(cid, "Unknown")
     return {"leads": leads, "total": len(leads)}
 
 @api_router.get("/admin/contractors")
