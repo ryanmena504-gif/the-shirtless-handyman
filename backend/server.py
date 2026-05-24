@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, Request
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
@@ -27,6 +28,7 @@ from prompts import (
     ROOM_ANALYSIS_PROMPTS, PROJECT_TYPE_ROUTING,
     SHIRTLESS_HANDYMAN_ZIP, SHIRTLESS_HANDYMAN_PROFILE,
 )
+from notifications import notify_new_lead
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -706,11 +708,51 @@ async def create_lead(data: LeadCreate):
     lead = {
         "id": lead_id,
         **data.model_dump(),
+        "source": "quote_form",
         "status": "new",
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.leads.insert_one(lead)
+    # Fire notifications in background — never block the lead submission.
+    asyncio.create_task(notify_new_lead({k: v for k, v in lead.items() if k != "_id"}))
     return {"id": lead_id, "status": "new", "message": "Quote request submitted successfully"}
+
+
+class QuickLead(BaseModel):
+    name: str
+    phone: str
+    email: str = ""
+    zip_code: str = ""
+    project_type: str = ""
+    source: str = "hero_form"
+
+
+@api_router.post("/leads/quick")
+async def create_quick_lead(data: QuickLead):
+    """Lightweight lead capture for hero form / exit-intent modal / sticky CTA.
+    Requires only name + phone — email/ZIP/project optional."""
+    if not data.name.strip() or not data.phone.strip():
+        raise HTTPException(status_code=400, detail="Name and phone are required")
+    lead_id = str(uuid.uuid4())
+    lead = {
+        "id": lead_id,
+        "name": data.name.strip(),
+        "phone": data.phone.strip(),
+        "email": data.email.strip(),
+        "zip_code": data.zip_code.strip(),
+        "project_type": data.project_type.strip(),
+        "project_description": "",
+        "selected_design_style": "",
+        "room_photo": "",
+        "project_id": None,
+        "contractor_id": None,
+        "source": data.source or "hero_form",
+        "status": "new",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.leads.insert_one(lead)
+    asyncio.create_task(notify_new_lead({k: v for k, v in lead.items() if k != "_id"}))
+    return {"id": lead_id, "status": "new", "message": "Got it — Ryan will reach out within 1 hour."}
 
 
 @api_router.get("/leads")

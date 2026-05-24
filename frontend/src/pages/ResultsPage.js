@@ -219,6 +219,41 @@ export default function ResultsPage() {
           {/* Designs with Before/After Sliders */}
           {!generating && project?.designs?.length > 0 && (
             <>
+              {/* Primary "Build This" CTA — high-conversion lead button right above the designs */}
+              <div
+                className="mb-10 bg-gradient-to-br from-[#1A3C34] to-[#0E0E0E] rounded-3xl p-7 md:p-9 text-white shadow-xl shadow-[#1A3C34]/20 relative overflow-hidden"
+                data-testid="build-this-cta"
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#D97757]/15 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+                <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                  <div className="max-w-md">
+                    <p className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-2">
+                      Love what you see?
+                    </p>
+                    <h3
+                      className="text-2xl md:text-3xl font-light text-white tracking-tight leading-tight"
+                      style={{ fontFamily: "'Fraunces', serif" }}
+                    >
+                      Get Ryan to build this in your home.
+                    </h3>
+                    <p className="text-sm text-white/55 mt-2">
+                      Free in-home quote within 24 hrs. No commitment, no pressure.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setSelectedContractor(null);
+                      setQuoteModalOpen(true);
+                    }}
+                    className="h-14 px-8 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/40 hover:bg-[#C56545] whitespace-nowrap"
+                    data-testid="build-this-btn"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Build This — Free Quote
+                  </Button>
+                </div>
+              </div>
+
               <div className="space-y-10 mb-16" data-testid="designs-grid">
                 {project.designs.map((design, i) => (
                   <div key={design.name} data-testid={`design-block-${i}`}>

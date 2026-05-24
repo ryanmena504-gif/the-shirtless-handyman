@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
+import { InstantQuoteForm } from "../components/InstantQuoteForm";
+import { TrustStrip } from "../components/TrustStrip";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
@@ -78,10 +80,18 @@ export default function HomePage() {
               <p className="text-sm text-white/40 mt-6 animate-fade-in-up opacity-0 stagger-4">
                 Or call Ryan directly: <a href={TEL_LINK} className="text-white/60 hover:text-white underline underline-offset-2">{PHONE}</a>
               </p>
+
+              {/* Instant quote — secondary lead-capture for visitors not ready to upload */}
+              <div className="mt-8 max-w-xl animate-fade-in-up opacity-0 stagger-4">
+                <InstantQuoteForm variant="dark" source="hero_form" />
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Trust strip — right under the hero, sets the bar before scrolling */}
+      <TrustStrip variant="dark" />
 
       {/* ===== THE PROBLEM ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="problem-section">

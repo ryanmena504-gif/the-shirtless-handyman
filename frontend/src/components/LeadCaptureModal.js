@@ -12,6 +12,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { Send, CheckCircle, Image as ImageIcon, Paintbrush } from "lucide-react";
+import { trackEvent } from "../lib/tracking";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -73,6 +74,11 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
         room_photo: roomPhoto || "",
         project_id: projectId || "",
         contractor_id: contractor?.id || "",
+      });
+      trackEvent("lead_submitted", {
+        source: "quote_modal",
+        contractor_id: contractor?.id || null,
+        design_style: selectedDesignStyle || null,
       });
       setSubmitted(true);
       toast.success("Quote request sent successfully!");

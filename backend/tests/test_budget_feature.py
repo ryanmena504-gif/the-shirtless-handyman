@@ -117,7 +117,7 @@ class TestBudgetFeature:
         assert response.status_code == 200
         result = response.json()
         assert result['budget'] == '5k_10k', f"Expected '5k_10k', got '{result.get('budget')}'"
-        print(f"Verified 5k_10k budget persistence")
+        print("Verified 5k_10k budget persistence")
     
     def test_get_project_with_10k_20k_budget(self):
         """Verify persistence of 10k_20k budget"""
@@ -129,7 +129,7 @@ class TestBudgetFeature:
         assert response.status_code == 200
         result = response.json()
         assert result['budget'] == '10k_20k', f"Expected '10k_20k', got '{result.get('budget')}'"
-        print(f"Verified 10k_20k budget persistence")
+        print("Verified 10k_20k budget persistence")
     
     def test_get_project_with_20k_plus_budget(self):
         """Verify persistence of 20k_plus budget"""
@@ -141,7 +141,7 @@ class TestBudgetFeature:
         assert response.status_code == 200
         result = response.json()
         assert result['budget'] == '20k_plus', f"Expected '20k_plus', got '{result.get('budget')}'"
-        print(f"Verified 20k_plus budget persistence")
+        print("Verified 20k_plus budget persistence")
 
 
 class TestBudgetValidation:
@@ -151,7 +151,7 @@ class TestBudgetValidation:
         """Verify API is accessible"""
         response = requests.get(f"{BASE_URL}/api/")
         assert response.status_code == 200
-        print(f"API health check passed")
+        print("API health check passed")
     
     def test_upload_missing_budget_returns_422(self):
         """Test that upload without budget returns validation error"""

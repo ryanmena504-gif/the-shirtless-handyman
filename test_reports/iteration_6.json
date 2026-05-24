@@ -1,0 +1,57 @@
+{
+  "summary": "Validated the new lead-gen layer (instant quote form, trust strip, sticky mobile CTA, exit-intent modal, social-proof toast, results-page Build-This CTA) + backend /api/leads/quick and /api/leads endpoints + graceful Resend/Twilio fallback. All 7 backend tests passed and every frontend lead-gen widget rendered/behaved as designed on both desktop and mobile.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/seed", "issue": "Bug: `@api_router.post('/seed')` decorates the helper `_build_contractor` instead of the actual `seed_data()` function (server.py line 897). Hitting POST /api/seed would invoke the wrong function. Pre-existing, not in this iteration's scope but should be fixed."},
+      {"endpoint": "notifications.send_lead_email", "issue": "Warning message says 'RESEND_API_KEY or LEAD_NOTIFICATION_EMAIL not configured' even though only RESEND_API_KEY is empty (LEAD_NOTIFICATION_EMAIL is set). Cosmetic — could split into two specific warnings for clarity."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "ResultsPage", "issues": ["Klaviyo signup popup auto-opens on /results route and visually overlaps the new 'Build This — Free Quote' CTA card. Consider delaying or suppressing Klaviyo on the results step so the new lead CTA gets full attention."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_leads.py",
+    "/app/test_reports/pytest/leads_tests.xml"
+  ],
+  "action_items": [
+    "(Optional, out-of-scope) Fix /api/seed decorator pointing at the wrong function in server.py.",
+    "(Optional UX) Defer/suppress Klaviyo popup on Results page so it doesn't cover the new Build-This CTA."
+  ],
+  "critical_code_review_comments": [
+    "server.py @api_router.post('/seed') decorator is attached to the helper `_build_contractor` rather than the async `seed_data` function — silent latent bug.",
+    "notifications.send_lead_email warning text conflates two missing-env scenarios; split for easier ops debugging.",
+    "ExitIntentModal mousemove(500,-10) successfully fires mouseleave on top edge — covered by tests. SessionStorage flag correctly prevents re-display.",
+    "LeadGenWidgets correctly excludes /admin and /contractor/dashboard via route allow-list."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_leads.py (new)"
+  ],
+  "success_rate": {"backend": "100% (7/7)", "frontend": "100% (all widgets validated)"},
+  "test_credentials": "Admin password: renovate2024admin (not exercised in this iteration; admin route was only used to verify LeadGenWidgets are excluded).",
+  "seed_data_creation": "Inserted 6 TEST_-prefixed lead docs into MongoDB via the API. Inserted one completed project with id 'test-buildthis-a47904d0' for verifying the Build-This CTA on /results.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend lead notifications gracefully log 'Lead email skipped' + 'Lead SMS skipped' warnings while still creating the lead (verified in supervisor logs). When RESEND_API_KEY / TWILIO_* get filled, the notify_new_lead path should be re-tested end-to-end. Backend test file /app/backend/tests/test_leads.py is reusable for regression.",
+  "rca of the issue": "N/A — no functional bugs found in the lead-gen feature set. Two minor pre-existing items called out under backend_issues.minor.",
+  "verified_features": [
+    "POST /api/leads/quick — valid input returns 200 with {id, status:'new', message} (5 test cases).",
+    "POST /api/leads/quick — empty name or empty/whitespace phone returns 400 'Name and phone are required'.",
+    "POST /api/leads/quick — optional fields email/zip_code/project_type/source all persist (verified via Mongo query).",
+    "POST /api/leads — still works post-refactor, sets source='quote_form' automatically (verified via Mongo query).",
+    "Notifications skip cleanly when API keys are empty — supervisor logs show 'Lead email skipped' + 'Lead SMS skipped' warnings; lead still saved.",
+    "GET /api/health/ai — returns ok:true (regression intact).",
+    "Homepage: instant-quote-form-hero_form + trust-strip render on desktop.",
+    "Hero form empty submit → toast 'Add your name and phone — that's all I need.'",
+    "Hero form valid submit → success toast + success state 'You're on Ryan's list.'",
+    "Sticky mobile CTA hidden on desktop, visible on 375x800 mobile with all 3 sub-buttons (call/text/studio).",
+    "Exit-intent modal triggers on mouseleave-top, dismisses, and sessionStorage 'sh_exit_intent_seen' is set.",
+    "Social-proof toast appears ~6s after homepage load on desktop; hidden on mobile (hidden md:block).",
+    "LeadGenWidgets NOT mounted on /admin or /contractor/dashboard (verified absence of sticky + social-proof in DOM).",
+    "ResultsPage: build-this-btn renders with text 'Build This — Free Quote' above designs grid when project is completed."
+  ]
+}

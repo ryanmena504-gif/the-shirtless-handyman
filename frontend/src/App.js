@@ -2,6 +2,7 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
+import { LeadGenWidgets } from "./components/LeadGenWidgets";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
 import AnalysisPage from "./pages/AnalysisPage";
@@ -30,6 +31,7 @@ function App() {
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/share/:shareId" element={<SharePage />} />
         </Routes>
+        <LeadGenWidgets />
       </AuthProvider>
     </BrowserRouter>
   );
