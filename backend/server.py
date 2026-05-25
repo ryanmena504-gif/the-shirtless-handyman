@@ -29,6 +29,7 @@ from prompts import (
     SHIRTLESS_HANDYMAN_ZIP, SHIRTLESS_HANDYMAN_PROFILE,
 )
 from notifications import notify_new_lead
+from image_utils import normalize_image_for_ai
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -176,16 +177,22 @@ async def upload_project(
     primary_index: int = Form(0),
     additional_photos: List[UploadFile] = File(default=[]),
 ):
-    image_data = await photo.read()
+    raw = await photo.read()
+    try:
+        image_data, content_type = normalize_image_for_ai(raw)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Could not process the uploaded photo: {e}. Try a JPEG or PNG.")
     image_base64 = base64.b64encode(image_data).decode("utf-8")
-    content_type = photo.content_type or "image/jpeg"
 
     # Build list of all images (primary first, then additional)
     all_images = [f"data:{content_type};base64,{image_base64}"]
     for extra in additional_photos:
-        extra_data = await extra.read()
+        extra_raw = await extra.read()
+        try:
+            extra_data, extra_ct = normalize_image_for_ai(extra_raw)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Could not process one of your additional photos: {e}")
         extra_b64 = base64.b64encode(extra_data).decode("utf-8")
-        extra_ct = extra.content_type or "image/jpeg"
         all_images.append(f"data:{extra_ct};base64,{extra_b64}")
 
     # Clamp primary_index
@@ -934,13 +941,19 @@ async def admin_upload_portfolio(
     if admin_id != "admin":
         raise HTTPException(status_code=403, detail="Admin access required")
 
-    before_data = await before_photo.read()
+    before_raw = await before_photo.read()
+    try:
+        before_data, before_ct = normalize_image_for_ai(before_raw)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Before photo: {e}")
     before_b64 = base64.b64encode(before_data).decode("utf-8")
-    before_ct = before_photo.content_type or "image/jpeg"
 
-    after_data = await after_photo.read()
+    after_raw = await after_photo.read()
+    try:
+        after_data, after_ct = normalize_image_for_ai(after_raw)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"After photo: {e}")
     after_b64 = base64.b64encode(after_data).decode("utf-8")
-    after_ct = after_photo.content_type or "image/jpeg"
 
     item_id = str(uuid.uuid4())
     item = {
