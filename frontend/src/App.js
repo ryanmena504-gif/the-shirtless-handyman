@@ -1,5 +1,6 @@
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
@@ -13,27 +14,31 @@ import ContractorDashboardPage from "./pages/ContractorDashboardPage";
 import AdminPage from "./pages/AdminPage";
 import SharePage from "./pages/SharePage";
 import PortfolioPage from "./pages/PortfolioPage";
+import MicrocementNewOrleansPage from "./pages/MicrocementNewOrleansPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Toaster position="top-right" richColors />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/analysis/:projectId" element={<AnalysisPage />} />
-          <Route path="/results/:projectId" element={<ResultsPage />} />
-          <Route path="/contractor/login" element={<ContractorLoginPage />} />
-          <Route path="/contractor/register" element={<ContractorRegisterPage />} />
-          <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/share/:shareId" element={<SharePage />} />
-        </Routes>
-        <LeadGenWidgets />
-      </AuthProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Toaster position="top-right" richColors />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/upload" element={<UploadPage />} />
+            <Route path="/analysis/:projectId" element={<AnalysisPage />} />
+            <Route path="/results/:projectId" element={<ResultsPage />} />
+            <Route path="/contractor/login" element={<ContractorLoginPage />} />
+            <Route path="/contractor/register" element={<ContractorRegisterPage />} />
+            <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/share/:shareId" element={<SharePage />} />
+            <Route path="/microcement-new-orleans" element={<MicrocementNewOrleansPage />} />
+          </Routes>
+          <LeadGenWidgets />
+        </AuthProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

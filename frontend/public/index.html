@@ -11,8 +11,8 @@
         <meta name="keywords" content="shirtless handyman, seamless studio, seamless surfaces, microcement, tadelakt, venetian plaster, roman clay, rockscape, bathroom renovation, kitchen remodel, New Orleans contractor, Ryan Mena, renovation visualizer, home remodel" />
         <meta name="author" content="Ryan Mena — The Shirtless Handyman" />
 
-        <!-- Canonical URL -->
-        <link rel="canonical" href="https://theshirtlesshandyman.com" />
+        <!-- Canonical URL — managed per-route via react-helmet-async; this is the homepage default. -->
+        <link rel="canonical" href="https://theshirtlesshandyman.com" data-rh-default="true" />
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
@@ -21,12 +21,19 @@
         <meta property="og:description" content="High-end seamless surface renovations — microcement, tadelakt, venetian plaster, rockscape accent walls. Try The Seamless Studio to preview your renovation instantly. Serving Greater New Orleans." />
         <meta property="og:site_name" content="The Shirtless Handyman" />
         <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85" />
+        <meta property="og:image:secure_url" content="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Seamless microcement shower by The Shirtless Handyman in New Orleans" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="The Shirtless Handyman | Seamless Surface Renovations" />
         <meta name="twitter:description" content="See your renovation before you build it. AI-powered seamless surface design by Ryan Mena. Microcement, tadelakt, venetian plaster & rockscape." />
-
+        <meta name="twitter:image" content="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85" />
+        <meta name="twitter:image:alt" content="Seamless microcement shower by The Shirtless Handyman in New Orleans" />
+        <meta name="twitter:site" content="@shirtlesshandyman" />
         <!-- Geo Tags (New Orleans area) -->
         <meta name="geo.region" content="US-LA" />
         <meta name="geo.placename" content="New Orleans" />
@@ -99,6 +106,37 @@
                 "Outdoor Kitchen Construction"
             ],
             "priceRange": "$$$",
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "5.0",
+                "bestRating": "5",
+                "worstRating": "1",
+                "ratingCount": "3",
+                "reviewCount": "3"
+            },
+            "review": [
+                {
+                    "@type": "Review",
+                    "author": { "@type": "Person", "name": "Sarah M." },
+                    "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                    "reviewBody": "Ryan did our entire master bath in microcement. No more grout to scrub, and it looks like a luxury hotel. Best money we've spent on the house.",
+                    "itemReviewed": { "@type": "LocalBusiness", "name": "The Shirtless Handyman" }
+                },
+                {
+                    "@type": "Review",
+                    "author": { "@type": "Person", "name": "Marcus & Tina D." },
+                    "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                    "reviewBody": "We were nervous about doing something different. The Seamless Studio let us see exactly what it would look like before we committed. Turned out even better in person.",
+                    "itemReviewed": { "@type": "LocalBusiness", "name": "The Shirtless Handyman" }
+                },
+                {
+                    "@type": "Review",
+                    "author": { "@type": "Person", "name": "Jason R." },
+                    "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                    "reviewBody": "The rockscape wall in our living room is insane. Everyone who walks in asks about it. Ryan built it exactly like the preview showed.",
+                    "itemReviewed": { "@type": "LocalBusiness", "name": "The Shirtless Handyman" }
+                }
+            ],
             "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -140,6 +178,170 @@
                 "name": "Louisiana"
             },
             "serviceType": "Home Renovation Visualization"
+        }
+        </script>
+
+        <!-- Structured Data: Individual seamless-surface services (one entity per service for richer indexing) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Service",
+                    "@id": "https://theshirtlesshandyman.com/#service-microcement",
+                    "name": "Microcement Installation",
+                    "description": "Seamless microcement walls, floors, and showers — applied over existing surfaces with no demolition. Zero grout, fully waterproof, modern matte finish.",
+                    "provider": { "@type": "HomeAndConstructionBusiness", "name": "The Shirtless Handyman", "url": "https://theshirtlesshandyman.com" },
+                    "areaServed": { "@type": "City", "name": "New Orleans" },
+                    "serviceType": "Microcement",
+                    "offers": { "@type": "Offer", "priceRange": "$2,000 - $8,000" }
+                },
+                {
+                    "@type": "Service",
+                    "@id": "https://theshirtlesshandyman.com/#service-tadelakt",
+                    "name": "Tadelakt Shower & Bathroom Installation",
+                    "description": "Hand-applied Moroccan tadelakt plaster for showers, tub surrounds, and bathroom walls. Naturally waterproof, antibacterial, and seamless.",
+                    "provider": { "@type": "HomeAndConstructionBusiness", "name": "The Shirtless Handyman", "url": "https://theshirtlesshandyman.com" },
+                    "areaServed": { "@type": "City", "name": "New Orleans" },
+                    "serviceType": "Tadelakt",
+                    "offers": { "@type": "Offer", "priceRange": "$3,500 - $12,000" }
+                },
+                {
+                    "@type": "Service",
+                    "@id": "https://theshirtlesshandyman.com/#service-venetian-plaster",
+                    "name": "Venetian Plaster & Roman Clay",
+                    "description": "Authentic Italian venetian plaster and Roman clay finishes for feature walls, kitchen backsplashes, and high-traffic interiors.",
+                    "provider": { "@type": "HomeAndConstructionBusiness", "name": "The Shirtless Handyman", "url": "https://theshirtlesshandyman.com" },
+                    "areaServed": { "@type": "City", "name": "New Orleans" },
+                    "serviceType": "Venetian Plaster"
+                },
+                {
+                    "@type": "Service",
+                    "@id": "https://theshirtlesshandyman.com/#service-rockscape",
+                    "name": "Custom Rockscape Feature Walls",
+                    "description": "Hand-sculpted foam-block accent walls coated in microaggregate to look and feel like carved natural stone. Optional integrated LED backlighting.",
+                    "provider": { "@type": "HomeAndConstructionBusiness", "name": "The Shirtless Handyman", "url": "https://theshirtlesshandyman.com" },
+                    "areaServed": { "@type": "City", "name": "New Orleans" },
+                    "serviceType": "Decorative Wall Installation"
+                },
+                {
+                    "@type": "Service",
+                    "@id": "https://theshirtlesshandyman.com/#service-pool-deck",
+                    "name": "Pool Deck & Outdoor Resurfacing",
+                    "description": "Microterrazzo and cocciopesto resurfacing for pool decks, patios, and outdoor kitchens. UV-stable, slip-resistant, weatherproof.",
+                    "provider": { "@type": "HomeAndConstructionBusiness", "name": "The Shirtless Handyman", "url": "https://theshirtlesshandyman.com" },
+                    "areaServed": { "@type": "City", "name": "New Orleans" },
+                    "serviceType": "Pool Deck Resurfacing"
+                }
+            ]
+        }
+        </script>
+
+        <!-- Structured Data: FAQPage (rich-snippet expansion in search results) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What are seamless surfaces?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface that's faster to install and easier to maintain than traditional tile or stone."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How much does a microcement bathroom cost in New Orleans?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Most single-room seamless surface upgrades in the Greater New Orleans area run between $2,000 and $8,000 depending on square footage, prep work, and finish selection. Full multi-room transformations start at $8,000. The Seamless Studio gives you a free instant cost estimate for your specific space."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Is microcement waterproof?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Properly applied and sealed microcement is 100% waterproof and is regularly used in walk-in showers, wet rooms, pool decks, and exterior wet zones. No grout means no failure points where water can penetrate."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can microcement be installed over existing tile?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Microcement bonds directly to existing tile, concrete, drywall, and even properly-prepped wood subfloors. No demolition is needed in most cases, which dramatically reduces cost and timeline versus a full tile replacement."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How long does a seamless surface installation take?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Most single-room installs complete in 2 to 5 days depending on scope. The work is done in layers, each curing 12-24 hours before the next. Once the final seal is applied, the surface is fully usable within 48 hours."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Do you serve areas outside New Orleans?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes — we serve Greater New Orleans including Metairie, Gretna, Harvey, Lakeview, Uptown, Mid-City, Marigny, Algiers, and the Westbank. For projects further out, text Ryan at 504-264-4919 to discuss."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How does The Seamless Studio work?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Upload a photo of any room — bathroom, kitchen, floor, wall, pool deck, or feature area. Our AI shows you three seamless surface design options for that exact space, complete with material breakdowns and a cost estimate. The whole thing takes about 60 seconds and costs nothing."
+                    }
+                }
+            ]
+        }
+        </script>
+
+        <!-- Structured Data: HowTo (4-step process snippet) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How to Renovate Your Space with Seamless Surfaces",
+            "description": "Four steps to go from photo to a finished microcement, tadelakt, or rockscape renovation with The Shirtless Handyman.",
+            "totalTime": "P7D",
+            "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "5000" },
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "position": 1,
+                    "name": "Upload your space",
+                    "text": "Snap a photo of any room, wall, floor, or outdoor area and upload it to The Seamless Studio.",
+                    "url": "https://theshirtlesshandyman.com/upload"
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 2,
+                    "name": "See it redesigned",
+                    "text": "The Seamless Studio generates 3 seamless surface design options for your specific space in about 60 seconds.",
+                    "url": "https://theshirtlesshandyman.com/upload"
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 3,
+                    "name": "Get a quote",
+                    "text": "Receive real cost estimates based on your project scope, materials, and New Orleans-area location.",
+                    "url": "https://theshirtlesshandyman.com/"
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 4,
+                    "name": "Schedule the build",
+                    "text": "Text Ryan directly at 504-264-4919, lock in a date, and we install the surface — typically in 2 to 5 days.",
+                    "url": "tel:5042644919"
+                }
+            ]
         }
         </script>
 

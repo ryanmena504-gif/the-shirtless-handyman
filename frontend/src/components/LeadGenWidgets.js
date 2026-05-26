@@ -5,7 +5,7 @@ import { StickyMobileCTA } from "./StickyMobileCTA";
 import { SocialProofToast } from "./SocialProofToast";
 
 // Routes where lead-gen widgets should appear (homeowner-facing pages).
-const LEADGEN_ROUTES = ["/", "/upload", "/portfolio"];
+const LEADGEN_ROUTES = ["/", "/upload", "/portfolio", "/microcement-new-orleans"];
 const LEADGEN_PREFIXES = ["/results", "/analysis", "/share"];
 
 // Routes where ANY 3rd-party homeowner-targeted overlay (Klaviyo signup, etc.) must be hidden.

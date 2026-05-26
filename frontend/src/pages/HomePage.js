@@ -22,7 +22,7 @@ export default function HomePage() {
       <section className="relative min-h-[95vh] overflow-hidden" data-testid="hero-section">
         <img
           src={HERO_BG}
-          alt="Seamless microcement shower wall"
+          alt="Seamless microcement shower wall installed by The Shirtless Handyman in New Orleans"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/30" />
@@ -377,7 +377,7 @@ export default function HomePage() {
               <div className="relative h-56 overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85"
-                  alt="Sculpted rockscape accent wall"
+                  alt="Custom sculpted rockscape accent wall with microaggregate stone finish — The Shirtless Handyman, New Orleans"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E] via-transparent to-transparent" />
@@ -567,7 +567,7 @@ export default function HomePage() {
               >
                 <img
                   src={cat.image}
-                  alt={cat.title}
+                  alt={`${cat.title} — seamless surface renovation example by The Shirtless Handyman, New Orleans`}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

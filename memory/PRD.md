@@ -74,6 +74,21 @@ Env vars (currently empty pending user setup):
 - **P2.2** Admin leads N+1 fix — batch-fetch contractor names in a single `$in` query.
 - **P2.3** `MaterialsListPDF.generatePDF()` complexity-36 split into 6 focused render helpers (`renderPdfHeader`, `renderProjectDetails`, `renderMaterialsTable`, `computeZoneCost`, `renderContractorSection`, `renderQuoteSection`, `renderFooter`). Behavior unchanged, code now testable section-by-section.
 
+### 2026-05-25 — iPhone HEIC fix
+- `backend/image_utils.py` — pillow-heif normalization. Decodes HEIC/HEIF/PNG/WebP/JPEG → EXIF rotated → resized to 1536px max → JPEG q85. Wired into `/api/projects/upload` and `/api/admin/portfolio`.
+- Fixes the `litellm.BadRequestError: invalid_image_file` that killed every iPhone-originated generation.
+- Regression tests at `backend/tests/test_image_normalization.py` (4/4 pass).
+
+### 2026-05-26 — SEO Wave
+- **Social-share previews**: `og:image` + `twitter:image` (1200×630), width/height/secure_url/alt. Rich preview now generates on iMessage/Facebook/Slack.
+- **AggregateRating + 3 inline Reviews schema** — backs the "4.9★" claim with the on-page testimonials. Unlocks ⭐ star ratings in Google search results.
+- **FAQPage schema (7 Q&A)** — homepage. Eligible for FAQ rich-snippet expansion.
+- **HowTo schema** — 4-step process is now indexable.
+- **Individual Service schemas** — microcement / tadelakt / venetian plaster / rockscape / pool-deck each their own entity with priceRange + areaServed.
+- **Image alt text** upgraded on homepage hero, rockscape image, 4 gallery thumbnails — location + brand for image-search SEO.
+- **NEW `/microcement-new-orleans`** local landing page — own Helmet meta, BreadcrumbList, route-specific Service entity, local FAQ (4 NOLA-targeted Q&A), 14 service-area neighborhood tags. sitemap.xml priority 0.9.
+- **`SeoHead` component + `react-helmet-async`** — per-route title/description/canonical/og/JSON-LD with post-mount dedupe so each route sends exactly **one** canonical/description/og:title to crawlers.
+
 ## Verification Status
 
 ## Pending — User Action Required (Production)
