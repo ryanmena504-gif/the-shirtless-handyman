@@ -14,7 +14,9 @@ import ContractorDashboardPage from "./pages/ContractorDashboardPage";
 import AdminPage from "./pages/AdminPage";
 import SharePage from "./pages/SharePage";
 import PortfolioPage from "./pages/PortfolioPage";
-import MicrocementNewOrleansPage from "./pages/MicrocementNewOrleansPage";
+import LocalServiceRoute from "./pages/LocalServiceRoute";
+import BlogIndexPage from "./pages/BlogIndexPage";
+import BlogPostPage from "./pages/BlogPostPage";
 
 function App() {
   return (
@@ -33,7 +35,17 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/share/:shareId" element={<SharePage />} />
-            <Route path="/microcement-new-orleans" element={<MicrocementNewOrleansPage />} />
+
+            {/* Local-SEO landing pages (all five share the LocalServiceRoute → LocalServicePage template) */}
+            <Route path="/microcement-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/microcement-metairie" element={<LocalServiceRoute />} />
+            <Route path="/tadelakt-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/rockscape-walls-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/pool-deck-resurfacing-new-orleans" element={<LocalServiceRoute />} />
+
+            {/* Blog */}
+            <Route path="/blog" element={<BlogIndexPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

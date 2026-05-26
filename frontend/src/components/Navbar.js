@@ -51,6 +51,14 @@ export const Navbar = () => {
           >
             Our Work
           </Button>
+          <Button
+            variant="ghost"
+            className="rounded-full text-sm font-medium"
+            onClick={() => navigate("/blog")}
+            data-testid="nav-blog-btn"
+          >
+            Journal
+          </Button>
           {contractorAuth ? (
             <Button
               variant="ghost"
@@ -110,6 +118,14 @@ export const Navbar = () => {
             data-testid="mobile-portfolio-btn"
           >
             Our Work
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/blog"); setMobileOpen(false); }}
+            data-testid="mobile-blog-btn"
+          >
+            Journal
           </Button>
           {contractorAuth ? (
             <Button

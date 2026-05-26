@@ -89,6 +89,16 @@ Env vars (currently empty pending user setup):
 - **NEW `/microcement-new-orleans`** local landing page — own Helmet meta, BreadcrumbList, route-specific Service entity, local FAQ (4 NOLA-targeted Q&A), 14 service-area neighborhood tags. sitemap.xml priority 0.9.
 - **`SeoHead` component + `react-helmet-async`** — per-route title/description/canonical/og/JSON-LD with post-mount dedupe so each route sends exactly **one** canonical/description/og:title to crawlers.
 
+### 2026-05-26 — SEO Wave 2: Local pages × 4 + Blog
+- **Reusable `LocalServicePage` template** (`/app/frontend/src/components/LocalServicePage.js`) — single configurable component that powers all NOLA local-SEO landing pages. Renders hero + benefits + service-areas + Studio + where-it-shines + visible FAQ + final CTA, with per-page Service + BreadcrumbList + FAQ schema. Refactored existing `/microcement-new-orleans` to use it.
+- **`localServiceConfigs.js`** — config-driven copy/data for **5 NOLA landing pages**: `/microcement-new-orleans`, `/microcement-metairie`, `/tadelakt-new-orleans`, `/rockscape-walls-new-orleans`, `/pool-deck-resurfacing-new-orleans`. Each one has unique NOLA-native copy, its own price range, its own benefits, its own FAQ — all separately rankable for long-tail queries.
+- **`LocalServiceRoute.js`** — single React component routed at each explicit URL; reads pathname → looks up config → renders LocalServicePage. Falls back to HomePage if slug unknown.
+- **Blog infrastructure**: `/blog` index + `/blog/:slug` posts with Blog + BlogPosting + BreadcrumbList schema, InstantQuoteForm at end of every post, related-posts strip. 4 NOLA-targeted posts (microcement vs tile cost, how to choose a contractor, tadelakt vs microcement, why tile fails in NOLA humidity).
+- **Navbar** — added "Journal" link in desktop + mobile menus.
+- **sitemap.xml** — all 5 local pages + blog index + 4 blog post URLs.
+- **LeadGenWidgets** — extended to include `/blog`, all 5 local pages, and `/blog/*` so instant-quote/sticky-CTA/exit-intent appear on every homeowner page.
+- Verified live on preview: all 5 local pages + blog index + sample blog post each render with unique title/H1/canonical and 7 JSON-LD blocks.
+
 ## Verification Status
 
 ## Pending — User Action Required (Production)
