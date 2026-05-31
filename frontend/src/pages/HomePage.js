@@ -6,7 +6,7 @@ import { TrustStrip } from "../components/TrustStrip";
 import { SeoHead } from "../components/SeoHead";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User } from "lucide-react";
 
-const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
+const HERO_BG = "/portfolio/shower-led-niche.jpg";
 
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
@@ -16,7 +16,7 @@ const SERVICES = [
   {
     title: "Microcement",
     description: "Seamless waterproof showers, floors, and walls — installed directly over existing tile.",
-    image: "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=900&fit=crop&fm=jpg&q=85",
+    image: "/portfolio/shower-led-niche.jpg",
     href: "/microcement-new-orleans",
     priceRange: "From $2,000",
   },
@@ -52,7 +52,7 @@ export default function HomePage() {
         title="The Shirtless Handyman | Microcement, Tadelakt & Seamless Surfaces in New Orleans"
         description="I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in New Orleans homes — no demolition, no grout, no tile. Free design preview. Text: 504-264-4919."
         canonical="https://theshirtlesshandyman.com/"
-        ogImage="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85"
+        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
       />
       <Navbar />
 
@@ -185,8 +185,8 @@ export default function HomePage() {
             {/* Portrait placeholder — Ryan can swap in his real photo */}
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34] order-2 md:order-1">
               <img
-                src="https://images.unsplash.com/photo-1542621334-a254cf47733d?w=900&fit=crop&fm=jpg&q=85"
-                alt="Ryan Mena — Microcement craftsman, founder of The Shirtless Handyman, New Orleans"
+                src="/portfolio/microcement-vanity-bathroom.jpg"
+                alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans — sink, walls, and floor"
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/80 via-transparent to-transparent" />

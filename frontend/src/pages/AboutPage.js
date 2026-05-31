@@ -66,7 +66,7 @@ export default function AboutPage() {
         title="Meet Ryan Mena — Founder of The Shirtless Handyman | New Orleans Microcement Specialist"
         description="New Orleans-born craftsman specializing in microcement, tadelakt, and custom rockscape installations. The Shirtless Handyman is one guy doing the craft right. Text: 504-264-4919."
         canonical={PAGE_URL}
-        ogImage="https://images.unsplash.com/photo-1542621334-a254cf47733d?w=1200&h=630&fit=crop&fm=jpg&q=85"
+        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
         ogType="profile"
       >
         <script type="application/ld+json">{JSON.stringify(ABOUT_SCHEMA)}</script>
@@ -104,8 +104,8 @@ export default function AboutPage() {
             <div className="md:col-span-2">
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34]">
                 <img
-                  src="https://images.unsplash.com/photo-1542621334-a254cf47733d?w=900&fit=crop&fm=jpg&q=85"
-                  alt="Ryan Mena, founder of The Shirtless Handyman"
+                  src="/portfolio/microcement-vanity-bathroom.jpg"
+                  alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/85 via-transparent to-transparent" />
