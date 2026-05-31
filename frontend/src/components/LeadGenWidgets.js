@@ -6,7 +6,7 @@ import { SocialProofToast } from "./SocialProofToast";
 
 // Routes where lead-gen widgets should appear (homeowner-facing pages).
 const LEADGEN_ROUTES = [
-  "/", "/upload", "/portfolio", "/blog",
+  "/", "/upload", "/portfolio", "/blog", "/about",
   "/microcement-new-orleans",
   "/microcement-metairie",
   "/tadelakt-new-orleans",

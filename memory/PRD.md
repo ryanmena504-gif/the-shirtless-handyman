@@ -99,6 +99,17 @@ Env vars (currently empty pending user setup):
 - **LeadGenWidgets** — extended to include `/blog`, all 5 local pages, and `/blog/*` so instant-quote/sticky-CTA/exit-intent appear on every homeowner page.
 - Verified live on preview: all 5 local pages + blog index + sample blog post each render with unique title/H1/canonical and 7 JSON-LD blocks.
 
+### 2026-05-31 — Positioning Reset
+Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craftsman who installs surfaces. Fixed:
+- **New homepage hero** — eyebrow `MICROCEMENT & SEAMLESS SURFACE SPECIALIST · NEW ORLEANS, LA`. H1 `Seamless renovations, built by hand in New Orleans.` Personal paragraph: "I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in NOLA homes…"
+- **CTA priority flipped**: primary = "Get a Free Quote" (lead capture); secondary = "See Your Space — Try The Studio" (demo). The Studio is now a feature, not the brand.
+- **New "What I Install" section** on homepage — 4 service tiles (Microcement/Tadelakt/Rockscape/Pool Decks) with price ranges, each linking to its dedicated local landing page.
+- **New "Meet Ryan" section** on homepage — portrait + "I used to install tile. I stopped." story + CTAs to /about and SMS.
+- **New `/about` page** — full Person-schema'd personal story, 4 values (one craftsman / treats your house like his / NOLA-born / real materials), dedicated lead capture.
+- **Navbar** — "About Ryan" link added (desktop + mobile).
+- **HomePage** — added SeoHead so homepage now sends route-specific title/description/canonical instead of relying on static index.html (eliminates last duplicate-canonical risk).
+- sitemap.xml + LeadGenWidgets updated.
+
 ## Verification Status
 
 ## Pending — User Action Required (Production)

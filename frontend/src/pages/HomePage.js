@@ -3,7 +3,8 @@ import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
 import { TrustStrip } from "../components/TrustStrip";
-import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem } from "lucide-react";
+import { SeoHead } from "../components/SeoHead";
+import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User } from "lucide-react";
 
 const HERO_BG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwbW9vZHklMjBzZWFtbGVzcyUyMGNvbmNyZXRlJTIwc2hvd2VyJTIwYmF0aHJvb20lMjByZW5vdmF0aW9ufGVufDB8fHx8MTc3NjQ1MjM2OHww&ixlib=rb-4.1.0&q=85";
 
@@ -11,15 +12,52 @@ const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
 const TEL_LINK = "tel:5042644919";
 
+const SERVICES = [
+  {
+    title: "Microcement",
+    description: "Seamless waterproof showers, floors, and walls — installed directly over existing tile.",
+    image: "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=900&fit=crop&fm=jpg&q=85",
+    href: "/microcement-new-orleans",
+    priceRange: "From $2,000",
+  },
+  {
+    title: "Tadelakt",
+    description: "Hand-burnished Moroccan lime plaster. Naturally waterproof. 800-year-old craft.",
+    image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=900&fit=crop&fm=jpg&q=85",
+    href: "/tadelakt-new-orleans",
+    priceRange: "From $3,500",
+  },
+  {
+    title: "Rockscape Walls",
+    description: "Sculpted feature walls that look like carved stone. Optional LED backlighting.",
+    image: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?w=900&fit=crop&fm=jpg&q=85",
+    href: "/rockscape-walls-new-orleans",
+    priceRange: "From $3,500",
+  },
+  {
+    title: "Pool Decks & Outdoor",
+    description: "Microterrazzo + cocciopesto resurfacing. UV-stable. Slip-resistant. Built for NOLA sun.",
+    image: "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?w=900&fit=crop&fm=jpg&q=85",
+    href: "/pool-deck-resurfacing-new-orleans",
+    priceRange: "From $3,000",
+  },
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background" data-testid="home-page">
+      <SeoHead
+        title="The Shirtless Handyman | Microcement, Tadelakt & Seamless Surfaces in New Orleans"
+        description="I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in New Orleans homes — no demolition, no grout, no tile. Free design preview. Text: 504-264-4919."
+        canonical="https://theshirtlesshandyman.com/"
+        ogImage="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85"
+      />
       <Navbar />
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-[95vh] overflow-hidden" data-testid="hero-section">
+      <section className="relative min-h-[92vh] overflow-hidden" data-testid="hero-section">
         <img
           src={HERO_BG}
           alt="Seamless microcement shower wall installed by The Shirtless Handyman in New Orleans"
@@ -27,61 +65,56 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/30" />
 
-        <div className="relative z-10 h-full flex items-center min-h-[95vh]">
+        <div className="relative z-10 h-full flex items-center min-h-[92vh]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div className="max-w-2xl">
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-6 animate-fade-in-up opacity-0 stagger-1">
-                The Shirtless Handyman — New Orleans, LA
+                Microcement & Seamless Surface Specialist · New Orleans, LA
               </p>
 
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.08] text-white mb-6 animate-fade-in-up opacity-0 stagger-2"
+                className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white mb-6 animate-fade-in-up opacity-0 stagger-2"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                See Your Space In<br />
-                Seamless Surfaces — Instantly.
+                Seamless renovations,<br />
+                built by hand in<br />
+                New Orleans.
               </h1>
 
-              <p className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-lg animate-fade-in-up opacity-0 stagger-3">
-                Upload a photo of any room — bathroom, kitchen, floors, walls, pool deck, patio — and The Seamless Studio transforms it with seamless microcement, tadelakt, and luxury plaster finishes. No grout. No limits. No guesswork.
+              <p className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-xl animate-fade-in-up opacity-0 stagger-3">
+                I'm Ryan Mena. I install <strong className="text-white font-medium">microcement, tadelakt, and custom rockscape walls</strong> in NOLA homes — over your existing tile, with zero grout, zero seams, and zero demolition. One craftsman. One continuous surface. Built to outlast the humidity.
               </p>
 
-              {/* Benefits pills */}
-              <div className="flex flex-wrap gap-3 mb-10 animate-fade-in-up opacity-0 stagger-3">
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <Droplets className="w-3.5 h-3.5 text-[#D97757]" /> 100% Waterproof
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#D97757]" /> Zero Grout Lines
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/90">
-                  <Paintbrush className="w-3.5 h-3.5 text-[#D97757]" /> Modern Luxury Finish
-                </span>
-              </div>
-
-              {/* CTAs — Seamless Studio is primary */}
-              <div className="flex flex-wrap gap-4 animate-fade-in-up opacity-0 stagger-4">
+              {/* CTAs — Get Quote is primary, Studio is the demo */}
+              <div className="flex flex-wrap gap-3 animate-fade-in-up opacity-0 stagger-4">
+                <Button
+                  onClick={() => {
+                    const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
+                    formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    formEl?.querySelector('input')?.focus();
+                  }}
+                  className="h-13 px-7 rounded-full bg-[#D97757] text-white font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                  data-testid="hero-quote-btn"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Get a Free Quote
+                </Button>
                 <Button
                   onClick={() => navigate("/upload")}
-                  className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-                  data-testid="hero-cta-btn"
+                  variant="outline"
+                  className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium"
+                  data-testid="hero-studio-btn"
                 >
-                  <Upload className="w-5 h-5 mr-2" />
-                  Show Us Your Room
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  See Your Space — Try The Studio
                 </Button>
-                <a href={SMS_LINK} data-testid="hero-text-cta">
-                  <Button variant="outline" className="h-14 px-10 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Text Your Project
-                  </Button>
-                </a>
               </div>
 
               <p className="text-sm text-white/40 mt-6 animate-fade-in-up opacity-0 stagger-4">
-                Or call Ryan directly: <a href={TEL_LINK} className="text-white/60 hover:text-white underline underline-offset-2">{PHONE}</a>
+                Or text Ryan directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
               </p>
 
-              {/* Instant quote — secondary lead-capture for visitors not ready to upload */}
+              {/* Instant quote — primary lead capture */}
               <div className="mt-8 max-w-xl animate-fade-in-up opacity-0 stagger-4">
                 <InstantQuoteForm variant="dark" source="hero_form" />
               </div>
@@ -92,6 +125,125 @@ export default function HomePage() {
 
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
       <TrustStrip variant="dark" />
+
+      {/* ===== WHAT I DO ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14 max-w-2xl mx-auto">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+              What I Install
+            </p>
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground leading-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Four crafts. One philosophy:<br />
+              <span className="italic">no seams, no grout, no shortcuts.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {SERVICES.map((service) => (
+              <button
+                key={service.title}
+                onClick={() => navigate(service.href)}
+                className="group relative aspect-[3/4] rounded-2xl overflow-hidden text-left bg-muted hover:shadow-xl transition-shadow"
+                data-testid={`service-card-${service.title.toLowerCase().replace(/[^a-z]/g, "-")}`}
+              >
+                <img
+                  src={service.image}
+                  alt={`${service.title} installation by The Shirtless Handyman, New Orleans`}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
+                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-2">
+                    {service.priceRange}
+                  </p>
+                  <h3
+                    className="text-2xl font-light mb-2 leading-tight"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-white/70 mb-3 leading-relaxed">{service.description}</p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    Learn more <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== MEET RYAN ===== */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#FAFAF9]" data-testid="meet-ryan-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+            {/* Portrait placeholder — Ryan can swap in his real photo */}
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34] order-2 md:order-1">
+              <img
+                src="https://images.unsplash.com/photo-1542621334-a254cf47733d?w=900&fit=crop&fm=jpg&q=85"
+                alt="Ryan Mena — Microcement craftsman, founder of The Shirtless Handyman, New Orleans"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/80 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white">
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
+                  Ryan Mena
+                </p>
+                <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
+                  Founder · Craftsman · NOLA-born
+                </p>
+              </div>
+            </div>
+
+            <div className="order-1 md:order-2">
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
+                Meet Ryan
+              </p>
+              <h2
+                className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground mb-6 leading-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                I used to install tile.<br />
+                <span className="italic">I stopped.</span>
+              </h2>
+              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
+                <p>
+                  I'm Ryan, born and raised in New Orleans. I spent years installing tile in NOLA bathrooms — and watching that exact same tile fail inside a decade. Grout turning black. Caulk peeling. Mold finding the smallest seam. It's not the tile's fault. It's just the wrong material for this climate.
+                </p>
+                <p>
+                  So I went and learned the alternative. Microcement. Tadelakt. Marmorino. Sculpted rockscape. Surfaces that don't have seams to fail. Surfaces that look like a Tulum hotel or a Moroccan riad — and last in NOLA humidity for decades.
+                </p>
+                <p>
+                  Now that's all I do. One craftsman. Real materials. Photos of every step. <strong className="text-foreground font-semibold">You text me, I show up, I treat your home like my own.</strong> That's the whole pitch.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-3 mt-8">
+                <Button
+                  onClick={() => navigate("/about")}
+                  variant="outline"
+                  className="h-12 px-6 rounded-full border-foreground/20 font-medium"
+                  data-testid="meet-ryan-about-btn"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Read my full story
+                </Button>
+                <a href={SMS_LINK}>
+                  <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium" data-testid="meet-ryan-text-btn">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Text me directly
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ===== THE PROBLEM ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="problem-section">

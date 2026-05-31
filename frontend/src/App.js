@@ -17,6 +17,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import LocalServiceRoute from "./pages/LocalServiceRoute";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -46,6 +47,9 @@ function App() {
             {/* Blog */}
             <Route path="/blog" element={<BlogIndexPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
+
+            {/* About */}
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>
