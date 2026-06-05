@@ -151,8 +151,14 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className="py-20 px-6 md:px-12 bg-[#FAFAF9]">
-          <div className="max-w-6xl mx-auto">
+        <section className="py-20 px-6 md:px-12 bg-[#F5F1EA] relative overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{
+              backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='nf'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23nf)'/%3E%3C/svg%3E\")",
+            }}
+          />
+          <div className="max-w-6xl mx-auto relative">
             <div className="text-center mb-14 max-w-2xl mx-auto">
               <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-4">
                 How I work

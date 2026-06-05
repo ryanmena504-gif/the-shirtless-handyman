@@ -4,6 +4,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
+import { CustomCursor } from "./components/cinematic";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
 import AnalysisPage from "./pages/AnalysisPage";
@@ -25,6 +26,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Toaster position="top-right" richColors />
+          <CustomCursor />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/upload" element={<UploadPage />} />

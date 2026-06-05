@@ -4,6 +4,8 @@ import { Navbar } from "../components/Navbar";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
 import { TrustStrip } from "../components/TrustStrip";
 import { SeoHead } from "../components/SeoHead";
+import { RevealText, ScrollReveal, MagneticButton } from "../components/cinematic";
+import { motion } from "framer-motion";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User } from "lucide-react";
 
 const HERO_BG = "/portfolio/shower-led-niche.jpg";
@@ -58,47 +60,67 @@ export default function HomePage() {
 
       {/* ===== HERO ===== */}
       <section className="relative min-h-[92vh] overflow-hidden" data-testid="hero-section">
-        <img
+        <motion.img
           src={HERO_BG}
           alt="Seamless microcement shower wall installed by The Shirtless Handyman in New Orleans"
           className="absolute inset-0 w-full h-full object-cover"
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.6, ease: [0.22, 1, 0.36, 1] }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/30" />
 
         <div className="relative z-10 h-full flex items-center min-h-[92vh]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-6 animate-fade-in-up opacity-0 stagger-1">
+              <motion.p
+                className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-6"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
                 Microcement & Seamless Surface Specialist · New Orleans, LA
-              </p>
+              </motion.p>
 
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white mb-6 animate-fade-in-up opacity-0 stagger-2"
+                className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white mb-6"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Seamless renovations,<br />
-                built by hand in<br />
-                New Orleans.
+                <RevealText text="Seamless renovations," as="span" className="block" delay={0.25} />
+                <RevealText text="built by hand in" as="span" className="block" delay={0.45} />
+                <RevealText text="New Orleans." as="span" className="block italic" delay={0.65} />
               </h1>
 
-              <p className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-xl animate-fade-in-up opacity-0 stagger-3">
+              <motion.p
+                className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-xl"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.1 }}
+              >
                 I'm Ryan Mena. I install <strong className="text-white font-medium">microcement, tadelakt, and custom rockscape walls</strong> in NOLA homes — over your existing tile, with zero grout, zero seams, and zero demolition. One craftsman. One continuous surface. Built to outlast the humidity.
-              </p>
+              </motion.p>
 
-              {/* CTAs — Get Quote is primary, Studio is the demo */}
-              <div className="flex flex-wrap gap-3 animate-fade-in-up opacity-0 stagger-4">
-                <Button
-                  onClick={() => {
-                    const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
-                    formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
-                    formEl?.querySelector('input')?.focus();
-                  }}
-                  className="h-13 px-7 rounded-full bg-[#D97757] text-white font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-                  data-testid="hero-quote-btn"
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Get a Free Quote
-                </Button>
+              {/* CTAs */}
+              <motion.div
+                className="flex flex-wrap gap-3"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.3 }}
+              >
+                <MagneticButton>
+                  <Button
+                    onClick={() => {
+                      const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
+                      formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+                      formEl?.querySelector('input')?.focus();
+                    }}
+                    className="h-13 px-7 rounded-full bg-[#D97757] text-white font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
+                    data-testid="hero-quote-btn"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Get a Free Quote
+                  </Button>
+                </MagneticButton>
                 <Button
                   onClick={() => navigate("/upload")}
                   variant="outline"
@@ -108,19 +130,44 @@ export default function HomePage() {
                   <Sparkles className="w-4 h-4 mr-2" />
                   See Your Space — Try The Studio
                 </Button>
-              </div>
+              </motion.div>
 
-              <p className="text-sm text-white/40 mt-6 animate-fade-in-up opacity-0 stagger-4">
+              <motion.p
+                className="text-sm text-white/40 mt-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.5 }}
+              >
                 Or text Ryan directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
-              </p>
+              </motion.p>
 
-              {/* Instant quote — primary lead capture */}
-              <div className="mt-8 max-w-xl animate-fade-in-up opacity-0 stagger-4">
+              <motion.div
+                className="mt-8 max-w-xl"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 1.6 }}
+              >
                 <InstantQuoteForm variant="dark" source="hero_form" />
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
+
+        {/* Scroll cue */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-white/45 text-[10px] uppercase tracking-[0.3em] font-semibold pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2 }}
+        >
+          <span>Scroll</span>
+          <motion.div
+            className="w-px h-10 bg-white/40"
+            animate={{ scaleY: [0.3, 1, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: "top" }}
+          />
+        </motion.div>
       </section>
 
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
@@ -129,7 +176,7 @@ export default function HomePage() {
       {/* ===== WHAT I DO ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14 max-w-2xl mx-auto">
+          <ScrollReveal className="text-center mb-14 max-w-2xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
               What I Install
             </p>
@@ -140,78 +187,96 @@ export default function HomePage() {
               Four crafts. One philosophy:<br />
               <span className="italic">no seams, no grout, no shortcuts.</span>
             </h2>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {SERVICES.map((service) => (
-              <button
-                key={service.title}
-                onClick={() => navigate(service.href)}
-                className="group relative aspect-[3/4] rounded-2xl overflow-hidden text-left bg-muted hover:shadow-xl transition-shadow"
-                data-testid={`service-card-${service.title.toLowerCase().replace(/[^a-z]/g, "-")}`}
-              >
-                <img
-                  src={service.image}
-                  alt={`${service.title} installation by The Shirtless Handyman, New Orleans`}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-                <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-2">
-                    {service.priceRange}
-                  </p>
-                  <h3
-                    className="text-2xl font-light mb-2 leading-tight"
-                    style={{ fontFamily: "'Fraunces', serif" }}
-                  >
-                    {service.title}
-                  </h3>
-                  <p className="text-sm text-white/70 mb-3 leading-relaxed">{service.description}</p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    Learn more <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </button>
+            {SERVICES.map((service, i) => (
+              <ScrollReveal key={service.title} delay={i * 0.08}>
+                <button
+                  onClick={() => navigate(service.href)}
+                  data-cursor="view"
+                  data-cursor-label="View"
+                  className="group relative aspect-[3/4] w-full rounded-2xl overflow-hidden text-left bg-muted hover:shadow-xl transition-shadow"
+                  data-testid={`service-card-${service.title.toLowerCase().replace(/[^a-z]/g, "-")}`}
+                >
+                  <motion.img
+                    src={service.image}
+                    alt={`${service.title} installation by The Shirtless Handyman, New Orleans`}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                  <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
+                    <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-2">
+                      {service.priceRange}
+                    </p>
+                    <h3
+                      className="text-2xl font-light mb-2 leading-tight"
+                      style={{ fontFamily: "'Fraunces', serif" }}
+                    >
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-white/70 mb-3 leading-relaxed">{service.description}</p>
+                    <motion.span
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-white"
+                      initial={{ opacity: 0, x: -4 }}
+                      whileHover={{ opacity: 1, x: 0 }}
+                    >
+                      Learn more <ArrowRight className="w-3.5 h-3.5" />
+                    </motion.span>
+                  </div>
+                </button>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== MEET RYAN ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#FAFAF9]" data-testid="meet-ryan-section">
-        <div className="max-w-6xl mx-auto">
+      {/* ===== MEET RYAN ===== (warm hybrid palette: light bone bg, warm taupe accents) */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#F5F1EA] relative overflow-hidden" data-testid="meet-ryan-section">
+        {/* Subtle plaster-grain texture overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+          }}
+        />
+        <div className="max-w-6xl mx-auto relative">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            {/* Portrait placeholder — Ryan can swap in his real photo */}
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34] order-2 md:order-1">
-              <img
-                src="/portfolio/microcement-vanity-bathroom.jpg"
-                alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans — sink, walls, and floor"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/80 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
-                  Ryan Mena
-                </p>
-                <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
-                  Founder · Craftsman · NOLA-born
-                </p>
+            <ScrollReveal className="order-2 md:order-1" delay={0.1}>
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34]">
+                <img
+                  src="/portfolio/microcement-vanity-bathroom.jpg"
+                  alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans — sink, walls, and floor"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/85 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
+                    Ryan Mena
+                  </p>
+                  <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
+                    Founder · Craftsman · NOLA-born
+                  </p>
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="order-1 md:order-2">
+            <ScrollReveal className="order-1 md:order-2" delay={0.25}>
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
                 Meet Ryan
               </p>
               <h2
-                className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground mb-6 leading-tight"
+                className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-[#1A3C34] mb-6 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
                 I used to install tile.<br />
                 <span className="italic">I stopped.</span>
               </h2>
-              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
+              <div className="space-y-4 text-base text-[#1A3C34]/80 leading-relaxed">
                 <p>
                   I'm Ryan, born and raised in New Orleans. I spent years installing tile in NOLA bathrooms — and watching that exact same tile fail inside a decade. Grout turning black. Caulk peeling. Mold finding the smallest seam. It's not the tile's fault. It's just the wrong material for this climate.
                 </p>
@@ -219,7 +284,7 @@ export default function HomePage() {
                   So I went and learned the alternative. Microcement. Tadelakt. Marmorino. Sculpted rockscape. Surfaces that don't have seams to fail. Surfaces that look like a Tulum hotel or a Moroccan riad — and last in NOLA humidity for decades.
                 </p>
                 <p>
-                  Now that's all I do. One craftsman. Real materials. Photos of every step. <strong className="text-foreground font-semibold">You text me, I show up, I treat your home like my own.</strong> That's the whole pitch.
+                  Now that's all I do. One craftsman. Real materials. Photos of every step. <strong className="text-[#1A3C34] font-semibold">You text me, I show up, I treat your home like my own.</strong> That's the whole pitch.
                 </p>
               </div>
 
@@ -227,20 +292,22 @@ export default function HomePage() {
                 <Button
                   onClick={() => navigate("/about")}
                   variant="outline"
-                  className="h-12 px-6 rounded-full border-foreground/20 font-medium"
+                  className="h-12 px-6 rounded-full border-[#1A3C34]/25 text-[#1A3C34] hover:bg-[#1A3C34] hover:text-white font-medium"
                   data-testid="meet-ryan-about-btn"
                 >
                   <User className="w-4 h-4 mr-2" />
                   Read my full story
                 </Button>
                 <a href={SMS_LINK}>
-                  <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium" data-testid="meet-ryan-text-btn">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Text me directly
-                  </Button>
+                  <MagneticButton>
+                    <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium" data-testid="meet-ryan-text-btn">
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Text me directly
+                    </Button>
+                  </MagneticButton>
                 </a>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
