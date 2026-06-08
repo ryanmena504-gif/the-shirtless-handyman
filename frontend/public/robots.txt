@@ -1,6 +1,78 @@
+# The Shirtless Handyman - robots.txt
+# Allow all major crawlers full access to the public site.
+
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
+Disallow: /contractor/login
+Disallow: /contractor/dashboard
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Baiduspider
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Allow social media crawlers full access for rich previews
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Block known SEO scrapers / content harvesters
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
 
 Sitemap: https://theshirtlesshandyman.com/sitemap.xml

@@ -6,6 +6,7 @@ import { BLOG_POSTS } from "../blog/posts";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 
 const PAGE_URL = "https://theshirtlesshandyman.com/blog";
+const POSTS_PER_PAGE = 12;
 
 const BLOG_SCHEMA = {
   "@context": "https://schema.org",
@@ -30,7 +31,30 @@ const BLOG_SCHEMA = {
   })),
 };
 
+// ItemList helps Google understand the post ordering & relationships
+const BLOG_ITEMLIST_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": `${PAGE_URL}#itemlist`,
+  itemListOrder: "https://schema.org/ItemListOrderDescending",
+  numberOfItems: BLOG_POSTS.length,
+  itemListElement: BLOG_POSTS.map((p, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: `https://theshirtlesshandyman.com/blog/${p.slug}`,
+    name: p.title,
+  })),
+};
+
+// rel="prev"/"next" pagination hints — future-proof for when posts exceed POSTS_PER_PAGE.
+// Computed once at module-load so the SeoHead can ship them with the initial render.
+function getPaginationLinks() {
+  const totalPages = Math.max(1, Math.ceil(BLOG_POSTS.length / POSTS_PER_PAGE));
+  return { totalPages, prev: null, next: totalPages > 1 ? `${PAGE_URL}/page/2` : null };
+}
+
 export default function BlogIndexPage() {
+  const { prev, next } = getPaginationLinks();
   return (
     <>
       <SeoHead
@@ -39,8 +63,11 @@ export default function BlogIndexPage() {
         canonical={PAGE_URL}
         ogImage="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85"
         ogType="website"
+        prev={prev}
+        next={next}
       >
         <script type="application/ld+json">{JSON.stringify(BLOG_SCHEMA)}</script>
+        <script type="application/ld+json">{JSON.stringify(BLOG_ITEMLIST_SCHEMA)}</script>
       </SeoHead>
 
       <div className="min-h-screen bg-background" data-testid="blog-index">

@@ -28,7 +28,7 @@ const STATIC_TAGS_TO_DEDUPE = [
  * Children passed inside are rendered as additional <Helmet> entries
  * (typically the route-specific JSON-LD <script> tag).
  */
-export function SeoHead({ title, description, canonical, ogImage, ogType = "website", children }) {
+export function SeoHead({ title, description, canonical, ogImage, ogType = "website", prev, next, children }) {
   useEffect(() => {
     // Wait one tick so Helmet has already inserted its tags before we dedupe.
     const t = setTimeout(() => {
@@ -48,6 +48,8 @@ export function SeoHead({ title, description, canonical, ogImage, ogType = "webs
       {title ? <title>{title}</title> : null}
       {description ? <meta name="description" content={description} /> : null}
       {canonical ? <link rel="canonical" href={canonical} /> : null}
+      {prev ? <link rel="prev" href={prev} /> : null}
+      {next ? <link rel="next" href={next} /> : null}
       {title ? <meta property="og:title" content={title} /> : null}
       {description ? <meta property="og:description" content={description} /> : null}
       {canonical ? <meta property="og:url" content={canonical} /> : null}

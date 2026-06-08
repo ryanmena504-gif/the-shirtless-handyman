@@ -110,9 +110,17 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 - **HomePage** — added SeoHead so homepage now sends route-specific title/description/canonical instead of relying on static index.html (eliminates last duplicate-canonical risk).
 - sitemap.xml + LeadGenWidgets updated.
 
-## Verification Status
+### 2026-06-08 — SEO Audit Wave 3 (Crawler-readability)
+- **`robots.txt` expanded** — explicit allow rules for Googlebot, Googlebot-Image, Bingbot, Slurp (Yahoo), DuckDuckBot, YandexBot, Baiduspider, Applebot. Explicit allow for social crawlers (Twitterbot, facebookexternalhit, LinkedInBot, Slackbot, WhatsApp). Disallow for known content-scraping bots (SemrushBot, AhrefsBot, MJ12bot, DotBot) to reduce bandwidth waste.
+- **`BlogIndexPage` ItemList JSON-LD** — adds Schema.org ItemList alongside the existing Blog schema so Google understands post ordering and surfaces them as a list in SERP.
+- **`SeoHead` rel="prev"/"next"`** — `SeoHead` now accepts `prev` and `next` props, BlogIndexPage emits them computed from `POSTS_PER_PAGE=12`. Future-proof for paginated archive growth.
+- **Static SEO pre-rendering** — new `frontend/scripts/seo-routes.js` + `frontend/scripts/prerender-seo.js`. After `craco build`, the post-build step writes a route-specific `build/<route>/index.html` for every URL in the site (homepage, /about, /upload, /portfolio, 5 local landing pages, /blog, 4 blog posts). Each file has the route's own `<title>`, `<meta description>`, canonical, OG, and Twitter tags baked into the initial HTML so:
+  - Search engines see route-specific meta in the first byte (no JS execution required).
+  - Social crawlers (Facebook, Twitter, LinkedIn, Slack, iMessage, WhatsApp — none of which run JS) get the correct rich preview for *every* shared URL instead of always showing the homepage card.
+  - The React app still hydrates and Helmet still owns runtime meta updates after mount.
+- Build script updated: `yarn build` → `craco build && node scripts/prerender-seo.js`. Static hosts (Vercel/Netlify/Cloudflare Pages) automatically serve `/foo/index.html` when a user hits `/foo`, so no extra deploy config is required.
 
-## Pending — User Action Required (Production)
+## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
 3. **(Optional)** Paste GA4 measurement ID (G-XXXXXXXXXX) and Meta Pixel ID into the placeholders in `frontend/public/index.html` for analytics + retargeting.
