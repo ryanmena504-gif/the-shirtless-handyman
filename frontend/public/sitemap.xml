@@ -85,4 +85,36 @@
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- Neighborhood handyman micro-pages -->
+  <url>
+    <loc>https://theshirtlesshandyman.com/lakeview-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshirtlesshandyman.com/uptown-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshirtlesshandyman.com/mid-city-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshirtlesshandyman.com/bywater-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshirtlesshandyman.com/french-quarter-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshirtlesshandyman.com/garden-district-handyman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

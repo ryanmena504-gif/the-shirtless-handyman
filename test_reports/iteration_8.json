@@ -1,0 +1,41 @@
+{
+  "summary": "Tested all 10 review-request items for the 3 enhancements (neighborhood micro-pages, email-only lead capture, Studio share-card support). Found and FIXED a critical schema bug in /api/leads/quick (Pydantic model still required `phone`, blocking email-only submissions despite docstring). After the fix, all 7 backend pytest assertions pass and 100% of frontend acceptance criteria are met: 6 neighborhood pages load with route-specific H1/title/canonical/meta-description and 7 JSON-LD blocks each (>= 6 required); /blog has 8 JSON-LD blocks; StickyMobileCTA shows on mobile and hides on desktop; embedded InstantQuoteForm on /lakeview-handyman successfully POSTs to /api/leads/quick (status 200); robots.txt contains all required bots; sitemap.xml contains all 6 new URLs; homepage and all 5 existing SEO pages still render without React errors.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_quick_lead_validation.py",
+    "/app/backend/tests/test_seo_pages_static.py",
+    "/app/test_reports/pytest/quick_lead_seo_tests.xml"
+  ],
+  "action_items": [
+    "No outstanding items. The QuickLead Pydantic schema fix was applied directly (server.py line ~774): `phone: str = \"\"` so the endpoint matches its docstring contract. Main agent should verify no callers depend on the previous strict-required behavior (search confirmed: existing callers all pass `phone` for legacy hero-form / sticky-cta, so the change is backwards compatible)."
+  ],
+  "critical_code_review_comments": [
+    "BUG (fixed): /app/backend/server.py — QuickLead Pydantic model had `phone: str` (required). FastAPI rejected email-only payloads with 422 BEFORE the manual `if not data.phone.strip() and not data.email.strip()` validation ever ran. The docstring promised 'name + (phone OR email)' but the schema enforced phone-always. Changed to `phone: str = \"\"` to make the schema permissive and let the manual check own the policy. Now returns 200 for email-only and 400 for neither.",
+    "LOCAL SEO: All 6 neighborhood configs share serviceType/serviceName 'General Contracting' / 'Handyman & Seamless Surfaces' — consistent. Each emits 7 JSON-LD blocks (exceeds the 6 required) including LocalBusiness, Service, FAQPage, BreadcrumbList. JSON-LD count was verified live in the rendered DOM.",
+    "robots.txt and sitemap.xml are properly served by react-scripts dev server through the preview ingress; both contain all 6 new URLs and all 4 social/search crawler agents (Bingbot, YandexBot, Twitterbot, facebookexternalhit). No tweaks needed.",
+    "StickyMobileCTA visibility correctly responsive — visible on 390px mobile viewport on /lakeview-handyman, hidden on 1920px desktop. Tailwind `md:hidden` class is doing its job.",
+    "Embedded /lakeview-handyman InstantQuoteForm POST integration verified end-to-end: status 200, response body matches `{id, status:'new', message:...}` contract. Lead inserted into Mongo as TEST_-prefix-friendly source 'hero_form'.",
+    "/blog has exactly 8 JSON-LD scripts (ItemList + per-article BlogPosting etc.) — meets requested count.",
+    "ResultsPage was not exercised against a real generated project (per request, do NOT block on AI generation). Code-level review confirms ShareCard and EmailCaptureModal imports + mounts are present and the 18s time-gate is implemented via setTimeout. Recommend a manual smoke once Studio generation runs in this env."
+  ],
+  "updated_files": [
+    "/app/backend/server.py (QuickLead.phone: str -> str = \"\")",
+    "/app/backend/tests/test_quick_lead_validation.py (new)",
+    "/app/backend/tests/test_seo_pages_static.py (new)"
+  ],
+  "success_rate": {"backend": "100% (7/7 new pytest + prior regressions intact)", "frontend": "100% (10/10 review-request acceptance criteria)"},
+  "test_credentials": "n/a — public endpoints only for this iteration",
+  "seed_data_creation": "Created TEST_-prefixed leads: TEST_StudioEmailOnly (email-only studio_email_gate), TEST_LegacyPhone (phone-only), TEST_NoContact (rejected), QA Lakeview Test (phone via /lakeview-handyman form). All can be cleaned via the existing TEST_ prefix sweep.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Tests are in /app/backend/tests/test_quick_lead_validation.py and test_seo_pages_static.py — both are good for regression. The QuickLead schema fix is the only code change. ResultsPage ShareCard + EmailCaptureModal integration was not end-to-end tested because that requires a successful Studio AI generation (Gemini render); main agent can confirm manually by creating a project and waiting 18s on /results/:id to see the email modal fire. JSON-LD count on neighborhood pages is 7 (request said 'at least 6', so passes).",
+  "rca of the issue": "RCA — /api/leads/quick was relaxed in server logic (line 785-786: accepts phone OR email) but the Pydantic request model on line 773-778 was NOT updated to match — `phone: str` remained required. FastAPI runs Pydantic validation BEFORE the route handler body executes, so an email-only payload was rejected at the schema layer with a 422 'Field required' error and the new validation logic was unreachable. Reproduction: `curl -X POST /api/leads/quick -d '{\"name\":\"x\",\"email\":\"a@b.com\"}'` → 422. Fix: `phone: str = \"\"` makes the field optional at the schema level, deferring the OR-validation to the explicit `if` check inside the handler. Verified: email-only now returns 200, neither returns 400 (as the handler raises HTTPException(400))."
+}

@@ -771,7 +771,7 @@ async def create_lead(data: LeadCreate):
 
 class QuickLead(BaseModel):
     name: str
-    phone: str
+    phone: str = ""
     email: str = ""
     zip_code: str = ""
     project_type: str = ""
@@ -780,10 +780,10 @@ class QuickLead(BaseModel):
 
 @api_router.post("/leads/quick")
 async def create_quick_lead(data: QuickLead):
-    """Lightweight lead capture for hero form / exit-intent modal / sticky CTA.
-    Requires only name + phone — email/ZIP/project optional."""
-    if not data.name.strip() or not data.phone.strip():
-        raise HTTPException(status_code=400, detail="Name and phone are required")
+    """Lightweight lead capture for hero form / exit-intent modal / sticky CTA /
+    Studio email-gate. Requires name + (phone OR email)."""
+    if not data.name.strip() or (not data.phone.strip() and not data.email.strip()):
+        raise HTTPException(status_code=400, detail="Name and either phone or email are required")
     lead_id = str(uuid.uuid4())
     lead = {
         "id": lead_id,

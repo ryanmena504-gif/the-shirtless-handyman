@@ -12,6 +12,13 @@ const LEADGEN_ROUTES = [
   "/tadelakt-new-orleans",
   "/rockscape-walls-new-orleans",
   "/pool-deck-resurfacing-new-orleans",
+  // Neighborhood micro-pages
+  "/lakeview-handyman",
+  "/uptown-handyman",
+  "/mid-city-handyman",
+  "/bywater-handyman",
+  "/french-quarter-handyman",
+  "/garden-district-handyman",
 ];
 const LEADGEN_PREFIXES = ["/results", "/analysis", "/share", "/blog/"];
 

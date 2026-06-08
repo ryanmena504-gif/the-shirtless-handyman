@@ -41,6 +41,7 @@ export const InstantQuoteForm = ({
       });
       trackEvent("quick_lead_submitted", { source });
       identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source });
+      try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       setDone(true);
       toast.success("Got it! Ryan will text you within an hour.");
       onSubmitted?.();

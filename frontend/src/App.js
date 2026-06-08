@@ -46,6 +46,14 @@ function App() {
             <Route path="/rockscape-walls-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/pool-deck-resurfacing-new-orleans" element={<LocalServiceRoute />} />
 
+            {/* Neighborhood handyman micro-pages — long-tail local SEO */}
+            <Route path="/lakeview-handyman" element={<LocalServiceRoute />} />
+            <Route path="/uptown-handyman" element={<LocalServiceRoute />} />
+            <Route path="/mid-city-handyman" element={<LocalServiceRoute />} />
+            <Route path="/bywater-handyman" element={<LocalServiceRoute />} />
+            <Route path="/french-quarter-handyman" element={<LocalServiceRoute />} />
+            <Route path="/garden-district-handyman" element={<LocalServiceRoute />} />
+
             {/* Blog */}
             <Route path="/blog" element={<BlogIndexPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />

@@ -106,6 +106,43 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
     ogType: "article",
   },
+  // -------- Neighborhood handyman micro-pages --------
+  {
+    path: "/lakeview-handyman",
+    title: "Lakeview Handyman & Microcement Specialist | The Shirtless Handyman",
+    description: "Lakeview, New Orleans handyman and microcement specialist. Drywall, fixture installs, painting, plus seamless microcement bathrooms and tadelakt showers. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/uptown-handyman",
+    title: "Uptown New Orleans Handyman & Microcement Specialist | The Shirtless Handyman",
+    description: "Uptown New Orleans handyman and seamless-surface specialist. Drywall, fixtures, painting, microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/mid-city-handyman",
+    title: "Mid-City New Orleans Handyman & Microcement | The Shirtless Handyman",
+    description: "Mid-City New Orleans handyman and microcement specialist. Renovations on raised cottages, doubles, and shotguns. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/bywater-handyman",
+    title: "Bywater Handyman & Microcement Specialist | The Shirtless Handyman",
+    description: "Bywater New Orleans handyman and microcement specialist. Renovations on shotguns and doubles. Microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/french-quarter-handyman",
+    title: "French Quarter Handyman & Microcement Specialist | The Shirtless Handyman",
+    description: "French Quarter New Orleans handyman and seamless-surface specialist. Microcement bathrooms, tadelakt, plaster repair, fixture installs in historic Quarter properties. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/garden-district-handyman",
+    title: "Garden District Handyman & Microcement Specialist | The Shirtless Handyman",
+    description: "Garden District New Orleans handyman and seamless-surface specialist. Historic mansions, microcement bathrooms, tadelakt, plaster restoration. Text Ryan: 504-264-4919.",
+    ogImage: DEFAULT_OG,
+  },
 ];
 
 module.exports = { SEO_ROUTES, SITE };

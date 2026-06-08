@@ -221,4 +221,243 @@ export const LOCAL_SERVICE_CONFIGS = {
       { q: "How long will a resurfaced pool deck last in Louisiana?", a: "Properly sealed microterrazzo and cocciopesto pool decks routinely last 10+ years in Louisiana climate. A periodic re-seal (every 3–5 years) extends life further." },
     ],
   },
+
+  // =========================================================================
+  // NEIGHBORHOOD HANDYMAN MICRO-PAGES — long-tail local SEO
+  // Each is a hyper-local landing page for "handyman in {neighborhood}" + seamless
+  // surfaces. Same template, different copy, separately rankable.
+  // =========================================================================
+  "lakeview-handyman": {
+    slug: "lakeview-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "Lakeview",
+    title: "Lakeview Handyman & Microcement Specialist | The Shirtless Handyman",
+    description:
+      "Lakeview, New Orleans handyman and microcement specialist. Drywall, fixture installs, painting, plus seamless microcement bathrooms and tadelakt showers. Text Ryan: 504-264-4919.",
+    eyebrow: "Lakeview · New Orleans, LA",
+    h1: "Lakeview handyman — and the only microcement specialist on your block.",
+    heroParagraph:
+      "Born and built in New Orleans, serving Lakeview homes from Harrison Avenue to West End Boulevard. Same-day handyman fixes and full seamless-surface renovations — microcement bathrooms, tadelakt showers, rockscape walls. One craftsman. Real photos. Honest pricing.",
+    heroImage: "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My Lakeview Project",
+    smsBody: "Hey Ryan, I'm in Lakeview and need help with a project.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 150,
+    priceHigh: 12000,
+    benefits: [
+      { icon: "Clock", title: "Same-Week Availability", body: "Lakeview is 12 minutes from my truck. Small repairs usually get scheduled within a week, microcement within 2–3." },
+      { icon: "ShieldCheck", title: "Licensed & Insured Locally", body: "Fully covered, NOLA-based business. Not a national franchise quote." },
+      { icon: "Wrench", title: "From Drywall to Microcement", body: "One call covers handyman repairs and full seamless renovations — no juggling 3 contractors." },
+      { icon: "Award", title: "Real Lakeview References", body: "Ask for a list of Lakeview clients — I'll put you in touch with neighbors who've used me." },
+    ],
+    serviceAreas: ["Lakeview", "Lakeshore", "West End", "Lake Vista", "Lakewood", "Navarre"],
+    whereItShines: [
+      "Post-Katrina rebuilds — drywall, trim, fixtures, painting.",
+      "Microcement bathrooms in two-story Lakeview homes.",
+      "Pool deck resurfacing for lakefront properties.",
+      "Pressure washing and exterior touch-ups before listing.",
+      "Custom rockscape feature walls for new construction.",
+    ],
+    faq: [
+      { q: "Do you cover all of Lakeview?", a: "Yes — from Robert E. Lee down to West End and across to Lake Vista. Lakeview is one of my most-requested neighborhoods because of its post-Katrina rebuild density." },
+      { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while we're there. One trip, one invoice." },
+      { q: "How much does a Lakeview microcement bathroom cost?", a: "Most Lakeview bathrooms land between $2,500 and $8,500 installed depending on size and prep. Smaller powder rooms can be under $2,000." },
+    ],
+  },
+
+  "uptown-handyman": {
+    slug: "uptown-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "Uptown",
+    title: "Uptown New Orleans Handyman & Microcement Specialist | The Shirtless Handyman",
+    description:
+      "Uptown New Orleans handyman and seamless-surface specialist. Drywall, fixtures, painting, microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+    eyebrow: "Uptown · New Orleans, LA",
+    h1: "Uptown handyman — for the historic homes that deserve the right craftsman.",
+    heroParagraph:
+      "Serving Uptown New Orleans from St. Charles Avenue to Magazine Street to Audubon. Old plaster walls, century-old framing, narrow shotgun bathrooms — I've worked them all. Handyman repairs and full microcement / tadelakt renovations built to respect the character of an Uptown home.",
+    heroImage: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My Uptown Project",
+    smsBody: "Hey Ryan, I'm in Uptown and need help with a project.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 150,
+    priceHigh: 18000,
+    benefits: [
+      { icon: "Award", title: "Historic Home Experience", body: "Lath-and-plaster walls, old subfloors, narrow shotgun layouts — I've worked them all. We don't damage what we're hired to improve." },
+      { icon: "Layers", title: "Microcement Over Anything", body: "Bonds directly to original tile, plaster, or even old wood — perfect for Uptown homes where demolition is too risky." },
+      { icon: "ShieldCheck", title: "Insured for Historic Properties", body: "Full liability coverage for older homes, including documented prep on heritage-style walls." },
+      { icon: "Sparkles", title: "Modern Finish, Classic Bones", body: "Microcement, tadelakt, and venetian plaster sit beautifully in century-old Uptown architecture." },
+    ],
+    serviceAreas: ["Uptown", "University Area", "Audubon", "Carrollton", "Riverbend", "Black Pearl", "Touro"],
+    whereItShines: [
+      "Microcement showers in narrow Uptown shotgun bathrooms.",
+      "Tadelakt feature walls in century-old plaster rooms.",
+      "Rockscape walls in renovated double-shotgun living areas.",
+      "Plaster and trim repairs that don't ruin the historic detail.",
+      "Pre-sale handyman punch lists for Uptown listings.",
+    ],
+    faq: [
+      { q: "Do you work on historic Uptown homes?", a: "Yes — historic homes are most of what I do in Uptown. I take time to test substrates and document everything before I touch a wall. We bond microcement directly to old surfaces wherever possible to preserve the original house." },
+      { q: "What's the most popular renovation in Uptown right now?", a: "Microcement bathrooms — especially shower-only conversions in tight shotgun layouts. The seamless finish fits a tiny footprint better than tile ever can." },
+      { q: "Do you handle smaller handyman jobs in Uptown too?", a: "Yes. Drywall patches, plaster repair, fixture installs, painting, exterior touch-ups. Sometimes I knock these out the same day as a microcement consult." },
+    ],
+  },
+
+  "mid-city-handyman": {
+    slug: "mid-city-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "Mid-City",
+    title: "Mid-City New Orleans Handyman & Microcement | The Shirtless Handyman",
+    description:
+      "Mid-City New Orleans handyman and microcement specialist. Renovations on raised cottages, doubles, and shotguns. Drywall, fixtures, microcement bathrooms. Text Ryan: 504-264-4919.",
+    eyebrow: "Mid-City · New Orleans, LA",
+    h1: "Mid-City handyman — built for raised cottages and shotgun bathrooms.",
+    heroParagraph:
+      "Serving Mid-City New Orleans from Canal Street to Bayou St. John to Esplanade Ridge. Raised cottages, doubles, and renovated shotguns — I work them all. Handyman fixes, drywall, painting, plus full seamless microcement bathrooms and tadelakt showers.",
+    heroImage: "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My Mid-City Project",
+    smsBody: "Hey Ryan, I'm in Mid-City and need help with a project.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 150,
+    priceHigh: 14000,
+    benefits: [
+      { icon: "Wrench", title: "All-in-One Craftsman", body: "Handyman to high-end microcement under one phone number. No subcontracting." },
+      { icon: "Layers", title: "Microcement Over Old Tile", body: "Most Mid-City bathrooms still have 1950s tile. We bond microcement directly — no demolition required." },
+      { icon: "Clock", title: "5-Minute Drive Door-to-Door", body: "I live nearby. Mid-City is one of my fastest-turnaround neighborhoods." },
+      { icon: "ShieldCheck", title: "Insured & Locally Accountable", body: "Same craftsman before and after the install. If something needs attention, I'm one text away." },
+    ],
+    serviceAreas: ["Mid-City", "Bayou St. John", "Esplanade Ridge", "Faubourg St. John", "Tulane", "Treme"],
+    whereItShines: [
+      "Microcement powder rooms in raised cottages.",
+      "Tadelakt showers in renovated Mid-City shotguns.",
+      "Rockscape accent walls for double-shotgun living rooms.",
+      "Pool deck and patio resurfacing in Bayou St. John yards.",
+      "Quick-turn handyman repairs before Mardi Gras / Jazz Fest.",
+    ],
+    faq: [
+      { q: "Do you work in raised cottages?", a: "All the time. Raised cottages have unique subfloor concerns (especially after the post-Katrina rebuilds), and microcement works on them as long as we properly test the substrate first." },
+      { q: "How quickly can you come look at a Mid-City project?", a: "Usually within 48 hours. I live close enough that estimating Mid-City jobs is genuinely fast." },
+      { q: "Is Mid-City humidity a problem for microcement?", a: "No — microcement is fully waterproof when sealed. It's especially well-suited to NOLA humidity because there are no grout lines for water or mold to find." },
+    ],
+  },
+
+  "bywater-handyman": {
+    slug: "bywater-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "Bywater",
+    title: "Bywater Handyman & Microcement Specialist | The Shirtless Handyman",
+    description:
+      "Bywater New Orleans handyman and microcement specialist. Renovations on shotguns and doubles. Microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+    eyebrow: "Bywater · New Orleans, LA",
+    h1: "Bywater handyman — modern microcement for the most creative neighborhood in NOLA.",
+    heroParagraph:
+      "Serving Bywater and the Upper 9th from Press Street to Poland Avenue. Shotguns, doubles, art studios, short-term rentals — I work them all. Handyman repairs, plus seamless microcement bathrooms, tadelakt showers, and one-off rockscape feature walls that fit the Bywater aesthetic perfectly.",
+    heroImage: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My Bywater Project",
+    smsBody: "Hey Ryan, I'm in Bywater and want to chat about a project.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 150,
+    priceHigh: 16000,
+    benefits: [
+      { icon: "Sparkles", title: "Fits the Bywater Aesthetic", body: "Microcement, tadelakt, and rockscape look the way Bywater wants to look — warm, hand-finished, never sterile." },
+      { icon: "Award", title: "STR-Friendly Turnaround", body: "Quick-turn renovations between Airbnb guests. Tested process for Bywater short-term rentals." },
+      { icon: "Wrench", title: "Trades + Aesthetic in One", body: "Handyman, microcement, and rockscape under one phone number." },
+      { icon: "ShieldCheck", title: "NOLA-Native Craftsman", body: "Born and raised in New Orleans. I get how Bywater works." },
+    ],
+    serviceAreas: ["Bywater", "Marigny", "Upper 9th Ward", "Holy Cross", "St. Claude"],
+    whereItShines: [
+      "Microcement bathrooms in renovated shotguns.",
+      "Rockscape feature walls for live/work studios.",
+      "Tadelakt showers for boutique Airbnb units.",
+      "Quick-turn drywall, paint, and fixture work between guests.",
+      "Custom one-off finishes that match Bywater's creative aesthetic.",
+    ],
+    faq: [
+      { q: "Do you work with short-term rental owners in Bywater?", a: "Yes — a lot of my Bywater work is for Airbnb hosts who need turnaround between bookings. We schedule around your reservation calendar." },
+      { q: "Will microcement hold up in a high-turnover Bywater rental?", a: "Yes. Microcement is more durable than tile and grout under guest abuse — no joints to crack, no grout to stain. A quick seasonal re-seal is all it needs." },
+      { q: "Do you do custom one-offs?", a: "Bywater is the right neighborhood for that. Rockscape walls, color-tinted microcement, mixed-finish bathrooms — I love a one-off." },
+    ],
+  },
+
+  "french-quarter-handyman": {
+    slug: "french-quarter-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "French Quarter",
+    title: "French Quarter Handyman & Microcement Specialist | The Shirtless Handyman",
+    description:
+      "French Quarter New Orleans handyman and seamless-surface specialist. Microcement bathrooms, tadelakt, plaster repair, fixture installs in historic Quarter properties. Text Ryan: 504-264-4919.",
+    eyebrow: "French Quarter · New Orleans, LA",
+    h1: "French Quarter handyman — respectful renovations on 200-year-old buildings.",
+    heroParagraph:
+      "Working in the French Quarter takes patience, the right insurance, and a craftsman who actually understands historic plaster, courtyards, and short-term rental turnover. I cover Royal Street to Dauphine, Esplanade to Canal. Handyman repairs, microcement bathrooms, tadelakt showers, and plaster restoration.",
+    heroImage: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My French Quarter Project",
+    smsBody: "Hey Ryan, I'm in the French Quarter and have a project to discuss.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 200,
+    priceHigh: 25000,
+    benefits: [
+      { icon: "Award", title: "Historic Property Experience", body: "Quarter buildings need a craftsman who respects what's there. We test before we touch and document every step." },
+      { icon: "ShieldCheck", title: "Insured for Quarter Work", body: "Full coverage and familiar with VCC restrictions, courtyard access, and STR licensing context." },
+      { icon: "Layers", title: "Modern Finish, Historic Bones", body: "Tadelakt and microcement sit beautifully against original Quarter plaster — no seam, no joint, no jarring contrast." },
+      { icon: "Clock", title: "Scheduled Around Bookings", body: "STR-friendly turnaround. We work around your guest calendar." },
+    ],
+    serviceAreas: ["French Quarter", "Vieux Carré", "Marigny", "Faubourg Marigny", "Treme"],
+    whereItShines: [
+      "Microcement bathrooms in second-floor Quarter apartments.",
+      "Tadelakt showers in courtyard guest suites.",
+      "Plaster repair and historic-friendly drywall patches.",
+      "Rockscape accent walls for boutique Quarter STRs.",
+      "Pre-listing punch lists for Quarter properties going on market.",
+    ],
+    faq: [
+      { q: "Can you do major renovations inside French Quarter properties?", a: "Yes, with the caveat that anything affecting exterior visible elements requires VCC approval. Interior renovations — microcement bathrooms, plaster repair, fixture work — we handle directly." },
+      { q: "How do you handle access for second-floor Quarter units?", a: "We coordinate with property managers for elevator/stair access and minimize disruption to neighbors. Most of my Quarter clients are repeat work because of that." },
+      { q: "Is microcement allowed in historic French Quarter bathrooms?", a: "Microcement is an interior finish that doesn't alter the historic structure — it bonds directly to existing tile or substrate. It's a common upgrade in Quarter STRs and full-time residences." },
+    ],
+  },
+
+  "garden-district-handyman": {
+    slug: "garden-district-handyman",
+    serviceName: "Handyman & Seamless Surfaces",
+    serviceType: "General Contracting",
+    city: "Garden District",
+    title: "Garden District Handyman & Microcement Specialist | The Shirtless Handyman",
+    description:
+      "Garden District New Orleans handyman and seamless-surface specialist. Historic mansions, microcement bathrooms, tadelakt, plaster restoration. Text Ryan: 504-264-4919.",
+    eyebrow: "Garden District · New Orleans, LA",
+    h1: "Garden District handyman — high-end finishes for historic mansions.",
+    heroParagraph:
+      "Serving the Garden District from St. Charles Avenue to Magazine to Jackson. Greek Revival and Italianate mansions get high-end treatment — full seamless microcement, hand-burnished tadelakt, custom rockscape feature walls, and the kind of plaster and trim work that doesn't damage what's been there 150 years.",
+    heroImage: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Text My Garden District Project",
+    smsBody: "Hey Ryan, I have a Garden District home and need help.",
+    defaultProjectType: "Handyman / Microcement",
+    priceLow: 200,
+    priceHigh: 35000,
+    benefits: [
+      { icon: "Award", title: "High-End Finish Specialist", body: "Tadelakt, hand-burnished microcement, custom-tinted venetian plaster. Built for homes where the finish has to look the part." },
+      { icon: "Sparkles", title: "Historic-Sensitive Approach", body: "I work around original moldings, plaster, and trim. We test substrates and protect what's there." },
+      { icon: "Layers", title: "Modern + Classic, Coexisting", body: "Microcement bathrooms and tadelakt showers integrate beautifully against 150-year-old plaster walls." },
+      { icon: "ShieldCheck", title: "Discreet, Insured, Local", body: "Quiet jobsite. Full coverage. NOLA-based. No national franchise quotes." },
+    ],
+    serviceAreas: ["Garden District", "Lower Garden District", "Irish Channel", "St. Charles Corridor", "Touro"],
+    whereItShines: [
+      "Tadelakt showers in restored Garden District mansions.",
+      "Microcement bathrooms in carriage houses and pool houses.",
+      "Rockscape walls in renovated kitchens and family rooms.",
+      "Hand-finished venetian plaster in dining rooms and parlors.",
+      "Pool deck resurfacing in Garden District courtyards.",
+    ],
+    faq: [
+      { q: "Do you work on Garden District historic homes?", a: "Yes — a large portion of my high-end work is Garden District renovations. We move carefully around original moldings, plaster, and trim, and we test every substrate before we apply microcement or tadelakt." },
+      { q: "What does a Garden District tadelakt shower cost?", a: "Larger Garden District tadelakt installations typically run $8,000 to $18,000 — sometimes more for high ceilings, custom color, or full-room (floor + wall) installations." },
+      { q: "Can you coordinate with our architect or designer?", a: "Absolutely. A lot of my Garden District work is designer-specified — I'm comfortable presenting samples, color matching, and meeting on-site to walk specs." },
+    ],
+  },
 };

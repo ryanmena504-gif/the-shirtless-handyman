@@ -82,6 +82,7 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
       });
       identifyLead({ ...form, source: "quote_modal" });
       setSubmitted(true);
+      try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       toast.success("Quote request sent successfully!");
     } catch {
       toast.error("Failed to submit. Please try again.");

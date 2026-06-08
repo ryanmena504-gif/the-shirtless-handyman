@@ -5,6 +5,8 @@ import { Navbar } from "../components/Navbar";
 import { ContractorMap } from "../components/ContractorMap";
 import { LeadCaptureModal } from "../components/LeadCaptureModal";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
+import { ShareCard } from "../components/ShareCard";
+import { EmailCaptureModal } from "../components/EmailCaptureModal";
 import MaterialsListPDF from "../components/MaterialsListPDF";
 import { CostEstimate } from "../components/CostEstimate";
 import { Button } from "../components/ui/button";
@@ -158,7 +160,7 @@ export default function ResultsPage() {
               Your space, transformed.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Here's what your room looks like in seamless surfaces. Slide to compare, explore materials, and request a quote when you're ready.
+              Here&apos;s what your room looks like in seamless surfaces. Slide to compare, explore materials, and request a quote when you&apos;re ready.
             </p>
           </div>
 
@@ -315,26 +317,56 @@ export default function ResultsPage() {
                 ))}
               </div>
 
-              {/* Share Button */}
-              <div className="flex justify-center mb-16" data-testid="share-section">
-                <Button
-                  onClick={handleShare}
-                  disabled={sharing}
-                  className="rounded-full h-12 px-8 bg-[#D97757] text-white hover:bg-[#C56545] btn-pill shadow-lg shadow-[#D97757]/20 text-sm font-medium"
-                  data-testid="share-renovation-btn"
-                >
-                  {sharing ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Creating share link...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <Share2 className="w-4 h-4" />
-                      Share My Renovation Ideas
-                    </span>
-                  )}
-                </Button>
+              {/* Share — link + auto-generated 1080×1350 PNG share card */}
+              <div className="mb-16 bg-[#0E0E0E] rounded-3xl p-8 md:p-12 border border-white/10" data-testid="share-section">
+                <div className="text-center max-w-2xl mx-auto mb-8">
+                  <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[#D97757] mb-3">
+                    Show it off
+                  </p>
+                  <h2
+                    className="text-2xl md:text-3xl font-light text-white leading-tight mb-3"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                  >
+                    Designed in The Seamless Studio.
+                  </h2>
+                  <p className="text-sm text-white/55 leading-relaxed">
+                    Generate a 1080 × 1350 share card and post it. Or grab a public link to send straight to your partner.
+                  </p>
+                </div>
+
+                {selectedDesign !== null && project.designs?.[selectedDesign] && (
+                  <div className="max-w-xl mx-auto mb-8">
+                    <ShareCard
+                      afterImage={project.designs[selectedDesign].image}
+                      beforeImage={project.original_image}
+                      designName={project.designs[selectedDesign].name}
+                      city={project.location?.city || "New Orleans"}
+                      projectId={projectId}
+                    />
+                  </div>
+                )}
+
+                <div className="flex justify-center">
+                  <Button
+                    onClick={handleShare}
+                    disabled={sharing}
+                    variant="outline"
+                    className="rounded-full h-11 px-7 border-white/15 text-white/80 hover:bg-white/5 text-sm font-medium"
+                    data-testid="share-renovation-btn"
+                  >
+                    {sharing ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Creating share link...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Share2 className="w-4 h-4" />
+                        Or copy a public share link
+                      </span>
+                    )}
+                  </Button>
+                </div>
               </div>
 
               {/* Cost Estimate */}
@@ -542,10 +574,10 @@ export default function ResultsPage() {
                     className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4"
                     style={{ fontFamily: "'Fraunces', serif" }}
                   >
-                    This isn't just a preview —<br />we can build this.
+                    This isn&apos;t just a preview —<br />we can build this.
                   </h3>
                   <p className="text-sm text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
-                    Every surface you just saw is something we install. Text Ryan the design you like, get a fast quote, and we'll make your space seamless for real.
+                    Every surface you just saw is something we install. Text Ryan the design you like, get a fast quote, and we&apos;ll make your space seamless for real.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
                     <Button
@@ -591,6 +623,14 @@ export default function ResultsPage() {
         zipCode={zipCode || project?.zip_code || ""}
         contractor={selectedContractor}
       />
+
+      {/* Studio email-gate — fires ~18s after designs render to capture non-leads */}
+      {project && !generating && (
+        <EmailCaptureModal
+          projectId={projectId}
+          projectType={project?.project_type || ""}
+        />
+      )}
     </div>
   );
 }
