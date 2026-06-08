@@ -28,27 +28,35 @@ export function RevealText({ text, as = "span", className = "", delay = 0, stagg
       className={className}
       initial="hidden"
       animate="visible"
+      // Accessibility + SEO: the screen-reader / crawler-visible text is the full sentence.
+      // The visual letter-reveal is purely decorative on top.
+      aria-label={text}
       variants={{
         visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
         hidden: {},
       }}
     >
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          style={{ marginRight: "0.25em" }}
-          variants={{
-            hidden: { opacity: 0, y: "0.4em", filter: "blur(8px)" },
-            visible: {
-              opacity: 1, y: 0, filter: "blur(0px)",
-              transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-            },
-          }}
-        >
-          {word}
-        </motion.span>
-      ))}
+      {/* SR-only / crawler-accessible full text */}
+      <span className="sr-only">{text}</span>
+      {/* Decorative word-by-word reveal hidden from screen readers + indexed differently */}
+      <span aria-hidden="true">
+        {words.map((word, i) => (
+          <motion.span
+            key={i}
+            className="inline-block"
+            variants={{
+              hidden: { opacity: 0, y: "0.4em", filter: "blur(8px)" },
+              visible: {
+                opacity: 1, y: 0, filter: "blur(0px)",
+                transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+              },
+            }}
+          >
+            {word}
+            {i < words.length - 1 ? "\u00A0" : ""}
+          </motion.span>
+        ))}
+      </span>
     </MotionTag>
   );
 }
