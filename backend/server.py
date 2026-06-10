@@ -806,6 +806,93 @@ async def create_quick_lead(data: QuickLead):
     return {"id": lead_id, "status": "new", "message": "Got it — Ryan will reach out within 1 hour."}
 
 
+# =========================================================================
+# AI Chat Bot — Claude Sonnet via Emergent Universal Key
+# =========================================================================
+from chat_service import (
+    make_chat,
+    replay_history,
+    extract_contact,
+    build_chat_message_doc,
+    UserMessage,
+)
+
+
+class ChatRequest(BaseModel):
+    session_id: str
+    message: str
+    name: str = ""  # optional — if the visitor has shared their name elsewhere
+
+
+@api_router.post("/chat")
+async def chat_endpoint(req: ChatRequest):
+    """Send a user message to the AI assistant. Multi-turn — conversation
+    history is persisted in MongoDB keyed by session_id."""
+    session_id = (req.session_id or "").strip()
+    user_text = (req.message or "").strip()
+    if not session_id or not user_text:
+        raise HTTPException(status_code=400, detail="session_id and message are required")
+    if len(user_text) > 2000:
+        raise HTTPException(status_code=400, detail="Message too long (2000 char max)")
+
+    # Restore prior turns
+    cursor = db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1)
+    history = await cursor.to_list(50)
+
+    try:
+        chat = make_chat(session_id)
+        await replay_history(chat, history)
+        reply = await chat.send_message(UserMessage(text=user_text))
+    except Exception as e:
+        logger.exception(f"Chat error for session {session_id}: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail="The AI is napping right now — text Ryan directly at 504-264-4919.",
+        )
+
+    # Persist this turn
+    await db.chat_messages.insert_one(build_chat_message_doc(session_id, "user", user_text))
+    await db.chat_messages.insert_one(build_chat_message_doc(session_id, "assistant", reply))
+
+    # If the user dropped contact info in their message, save them as a lead.
+    contact = extract_contact(user_text)
+    lead_id = None
+    if contact["phone"] or contact["email"]:
+        # Use the name from the request if provided, otherwise try to derive from
+        # the first user turn that looked like an introduction.
+        name = (req.name or "").strip() or "Chat visitor"
+        lead_doc = {
+            "id": str(uuid.uuid4()),
+            "name": name,
+            "phone": contact["phone"],
+            "email": contact["email"],
+            "zip_code": "",
+            "project_type": "",
+            "project_description": user_text[:280],
+            "selected_design_style": "",
+            "room_photo": "",
+            "project_id": None,
+            "contractor_id": None,
+            "source": "ai_chat",
+            "status": "new",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.leads.insert_one(lead_doc)
+        lead_id = lead_doc["id"]
+        asyncio.create_task(notify_new_lead({k: v for k, v in lead_doc.items() if k != "_id"}))
+
+    return {"reply": reply, "lead_id": lead_id}
+
+
+@api_router.get("/chat/{session_id}/history")
+async def get_chat_history(session_id: str):
+    """Return prior messages for a session so the widget can rehydrate after refresh."""
+    msgs = await db.chat_messages.find(
+        {"session_id": session_id}, {"_id": 0}
+    ).sort("created_at", 1).to_list(50)
+    return {"messages": msgs}
+
+
 @api_router.get("/leads")
 async def get_leads(contractor_id: str = Depends(decode_token)):
     lead_projection = {"_id": 0}
