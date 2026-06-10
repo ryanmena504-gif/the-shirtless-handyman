@@ -124,6 +124,16 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 - **6 neighborhood handyman micro-pages** — `/lakeview-handyman`, `/uptown-handyman`, `/mid-city-handyman`, `/bywater-handyman`, `/french-quarter-handyman`, `/garden-district-handyman`. Each is a fully unique config in `lib/localServiceConfigs.js` with neighborhood-native copy (Lakeview = post-Katrina rebuilds; Uptown = historic plaster; Mid-City = raised cottages; Bywater = STR-friendly turnaround; French Quarter = VCC + courtyard access; Garden District = high-end finish + designer specs). Each renders 7 JSON-LD blocks. Wired into `App.js` routes, `LeadGenWidgets` route list, `sitemap.xml`, and `scripts/seo-routes.js`.
 - All three enhancements verified end-to-end by `testing_agent_v3_fork` iteration_8: 7/7 backend pytest pass, 10/10 frontend acceptance criteria pass.
 
+### 2026-06-08 — True SSG via headless Chrome (upgrade)
+- **`scripts/prerender-seo.js` rewritten** as a real static-site-generator. After `craco build`, it:
+  1. Boots a tiny local static server on `build/`
+  2. Launches headless Chromium via `puppeteer-core` (uses the container's system Chrome — no 250 MB Chromium download)
+  3. Visits every route from `scripts/seo-routes.js`, waits for React + Helmet + framer-motion to fully render
+  4. Captures the **full rendered DOM** (real text content + JSON-LD + meta tags) and writes per-route `build/<route>/index.html`
+- This replaces the earlier meta-injection-only approach. Now Googlebot sees the entire indexable text of every page in the first byte — no JS execution required. The React app still hydrates and runs as a normal SPA on top of the snapshot.
+- New devDeps: `puppeteer-core@22`, `serve-handler`.
+- Verified Puppeteer + Chromium launches and snapshots HTML in the container. Build itself runs on the production deployment server.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
