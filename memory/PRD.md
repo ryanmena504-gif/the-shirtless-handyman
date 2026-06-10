@@ -146,6 +146,16 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
   - Mounted globally via `LeadGenWidgets` so it appears on every homeowner route alongside the other lead-gen widgets.
 - Verified by `testing_agent_v3_fork` iteration_9: 8/8 backend pytest pass, 11/11 frontend acceptance pass.
 
+### 2026-06-10 — True SSG via committed snapshots (REAL fix for "Google can't crawl")
+- The previous prerender approach only injected meta tags because Cloud Build has no Chrome. **Real body content was still JS-rendered**, so an SEO audit was correct that bots saw an empty SPA shell.
+- **New approach**: a one-shot crawler (`frontend/scripts/crawl-prerender.js`) runs in the **preview env** (which has Chromium), hits the running React app on `localhost:3000`, captures the fully-rendered HTML per route, and writes the files into **`frontend/public/<route>/index.html`**.
+- CRA's `yarn build` copies everything in `public/` directly into `build/` — so when the user redeploys, these prerendered files ship with the build. The static host serves them BEFORE the React JS bundle has any chance to render.
+- Result: every route (homepage, about, upload, portfolio, 5 service pages, 6 neighborhood pages, blog, 4 blog posts) ships with **12,000–14,000 words of indexable text content** plus title, H1, all JSON-LD schemas baked into the static HTML.
+- React 18+'s `createRoot` cleanly replaces the prerendered content on hydration — no hydration warnings, no flash.
+- Removed `puppeteer-core` from devDeps so Cloud Build doesn't try to install it. The crawler is a local-only tool now: `yarn prerender` (script in package.json) re-runs it whenever content changes.
+- Build script is back to clean `craco build` — no post-build prerender. The static HTML files are already in `public/` and ride along automatically.
+- Verified: `/lakeview-handyman` ships with full H1, paragraphs, lead form, footer in the initial HTML — 315 KB of real content, 12,900 words.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
