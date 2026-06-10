@@ -131,6 +131,21 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 - **Verified end-to-end without puppeteer**: all 20 routes write per-route HTML files with correct titles, canonicals, and OG tags. Search engines and social crawlers see the right meta in the first byte of every URL.
 - Optional: install `puppeteer-core` locally and re-run `node scripts/prerender-seo.js` to get full SSG snapshots if desired — the script auto-detects Chrome and switches modes.
 
+### 2026-06-10 — Conversational AI Chatbot
+- **Backend: `/api/chat` + `/api/chat/{session_id}/history`** in `server.py`, with logic in new `backend/chat_service.py`.
+  - Uses `LlmChat` from `emergentintegrations` with `anthropic/claude-sonnet-4-6` via the Emergent Universal Key.
+  - Multi-turn memory: messages persist in MongoDB `chat_messages` collection keyed by `session_id` and replayed into LlmChat on every turn.
+  - System prompt holds Ryan's published price ranges (microcement $18-35/sq ft, tadelakt $22-40/sq ft, etc.) so the bot never invents pricing.
+  - **Auto lead capture**: if the user shares a phone or email in a chat message (regex detection), a lead is inserted with `source='ai_chat'`, `notify_new_lead` fires Resend email + Twilio SMS, and the response includes the new `lead_id`.
+  - Validations: 400 on empty session/message, 400 on >2000-char message.
+- **Frontend: `components/ChatWidget.js`** — floating chat bubble bottom-right.
+  - Matches the cinematic UI exactly: dark `#0E0E0E` surface, Fraunces serif header, `#D97757` orange accent, green-to-black gradient header, pulsing online dot, framer-motion launcher rotate + panel slide-in.
+  - 4 quick-reply chips on first turn (Bathroom remodel · Microcement floors · Rockscape wall · How much does it cost?) — disappear after first user turn.
+  - sessionStorage-keyed session ID — chat survives page navigations and refreshes.
+  - Hidden on mobile (`md:hidden`) so it never collides with the StickyMobileCTA; mobile users still get the sticky CTA bar.
+  - Mounted globally via `LeadGenWidgets` so it appears on every homeowner route alongside the other lead-gen widgets.
+- Verified by `testing_agent_v3_fork` iteration_9: 8/8 backend pytest pass, 11/11 frontend acceptance pass.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
