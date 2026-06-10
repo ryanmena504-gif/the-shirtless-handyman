@@ -107,6 +107,33 @@ async function snapshot(browser, route) {
   await page.setUserAgent("Mozilla/5.0 (compatible; ShirtlessSSG/1.0)");
   page.on("pageerror", (e) => console.warn(`   pageerror @ ${route.path}: ${e.message}`));
 
+  // Block third-party tracking / popup scripts at the network level so they
+  // never get a chance to inject their DOM into the snapshot. Critical: Klaviyo
+  // injects a fullscreen "See Your Room Transformed" popup that would otherwise
+  // be baked into the static HTML and cause production users to see the popup
+  // twice (once from the snapshot, once when Klaviyo's runtime JS loads),
+  // freezing the page on first visit.
+  await page.setRequestInterception(true);
+  const blockedHosts = [
+    "klaviyo.com",
+    "static.klaviyo.com",
+    "static-tracking.klaviyo.com",
+    "fast.a.klaviyo.com",
+    "googletagmanager.com",
+    "google-analytics.com",
+    "doubleclick.net",
+    "facebook.com",
+    "facebook.net",
+  ];
+  page.on("request", (req) => {
+    const url = req.url();
+    if (blockedHosts.some((h) => url.includes(h))) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+
   const url = `${TARGET}${route.path}`;
   try {
     await page.goto(url, { waitUntil: "networkidle0", timeout: 35000 });
@@ -122,6 +149,44 @@ async function snapshot(browser, route) {
     // Close any sessionStorage-controlled overlays so they don't render in the snapshot
     const cs = document.querySelectorAll('[data-testid="chat-widget-panel"], [data-testid="exit-intent-modal"], [data-testid="email-capture-modal"]');
     cs.forEach((el) => el.remove());
+
+    // CRITICAL: strip ALL Klaviyo-injected popups, forms, and surrounding wrappers.
+    // Klaviyo injects modals into the live DOM ~1-3s after page load — if we don't
+    // remove them before snapshotting, they get baked into the static HTML and
+    // collide with the runtime Klaviyo JS (causes the production page to freeze
+    // on first visit because two popups try to occupy the same root element).
+    const klaviyoSelectors = [
+      '[class*="klaviyo"]',
+      '[class*="kl-private"]',
+      '[data-testid="kl-private-form-modal-overlay"]',
+      'div[class*="needsclick"]',
+      '#klaviyo-pim',
+      'iframe[src*="klaviyo"]',
+      'iframe[data-testid*="klaviyo"]',
+    ];
+    document.querySelectorAll(klaviyoSelectors.join(",")).forEach((el) => el.remove());
+
+    // Also strip the Klaviyo loader script container if present
+    document.querySelectorAll('script[src*="klaviyo"]').forEach((el) => el.remove());
+
+    // Remove any element with the inline Klaviyo signup form text we know about
+    const textsToStrip = ["See Your Room Transformed", "Want Access to Exclusive Deals"];
+    document.querySelectorAll("*").forEach((el) => {
+      if (el.children.length === 0 && textsToStrip.some((t) => (el.textContent || "").includes(t))) {
+        let p = el;
+        // Walk up to the popup root and remove it
+        for (let i = 0; i < 8 && p && p.parentElement; i++) {
+          if (
+            (p.className && /klaviyo|kl-private|needsclick/i.test(p.className)) ||
+            (p.style && (p.style.position === "fixed" || parseInt(p.style.zIndex || "0", 10) > 1000))
+          ) {
+            p.remove();
+            return;
+          }
+          p = p.parentElement;
+        }
+      }
+    });
   });
 
   let html = await page.content();
