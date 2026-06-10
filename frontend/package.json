@@ -63,7 +63,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "craco build && (node scripts/inject-prerendered.js || echo '[build] inject skipped — SPA shipped')",
     "prerender": "node scripts/crawl-prerender.js",
     "test": "craco test"
   },

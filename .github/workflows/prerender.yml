@@ -1,0 +1,96 @@
+name: Prerender SSG snapshots
+
+# Regenerates the prerendered body fragments under frontend/public/_prerendered/
+# Trigger options:
+#   - Manually via the "Run workflow" button in the Actions tab
+#   - Automatically on every push to `main` that touches frontend/src/**
+#     (turn this off below if you don't want automatic regeneration)
+#
+# What it does:
+#   1. Checks out the repo
+#   2. Installs deps (including puppeteer-core temporarily)
+#   3. Builds and serves the production React bundle on localhost:4477
+#   4. Crawls every route in scripts/seo-routes.js using headless Chrome
+#   5. Writes body fragments to frontend/public/_prerendered/*.json
+#   6. Commits and pushes the regenerated fragments back to main
+#   7. The next Emergent deploy ships them automatically via the postbuild step.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/src/**"
+      - "frontend/scripts/seo-routes.js"
+      - "frontend/scripts/crawl-prerender.js"
+
+permissions:
+  contents: write
+
+jobs:
+  prerender:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install puppeteer-core (temporary)
+        run: yarn add -D --ignore-engines puppeteer-core@22 serve
+
+      # Ubuntu-latest already ships with Chrome at /usr/bin/google-chrome
+      - name: Verify Chrome is available
+        run: which google-chrome && google-chrome --version
+
+      - name: Build the React production bundle
+        run: yarn build
+        env:
+          # Use the production frontend URL so absolute links inside the build are correct
+          REACT_APP_BACKEND_URL: ${{ vars.REACT_APP_BACKEND_URL || 'https://theshirtlesshandyman.com' }}
+          CI: "false"
+
+      - name: Serve the built bundle
+        run: npx serve -s build -l 4477 &
+        # Wait briefly for the server to come up
+      - name: Wait for server
+        run: |
+          for i in {1..20}; do
+            if curl -s http://localhost:4477/ > /dev/null; then
+              echo "server up"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Crawl and snapshot all routes
+        run: TARGET_URL=http://localhost:4477 PUPPETEER_EXECUTABLE_PATH=$(which google-chrome) node scripts/crawl-prerender.js
+
+      - name: Clean up devDeps (don't commit puppeteer)
+        run: yarn remove puppeteer-core serve || true
+
+      - name: Commit and push regenerated fragments
+        run: |
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add frontend/public/_prerendered/ frontend/package.json frontend/yarn.lock
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: regenerate prerender fragments [skip ci]"
+            git push
+          fi

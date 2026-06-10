@@ -1,0 +1,105 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "slug": "home",
+      "size": 232204
+    },
+    {
+      "path": "/about",
+      "slug": "about",
+      "size": 47832
+    },
+    {
+      "path": "/upload",
+      "slug": "upload",
+      "size": 71364
+    },
+    {
+      "path": "/portfolio",
+      "slug": "portfolio",
+      "size": 32274
+    },
+    {
+      "path": "/microcement-new-orleans",
+      "slug": "microcement-new-orleans",
+      "size": 82893
+    },
+    {
+      "path": "/microcement-metairie",
+      "slug": "microcement-metairie",
+      "size": 78756
+    },
+    {
+      "path": "/tadelakt-new-orleans",
+      "slug": "tadelakt-new-orleans",
+      "size": 81437
+    },
+    {
+      "path": "/rockscape-walls-new-orleans",
+      "slug": "rockscape-walls-new-orleans",
+      "size": 81619
+    },
+    {
+      "path": "/pool-deck-resurfacing-new-orleans",
+      "slug": "pool-deck-resurfacing-new-orleans",
+      "size": 81405
+    },
+    {
+      "path": "/blog",
+      "slug": "blog",
+      "size": 51144
+    },
+    {
+      "path": "/blog/microcement-vs-tile-cost-new-orleans",
+      "slug": "blog__microcement-vs-tile-cost-new-orleans",
+      "size": 45629
+    },
+    {
+      "path": "/blog/best-microcement-contractor-new-orleans",
+      "slug": "blog__best-microcement-contractor-new-orleans",
+      "size": 42857
+    },
+    {
+      "path": "/blog/tadelakt-vs-microcement-bathroom",
+      "slug": "blog__tadelakt-vs-microcement-bathroom",
+      "size": 44465
+    },
+    {
+      "path": "/blog/why-tile-fails-in-new-orleans-humidity",
+      "slug": "blog__why-tile-fails-in-new-orleans-humidity",
+      "size": 43964
+    },
+    {
+      "path": "/lakeview-handyman",
+      "slug": "lakeview-handyman",
+      "size": 75851
+    },
+    {
+      "path": "/uptown-handyman",
+      "slug": "uptown-handyman",
+      "size": 76818
+    },
+    {
+      "path": "/mid-city-handyman",
+      "slug": "mid-city-handyman",
+      "size": 75825
+    },
+    {
+      "path": "/bywater-handyman",
+      "slug": "bywater-handyman",
+      "size": 75558
+    },
+    {
+      "path": "/french-quarter-handyman",
+      "slug": "french-quarter-handyman",
+      "size": 76001
+    },
+    {
+      "path": "/garden-district-handyman",
+      "slug": "garden-district-handyman",
+      "size": 76225
+    }
+  ],
+  "generatedAt": "2026-06-10T11:50:40.515Z"
+}

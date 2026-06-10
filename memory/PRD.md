@@ -156,6 +156,23 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 - Build script is back to clean `craco build` — no post-build prerender. The static HTML files are already in `public/` and ride along automatically.
 - Verified: `/lakeview-handyman` ships with full H1, paragraphs, lead form, footer in the initial HTML — 315 KB of real content, 12,900 words.
 
+### 2026-06-10 — SSG fix v2 (production-safe body-fragment approach)
+- **Production blank-page incident**: The previous SSG approach committed full HTML files to `public/`. Those files referenced CRA dev-server bundle paths (`/static/js/bundle.js`). Production builds emit hashed paths like `main.HASH.js` — so the static HTML couldn&apos;t load the JS bundle and produced a white screen. Also the homepage snapshot overwrote `public/index.html`, breaking CRA's template.
+- **Fix (committed)**:
+  1. Restored `public/index.html` from git history (commit `a849366`).
+  2. Deleted all 15 prerendered route folders that referenced broken bundle paths.
+- **New SSG approach (body-fragment injection)**:
+  - **`scripts/crawl-prerender.js`** — captures only the inner HTML of `<div id="root">` (the rendered React tree) plus JSON-LD blocks per route. Writes them to `public/_prerendered/<slug>.json`. Bundle-path-free, build-agnostic.
+  - **`scripts/inject-prerendered.js`** — runs as a postbuild step (`craco build && node scripts/inject-prerendered.js`). Reads each fragment, swaps it into the freshly built `build/index.html` shell (which has the correct hashed bundles), rewrites head meta, writes `build/<route>/index.html`. **No Chrome required at deploy time.**
+  - **`.github/workflows/prerender.yml`** — GitHub Action that on `workflow_dispatch` or pushes to `frontend/src/**`:
+    1. Builds the React app with the prod backend URL
+    2. Serves the build on localhost
+    3. Launches headless Chrome (preinstalled on `ubuntu-latest` runners)
+    4. Crawls all 20 routes and writes fresh fragments
+    5. Commits and pushes them back to main
+  - **`public/_prerendered/README.md`** — explains the pipeline for anyone working on the codebase.
+- 20 fragments generated and committed. Verified the injector works end-to-end against a fake build shell (real hashed bundle paths preserved, body content injected, head rewritten, JSON-LD blocks added).
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
