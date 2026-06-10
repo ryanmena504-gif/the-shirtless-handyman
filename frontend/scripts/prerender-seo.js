@@ -1,210 +1,258 @@
 /**
- * Post-build static-site-generation (SSG) for the React SPA.
+ * Post-build SEO pre-render — adaptive: tries full SSG via headless Chrome,
+ * falls back to meta-injection-only when Chrome isn't available in the build
+ * environment.
  *
- * After `craco build`, this:
- *   1. Boots a tiny static server on the build/ directory.
- *   2. Launches headless Chromium via puppeteer-core (uses system Chrome,
- *      no 250MB Chromium download required).
- *   3. For every route in scripts/seo-routes.js, navigates to the route,
- *      waits for React + Helmet to render, then captures the fully-rendered
- *      HTML (DOM + meta tags + JSON-LD) and writes it to:
- *        build/<route>/index.html
+ * Pipeline (called after `craco build`):
+ *   1. Read build/index.html (the SPA shell).
+ *   2. If SKIP_PRERENDER=1 → exit early (escape hatch for any deploy issue).
+ *   3. Try full SSG mode:
+ *        - Boot a tiny static server on build/
+ *        - Launch headless Chromium via puppeteer-core (system Chrome)
+ *        - For every route in scripts/seo-routes.js, visit it, wait for
+ *          React + Helmet to render, capture the live DOM, write to
+ *          build/<route>/index.html
+ *   4. If Chrome / puppeteer is unavailable, the launch fails, or the build
+ *      environment is constrained — fall back to META MODE:
+ *        - For every route, rewrite the shell's <title>, <meta description>,
+ *          canonical, OG and Twitter tags to the route-specific values and
+ *          write build/<route>/index.html.
  *
- * Why this matters:
- *   - Google does execute JS, but rendered SSG is still ranked higher and
- *     indexed faster than JS-rendered SPAs.
- *   - Social crawlers (Facebook/Twitter/LinkedIn/Slack/iMessage/WhatsApp)
- *     do NOT execute JS — they need real OG/Twitter tags in the first byte.
- *   - With SSG, the page is interactive almost immediately after the first
- *     paint (real text is already there, hydration adds interactivity on top).
- *
- * The React app still hydrates and runs as a normal SPA on top of the
- * pre-rendered HTML — no behavior changes for the user.
+ * Either way, the deploy never hangs and every route always gets its own HTML
+ * file with at minimum correct meta tags for crawlers.
  */
 
 const fs = require("fs");
 const path = require("path");
-const http = require("http");
-const handler = require("serve-handler");
-const puppeteer = require("puppeteer-core");
 const { SEO_ROUTES, SITE } = require("./seo-routes");
 
 const BUILD_DIR = path.join(__dirname, "..", "build");
+const SHELL_PATH = path.join(BUILD_DIR, "index.html");
 const PORT = 4477;
 const ORIGIN = `http://localhost:${PORT}`;
 
-// System Chrome / Chromium — installed in container at /usr/bin/chromium
-const CHROME_PATH =
-  process.env.PUPPETEER_EXECUTABLE_PATH ||
-  (fs.existsSync("/usr/bin/google-chrome") ? "/usr/bin/google-chrome" : "/usr/bin/chromium");
+// Possible Chrome locations on the typical Linux build host
+const CHROME_CANDIDATES = [
+  process.env.PUPPETEER_EXECUTABLE_PATH,
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+  "/snap/bin/chromium",
+].filter(Boolean);
 
-function startStaticServer() {
-  return new Promise((resolve, reject) => {
-    const server = http.createServer((req, res) =>
-      handler(req, res, {
-        public: BUILD_DIR,
-        // SPA fallback so unknown routes still serve index.html (before we overwrite per-route)
-        rewrites: [{ source: "**", destination: "/index.html" }],
-      }),
-    );
-    server.on("error", reject);
-    server.listen(PORT, "127.0.0.1", () => resolve(server));
-  });
+function findChrome() {
+  for (const p of CHROME_CANDIDATES) {
+    if (fs.existsSync(p)) return p;
+  }
+  return null;
 }
 
 function escapeAttr(value) {
   return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
+function escapeText(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
 /**
- * After Puppeteer captures the live DOM, ensure title/canonical/OG/Twitter are
- * the route's authoritative values (in case Helmet didn't dedupe in time).
+ * Meta-mode: rewrite the shell HTML with route-specific title/description/
+ * canonical/OG/Twitter tags. This is what every crawler sees in the first
+ * byte regardless of whether Chrome was available.
  */
-function reinforceHead(html, route) {
+function rewriteShell(shell, route) {
   const canonical = `${SITE}${route.path === "/" ? "" : route.path}`;
   const ogType = route.ogType || "website";
-  const title = route.title;
-  const desc = route.description;
+  const titleAttr = escapeText(route.title);
+  const descAttr = escapeAttr(route.description);
+  const ogImage = escapeAttr(route.ogImage);
+  const canonicalEsc = escapeAttr(canonical);
 
-  let out = html;
+  let html = shell;
 
-  // Title
-  out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeAttr(title)}</title>`);
-
-  // Description (replace the first one only — Helmet dedupes after mount but
-  // belt-and-suspenders here for crawlers that bail before JS even parses).
-  out = out.replace(
+  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${titleAttr}</title>`);
+  html = html.replace(
     /<meta\s+name=["']description["'][^>]*>/i,
-    `<meta name="description" content="${escapeAttr(desc)}" />`,
+    `<meta name="description" content="${descAttr}" />`,
   );
 
-  // Canonical
-  if (/<link\s+rel=["']canonical["'][^>]*>/i.test(out)) {
-    out = out.replace(/<link\s+rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${escapeAttr(canonical)}" />`);
+  if (/<link\s+rel=["']canonical["'][^>]*>/i.test(html)) {
+    html = html.replace(
+      /<link\s+rel=["']canonical["'][^>]*>/i,
+      `<link rel="canonical" href="${canonicalEsc}" />`,
+    );
   } else {
-    out = out.replace("</head>", `    <link rel="canonical" href="${escapeAttr(canonical)}" />\n    </head>`);
+    html = html.replace("</head>", `    <link rel="canonical" href="${canonicalEsc}" />\n    </head>`);
   }
 
-  // OG
   const ogPairs = [
     ["og:type", ogType],
     ["og:url", canonical],
-    ["og:title", title],
-    ["og:description", desc],
+    ["og:title", route.title],
+    ["og:description", route.description],
     ["og:image", route.ogImage],
+    ["og:image:secure_url", route.ogImage],
   ];
   for (const [prop, content] of ogPairs) {
     const re = new RegExp(`<meta\\s+property=["']${prop}["'][^>]*>`, "i");
     const tag = `<meta property="${prop}" content="${escapeAttr(content)}" />`;
-    out = re.test(out) ? out.replace(re, tag) : out.replace("</head>", `    ${tag}\n    </head>`);
+    html = re.test(html) ? html.replace(re, tag) : html.replace("</head>", `    ${tag}\n    </head>`);
   }
-
-  // Twitter
   const twPairs = [
-    ["twitter:title", title],
-    ["twitter:description", desc],
+    ["twitter:title", route.title],
+    ["twitter:description", route.description],
     ["twitter:image", route.ogImage],
   ];
   for (const [name, content] of twPairs) {
     const re = new RegExp(`<meta\\s+name=["']${name}["'][^>]*>`, "i");
     const tag = `<meta name="${name}" content="${escapeAttr(content)}" />`;
-    out = re.test(out) ? out.replace(re, tag) : out.replace("</head>", `    ${tag}\n    </head>`);
+    html = re.test(html) ? html.replace(re, tag) : html.replace("</head>", `    ${tag}\n    </head>`);
   }
 
-  // Mark the snapshot so we can detect it in debugging
-  out = out.replace("</head>", `    <meta name="x-prerendered" content="1" />\n    </head>`);
-  return out;
-}
-
-async function snapshotRoute(browser, route) {
-  const page = await browser.newPage();
-  await page.setViewport({ width: 1280, height: 800 });
-  await page.setUserAgent("Mozilla/5.0 (compatible; ShirtlessSSG/1.0; +https://theshirtlesshandyman.com)");
-
-  // Suppress browser logs unless they're errors that crash the render.
-  page.on("pageerror", (err) => console.warn(`[prerender]   pageerror at ${route.path}: ${err.message}`));
-
-  const url = `${ORIGIN}${route.path}`;
-  try {
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 });
-  } catch (e) {
-    // Fall back to domcontentloaded for routes that have background polling
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
-  }
-
-  // Give Helmet, framer-motion mount animations, and SeoHead's dedupe pass time to settle.
-  await new Promise((r) => setTimeout(r, 1500));
-
-  // Strip any in-flight loading spinners / framer-motion transform inline styles
-  // that would freeze the snapshot mid-animation. The CSS keeps these as the
-  // final state anyway after hydration.
-  await page.evaluate(() => {
-    document.querySelectorAll('[data-testid="generating-loader"]').forEach((el) => el.remove());
-  });
-
-  let html = await page.content();
-  await page.close();
-  html = reinforceHead(html, route);
   return html;
 }
 
 function writeRouteFile(route, html) {
   if (route.path === "/") {
-    fs.writeFileSync(path.join(BUILD_DIR, "index.html"), html, "utf8");
+    fs.writeFileSync(SHELL_PATH, html, "utf8");
     return "index.html";
   }
   const dir = path.join(BUILD_DIR, route.path.replace(/^\//, ""));
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
-  return path.relative(BUILD_DIR, path.join(dir, "index.html"));
+  const out = path.join(dir, "index.html");
+  fs.writeFileSync(out, html, "utf8");
+  return path.relative(BUILD_DIR, out);
 }
 
-async function main() {
-  if (!fs.existsSync(path.join(BUILD_DIR, "index.html"))) {
-    console.error(`[prerender] ERROR: build/index.html not found. Did 'craco build' run first?`);
-    process.exit(1);
+async function runMetaMode() {
+  console.log(`[prerender] META MODE — injecting per-route meta tags into ${SEO_ROUTES.length} routes`);
+  const shell = fs.readFileSync(SHELL_PATH, "utf8");
+  let count = 0;
+  for (const route of SEO_ROUTES) {
+    const html = rewriteShell(shell, route);
+    const out = writeRouteFile(route, html);
+    console.log(`[prerender]   ${route.path.padEnd(45)} -> ${out}`);
+    count++;
   }
-  if (!fs.existsSync(CHROME_PATH)) {
-    console.error(`[prerender] ERROR: Chrome not found at ${CHROME_PATH}. Set PUPPETEER_EXECUTABLE_PATH.`);
-    process.exit(1);
-  }
+  console.log(`[prerender] META MODE done. ${count} files written.`);
+}
 
-  console.log(`[prerender] Booting static server at ${ORIGIN} (build dir: ${BUILD_DIR})`);
-  const server = await startStaticServer();
+async function runSsgMode(chromePath) {
+  // Lazy-require Puppeteer + serve-handler only when we're actually going to use them.
+  // If either is missing the require() will throw and we'll fall back to meta mode.
+  const puppeteer = require("puppeteer-core");
+  const handler = require("serve-handler");
+  const http = require("http");
 
-  console.log(`[prerender] Launching Chrome at ${CHROME_PATH}`);
-  const browser = await puppeteer.launch({
-    executablePath: CHROME_PATH,
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+  console.log(`[prerender] SSG MODE — Chrome at ${chromePath}, ${SEO_ROUTES.length} routes`);
+
+  const server = await new Promise((resolve, reject) => {
+    const s = http.createServer((req, res) =>
+      handler(req, res, {
+        public: BUILD_DIR,
+        rewrites: [{ source: "**", destination: "/index.html" }],
+      }),
+    );
+    s.on("error", reject);
+    s.listen(PORT, "127.0.0.1", () => resolve(s));
   });
 
-  console.log(`[prerender] Snapshotting ${SEO_ROUTES.length} routes...`);
+  // Hard cap so a runaway Chrome can never freeze deploy
+  const browserLaunchTimeoutMs = 30000;
+  const browser = await Promise.race([
+    puppeteer.launch({
+      executablePath: chromePath,
+      headless: "new",
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+    }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error("Chrome launch timeout")), browserLaunchTimeoutMs)),
+  ]);
+
   let success = 0;
   let failure = 0;
   for (const route of SEO_ROUTES) {
     const t0 = Date.now();
     try {
-      const html = await snapshotRoute(browser, route);
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1280, height: 800 });
+      await page.setUserAgent("Mozilla/5.0 (compatible; ShirtlessSSG/1.0)");
+      await page.goto(`${ORIGIN}${route.path}`, { waitUntil: "networkidle0", timeout: 25000 }).catch(async () => {
+        // Fallback for routes with background polling
+        await page.goto(`${ORIGIN}${route.path}`, { waitUntil: "domcontentloaded", timeout: 25000 });
+      });
+      await new Promise((r) => setTimeout(r, 1200));
+      await page.evaluate(() => {
+        document.querySelectorAll('[data-testid="generating-loader"]').forEach((el) => el.remove());
+      });
+      let html = await page.content();
+      await page.close();
+      // Reinforce critical head tags with route's authoritative values
+      html = rewriteShell(html, route);
       const out = writeRouteFile(route, html);
       const ms = Date.now() - t0;
-      const sz = (html.length / 1024).toFixed(1);
-      console.log(`[prerender]   ✓ ${route.path.padEnd(50)} -> ${out.padEnd(40)} ${sz} KB · ${ms} ms`);
+      console.log(`[prerender]   ✓ ${route.path.padEnd(45)} -> ${out} · ${ms} ms`);
       success++;
     } catch (e) {
-      console.error(`[prerender]   ✗ ${route.path}: ${e.message}`);
+      console.warn(`[prerender]   ✗ ${route.path}: ${e.message} (falling back to meta-only for this route)`);
+      // Fall back per-route so one broken route doesn't kill the rest
+      const shell = fs.readFileSync(SHELL_PATH, "utf8");
+      writeRouteFile(route, rewriteShell(shell, route));
       failure++;
     }
   }
 
   await browser.close();
-  server.close();
-
-  console.log(`[prerender] Done. ${success} snapshots written, ${failure} failures.`);
-  if (failure > 0) process.exit(2);
+  await new Promise((resolve) => server.close(resolve));
+  console.log(`[prerender] SSG MODE done. ${success} snapshots, ${failure} fallbacks.`);
 }
 
-main().catch((e) => {
-  console.error("[prerender] Fatal:", e);
-  process.exit(1);
-});
+async function main() {
+  if (process.env.SKIP_PRERENDER === "1") {
+    console.log("[prerender] SKIP_PRERENDER=1 — skipping. The SPA will serve as-is.");
+    return;
+  }
+
+  if (!fs.existsSync(SHELL_PATH)) {
+    console.error(`[prerender] ERROR: build/index.html not found. Did 'craco build' run first?`);
+    process.exit(1);
+  }
+
+  const chromePath = findChrome();
+
+  // No Chrome → meta mode (always safe, never hangs).
+  if (!chromePath) {
+    console.log("[prerender] Chrome not found in build environment — using META MODE.");
+    await runMetaMode();
+    return;
+  }
+
+  // Try SSG. If anything in the pipeline blows up (puppeteer missing, launch
+  // hangs, network refuses), catch the error and fall back to meta mode.
+  try {
+    await runSsgMode(chromePath);
+  } catch (e) {
+    console.warn(`[prerender] SSG mode failed (${e.message}). Falling back to META MODE.`);
+    try {
+      await runMetaMode();
+    } catch (metaErr) {
+      console.error(`[prerender] Meta fallback also failed: ${metaErr.message}`);
+      // Don't fail the deploy — the homepage shell is still served as-is.
+      process.exit(0);
+    }
+  }
+}
+
+// Global safety net: never let prerender hang the deploy longer than 5 minutes.
+const HARD_TIMEOUT_MS = 5 * 60 * 1000;
+const hardTimer = setTimeout(() => {
+  console.error(`[prerender] HARD TIMEOUT after ${HARD_TIMEOUT_MS / 1000}s — aborting and accepting current state.`);
+  process.exit(0);
+}, HARD_TIMEOUT_MS);
+hardTimer.unref();
+
+main()
+  .catch((e) => {
+    console.warn(`[prerender] Unhandled error: ${e.message} — deploy will continue with whatever was written.`);
+    process.exit(0);
+  })
+  .finally(() => clearTimeout(hardTimer));
