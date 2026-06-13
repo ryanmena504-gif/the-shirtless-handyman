@@ -83,6 +83,19 @@ export function ChatWidget() {
     }
   }, [open]);
 
+  // Lock the body scroll on mobile when the panel is open (it's full-screen on mobile)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (open && isMobile) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
+
   const sendMessage = useCallback(
     async (text) => {
       const message = (text ?? input).trim();
@@ -125,21 +138,26 @@ export function ChatWidget() {
 
   return (
     <>
-      {/* Floating launcher */}
+      {/* Floating launcher — bottom-right on desktop, above the sticky mobile CTA on phones */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="hidden md:flex fixed bottom-6 right-6 z-[9990] w-14 h-14 rounded-full bg-[#D97757] hover:bg-[#C56545] items-center justify-center text-white shadow-2xl shadow-[#D97757]/40 transition-transform hover:scale-105 active:scale-95"
+        className={`fixed right-4 md:right-6 z-[9990] w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#D97757] hover:bg-[#C56545] flex items-center justify-center text-white shadow-2xl shadow-[#D97757]/40 transition-transform hover:scale-105 active:scale-95 ${
+          // Hide the launcher when the panel is open on mobile (panel has its own close button) so
+          // the panel covers the screen without a floating button overlapping the keyboard.
+          open ? "hidden md:flex" : "flex"
+        }`}
+        style={{ bottom: "calc(5.25rem + env(safe-area-inset-bottom))" }}
         data-testid="chat-widget-launcher"
         aria-label={open ? "Close chat with Ryan's AI" : "Chat with Ryan's AI"}
       >
         <AnimatePresence mode="wait">
           {open ? (
             <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 md:w-6 md:h-6" />
             </motion.div>
           ) : (
             <motion.div key="open" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
-              <MessageCircle className="w-6 h-6" />
+              <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -148,7 +166,7 @@ export function ChatWidget() {
         )}
       </button>
 
-      {/* Chat panel */}
+      {/* Chat panel — full-screen bottom-sheet on mobile, floating card on desktop */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -156,7 +174,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-6 z-[9990] w-[400px] max-w-[calc(100vw-3rem)] h-[600px] max-h-[calc(100vh-8rem)] bg-[#0E0E0E] rounded-2xl border border-white/10 shadow-2xl flex flex-col overflow-hidden"
+            className="fixed z-[9990] bg-[#0E0E0E] border border-white/10 shadow-2xl flex flex-col overflow-hidden inset-0 md:inset-auto md:bottom-24 md:right-6 md:w-[400px] md:max-w-[calc(100vw-3rem)] md:h-[600px] md:max-h-[calc(100vh-8rem)] md:rounded-2xl"
             data-testid="chat-widget-panel"
             role="dialog"
             aria-label="Chat with Ryan's AI assistant"
@@ -237,7 +255,10 @@ export function ChatWidget() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-white/5 bg-[#0A0A0A] p-3">
+            <div
+              className="border-t border-white/5 bg-[#0A0A0A] p-3"
+              style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+            >
               <div className="flex items-end gap-2">
                 <textarea
                   ref={inputRef}

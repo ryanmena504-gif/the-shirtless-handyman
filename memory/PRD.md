@@ -173,6 +173,15 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
   - **`public/_prerendered/README.md`** — explains the pipeline for anyone working on the codebase.
 - 20 fragments generated and committed. Verified the injector works end-to-end against a fake build shell (real hashed bundle paths preserved, body content injected, head rewritten, JSON-LD blocks added).
 
+### 2026-06-13 — Mobile chat experience
+- **ChatWidget now visible on mobile** — removed the `hidden md:flex` constraint.
+- **Launcher positioned above the StickyMobileCTA** (`bottom: calc(5.25rem + safe-area-inset)`) — 18 px gap, no overlap with the existing Call/Text/See My Room bar.
+- **Mobile launcher size**: 48×48 (vs 56×56 desktop) so it doesn't dominate the corner.
+- **Mobile panel** opens as a **full-screen overlay** (`inset-0`) instead of the desktop's 400×600 floating card. Body scroll locked while panel is open so users can't scroll the page behind it.
+- **Launcher auto-hides** when panel is open on mobile — frees up vertical space and avoids a floating button overlapping the on-screen keyboard.
+- **Safe-area padding** added to the input footer so the input never sits behind the iPhone home-indicator bar.
+- Verified at 390×844 (iPhone 13) viewport and 1920×800 (desktop) — both render cleanly with no regressions.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.
