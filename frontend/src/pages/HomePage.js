@@ -247,21 +247,20 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto relative">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <ScrollReveal className="order-2 md:order-1" delay={0.1}>
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34]">
+              <div className="relative aspect-square rounded-3xl overflow-hidden bg-[#F0E8D8]">
                 <img
-                  src="/portfolio/microcement-vanity-bathroom.jpg"
-                  alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans — sink, walls, and floor"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  src="/ryan-mena-illustration.jpg"
+                  alt="Ryan Mena — The Shirtless Handyman — illustration"
+                  className="absolute inset-0 w-full h-full object-contain"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/85 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
-                    Ryan Mena
-                  </p>
-                  <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
-                    Founder · Craftsman · NOLA-born
-                  </p>
-                </div>
+              </div>
+              <div className="mt-4 px-1">
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
+                  Ryan Mena
+                </p>
+                <p className="text-lg font-light text-foreground" style={{ fontFamily: "'Fraunces', serif" }}>
+                  Founder · Craftsman · NOLA-born
+                </p>
               </div>
             </ScrollReveal>
 
