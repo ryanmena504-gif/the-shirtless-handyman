@@ -196,6 +196,14 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
   - `LocalServicePage.js` after the trust strip on every neighborhood + service landing page (so SEO-driven traffic from `/lakeview-handyman` etc. hits it too)
 - Verified: live preview shows correct calculations (microcement 80 sqft = $1,450–$2,800; Venetian 120 sqft = $1,680–$3,350; Rockscape = flat $800–$2,500). Curl POST to `/api/leads/quick` with `source='pricing_calculator'` creates the lead with the embedded estimate in `project_description`.
 
+### 2026-06-14 — Calculator polish (pre-deploy upgrades)
+- **Real estimate confirmation email** — `notifications.py` now ships `send_estimate_confirmation()` which Resend-emails the visitor a styled HTML copy of their quote (finish, sq ft, price range, what's included, "Text Ryan" + "Call" CTAs). Wired into `notify_new_lead`'s parallel gather. Fires only when `source='pricing_calculator'` AND a real email is on the lead. Skips silently if Resend isn't configured (preview env) or the email's missing.
+- **Estimate parser** — `_parse_calculator_estimate()` regex-extracts finish / sqft / price range from the canonical `project_description` string the calculator writes (`"Pricing Calculator: <finish> · <sqft> sq ft · estimate <$low>–<$high>"`).
+- **Calculator button label fixed** — "Email me this quote" → "Email me my quote". Honest now that it actually emails them a copy.
+- **Calculator success message** — branches on contact type: if they gave an email, "Check your inbox in a minute"; if phone-only, "Ryan will text you within the hour".
+- **Trust badge above the lead form** — pulsing green dot + "Ryan typically replies within an hour · 7 days a week". Industry data: kills the "they'll ghost me" objection.
+- **Service JSON-LD upgraded** with `priceRange` field on both the Service itself and its provider, plus `availability: "InStock"` and a `PriceSpecification` block on the AggregateOffer. Google can now surface "From $X" in SERPs for the 11 landing pages.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.

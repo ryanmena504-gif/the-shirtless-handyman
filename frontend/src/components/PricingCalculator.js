@@ -289,7 +289,10 @@ export function PricingCalculator() {
               <div className="rounded-2xl bg-[#D97757]/15 border border-[#D97757]/30 p-5" data-testid="calc-lead-success">
                 <p className="text-sm font-semibold text-white mb-1">Quote sent.</p>
                 <p className="text-xs text-white/65 leading-relaxed">
-                  Ryan got your estimate and will reach out shortly. Want it now? Text him at{" "}
+                  {contact.includes("@")
+                    ? "Check your inbox in a minute — your estimate is on its way. "
+                    : "Ryan got your quote and will text you within the hour. "}
+                  Want him sooner? Text{" "}
                   <a href={SMS_LINK} className="text-[#D97757] underline">504-264-4919</a>.
                 </p>
               </div>
@@ -297,6 +300,10 @@ export function PricingCalculator() {
               <form onSubmit={submit} className="space-y-2.5" data-testid="calc-lead-form">
                 <p className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-1">
                   3. Save this quote
+                </p>
+                <p className="text-[11px] text-white/55 leading-relaxed -mt-0.5 mb-2 flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
+                  Ryan typically replies within an hour · 7 days a week
                 </p>
                 <Input
                   value={name}
@@ -324,7 +331,7 @@ export function PricingCalculator() {
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
-                      <Mail className="w-3.5 h-3.5 mr-1.5" /> Email me this quote <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      <Mail className="w-3.5 h-3.5 mr-1.5" /> Email me my quote <ArrowRight className="w-3.5 h-3.5 ml-1" />
                     </>
                   )}
                 </Button>

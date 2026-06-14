@@ -69,15 +69,27 @@ export default function LocalServicePage({ config }) {
           name: "The Shirtless Handyman",
           url: "https://theshirtlesshandyman.com",
           telephone: "(504) 264-4919",
+          priceRange: "$$",
+          areaServed: { "@type": "City", name: city },
         },
         areaServed: { "@type": "City", name: city },
         serviceType,
+        // priceRange is the field Google SERP renderers read directly when deciding
+        // whether to show a "From $X" pricing snippet alongside the search result.
+        priceRange: `$${priceLow.toLocaleString()}–$${priceHigh.toLocaleString()}`,
         offers: {
           "@type": "AggregateOffer",
           priceCurrency: "USD",
           lowPrice: String(priceLow),
           highPrice: String(priceHigh),
           offerCount: "5",
+          availability: "https://schema.org/InStock",
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            priceCurrency: "USD",
+            minPrice: String(priceLow),
+            maxPrice: String(priceHigh),
+          },
         },
       },
       {
