@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Navbar } from "./Navbar";
 import { InstantQuoteForm } from "./InstantQuoteForm";
 import { TrustStrip } from "./TrustStrip";
+import { PricingCalculator } from "./PricingCalculator";
 import { SeoHead } from "./SeoHead";
 import {
   ArrowRight, Upload, ShieldCheck, Droplets, Layers, Clock,
@@ -152,6 +153,9 @@ export default function LocalServicePage({ config }) {
         </section>
 
         <TrustStrip variant="dark" />
+
+        {/* Pricing calculator — instant estimate */}
+        <PricingCalculator />
 
         {/* Benefits */}
         <section className="py-20 px-6 md:px-12 bg-[#FAFAF9]">

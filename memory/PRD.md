@@ -182,6 +182,20 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 - **Safe-area padding** added to the input footer so the input never sits behind the iPhone home-indicator bar.
 - Verified at 390×844 (iPhone 13) viewport and 1920×800 (desktop) — both render cleanly with no regressions.
 
+### 2026-06-14 — Interactive Pricing Calculator
+- **`components/PricingCalculator.js`** — instant-estimate widget. 3 steps:
+  1. Pick a finish (Microcement / Tadelakt / Venetian Plaster / Rockscape Feature Wall / Pool Deck & Outdoor)
+  2. Drag the size slider (finish-specific min/max + default)
+  3. Save the quote — name + phone-or-email → posts to `/api/leads/quick` with `source='pricing_calculator'` and the calculated estimate baked into `project_description` so Ryan sees exactly what price the lead is responding to.
+- Pricing logic uses the **same published ranges** the AI chat references — microcement $18–35/sqft, tadelakt $22–40/sqft, venetian $14–28/sqft, rockscape flat $800–2,500, pool deck $7–15/sqft. Minimum-job "floor" prices baked in so tiny jobs round up sensibly.
+- **Live price update** with framer-motion fade as inputs change. Real-time price display in 4xl–5xl Fraunces serif.
+- **What's Included** card: prep + materials + 5–7 layers + topcoat sealing — sets expectation that this isn't a one-coat paint job.
+- **Two-button CTA**: primary "Email me this quote" → backend lead, secondary "Text Ryan now" → SMS link with pre-filled message.
+- **Mounted in 2 places**:
+  - `HomePage.js` between the Venetian Plaster section and Meet Ryan (anchor: `#quote`)
+  - `LocalServicePage.js` after the trust strip on every neighborhood + service landing page (so SEO-driven traffic from `/lakeview-handyman` etc. hits it too)
+- Verified: live preview shows correct calculations (microcement 80 sqft = $1,450–$2,800; Venetian 120 sqft = $1,680–$3,350; Rockscape = flat $800–$2,500). Curl POST to `/api/leads/quick` with `source='pricing_calculator'` creates the lead with the embedded estimate in `project_description`.
+
 ## Verification Status
 1. **Paste Resend API key** into `RESEND_API_KEY` on production. Get one free at https://resend.com → Dashboard → API Keys. Email will then go live.
 2. **Paste Twilio credentials** into `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`. Sign up at https://twilio.com, get a $1/mo phone number, copy the SID + token. SMS will then go live.

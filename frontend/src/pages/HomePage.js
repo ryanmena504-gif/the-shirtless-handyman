@@ -3,6 +3,7 @@ import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
 import { TrustStrip } from "../components/TrustStrip";
+import { PricingCalculator } from "../components/PricingCalculator";
 import { SeoHead } from "../components/SeoHead";
 import { RevealText, ScrollReveal, MagneticButton } from "../components/cinematic";
 import { motion } from "framer-motion";
@@ -28,6 +29,13 @@ const SERVICES = [
     image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=900&fit=crop&fm=jpg&q=85",
     href: "/tadelakt-new-orleans",
     priceRange: "From $3,500",
+  },
+  {
+    title: "Venetian Plaster",
+    description: "Mirror-polished Italian lime plaster. Marbled depth that catches the light. A Renaissance finish, hand-applied today.",
+    image: "/venetian-plaster-hero.jpg",
+    href: "/upload",
+    priceRange: "From $1,800",
   },
   {
     title: "Rockscape Walls",
@@ -184,12 +192,12 @@ export default function HomePage() {
               className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground leading-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Four crafts. One philosophy:<br />
+              Five crafts. One philosophy:<br />
               <span className="italic">no seams, no grout, no shortcuts.</span>
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {SERVICES.map((service, i) => (
               <ScrollReveal key={service.title} delay={i * 0.08}>
                 <button
@@ -234,6 +242,96 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== VENETIAN PLASTER — large feature strip ===== */}
+      <section
+        className="relative overflow-hidden bg-[#1A1410]"
+        data-testid="venetian-plaster-section"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[70vh]">
+          {/* Image side */}
+          <ScrollReveal className="relative md:order-1 order-1">
+            <div className="relative w-full h-[55vh] md:h-full min-h-[480px]">
+              <motion.img
+                src="/venetian-plaster-hero.jpg"
+                alt="Venetian plaster wall — mirror-polished Italian lime plaster with warm, marbled depth — installed by The Shirtless Handyman in New Orleans"
+                className="absolute inset-0 w-full h-full object-cover"
+                initial={{ scale: 1.04 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#1A1410]/60 md:to-[#1A1410]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1410]/70 via-transparent to-transparent md:from-transparent" />
+            </div>
+          </ScrollReveal>
+
+          {/* Copy side */}
+          <ScrollReveal delay={0.15} className="md:order-2 order-2 flex items-center px-6 md:px-12 lg:px-20 py-14 md:py-0">
+            <div className="max-w-xl">
+              <p className="text-[11px] uppercase tracking-[0.28em] font-bold text-[#D97757] mb-4">
+                Featured Craft · Italian Heritage
+              </p>
+              <h2
+                className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.05] mb-6"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Venetian Plaster.<br />
+                <span className="italic text-[#E8D2BD]">Light, made tangible.</span>
+              </h2>
+              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-5">
+                Burnished Italian lime plaster, troweled and polished by hand in 5–7 thin layers
+                until it reflects light like a sheet of marble — but warmer, deeper, alive. The same
+                finish that lines Renaissance palazzos in Venice and Florence is now installed in
+                New Orleans living rooms, hallways, dining rooms, and powder baths.
+              </p>
+              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-8">
+                Custom-tinted to any color. Naturally anti-microbial. Zero VOCs. No seams, no grout,
+                no joints — just one continuous, hand-finished plane that turns a flat wall into the
+                room&apos;s most striking feature.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-1">
+                    Best for
+                  </p>
+                  <p className="text-sm text-white/85">Living rooms · Dining · Halls · Powder baths</p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-1">
+                    Starting at
+                  </p>
+                  <p className="text-sm text-white/85">$14/sq ft · most rooms $1,800–$4,500</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => navigate("/upload")}
+                  data-cursor="view"
+                  data-cursor-label="Try"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#D97757] hover:bg-[#C56545] text-white text-sm font-semibold h-11 px-6 transition-colors"
+                  data-testid="venetian-try-studio-btn"
+                >
+                  Preview it in your space <ArrowRight className="w-4 h-4" />
+                </button>
+                <a
+                  href={SMS_LINK}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 hover:bg-white/5 text-white text-sm font-semibold h-11 px-6 transition-colors"
+                  data-testid="venetian-text-ryan-btn"
+                >
+                  Text Ryan for a quote
+                </a>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ===== PRICING CALCULATOR — instant estimate ===== */}
+      <PricingCalculator />
 
       {/* ===== MEET RYAN ===== (warm hybrid palette: light bone bg, warm taupe accents) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-[#F5F1EA] relative overflow-hidden" data-testid="meet-ryan-section">
