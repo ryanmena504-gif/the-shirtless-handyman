@@ -353,11 +353,7 @@
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
 
-        <!-- Klaviyo -->
-        <script async type='text/javascript' src='https://static.klaviyo.com/onsite/js/WsnEuq/klaviyo.js?company_id=WsnEuq'></script>
-        <script type="text/javascript">
-        !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
-        </script>
+        <!-- Klaviyo popup removed per business decision. tracking.js calls will no-op since window.klaviyo is undefined. -->
 
         <!-- Google Analytics 4 — set window.__GA4_ID at runtime or replace REPLACE_WITH_GA4_ID below -->
         <script>
