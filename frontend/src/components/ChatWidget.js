@@ -77,8 +77,12 @@ export function ChatWidget() {
     }
   }, [messages, loading]);
 
-  // Focus the input when widget opens
+  // Focus the input when widget opens; expose open state globally so other
+  // overlays (ExitIntentModal) can step out of our way.
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.__SHH_CHAT_OPEN__ = open;
+    }
     if (open && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 300);
       setUnread(false);

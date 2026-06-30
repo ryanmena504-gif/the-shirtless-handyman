@@ -40,13 +40,14 @@ function SectionRenderer({ section, navigate }) {
       return (
         <div className="my-8 p-6 bg-[#1A3C34] text-white rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <p className="font-medium">{section.text}</p>
-          <Button
-            onClick={() => navigate(section.href)}
-            className="h-11 px-6 rounded-full bg-[#D97757] text-white font-medium hover:bg-[#C56545] whitespace-nowrap"
+          <a
+            href={section.href}
+            className="inline-flex items-center h-11 px-6 rounded-full bg-[#D97757] text-white font-medium hover:bg-[#C56545] whitespace-nowrap no-underline"
+            data-testid="blog-post-cta-link"
           >
             {section.href === "/upload" ? <Upload className="w-4 h-4 mr-2" /> : <ArrowRight className="w-4 h-4 mr-2" />}
             {section.href === "/upload" ? "Try Free" : "Learn more"}
-          </Button>
+          </a>
         </div>
       );
     default:
