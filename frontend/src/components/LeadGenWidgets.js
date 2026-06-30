@@ -9,6 +9,7 @@ import { ChatWidget } from "./ChatWidget";
 const LEADGEN_ROUTES = [
   "/", "/upload", "/portfolio", "/blog", "/about",
   "/microcement-new-orleans",
+  "/microcement-installers-new-orleans",
   "/microcement-metairie",
   "/tadelakt-new-orleans",
   "/rockscape-walls-new-orleans",

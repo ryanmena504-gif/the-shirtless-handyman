@@ -54,6 +54,53 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
   },
 
+  // ---- Microcement Installers · New Orleans (hiring intent) ---------------
+  // Sibling to /microcement-new-orleans, but angled for searchers actively
+  // looking to *hire* a microcement installer (different SERP intent).
+  "microcement-installers-new-orleans": {
+    slug: "microcement-installers-new-orleans",
+    serviceName: "Microcement Installation",
+    serviceType: "Microcement Installer",
+    city: "New Orleans",
+    title: "Microcement Installers New Orleans | Local Specialist, Real Photos, Fast Quotes — The Shirtless Handyman",
+    description:
+      "Hire a microcement installer in New Orleans. Born-and-raised NOLA craftsman Ryan Mena installs seamless, waterproof microcement showers, floors, and walls — no demolition, no grout, no subcontractors. Free design preview in 60 seconds. Text 504-264-4919.",
+    eyebrow: "Microcement Installers · New Orleans, LA",
+    h1: "Microcement installers in New Orleans — one craftsman, real portfolio, fast quote.",
+    heroParagraph:
+      "Looking for microcement installers in New Orleans? You're in the right place. I'm Ryan Mena — born here, working here, installing microcement personally on every project. No subcontractors, no franchise quote, no 4-week wait. See your own bathroom rendered in microcement in 60 seconds, then get a real installer-direct quote.",
+    heroImage:
+      "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=2000&fit=crop&fm=jpg&q=85",
+    primaryCta: "Get My Installer Quote Free",
+    smsBody: "Hey Ryan, I'm looking for a microcement installer in New Orleans.",
+    defaultProjectType: "Microcement Bathroom",
+    priceLow: 2000,
+    priceHigh: 12000,
+    benefits: [
+      { icon: "Award", title: "The Installer Touches Every Job", body: "I install every microcement project personally — same hands from estimate to final seal. No 'we'll send a crew.' No language-barrier subs. You get one accountable craftsman." },
+      { icon: "ShieldCheck", title: "Licensed, Insured & NOLA-Based", body: "Fully licensed and insured Louisiana home-improvement business. Local addresses, local references, local accountability. No national franchise pulling permits from Texas." },
+      { icon: "Layers", title: "Real Microcement, Real Portfolio", body: "Italian microcement systems — not paint, not faux, not a knock-off. Ask to see in-person samples and references in your zip code before you commit a dollar." },
+      { icon: "Clock", title: "Quote in 24 Hours, Install in 2–3 Weeks", body: "Quotes go out same-day or next-morning. Most New Orleans microcement installs are booked within 2–3 weeks of approval — much faster than the typical contractor pipeline." },
+    ],
+    serviceAreas: NOLA_AREAS,
+    whereItShines: [
+      "Walk-in showers — sealed microcement shell replacing tile + grout entirely.",
+      "Master bathroom floors and walls — one continuous, waterproof surface.",
+      "Powder rooms and half baths — a high-impact upgrade in a small footprint.",
+      "Kitchen backsplashes and accent walls — no grout to stain, modern matte finish.",
+      "Concrete-slab floors — bonded directly to existing slab with zero subfloor demo.",
+      "Short-term rental turnovers — durable under guest abuse, easy to re-seal.",
+    ],
+    faq: [
+      { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (we use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
+      { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
+      { q: "How much do microcement installers charge in New Orleans?", a: "New Orleans microcement installers typically charge $14 to $40 per square foot installed, depending on the substrate, prep work, finish system, and color complexity. A single bathroom usually lands $2,000 to $8,000. We give a fixed, all-in price after a free in-home consultation — no hidden 'change order' add-ons." },
+      { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
+      { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. We schedule around your life — you can keep using the rest of the house while we work, and the room is back in service within 48 hours of the final seal." },
+      { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Yes — that's the most common install we do. Microcement bonds directly to existing tile after proper prep (cleaning, mechanical scarification, and a bonding primer). No demolition. No dumpster. No tile removal cost." },
+    ],
+  },
+
   // ---- Microcement · Metairie ---------------------------------------------
   "microcement-metairie": {
     slug: "microcement-metairie",

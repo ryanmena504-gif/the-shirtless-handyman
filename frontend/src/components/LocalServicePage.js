@@ -352,6 +352,7 @@ export default function LocalServicePage({ config }) {
             <div className="flex flex-wrap gap-2.5">
               {[
                 { slug: "microcement-new-orleans", label: "Microcement" },
+                { slug: "microcement-installers-new-orleans", label: "Microcement Installers" },
                 { slug: "tadelakt-new-orleans", label: "Tadelakt" },
                 { slug: "rockscape-walls-new-orleans", label: "Rockscape Walls" },
                 { slug: "pool-deck-resurfacing-new-orleans", label: "Pool Deck Resurfacing" },

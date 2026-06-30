@@ -41,6 +41,7 @@ function App() {
 
             {/* Local-SEO landing pages (all five share the LocalServiceRoute → LocalServicePage template) */}
             <Route path="/microcement-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/microcement-installers-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/microcement-metairie" element={<LocalServiceRoute />} />
             <Route path="/tadelakt-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/rockscape-walls-new-orleans" element={<LocalServiceRoute />} />

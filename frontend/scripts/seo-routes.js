@@ -48,6 +48,12 @@ const SEO_ROUTES = [
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
+    path: "/microcement-installers-new-orleans",
+    title: "Microcement Installers New Orleans | Local Specialist, Real Photos, Fast Quotes — The Shirtless Handyman",
+    description: "Hire a microcement installer in New Orleans. Ryan Mena installs seamless, waterproof microcement showers, floors & walls — no demolition, no grout, no subcontractors. Free design preview. Text 504-264-4919.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
+  },
+  {
     path: "/microcement-metairie",
     title: "Microcement Metairie LA | Seamless Bathroom & Shower Installation",
     description: "Microcement installation in Metairie, LA. Seamless, zero-grout showers, bathroom walls, and floors — installed over your existing tile. Text Ryan: 504-264-4919.",
