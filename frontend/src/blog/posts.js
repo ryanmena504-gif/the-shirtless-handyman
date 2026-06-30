@@ -193,6 +193,66 @@ export const BLOG_POSTS = [
       { type: "cta", text: "See your bathroom in a seamless finish — free preview", href: "/upload" },
     ],
   },
+
+  // -------------------------------------------------------------------------
+  {
+    slug: "how-to-choose-microcement-installer-new-orleans",
+    title: "How to Choose a Microcement Installer in New Orleans (6-Question Checklist)",
+    description:
+      "Hiring a microcement installer in New Orleans? Use this 6-question checklist to spot the pros from the pretenders — what to ask, what to see, and what red flags to walk away from.",
+    excerpt:
+      "Microcement is unforgiving. A bad installer can crack a finish in 6 months. Use this checklist before you hand anyone a check.",
+    publishedAt: "2026-02-15",
+    readTimeMin: 7,
+    heroImage:
+      "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1600&fit=crop&fm=jpg&q=85",
+    ogImage:
+      "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85",
+    tags: ["microcement", "installer", "hiring", "new orleans"],
+    sections: [
+      { type: "p", content: "Microcement looks effortless when it's done right. A glass-smooth, jointless shower wall or a continuous floor that flows from kitchen to living room — that's the finish that gets shared on Instagram. What people don't see is the prep, the cure schedule, the sealer chemistry, and the trowel discipline that takes years to develop. Microcement is unforgiving — a bad installer can crack a finish in six months." },
+      { type: "p", content: "So before you hire a microcement installer in New Orleans, work through these six questions. Any installer worth your money will answer them clearly and without dodging." },
+      { type: "h2", content: "1. \"Will you personally install this, or will it be a subcontractor?\"" },
+      { type: "p", content: "Most renovation calls in New Orleans get sub-contracted out — the person you meet at the estimate is rarely the person who shows up with the trowel. Microcement is too specialized for that. Ask directly: who is on the trowel? If the answer involves a crew you've never met, walk." },
+      { type: "p", content: "Single-craftsman shops are the safest bet for microcement. You get one accountable person, same hands from estimate to final seal, and one phone number if something needs attention later." },
+      { type: "h2", content: "2. \"What microcement system and brand do you use?\"" },
+      { type: "p", content: "There's no such thing as generic microcement. Real microcement is a multi-component system from a specific manufacturer — Italian brands like Topciment, Ideal Work, and Pavigres are the European originals, and there are a handful of high-quality US distributors. The brand affects bonding, color stability, sealer compatibility, and warranty." },
+      { type: "p", content: "If your installer can't name the exact brand and system they're applying — or says \"it's the same as concrete overlay,\" — they're either using a watered-down knock-off or improvising. Both are bad news for a 10-year finish." },
+      { type: "h2", content: "3. \"Can I see a finished project in person, in my zip code?\"" },
+      { type: "p", content: "Photos lie. Real microcement looks slightly different in person — the slight tonal shifts, the matte sheen, the way light moves across a hand-troweled surface. Insist on seeing a real installation in person before signing." },
+      { type: "p", content: "If your installer can't show you a finished project locally — meaning within a 30-minute drive of your home in New Orleans — that's a sign they don't have a local portfolio yet. That doesn't mean they're bad, but it means you're paying for their learning curve." },
+      { type: "h2", content: "4. \"How do you prep over existing tile or substrate?\"" },
+      { type: "p", content: "This is the question that separates the pros from the YouTube-trained. Microcement bonds to almost any substrate — tile, concrete, drywall, even properly-prepped wood — but only if the prep is done right. Listen for these phrases:" },
+      { type: "ul", items: [
+        "Mechanical scarification (scoring the surface) of existing tile",
+        "Cleaning with a degreaser and rinsing thoroughly",
+        "Applying a quartz-loaded bonding primer (not just a regular primer)",
+        "Allowing 24 hours of cure time before the first microcement coat",
+        "Reinforcement mesh embedded in the first coat (for floor installs especially)",
+      ]},
+      { type: "p", content: "If the installer says \"we just clean it and start troweling,\" walk away. That's how you get delamination in two years." },
+      { type: "h2", content: "5. \"What's the warranty on the seal — and what does it cover?\"" },
+      { type: "p", content: "Microcement gets its waterproofing from a topcoat sealer. The sealer is what fails first if anything is going to fail, so the warranty on the seal matters more than the warranty on the microcement itself." },
+      { type: "p", content: "Ask for a written warranty that covers (a) seal failure causing water intrusion, (b) cracking due to substrate prep, and (c) discoloration in the first 12 months. A solid New Orleans installer should offer at least 1 year on the seal and 5 years on the substrate bond. If they offer nothing in writing, that's the offer." },
+      { type: "h2", content: "6. \"Are you licensed and insured in Louisiana?\"" },
+      { type: "p", content: "Microcement installation falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold (currently \$7,500). Always ask to see (1) the license number and (2) a current insurance certificate." },
+      { type: "p", content: "If the installer dodges, hesitates, or says \"we don't need that for this kind of work,\" don't sign. Unlicensed work voids your homeowner's insurance if anything goes wrong, and uninsured workers on your property put your finances at risk if there's an injury." },
+      { type: "h2", content: "The red flags that should end the conversation" },
+      { type: "ul", items: [
+        "Won't name the microcement brand",
+        "Can't show a finished installation in person",
+        "No written warranty",
+        "No license / no insurance certificate",
+        "Asks for more than 50% deposit",
+        "Says \"any handyman can do this\"",
+      ]},
+      { type: "p", content: "If you spot two or more of these, walk away — even if the quote looks attractive. The cost of a failed microcement install is 3–4x the cost of doing it right the first time, because demolition becomes the only path to fix." },
+      { type: "h2", content: "How we stack up against the checklist" },
+      { type: "p", content: "We built The Shirtless Handyman around exactly this checklist. Ryan personally installs every microcement project. We use Italian-imported systems. We can show you a finished installation in your zip code. We're licensed and insured in Louisiana. We offer a 5-year bond warranty and a 1-year seal warranty in writing." },
+      { type: "p", content: "If you want to compare quotes — and we recommend you do — use this checklist as your scorecard. Any installer who passes it is worth talking to. If you'd like to start with us, see our microcement service page below." },
+      { type: "cta", text: "See our microcement installer page — book a free in-home walkthrough", href: "/microcement-installers-new-orleans" },
+    ],
+  },
 ];
 
 export const BLOG_POSTS_BY_SLUG = Object.fromEntries(BLOG_POSTS.map((p) => [p.slug, p]));

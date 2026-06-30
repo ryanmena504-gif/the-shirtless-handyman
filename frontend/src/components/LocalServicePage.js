@@ -4,6 +4,7 @@ import { Navbar } from "./Navbar";
 import { InstantQuoteForm } from "./InstantQuoteForm";
 import { TrustStrip } from "./TrustStrip";
 import { PricingCalculator } from "./PricingCalculator";
+import { GoogleReviews } from "./GoogleReviews";
 import { SeoHead } from "./SeoHead";
 import {
   ArrowRight, Upload, ShieldCheck, Droplets, Layers, Clock,
@@ -165,6 +166,9 @@ export default function LocalServicePage({ config }) {
         </section>
 
         <TrustStrip variant="dark" />
+
+        {/* Google Reviews — auto-hides if API key not configured */}
+        <GoogleReviews variant="light" />
 
         {/* Pricing calculator — instant estimate */}
         <PricingCalculator />

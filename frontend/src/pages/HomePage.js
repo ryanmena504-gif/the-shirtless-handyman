@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
 import { TrustStrip } from "../components/TrustStrip";
 import { PricingCalculator } from "../components/PricingCalculator";
+import { GoogleReviews } from "../components/GoogleReviews";
 import { SeoHead } from "../components/SeoHead";
 import { RevealText, ScrollReveal, MagneticButton } from "../components/cinematic";
 import { motion } from "framer-motion";
@@ -180,6 +181,9 @@ export default function HomePage() {
 
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
       <TrustStrip variant="dark" />
+
+      {/* Google Reviews — auto-hides if API key not yet configured */}
+      <GoogleReviews variant="light" />
 
       {/* ===== WHAT I DO ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">

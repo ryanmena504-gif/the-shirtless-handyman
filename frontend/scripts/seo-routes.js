@@ -112,6 +112,13 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
     ogType: "article",
   },
+  {
+    path: "/blog/how-to-choose-microcement-installer-new-orleans",
+    title: "How to Choose a Microcement Installer in New Orleans (6-Question Checklist)",
+    description: "Hiring a microcement installer in NOLA? Use this 6-question checklist to spot the pros from the pretenders — what to ask, what to see, and what red flags to walk away from.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
+    ogType: "article",
+  },
   // -------- Neighborhood handyman micro-pages --------
   {
     path: "/lakeview-handyman",

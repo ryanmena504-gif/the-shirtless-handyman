@@ -1,0 +1,60 @@
+{
+  "summary": "Tested all features from review_request: chat bookings, Google reviews graceful degrade, follow-up scheduling + unsubscribe flow, blog post, local service page, and end-to-end chat booking UI flow. 8/8 backend pytest cases passed and frontend booking flow works end-to-end. One UX issue found: the ExitIntentModal (Radix Dialog overlay, z-50) intercepts pointer events on the chat widget when both are open, even though the chat panel is visually above (z-9990).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ExitIntentModal vs ChatWidget",
+        "issue": "Once ExitIntentModal opens on the homepage, its Radix DialogOverlay (z-50, fixed inset-0, bg-black/80) blocks all pointer events on the ChatWidget panel (z-[9990]) — clicks on chat-widget-send, chat-open-booking, chat-booking-* become unresponsive even though the chat is visually on top. The chat must either pause/dismiss the exit-intent while open, or the chat panel must use a portal with pointer-events:auto above the overlay.",
+        "selector": "[data-radix-portal] .DialogOverlay (z-50) vs [data-testid=chat-widget-panel] (z-9990)",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Blog post (/blog/how-to-choose-microcement-installer-new-orleans)",
+        "issues": [
+          "CTA at the bottom uses <Button onClick={navigate('/microcement-installers-new-orleans')}> instead of a real <a href> — bad for SEO, accessibility, middle-click open-in-new-tab, and screen readers. Should be an anchor styled as a button. Functionally renders and navigates fine."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_bookings_reviews_followups.py",
+    "/app/test_reports/pytest/bookings_reviews_followups.xml"
+  ],
+  "passed_tests": [
+    "POST /api/bookings success: 200, status=confirmed, booking + lead (source=chat_booking) persisted",
+    "POST /api/bookings 400 on missing fields with exact detail message",
+    "GET /api/google-reviews graceful degrade: 200 with rating=null, reviews=[] (no API key)",
+    "GET /api/followups/unsubscribe/invalid-token: 404 HTML containing 'Link not found'",
+    "POST /api/leads/quick schedules 3 followup rows in db.lead_followups, all status=pending, send_at gaps ~+24h/+72h/+120h",
+    "Unsubscribe flow: real token marks rows skipped_unsubscribed, inserts db.lead_unsubscribes, and blocks new followups for the same email",
+    "GET /microcement-installers-new-orleans renders correct H1 'Microcement installers in New Orleans — one craftsman, real portfolio, fast quote.' and GoogleReviews widget self-hides (no rating)",
+    "GET /blog/how-to-choose-microcement-installer-new-orleans renders correct H1 + all 6 numbered questions + CTA navigating to /microcement-installers-new-orleans",
+    "End-to-end chat booking on /microcement-installers-new-orleans: opened chat, sent 2 messages, clicked chat-open-booking (7 day buttons present), selected day + morning, entered name+phone, submitted, chat-booking-success visible, assistant confirmation message 'You're booked for ...' appended"
+  ],
+  "action_items": [
+    "FIX: ExitIntentModal vs ChatWidget pointer-event conflict — when chat is open, exit-intent overlay (Radix Dialog) intercepts clicks even though chat is visually on top. Options: (a) suppress exit-intent fire while chat is open, (b) auto-close exit-intent when chat is open, or (c) use Dialog `modal=false` on exit-intent so it doesn't trap pointer events.",
+    "POLISH: Convert blog post CTA from Button+navigate to a real <a href> styled as a button (SEO/a11y)."
+  ],
+  "critical_code_review_comments": [
+    "ExitIntentModal modality vs ChatWidget z-index — pointer events trap is a real UX bug, will affect real users on homepage who open chat after mouse leaves toward top",
+    "BookingPanel POST blocks the form until response (15s timeout). Booking notifications (SMS, autoreply, customer email, followups) are correctly fired via asyncio.create_task so they don't block the booking response. Good.",
+    "Booking confirmation assistant message has a stray double period: 'Ryan will confirm via text..' — `replace('You're booked for ', '')` returns `<date> <time>. Ryan will confirm via text.` then ChatWidget prepends `You're booked for ` and appends another period via ` slot.\\n` — minor cosmetic.",
+    "followup_service.schedule_followups idempotency: it does NOT check for existing pending rows for the same lead_id, so a duplicate /api/leads/quick call before unsubscribe would create 6 followup rows. Low impact today but worth a unique index on (lead_id, step).",
+    "google_reviews.get_reviews caches even the empty 'no api key' shape? Actually no — it only writes cache when `raw` is non-None. Good — when key is added later, the next call will fetch live."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (8/8)", "frontend": "95% (booking flow works on /microcement-installers-new-orleans; homepage chat flow blocked by exit-intent overlay)"},
+  "test_credentials": "Not applicable for these features (no auth required).",
+  "seed_data_creation": "Inserted TEST_-prefixed booking + lead rows and 6 followup rows (2 lead emails) via the public API during tests. Safe to leave; not in production DB.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend pytest at /app/backend/tests/test_bookings_reviews_followups.py is comprehensive and reusable. The single open issue is the ExitIntentModal Radix overlay trapping pointer events over the open ChatWidget on homepage. Booking flow verified on /microcement-installers-new-orleans, but not on / (homepage) due to that overlay conflict.",
+  "rca of the issue": "Radix Dialog uses DialogOverlay (fixed inset-0 z-50) + sets aria-hidden on the rest of the tree when modal. Even though ChatWidget panel is z-[9990] visually above, Radix's overlay grabs pointer-events when the dialog is open as it's modal=true by default. This is why clicks on chat-widget-send / chat-open-booking time out with 'DialogOverlay intercepts pointer events'. Fix: pass modal={false} to the ExitIntent dialog, OR close exit-intent when chat is open, OR don't trigger exit-intent while chat is open."
+}

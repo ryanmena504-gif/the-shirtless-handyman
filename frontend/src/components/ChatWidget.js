@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Calendar } from "lucide-react";
+import { BookingPanel } from "./BookingPanel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const PHONE = "504-264-4919";
@@ -39,6 +40,7 @@ export function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState("");
   const [unread, setUnread] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -234,6 +236,36 @@ export function ChatWidget() {
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-bounce" style={{ animationDelay: "150ms" }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
+                </div>
+              )}
+
+              {/* Inline booking panel */}
+              {bookingOpen && (
+                <BookingPanel
+                  sessionId={sessionId}
+                  onBooked={(b) => {
+                    setMessages((m) => [
+                      ...m,
+                      {
+                        role: "assistant",
+                        content: `You're booked for ${b?.message ? b.message.replace("You're booked for ", "") : "your slot"}. I'll text you 10–15 min before to confirm.`,
+                      },
+                    ]);
+                  }}
+                />
+              )}
+
+              {/* Book-a-visit button — shown once chat has at least a few turns and not while booking is open */}
+              {messages.length >= 3 && !bookingOpen && !loading && (
+                <div className="flex justify-start" data-testid="chat-book-cta-wrap">
+                  <button
+                    onClick={() => setBookingOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#1A3C34] hover:bg-[#0E2A24] text-white text-xs font-semibold border border-[#D97757]/30 transition-colors"
+                    data-testid="chat-open-booking"
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    Book a free visit with Ryan
+                  </button>
                 </div>
               )}
 

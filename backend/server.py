@@ -765,7 +765,9 @@ async def create_lead(data: LeadCreate):
     }
     await db.leads.insert_one(lead)
     # Fire notifications in background — never block the lead submission.
-    asyncio.create_task(notify_new_lead({k: v for k, v in lead.items() if k != "_id"}))
+    lead_clean = {k: v for k, v in lead.items() if k != "_id"}
+    asyncio.create_task(notify_new_lead(lead_clean))
+    asyncio.create_task(followup_service.schedule_followups(db, lead_clean))
     return {"id": lead_id, "status": "new", "message": "Quote request submitted successfully"}
 
 
@@ -802,7 +804,9 @@ async def create_quick_lead(data: QuickLead):
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.leads.insert_one(lead)
-    asyncio.create_task(notify_new_lead({k: v for k, v in lead.items() if k != "_id"}))
+    lead_clean = {k: v for k, v in lead.items() if k != "_id"}
+    asyncio.create_task(notify_new_lead(lead_clean))
+    asyncio.create_task(followup_service.schedule_followups(db, lead_clean))
     return {"id": lead_id, "status": "new", "message": "Got it — Ryan will reach out within 1 hour."}
 
 
@@ -879,7 +883,9 @@ async def chat_endpoint(req: ChatRequest):
         }
         await db.leads.insert_one(lead_doc)
         lead_id = lead_doc["id"]
-        asyncio.create_task(notify_new_lead({k: v for k, v in lead_doc.items() if k != "_id"}))
+        lead_clean_chat = {k: v for k, v in lead_doc.items() if k != "_id"}
+        asyncio.create_task(notify_new_lead(lead_clean_chat))
+        asyncio.create_task(followup_service.schedule_followups(db, lead_clean_chat))
 
     return {"reply": reply, "lead_id": lead_id}
 
@@ -891,6 +897,190 @@ async def get_chat_history(session_id: str):
         {"session_id": session_id}, {"_id": 0}
     ).sort("created_at", 1).to_list(50)
     return {"messages": msgs}
+
+
+# =========================================================================
+# Chat Booking — visitor picks a day + time slot, Ryan gets a confirmed SMS
+# =========================================================================
+import followup_service
+import google_reviews
+from fastapi.responses import HTMLResponse
+
+
+class BookingRequest(BaseModel):
+    name: str
+    phone: str
+    email: str = ""
+    preferred_date: str  # ISO date "2026-03-10"
+    preferred_time: str  # "morning" | "afternoon" | "evening" | "10:00" etc
+    project_type: str = ""
+    notes: str = ""
+    zip_code: str = ""
+    session_id: str = ""
+
+
+@api_router.post("/bookings")
+async def create_booking(data: BookingRequest):
+    """Visitor books a callback/consult slot from the chat widget.
+    Stores the booking, texts Ryan, and emails the customer a confirmation."""
+    name = (data.name or "").strip()
+    phone = (data.phone or "").strip()
+    pref_date = (data.preferred_date or "").strip()
+    pref_time = (data.preferred_time or "").strip()
+    if not name or not phone or not pref_date or not pref_time:
+        raise HTTPException(status_code=400, detail="Name, phone, date, and time are required")
+
+    booking = {
+        "id": str(uuid.uuid4()),
+        "name": name,
+        "phone": phone,
+        "email": (data.email or "").strip(),
+        "preferred_date": pref_date,
+        "preferred_time": pref_time,
+        "project_type": (data.project_type or "").strip(),
+        "notes": (data.notes or "").strip()[:500],
+        "zip_code": (data.zip_code or "").strip(),
+        "session_id": (data.session_id or "").strip(),
+        "status": "confirmed",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.bookings.insert_one(booking)
+
+    # Also persist as a lead so it flows through the normal lead pipeline + follow-ups.
+    lead_doc = {
+        "id": str(uuid.uuid4()),
+        "name": name,
+        "phone": phone,
+        "email": booking["email"],
+        "zip_code": booking["zip_code"],
+        "project_type": booking["project_type"] or "Booked consultation",
+        "project_description": f"📅 BOOKED: {pref_date} {pref_time} — {booking['notes']}".strip(),
+        "selected_design_style": "",
+        "room_photo": "",
+        "project_id": None,
+        "contractor_id": None,
+        "source": "chat_booking",
+        "status": "new",
+        "booking_id": booking["id"],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.leads.insert_one(lead_doc)
+
+    # Send Ryan an SMS that's clearly a booking (not just a generic lead)
+    from notifications import send_lead_email, send_lead_sms, send_homeowner_autoreply
+
+    async def _send_booking_sms():
+        sid = os.environ.get("TWILIO_ACCOUNT_SID", "").strip()
+        token = os.environ.get("TWILIO_AUTH_TOKEN", "").strip()
+        from_num = os.environ.get("TWILIO_FROM_NUMBER", "").strip()
+        to_num = os.environ.get("LEAD_NOTIFICATION_PHONE", "").strip()
+        if not (sid and token and from_num and to_num):
+            return False
+        try:
+            from twilio.rest import Client
+            client_t = Client(sid, token)
+            body = (
+                f"✅ NEW BOOKING: {name} · {phone} · {pref_date} {pref_time} · "
+                f"ZIP {booking['zip_code'] or '?'} · {booking['project_type'] or 'consult'}"
+            )
+            await asyncio.to_thread(
+                lambda: client_t.messages.create(body=body, from_=from_num, to=to_num)
+            )
+            return True
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Booking SMS failed: {e}")
+            return False
+
+    async def _send_customer_confirmation():
+        api_key = os.environ.get("RESEND_API_KEY", "").strip()
+        from_email = os.environ.get("RESEND_FROM_EMAIL", "onboarding@resend.dev").strip()
+        if not api_key or not booking["email"] or "@" not in booking["email"]:
+            return False
+        try:
+            import resend
+            resend.api_key = api_key
+            first = name.split()[0][:30]
+            time_label = pref_time
+            html = f"""<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;background:#FAFAF9;padding:24px;margin:0;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+<tr><td style="background:#0E0E0E;padding:30px 32px;color:#fff;">
+<p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D97757;font-weight:bold;">Booking Confirmed</p>
+<h1 style="margin:10px 0 0 0;font-size:28px;font-weight:300;color:#fff;font-family:Georgia,serif;">You're on the calendar, {first}.</h1>
+</td></tr>
+<tr><td style="padding:30px 32px;font-size:15px;color:#1F2A28;line-height:1.6;">
+<p style="margin:0 0 16px 0;">Ryan got your booking. Here's what's locked in:</p>
+<div style="background:#FAF7F2;border-radius:12px;padding:18px 22px;margin:16px 0;">
+<p style="margin:0 0 4px 0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#666;font-weight:bold;">When</p>
+<p style="margin:0 0 12px 0;font-size:18px;font-weight:600;color:#1F2A28;">{pref_date} · {time_label}</p>
+<p style="margin:0 0 4px 0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#666;font-weight:bold;">Project</p>
+<p style="margin:0;font-size:15px;color:#1F2A28;">{booking['project_type'] or 'Free consultation'}</p>
+</div>
+<p style="margin:14px 0;font-size:14px;color:#555;">Ryan will text you 10–15 min before to confirm. If anything changes, just text 504-264-4919.</p>
+<p style="margin:24px 0 0 0;font-size:12px;color:#999;">— Ryan Mena · The Shirtless Handyman</p>
+</td></tr></table></body></html>"""
+            await asyncio.to_thread(resend.Emails.send, {
+                "from": from_email,
+                "to": [booking["email"]],
+                "subject": f"Booking confirmed for {pref_date} — The Shirtless Handyman",
+                "html": html,
+            })
+            return True
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Booking confirmation email failed: {e}")
+            return False
+
+    async def _all_booking_notifs():
+        await asyncio.gather(
+            _send_booking_sms(),
+            send_lead_email({k: v for k, v in lead_doc.items() if k != "_id"}),
+            send_homeowner_autoreply({k: v for k, v in lead_doc.items() if k != "_id"}),
+            _send_customer_confirmation(),
+            followup_service.schedule_followups(db, {k: v for k, v in lead_doc.items() if k != "_id"}),
+            return_exceptions=True,
+        )
+    asyncio.create_task(_all_booking_notifs())
+
+    return {
+        "id": booking["id"],
+        "status": "confirmed",
+        "message": f"You're booked for {pref_date} {pref_time}. Ryan will confirm via text.",
+    }
+
+
+# =========================================================================
+# Google Reviews — proxied + cached via Place ID
+# =========================================================================
+
+@api_router.get("/google-reviews")
+async def google_reviews_endpoint():
+    """Return cached Google Reviews for the business Place ID set in env.
+    Returns an empty {reviews:[]} if the API key isn't configured yet."""
+    place_id = os.environ.get("GOOGLE_PLACES_PLACE_ID", "").strip()
+    return await google_reviews.get_reviews(db, place_id)
+
+
+# =========================================================================
+# Email follow-up — unsubscribe link (rendered as a small HTML page)
+# =========================================================================
+
+@api_router.get("/followups/unsubscribe/{token}", response_class=HTMLResponse)
+async def unsubscribe_followups(token: str):
+    email = await followup_service.unsubscribe_by_token(db, token)
+    if not email:
+        return HTMLResponse(
+            "<html><body style='font-family:sans-serif;padding:40px;'>"
+            "<h2>Link not found</h2><p>This unsubscribe link is invalid or expired.</p>"
+            "</body></html>",
+            status_code=404,
+        )
+    return HTMLResponse(
+        f"<html><body style='font-family:-apple-system,sans-serif;background:#FAFAF9;padding:60px 24px;text-align:center;color:#1F2A28;'>"
+        f"<div style='max-width:480px;margin:0 auto;background:#fff;padding:48px 36px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);'>"
+        f"<h1 style='margin:0 0 12px 0;font-family:Georgia,serif;font-weight:300;'>You're unsubscribed.</h1>"
+        f"<p style='margin:0;color:#666;'>We won't send <strong>{email}</strong> any more follow-up emails.</p>"
+        f"<p style='margin:24px 0 0 0;font-size:13px;color:#999;'>If you need to reach Ryan directly: 504-264-4919</p>"
+        f"</div></body></html>"
+    )
 
 
 @api_router.get("/leads")
@@ -1155,6 +1345,11 @@ async def startup():
     await db.shares.create_index("id")
     await db.shares.create_index("project_id")
     await db.portfolio.create_index("id")
+    # Follow-up + Google Reviews infra
+    await followup_service.ensure_indexes(db)
+    await google_reviews.ensure_indexes(db)
+    # Background worker: scan for due follow-up emails every 5 min.
+    asyncio.create_task(followup_service.background_worker(db, interval_seconds=300))
     logger.info("AI Renovation Visualizer API started")
 
 
