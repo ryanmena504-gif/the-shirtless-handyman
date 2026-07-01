@@ -1,0 +1,41 @@
+{
+  "summary": "Frontend-only verification of: (1) full removal of ExitIntentModal, (2) new PromoBanner (radiant-heat/FREE/flooring), (3) dismiss + localStorage persistence, (4) operator-route gating, (5) booking flow regression. ExitIntentModal is fully gone (no import anywhere, no DOM node on any route even after 15s + mouseleave). PromoBanner works on all homeowner routes with correct copy and sms CTA, dismisses correctly, and re-appears after clearing localStorage. Two issues found: PromoBanner INCORRECTLY appears on operator routes (/admin, /contractor/login, /contractor/register, /contractor/dashboard) because it is unconditionally mounted inside Navbar. Also could not exercise the full booking submit path because 'chat-open-booking' testid is not visible on initial chat open (chip-driven UX).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "PromoBanner (inside Navbar)",
+        "issue": "PromoBanner renders on operator routes /admin, /contractor/login, /contractor/register (and by extension /contractor/dashboard). Spec explicitly requires it be hidden on operator routes. Root cause: Navbar.js unconditionally renders <PromoBanner /> as its first child regardless of route.",
+        "selector": "[data-testid=\"promo-banner\"]",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [
+      {
+        "flow": "Chat booking submit regression",
+        "issue": "Could not locate [data-testid=\"chat-open-booking\"] immediately after opening the chat panel on /. The panel opens (chat-widget-panel visible) and initial suggestion chips render (Bathroom remodel / Microcement floors / Rockscape wall / How much does it cost?), but no booking-open chip is directly exposed at first render. This may be by-design (booking chip appears after user picks a topic or chats). Not verified as broken, just not directly reachable via testid on first render. Main agent should confirm expected UX or ensure the booking entry is a top-level testid on open.",
+        "affected_selectors": ["[data-testid=\"chat-open-booking\"]"]
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Hide PromoBanner on operator routes. Simplest fix: in PromoBanner.js, useLocation() from react-router-dom and early-return null when pathname starts with '/admin' or '/contractor'. Alternative: move <PromoBanner /> out of Navbar and mount it in App.js gated by the same route check used in LeadGenWidgets (OPERATOR_PREFIXES).",
+    "(Optional) Expose chat-open-booking as a persistent testid-tagged chip on initial chat panel render, or document the interaction path required to surface it, so regression tests can exercise the full booking submit flow deterministically."
+  ],
+  "critical_code_review_comments": [
+    "ExitIntentModal.js still exists on disk but is unused. Consider deleting the file entirely to prevent accidental re-import.",
+    "LeadGenWidgets.js JSDoc still references 'exit-intent modal' and 'while our own ExitIntentModal is open' — stale comment after removal; update or remove.",
+    "PromoBanner correctly persists via localStorage key 'shh_promo_radiant_heat_dismissed_v1' but the key namespace is fine.",
+    "Route-gating for the PromoBanner belongs at the same layer as LeadGenWidgets (route-aware). Coupling it inside Navbar means every page that renders Navbar (including operator pages) inherits the banner — this is the root cause of the operator-route bug."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a", "frontend": "88% (15/17 verified assertions)"},
+  "test_credentials": "n/a",
+  "seed_data_creation": "None. Only localStorage manipulation on the test browser.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "ExitIntentModal removal is fully verified across /, /microcement-new-orleans, /upload, /portfolio, /blog, /about, /lakeview-handyman on both desktop (1920x800) and mobile (375x800) viewports, including 15s idle wait + simulated mouseleave from the top of the viewport. No exit-intent modal or backdrop ever appeared and chat launcher/panel remained clickable throughout. PromoBanner content, sms CTA (sms:5042644919...), dismiss button, localStorage persistence, and localStorage-clear-revives-banner all pass. Only remaining regression is the operator-route gating in the action items above. After main agent fixes that, a retest should just re-check /admin, /contractor/login, /contractor/register, /contractor/dashboard and confirm no [data-testid='promo-banner'] element is present.",
+  "rca_of_the_issue": "PromoBanner leak on operator routes — PromoBanner is imported and rendered as the first child of Navbar's outer <div> in /app/frontend/src/components/Navbar.js. Every page (including AdminPage, ContractorLoginPage, ContractorRegisterPage, ContractorDashboardPage) renders <Navbar />, so PromoBanner ships with it. Fix: gate rendering inside PromoBanner via useLocation() (return null when pathname startsWith('/admin') || startsWith('/contractor')), OR pull PromoBanner up to App.js next to LeadGenWidgets and reuse the OPERATOR_PREFIXES check. Reproduction: navigate to https://design-reveal.preview.emergentagent.com/admin — the orange promo banner is visible above the nav."
+}

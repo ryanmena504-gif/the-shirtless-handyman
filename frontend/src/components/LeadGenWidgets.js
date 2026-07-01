@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { ExitIntentModal } from "./ExitIntentModal";
 import { StickyMobileCTA } from "./StickyMobileCTA";
 import { SocialProofToast } from "./SocialProofToast";
 import { ChatWidget } from "./ChatWidget";
@@ -58,7 +57,6 @@ export const LeadGenWidgets = () => {
     <>
       <StickyMobileCTA />
       <SocialProofToast />
-      <ExitIntentModal />
       <ChatWidget />
     </>
   );

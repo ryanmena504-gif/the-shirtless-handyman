@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/AuthContext";
 import { Button } from "../components/ui/button";
 import { Menu, X, Hammer, LogIn, LayoutDashboard } from "lucide-react";
+import { PromoBanner } from "./PromoBanner";
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -10,10 +11,12 @@ export const Navbar = () => {
   const { contractorAuth } = useAuth();
 
   return (
-    <nav
-      data-testid="navbar"
-      className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/40"
-    >
+    <div className="fixed top-0 left-0 right-0 z-50" data-testid="navbar-wrap">
+      <PromoBanner />
+      <nav
+        data-testid="navbar"
+        className="glass-card border-b border-border/40"
+      >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-16">
         <Link
           to="/"
@@ -171,6 +174,7 @@ export const Navbar = () => {
           </Button>
         </div>
       )}
-    </nav>
+      </nav>
+    </div>
   );
 };
