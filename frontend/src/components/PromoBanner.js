@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Flame, X } from "lucide-react";
 
 const STORAGE_KEY = "shh_promo_radiant_heat_dismissed_v1";
+const OPERATOR_PREFIXES = ["/admin", "/contractor"];
 
 /**
  * PromoBanner — thin, dismissible top-of-page banner announcing the current
  * headline promotion. Sits above the Navbar so nothing else has to move.
  * Persists a "dismissed" flag in localStorage so it stays hidden after tap-X.
+ * Hidden on operator routes (admin / contractor dashboards) so we don't push
+ * a homeowner promo at professional users.
  */
 export const PromoBanner = () => {
+  const { pathname } = useLocation();
+  const isOperatorRoute = OPERATOR_PREFIXES.some((p) => pathname.startsWith(p));
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -32,6 +38,7 @@ export const PromoBanner = () => {
   }, [visible]);
 
   if (!visible) return null;
+  if (isOperatorRoute) return null;
 
   return (
     <div
