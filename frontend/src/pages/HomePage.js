@@ -16,6 +16,114 @@ const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
 const TEL_LINK = "tel:5042644919";
 
+// ---- Global JSON-LD entity block ----------------------------------------
+// One graph that names the business (LocalBusiness/HomeAndConstructionBusiness),
+// the person (Ryan Mena), the website, and the core services. LLMs treat this
+// as the authoritative "who / what / where" for the entity behind the domain.
+const SITE_URL = "https://theshirtlesshandyman.com";
+const GLOBAL_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": `${SITE_URL}/#business`,
+      name: "The Shirtless Handyman",
+      alternateName: ["Shirtless Handyman", "The Shirtless Handyman NOLA"],
+      url: SITE_URL,
+      logo: `${SITE_URL}/portfolio/microcement-vanity-bathroom.jpg`,
+      image: `${SITE_URL}/portfolio/shower-led-niche.jpg`,
+      description:
+        "Owner-operated microcement, tadelakt, and seamless-surface installation studio in New Orleans, Louisiana. Founder Ryan Mena personally installs every project — no subcontractors, no franchise.",
+      telephone: "+1-504-264-4919",
+      email: "ryan@theshirtlesshandyman.com",
+      priceRange: "$$-$$$",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "New Orleans",
+        addressRegion: "LA",
+        addressCountry: "US",
+      },
+      areaServed: [
+        { "@type": "City", name: "New Orleans" },
+        { "@type": "City", name: "Metairie" },
+        { "@type": "City", name: "Kenner" },
+        { "@type": "City", name: "Harahan" },
+        { "@type": "City", name: "Gretna" },
+        { "@type": "City", name: "Harvey" },
+        { "@type": "City", name: "Chalmette" },
+        { "@type": "City", name: "Slidell" },
+      ],
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 29.9511,
+        longitude: -90.0715,
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          opens: "08:00",
+          closes: "17:00",
+        },
+      ],
+      founder: { "@id": `${SITE_URL}/about#ryan` },
+      employee: { "@id": `${SITE_URL}/about#ryan` },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Seamless surface services",
+        itemListElement: [
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Microcement installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 2000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tadelakt installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3500, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Rockscape feature wall" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3500, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pool deck resurfacing" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Venetian plaster" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 1800, priceCurrency: "USD" } },
+        ],
+      },
+      knowsAbout: [
+        "Microcement", "Tadelakt", "Venetian plaster", "Marmorino", "Rockscape walls",
+        "Pool deck resurfacing", "Seamless waterproof coatings", "Beton cire",
+        "Moroccan lime plaster", "Cocciopesto", "Microterrazzo",
+      ],
+      slogan: "One craftsman. Zero grout. Real materials.",
+      sameAs: [
+        // Fill in once GBP / Yelp / Facebook / Instagram are live:
+        // "https://www.google.com/maps/place/?q=place_id:XXXX",
+        // "https://www.yelp.com/biz/the-shirtless-handyman-new-orleans",
+        // "https://www.facebook.com/theshirtlesshandyman",
+        // "https://www.instagram.com/theshirtlesshandyman",
+      ],
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/about#ryan`,
+      name: "Ryan Mena",
+      jobTitle: "Microcement & Seamless Surface Craftsman",
+      description:
+        "New Orleans-born craftsman and founder of The Shirtless Handyman. Personally installs microcement, tadelakt, and rockscape projects across the greater New Orleans metro.",
+      worksFor: { "@id": `${SITE_URL}/#business` },
+      knowsAbout: ["Microcement", "Tadelakt", "Venetian plaster", "Rockscape walls", "Pool deck resurfacing"],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "New Orleans",
+        addressRegion: "LA",
+        addressCountry: "US",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "The Shirtless Handyman",
+      publisher: { "@id": `${SITE_URL}/#business` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/faq?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 const SERVICES = [
   {
     title: "Microcement",
@@ -64,7 +172,9 @@ export default function HomePage() {
         description="I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in New Orleans homes — no demolition, no grout, no tile. Free design preview. Text: 504-264-4919."
         canonical="https://theshirtlesshandyman.com/"
         ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
-      />
+      >
+        <script type="application/ld+json">{JSON.stringify(GLOBAL_SCHEMA)}</script>
+      </SeoHead>
       <Navbar />
 
       {/* ===== HERO ===== */}

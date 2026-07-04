@@ -78,6 +78,14 @@ export const Navbar = () => {
           >
             Book
           </Button>
+          <Button
+            variant="ghost"
+            className="rounded-full text-sm font-medium"
+            onClick={() => navigate("/faq")}
+            data-testid="nav-faq-btn"
+          >
+            FAQ
+          </Button>
           {contractorAuth ? (
             <Button
               variant="ghost"
@@ -161,6 +169,14 @@ export const Navbar = () => {
             data-testid="mobile-book-btn"
           >
             Book Appointment
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/faq"); setMobileOpen(false); }}
+            data-testid="mobile-faq-btn"
+          >
+            FAQ
           </Button>
           {contractorAuth ? (
             <Button

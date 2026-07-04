@@ -29,6 +29,12 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
   },
   {
+    path: "/faq",
+    title: "FAQ | The Shirtless Handyman — Microcement, Tadelakt & Seamless Surfaces in New Orleans",
+    description: "Straight answers about microcement, tadelakt, rockscape walls, pricing, licensing, and hiring a seamless surface installer in New Orleans. From Ryan Mena.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
+  },
+  {
     path: "/about",
     title: "About Ryan Mena | The Shirtless Handyman — New Orleans Microcement Specialist",
     description: "Meet Ryan Mena — New Orleans-born craftsman behind The Shirtless Handyman. I used to install tile. Now I install microcement, tadelakt, and rockscape walls.",

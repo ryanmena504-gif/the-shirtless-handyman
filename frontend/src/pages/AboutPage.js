@@ -16,22 +16,43 @@ const ABOUT_SCHEMA = {
   "@type": "Person",
   "@id": `${PAGE_URL}#ryan`,
   name: "Ryan Mena",
+  givenName: "Ryan",
+  familyName: "Mena",
   jobTitle: "Microcement & Seamless Surface Craftsman",
   description:
-    "New Orleans-born craftsman specializing in microcement, tadelakt, and custom rockscape installations. Founder of The Shirtless Handyman.",
+    "New Orleans-born craftsman and founder of The Shirtless Handyman. Personally installs microcement, tadelakt, Venetian plaster, and custom rockscape feature walls in homes across the greater New Orleans metropolitan area. Started as a tile installer, transitioned to seamless surfaces after seeing traditional tile fail from Louisiana humidity.",
   worksFor: {
     "@type": "HomeAndConstructionBusiness",
+    "@id": "https://theshirtlesshandyman.com/#business",
     name: "The Shirtless Handyman",
     url: "https://theshirtlesshandyman.com",
-    telephone: "(504) 264-4919",
+    telephone: "+1-504-264-4919",
   },
+  founderOf: { "@id": "https://theshirtlesshandyman.com/#business" },
   address: {
     "@type": "PostalAddress",
     addressLocality: "New Orleans",
     addressRegion: "LA",
     addressCountry: "US",
   },
-  knowsAbout: ["Microcement", "Tadelakt", "Venetian Plaster", "Rockscape Walls", "Pool Deck Resurfacing"],
+  areaServed: [
+    { "@type": "City", name: "New Orleans" },
+    { "@type": "City", name: "Metairie" },
+    { "@type": "City", name: "Gretna" },
+    { "@type": "City", name: "Kenner" },
+  ],
+  telephone: "+1-504-264-4919",
+  knowsAbout: [
+    "Microcement", "Tadelakt", "Venetian Plaster", "Marmorino", "Beton cire",
+    "Rockscape Walls", "Pool Deck Resurfacing", "Cocciopesto", "Microterrazzo",
+    "Seamless waterproof coatings", "Moroccan lime plaster",
+  ],
+  hasCredential: [
+    { "@type": "EducationalOccupationalCredential", credentialCategory: "License", name: "Louisiana Residential Home Improvement License" },
+    { "@type": "EducationalOccupationalCredential", credentialCategory: "Insurance", name: "General Liability Insured" },
+  ],
+  image: "https://theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
+  url: PAGE_URL,
 };
 
 const VALUES = [
