@@ -109,9 +109,20 @@ export function BookingPanel({ sessionId, onBooked }) {
       className="bg-white/5 border border-white/10 rounded-xl p-3 my-2 space-y-3"
       data-testid="chat-booking-panel"
     >
-      <p className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#D97757]">
-        Book a free consult
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#D97757]">
+          Book a free consult
+        </p>
+        <a
+          href="/book"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] text-white/60 hover:text-white underline underline-offset-2"
+          data-testid="chat-booking-open-fullpage"
+        >
+          See full calendar →
+        </a>
+      </div>
 
       <div>
         <label className="text-[10px] uppercase tracking-wider text-white/50 font-semibold flex items-center gap-1 mb-1.5">

@@ -23,6 +23,12 @@ const SEO_ROUTES = [
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
+    path: "/book",
+    title: "Book Ryan Mena | The Shirtless Handyman — New Orleans",
+    description: "Pick your own time. Free in-home walkthroughs, phone consults, and project starts — book direct with Ryan. Mon–Sat, 8am–5pm Central.",
+    ogImage: DEFAULT_OG,
+  },
+  {
     path: "/about",
     title: "About Ryan Mena | The Shirtless Handyman — New Orleans Microcement Specialist",
     description: "Meet Ryan Mena — New Orleans-born craftsman behind The Shirtless Handyman. I used to install tile. Now I install microcement, tadelakt, and rockscape walls.",

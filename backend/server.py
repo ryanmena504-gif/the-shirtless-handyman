@@ -904,6 +904,7 @@ async def get_chat_history(session_id: str):
 # =========================================================================
 import followup_service
 import google_reviews
+import schedule_service
 from fastapi.responses import HTMLResponse
 
 
@@ -911,8 +912,10 @@ class BookingRequest(BaseModel):
     name: str
     phone: str
     email: str = ""
-    preferred_date: str  # ISO date "2026-03-10"
-    preferred_time: str  # "morning" | "afternoon" | "evening" | "10:00" etc
+    preferred_date: str = ""  # legacy free-text date (kept for chat quick-book)
+    preferred_time: str = ""  # legacy free-text time
+    slot_iso: str = ""        # NEW: canonical ISO slot for the /book calendar
+    appointment_type: str = ""  # walkthrough | phone | site_prep | project
     project_type: str = ""
     notes: str = ""
     zip_code: str = ""
@@ -921,14 +924,38 @@ class BookingRequest(BaseModel):
 
 @api_router.post("/bookings")
 async def create_booking(data: BookingRequest):
-    """Visitor books a callback/consult slot from the chat widget.
-    Stores the booking, texts Ryan, and emails the customer a confirmation."""
+    """Visitor books a callback/consult slot from the chat widget or /book page.
+    Stores the booking, texts Ryan, and emails the customer a confirmation.
+
+    Two paths:
+      • Free-text chat quick-book — uses preferred_date + preferred_time.
+      • /book calendar          — uses slot_iso + appointment_type. Server
+        validates the slot is still open and reserves it atomically.
+    """
     name = (data.name or "").strip()
     phone = (data.phone or "").strip()
-    pref_date = (data.preferred_date or "").strip()
-    pref_time = (data.preferred_time or "").strip()
-    if not name or not phone or not pref_date or not pref_time:
-        raise HTTPException(status_code=400, detail="Name, phone, date, and time are required")
+    slot_iso = (data.slot_iso or "").strip()
+    appointment_type = (data.appointment_type or "").strip()
+
+    if not name or not phone:
+        raise HTTPException(status_code=400, detail="Name and phone are required")
+
+    slot_local = None
+    slot_utc = None
+    if slot_iso:
+        slot_local = schedule_service.parse_slot_iso(slot_iso)
+        if not slot_local:
+            raise HTTPException(status_code=400, detail="That time slot isn't a valid working-hours slot.")
+        if not await schedule_service.is_slot_available(db, slot_local):
+            raise HTTPException(status_code=409, detail="That slot was just booked. Please pick another.")
+        slot_utc = slot_local.astimezone(timezone.utc)
+        pref_date = slot_local.strftime("%Y-%m-%d")
+        pref_time = slot_local.strftime("%-I:%M %p").lstrip("0")
+    else:
+        pref_date = (data.preferred_date or "").strip()
+        pref_time = (data.preferred_time or "").strip()
+        if not pref_date or not pref_time:
+            raise HTTPException(status_code=400, detail="Name, phone, and either a slot or preferred date+time are required")
 
     booking = {
         "id": str(uuid.uuid4()),
@@ -937,6 +964,8 @@ async def create_booking(data: BookingRequest):
         "email": (data.email or "").strip(),
         "preferred_date": pref_date,
         "preferred_time": pref_time,
+        "slot_start_utc": slot_utc,  # None for chat quick-book
+        "appointment_type": appointment_type or "walkthrough",
         "project_type": (data.project_type or "").strip(),
         "notes": (data.notes or "").strip()[:500],
         "zip_code": (data.zip_code or "").strip(),
@@ -1045,6 +1074,14 @@ async def create_booking(data: BookingRequest):
         "status": "confirmed",
         "message": f"You're booked for {pref_date} {pref_time}. Ryan will confirm via text.",
     }
+
+
+@api_router.get("/schedule/availability")
+async def get_schedule_availability(days: int = 60):
+    """Return a JSON schedule for the next N days (default 60).
+    Public endpoint — no auth. Consumed by the /book page."""
+    days = max(1, min(days, 90))
+    return await schedule_service.get_availability(db, days_ahead=days)
 
 
 # =========================================================================
@@ -1348,6 +1385,7 @@ async def startup():
     # Follow-up + Google Reviews infra
     await followup_service.ensure_indexes(db)
     await google_reviews.ensure_indexes(db)
+    await schedule_service.ensure_indexes(db)
     # Background worker: scan for due follow-up emails every 5 min.
     asyncio.create_task(followup_service.background_worker(db, interval_seconds=300))
     logger.info("AI Renovation Visualizer API started")

@@ -19,6 +19,7 @@ import LocalServiceRoute from "./pages/LocalServiceRoute";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
+import BookPage from "./pages/BookPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <CustomCursor />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/book" element={<BookPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/analysis/:projectId" element={<AnalysisPage />} />
             <Route path="/results/:projectId" element={<ResultsPage />} />
