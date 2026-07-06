@@ -574,10 +574,10 @@ export default function ResultsPage() {
                     className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4"
                     style={{ fontFamily: "'Fraunces', serif" }}
                   >
-                    This isn&apos;t just a preview —<br />we can build this.
+                    This isn&apos;t just a preview —<br />I can build this.
                   </h3>
                   <p className="text-sm text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
-                    Every surface you just saw is something we install. Text Ryan the design you like, get a fast quote, and we&apos;ll make your space seamless for real.
+                    Every surface you just saw is something I install. Text Ryan the design you like, get a fast quote, and I&apos;ll make your space seamless for real.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
                     <Button

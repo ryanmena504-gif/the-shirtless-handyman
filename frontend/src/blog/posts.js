@@ -25,7 +25,7 @@ export const BLOG_POSTS = [
     tags: ["microcement", "cost", "comparison", "new orleans"],
     sections: [
       { type: "p", content: "If you're staring at a quote for a tile bathroom in New Orleans and the number made you put your phone down, you're not alone. Tile pricing in the metro has crept up steadily — and that's before you factor in the parts of the renovation nobody puts on the quote." },
-      { type: "p", content: "We do both finishes. Most of our clients arrive comparing microcement to tile on a per-square-foot basis. By the end of the conversation, they're surprised to learn the gap is much smaller than they assumed — and over 10 years, microcement is usually the cheaper finish." },
+      { type: "p", content: "I do both finishes. Most of my clients arrive comparing microcement to tile on a per-square-foot basis. By the end of the conversation, they're surprised to learn the gap is much smaller than they assumed — and over 10 years, microcement is usually the cheaper finish." },
       { type: "h2", content: "The headline numbers" },
       { type: "p", content: "For a typical New Orleans bathroom (around 60 sq ft of floor, 120 sq ft of walls), here's what we see most often in 2026 pricing:" },
       { type: "ul", items: [
@@ -93,7 +93,7 @@ export const BLOG_POSTS = [
       { type: "p", content: "Microcement color and texture is subtle. A real installer will hand-apply a small finish sample on a board so you can see — in your actual lighting — what the final wall will look like. If they refuse, that's a problem." },
       { type: "h2", content: "One bonus question" },
       { type: "p", content: "'Can I see your portfolio of NOLA-area installs?' Local matters. New Orleans humidity, slab foundations, and older substrates are different beasts than dry-climate microcement work. Make sure your contractor has actually solved problems in this city." },
-      { type: "cta", text: "See our microcement portfolio and request a quote", href: "/microcement-new-orleans" },
+      { type: "cta", text: "See the microcement portfolio and request a quote", href: "/microcement-new-orleans" },
     ],
   },
 
@@ -248,9 +248,9 @@ export const BLOG_POSTS = [
       ]},
       { type: "p", content: "If you spot two or more of these, walk away — even if the quote looks attractive. The cost of a failed microcement install is 3–4x the cost of doing it right the first time, because demolition becomes the only path to fix." },
       { type: "h2", content: "How we stack up against the checklist" },
-      { type: "p", content: "We built The Shirtless Handyman around exactly this checklist. Ryan personally installs every microcement project. We use Italian-imported systems. We can show you a finished installation in your zip code. We're licensed and insured in Louisiana. We offer a 5-year bond warranty and a 1-year seal warranty in writing." },
+      { type: "p", content: "I built The Shirtless Handyman around exactly this checklist. I personally install every microcement project. I use Italian-imported systems. I can show you a finished installation in your zip code. I'm licensed and insured in Louisiana. I offer a 5-year bond warranty and a 1-year seal warranty in writing." },
       { type: "p", content: "If you want to compare quotes — and we recommend you do — use this checklist as your scorecard. Any installer who passes it is worth talking to. If you'd like to start with us, see our microcement service page below." },
-      { type: "cta", text: "See our microcement installer page — book a free in-home walkthrough", href: "/microcement-installers-new-orleans" },
+      { type: "cta", text: "See the microcement installer page — book a free in-home walkthrough", href: "/microcement-installers-new-orleans" },
     ],
   },
 ];

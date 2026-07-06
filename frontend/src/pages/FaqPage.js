@@ -29,7 +29,7 @@ const CATEGORIES = [
       },
       {
         q: "Can I install microcement over existing tile?",
-        a: "Yes. Microcement bonds directly to existing tile with proper prep — cleaning, mechanical scarification, a quartz-loaded bonding primer, 24-hour cure, then reinforcement mesh embedded in the first coat. No demolition, no dumpster, no tile removal cost. This is the most common install we do in NOLA.",
+        a: "Yes. Microcement bonds directly to existing tile with proper prep — cleaning, mechanical scarification, a quartz-loaded bonding primer, 24-hour cure, then reinforcement mesh embedded in the first coat. No demolition, no dumpster, no tile removal cost. This is the most common install I do in NOLA.",
       },
       {
         q: "Is microcement waterproof?",

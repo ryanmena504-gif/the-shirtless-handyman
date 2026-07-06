@@ -583,7 +583,7 @@ export default function HomePage() {
                 Now you can see your upgrade before you commit a single dollar.
               </h3>
               <p className="text-sm text-white/60 leading-relaxed mb-8">
-                Our Seamless Studio takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of our premium finishes. Three design options. Real cost estimates. In about 60 seconds.
+                The Seamless Studio takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of the premium finishes I install. Three design options. Real cost estimates. In about 60 seconds.
               </p>
               <Button
                 onClick={() => navigate("/upload")}
@@ -626,7 +626,7 @@ export default function HomePage() {
               { icon: CheckCircle, text: "Clean jobsite, every time — we leave it better than we found it" },
               { icon: Clock, text: "On time, on budget — no drawn-out timelines or surprise costs" },
               { icon: ShieldCheck, text: "Licensed, insured, and personally accountable for every project" },
-              { icon: Star, text: "5-star craftsmanship — we don't cut corners on materials or labor" },
+              { icon: Star, text: "5-star craftsmanship — I don't cut corners on materials or labor" },
               { icon: Phone, text: "Direct line to Ryan — no call centers, no runaround" },
               { icon: Gem, text: "High-end results at fair prices — premium doesn't have to mean overpriced" },
             ].map((item) => (
@@ -691,7 +691,7 @@ export default function HomePage() {
               Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what The Seamless Studio designs for your space.
             </p>
             <p className="text-muted-foreground leading-relaxed mt-4">
-              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — we handle it all right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for microcement in New Orleans or seamless surface contractors near you, you just found them.
+              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — I handle it all personally, right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for a microcement installer in New Orleans or a seamless surface contractor near you, you just found him.
             </p>
           </div>
 
@@ -721,7 +721,7 @@ export default function HomePage() {
               className="text-xl font-medium text-foreground mb-6"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Finishes we install — and what The Seamless Studio shows you
+              Finishes I install — and what The Seamless Studio shows you
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {[
@@ -862,7 +862,7 @@ export default function HomePage() {
               className="text-lg md:text-xl font-light text-white/80 tracking-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              "Luxury that lasts. Every surface we install is waterproof, mold-resistant, UV-stable, and designed to look better with age — not worse."
+              "Luxury that lasts. Every surface I install is waterproof, mold-resistant, UV-stable, and designed to look better with age — not worse."
             </p>
           </div>
         </div>
@@ -882,7 +882,7 @@ export default function HomePage() {
               Need a handyman? We do that too.
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
-              Drywall patches, fixture installs, door and trim work, painting, pressure washing, and general repairs. Our main focus is seamless surfaces — but we're happy to help with the small stuff while we're there.
+              Drywall patches, fixture installs, door and trim work, painting, pressure washing, and general repairs. My main focus is seamless surfaces — but I'm happy to help with the small stuff while I'm already there.
             </p>
           </div>
           <a href={SMS_LINK} className="flex-shrink-0" data-testid="handyman-text-btn">
@@ -914,7 +914,7 @@ export default function HomePage() {
               { num: "01", icon: Upload, title: "Upload your space", desc: "Snap a photo of any room, wall, floor, or outdoor area." },
               { num: "02", icon: Sparkles, title: "See it redesigned", desc: "The Seamless Studio shows you 3 seamless surface options — instantly." },
               { num: "03", icon: DollarSign, title: "Get a quote", desc: "Real cost estimates based on your project and location." },
-              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text Ryan, lock in a date, and we make it real." },
+              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text Ryan, lock in a date, and I make it real." },
             ].map((step, i) => (
               <div key={step.title} className="relative flex flex-col items-center text-center px-6 py-8" data-testid={`step-${i}`}>
                 {/* Connector line */}
@@ -944,7 +944,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== GALLERY — What the AI shows = what we build ===== */}
+      {/* ===== GALLERY — What the AI shows = what I build ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="gallery-section">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -958,7 +958,7 @@ export default function HomePage() {
               What you see in the tool<br />can be built in real life.
             </h2>
             <p className="text-sm text-white/45 max-w-lg mx-auto">
-              Our Seamless Studio designs with the exact same finishes we install. Every surface you preview is something we can put on your walls, floors, and counters.
+              The Seamless Studio designs with the exact same finishes I install. Every surface you preview is something I can put on your walls, floors, and counters.
             </p>
           </div>
 
@@ -1030,10 +1030,10 @@ export default function HomePage() {
             className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
             style={{ fontFamily: "'Fraunces', serif" }}
           >
-            See our completed projects
+            See completed projects
           </h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            Real before and after photos from jobs we've done — no renders, no stock photos.
+            Real before and after photos from jobs I've done — no renders, no stock photos.
           </p>
           <Button
             onClick={() => navigate("/portfolio")}
@@ -1067,7 +1067,7 @@ export default function HomePage() {
                 You run the remodel. We install the surfaces. Your client gets a higher-end finish, you increase the project value, and nobody has to learn a new trade.
               </p>
               <p className="text-base text-white/60 leading-relaxed mb-8">
-                We partner with general contractors, bathroom remodelers, kitchen builders, and design firms across Greater New Orleans. You bring the project — we bring the microcement, tadelakt, venetian plaster, and rockscape installs.
+                I partner with general contractors, bathroom remodelers, kitchen builders, and design firms across Greater New Orleans. You bring the project — I bring the microcement, tadelakt, venetian plaster, and rockscape installs.
               </p>
 
               <div className="space-y-4 mb-10">
@@ -1143,7 +1143,7 @@ export default function HomePage() {
               Straight pricing. No surprises.
             </h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Every project is different — The Seamless Studio helps you and us understand the scope before we talk numbers. Here's the general range.
+              Every project is different — The Seamless Studio helps you (and me) understand the scope before I quote numbers. Here's the general range.
             </p>
           </div>
 
@@ -1316,3 +1316,4 @@ export default function HomePage() {
     </div>
   );
 }
+

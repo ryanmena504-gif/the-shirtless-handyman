@@ -92,12 +92,12 @@ export const LOCAL_SERVICE_CONFIGS = {
       "Short-term rental turnovers — durable under guest abuse, easy to re-seal.",
     ],
     faq: [
-      { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (we use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
+      { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (I use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
       { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
       { q: "How much do microcement installers charge in New Orleans?", a: "New Orleans microcement installers typically charge $14 to $40 per square foot installed, depending on the substrate, prep work, finish system, and color complexity. A single bathroom usually lands $2,000 to $8,000. We give a fixed, all-in price after a free in-home consultation — no hidden 'change order' add-ons." },
       { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
-      { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. We schedule around your life — you can keep using the rest of the house while we work, and the room is back in service within 48 hours of the final seal." },
-      { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Yes — that's the most common install we do. Microcement bonds directly to existing tile after proper prep (cleaning, mechanical scarification, and a bonding primer). No demolition. No dumpster. No tile removal cost." },
+      { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. I schedule around your life — you can keep using the rest of the house while I work, and the room is back in service within 48 hours of the final seal." },
+      { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Yes — that's the most common install I do. Microcement bonds directly to existing tile after proper prep (cleaning, mechanical scarification, and a bonding primer). No demolition. No dumpster. No tile removal cost." },
     ],
   },
 
@@ -209,7 +209,7 @@ export const LOCAL_SERVICE_CONFIGS = {
       { icon: "Award", title: "Built for Your Exact Space", body: "We sculpt each panel to fit your wall dimensions, ceiling line, and architectural features. No two rockscape walls are alike." },
       { icon: "Sparkles", title: "LED Backlighting Available", body: "Integrate warm or color-shifting LED behind the sculpted face for cinematic depth — perfect for living rooms and lobbies." },
       { icon: "Layers", title: "Authentic Stone Texture", body: "The microaggregate finish gives every surface a real carved-rock feel — not faux paint, not printed wallpaper." },
-      { icon: "ShieldCheck", title: "Lightweight & Easy to Install", body: "Foam-core panels mean we can install on any standard drywall — no structural reinforcement needed in older NOLA homes." },
+      { icon: "ShieldCheck", title: "Lightweight & Easy to Install", body: "Foam-core panels mean I can install on any standard drywall — no structural reinforcement needed in older NOLA homes." },
     ],
     serviceAreas: NOLA_AREAS,
     whereItShines: [
@@ -308,7 +308,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Do you cover all of Lakeview?", a: "Yes — from Robert E. Lee down to West End and across to Lake Vista. Lakeview is one of my most-requested neighborhoods because of its post-Katrina rebuild density." },
-      { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while we're there. One trip, one invoice." },
+      { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while I'm there. One trip, one invoice." },
       { q: "How much does a Lakeview microcement bathroom cost?", a: "Most Lakeview bathrooms land between $2,500 and $8,500 installed depending on size and prep. Smaller powder rooms can be under $2,000." },
     ],
   },
@@ -332,7 +332,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     priceLow: 150,
     priceHigh: 18000,
     benefits: [
-      { icon: "Award", title: "Historic Home Experience", body: "Lath-and-plaster walls, old subfloors, narrow shotgun layouts — I've worked them all. We don't damage what we're hired to improve." },
+      { icon: "Award", title: "Historic Home Experience", body: "Lath-and-plaster walls, old subfloors, narrow shotgun layouts — I've worked them all. I don't damage what I'm hired to improve." },
       { icon: "Layers", title: "Microcement Over Anything", body: "Bonds directly to original tile, plaster, or even old wood — perfect for Uptown homes where demolition is too risky." },
       { icon: "ShieldCheck", title: "Insured for Historic Properties", body: "Full liability coverage for older homes, including documented prep on heritage-style walls." },
       { icon: "Sparkles", title: "Modern Finish, Classic Bones", body: "Microcement, tadelakt, and venetian plaster sit beautifully in century-old Uptown architecture." },
@@ -463,7 +463,7 @@ export const LOCAL_SERVICE_CONFIGS = {
       "Pre-listing punch lists for Quarter properties going on market.",
     ],
     faq: [
-      { q: "Can you do major renovations inside French Quarter properties?", a: "Yes, with the caveat that anything affecting exterior visible elements requires VCC approval. Interior renovations — microcement bathrooms, plaster repair, fixture work — we handle directly." },
+      { q: "Can you do major renovations inside French Quarter properties?", a: "Yes, with the caveat that anything affecting exterior visible elements requires VCC approval. Interior renovations — microcement bathrooms, plaster repair, fixture work — I handle directly." },
       { q: "How do you handle access for second-floor Quarter units?", a: "We coordinate with property managers for elevator/stair access and minimize disruption to neighbors. Most of my Quarter clients are repeat work because of that." },
       { q: "Is microcement allowed in historic French Quarter bathrooms?", a: "Microcement is an interior finish that doesn't alter the historic structure — it bonds directly to existing tile or substrate. It's a common upgrade in Quarter STRs and full-time residences." },
     ],
