@@ -120,7 +120,30 @@ TEMPLATES = {
     "day1_nudge": _build_day1,
     "day3_social_proof": _build_day3,
     "day5_soft_close": _build_day5,
+    "post_visit_review": lambda name, unsub: _build_post_visit_review(name, unsub),
 }
+
+
+REVIEW_URL = "https://g.page/r/CZgh4ltLoG1SEBI/review"
+
+
+def _build_post_visit_review(name: str, unsub_url: str) -> dict:
+    first = name.split()[0][:30] if name else "there"
+    body = f"""<tr><td style="background:#0E0E0E;padding:30px 32px;color:#fff;">
+<p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D97757;font-weight:bold;">Quick favor</p>
+<h1 style="margin:10px 0 0 0;font-size:26px;font-weight:300;color:#fff;font-family:Georgia,serif;">30 seconds could really help me, {first}.</h1>
+</td></tr>
+<tr><td style="padding:28px 32px;font-size:15px;line-height:1.6;">
+<p style="margin:0 0 14px 0;">Hope everything went well with the visit. I'm working on getting the business more visible on Google and AI search — and honest customer reviews are the single biggest lever for that.</p>
+<p style="margin:0 0 14px 0;">If you have 30 seconds, would you leave an honest Google review? Even one line means the world to a one-person shop like mine.</p>
+<table cellpadding="0" cellspacing="0" border="0" style="margin-top:18px;"><tr>
+<td><a href="{REVIEW_URL}" style="background:#D97757;color:#fff;text-decoration:none;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:600;display:inline-block;">Leave a Google review →</a></td>
+</tr></table>
+<p style="margin:22px 0 0 0;font-size:13px;color:#666;">Not the right time? No worries at all — reply anytime with feedback and I'll take it straight to heart. — Ryan</p></td></tr>"""
+    return {
+        "subject": f"Quick favor, {first} — 30-second Google review?",
+        "html": _email_shell(body, unsub_url),
+    }
 
 
 async def ensure_indexes(db) -> None:
@@ -165,6 +188,47 @@ async def schedule_followups(db, lead: dict) -> None:
         logger.info(f"Scheduled {len(docs)} follow-ups for lead {lead.get('id')} <{email}>")
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to schedule follow-ups for {email}: {e}")
+
+
+async def schedule_post_visit_review(db, booking: dict) -> None:
+    """After a booked appointment happens, ask the customer for a Google review.
+    Sends 2 days after the slot_start_utc so the memory is fresh but not intrusive.
+    Skips if there's no email, if unsubscribed, or if the booking has no slot."""
+    email = (booking.get("email") or "").strip().lower()
+    if not email or "@" not in email:
+        return
+    slot_start = booking.get("slot_start_utc")
+    if not slot_start:
+        # Chat quick-book without a canonical slot — skip; we don't know when the visit happened
+        return
+    unsub = await db.lead_unsubscribes.find_one({"email": email})
+    if unsub:
+        return
+
+    now = datetime.now(timezone.utc)
+    send_at = slot_start + timedelta(days=2)
+    if send_at < now:
+        send_at = now + timedelta(minutes=5)  # slot already passed — fire on next worker tick
+
+    doc = {
+        "id": str(uuid.uuid4()),
+        "lead_id": booking.get("id"),
+        "email": email,
+        "name": booking.get("name") or "",
+        "template": "post_visit_review",
+        "step": 99,
+        "send_at": send_at,
+        "status": "pending",
+        "unsub_token": str(uuid.uuid4()),
+        "created_at": now,
+        "sent_at": None,
+        "error": "",
+    }
+    try:
+        await db.lead_followups.insert_one(doc)
+        logger.info(f"Scheduled post-visit review request for booking {booking.get('id')} <{email}> at {send_at.isoformat()}")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to schedule review request for {email}: {e}")
 
 
 async def _send_one(row: dict) -> bool:

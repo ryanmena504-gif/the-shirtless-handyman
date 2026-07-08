@@ -1065,6 +1065,7 @@ async def create_booking(data: BookingRequest):
             send_homeowner_autoreply({k: v for k, v in lead_doc.items() if k != "_id"}),
             _send_customer_confirmation(),
             followup_service.schedule_followups(db, {k: v for k, v in lead_doc.items() if k != "_id"}),
+            followup_service.schedule_post_visit_review(db, {k: v for k, v in booking.items() if k != "_id"}),
             return_exceptions=True,
         )
     asyncio.create_task(_all_booking_notifs())
