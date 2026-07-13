@@ -133,7 +133,7 @@ export const InstantQuoteForm = ({
         </Button>
       </div>
       <p className={`text-[11px] mt-2.5 ${isDark ? "text-white/40" : "text-muted-foreground"}`}>
-        Direct to Ryan's phone. No spam, no call center. Avg response under 1 hr.
+        Sent directly to me. No spam, no call center. Avg response under 1 hr.
       </p>
     </form>
   );
