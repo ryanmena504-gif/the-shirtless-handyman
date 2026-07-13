@@ -251,7 +251,7 @@ export default function ResultsPage() {
                     data-testid="build-this-btn"
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />
-                    Build This — Free Quote
+                    Build This — Request an Assessment
                   </Button>
                 </div>
               </div>

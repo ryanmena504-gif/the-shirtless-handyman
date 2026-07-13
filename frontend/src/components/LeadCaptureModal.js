@@ -182,7 +182,7 @@ export const LeadCaptureModal = ({ open, onOpenChange, contractor, projectId, zi
               ) : (
                 <span className="flex items-center gap-2">
                   <Send className="w-4 h-4" />
-                  Request Free Quote
+                  Request an Assessment
                 </span>
               )}
             </Button>

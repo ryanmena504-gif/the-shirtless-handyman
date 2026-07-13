@@ -112,7 +112,7 @@ export const Navbar = () => {
             onClick={() => navigate("/upload")}
             data-testid="nav-cta-btn"
           >
-            Get Free Estimate
+            Request an Assessment
           </Button>
         </div>
 
@@ -202,7 +202,7 @@ export const Navbar = () => {
             onClick={() => { navigate("/upload"); setMobileOpen(false); }}
             data-testid="mobile-cta-btn"
           >
-            Get Free Estimate
+            Request an Assessment
           </Button>
         </div>
       )}

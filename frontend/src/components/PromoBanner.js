@@ -51,17 +51,17 @@ export const PromoBanner = () => {
         <Flame className="w-4 h-4 flex-shrink-0 hidden sm:block" aria-hidden="true" />
         <p className="flex-1 text-[12px] sm:text-sm font-medium leading-snug text-center sm:text-left">
           <span className="font-bold uppercase tracking-wider mr-2 hidden sm:inline">
-            Limited-time:
+            Signature offer:
           </span>
           <span>
-            Book <strong>any flooring or seamless-surface package with flooring</strong> and I&rsquo;ll <strong>install radiant heat under it for FREE</strong>.
+            Every qualifying <strong>Signature Grout-Free Bathroom Transformation</strong> includes <strong>up to 30 sq ft of radiant heated flooring at no additional charge</strong>.
           </span>{" "}
           <a
-            href="sms:5042644919?body=Hey%20Ryan%2C%20I%27d%20like%20to%20claim%20the%20free%20radiant%20heat%20install%20offer."
+            href="sms:5042644919?body=Hey%20Ryan%2C%20I%27d%20like%20to%20see%20if%20my%20bathroom%20qualifies%20for%20the%20radiant%20heated%20flooring%20included%20with%20the%20Signature%20package."
             className="underline underline-offset-2 font-semibold whitespace-nowrap hover:text-white/90"
             data-testid="promo-banner-cta"
           >
-            Text Ryan to lock it in →
+            See if your bathroom qualifies →
           </a>
         </p>
         <button

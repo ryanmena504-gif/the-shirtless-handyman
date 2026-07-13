@@ -25,11 +25,11 @@ const CATEGORIES = [
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: $5,500–$9,500 (microcement or tadelakt over an existing bathroom footprint, no demo). Signature Grout-Free Transformation: $18,000–$35,000 (full bathroom rebuild in seamless — walls, floor, shower). Luxury Seamless Wet Room: custom projects generally begin around $30,000. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
+        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: starting at $5,500 — most qualifying overlays range from $5,500–$9,500. Signature Grout-Free Bathroom Transformation: starting at $15,000 — most Signature transformations range from $18,000–$35,000+, and every qualifying Signature project includes up to 30 square feet of radiant heated flooring at no additional charge. Luxury Seamless Wet Room: starting at $30,000 — custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
       },
       {
         q: "Can I install microcement over existing tile?",
-        a: "Yes. Microcement bonds directly to existing tile with proper prep — cleaning, mechanical scarification, a quartz-loaded bonding primer, 24-hour cure, then reinforcement mesh embedded in the first coat. No demolition, no dumpster, no tile removal cost. This is the most common install I do in NOLA.",
+        a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying Essential Overlay projects may require little or no demolition. Prep typically includes mechanical scarification, a quartz-loaded bonding primer, a 24-hour cure, and reinforcement mesh embedded in the first coat. When the underlying tile assembly is unstable, delaminating, or waterproofing needs to be rebuilt, the project moves into the Signature tier.",
       },
       {
         q: "Is microcement waterproof?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt is priced under the same three tiers as microcement. Essential Seamless Bathroom Overlay: $5,500–$9,500 (existing footprint). Signature Grout-Free Transformation: $18,000–$35,000 (full tadelakt bathroom rebuild). Luxury Seamless Wet Room: from $30,000. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
+        a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room: starting at $30,000, priced individually.",
       },
     ],
   },
@@ -129,7 +129,7 @@ const CATEGORIES = [
       },
       {
         q: "Are there any current promotions?",
-        a: "Yes — as of Feb 2026, any flooring or seamless-surface package that includes flooring receives a FREE installed floor radiant heating system. Applies to microcement, tadelakt, and epoxy floor packages. Contact Ryan to lock in.",
+        a: "Yes. Every qualifying Signature Grout-Free Bathroom Transformation includes up to 30 square feet of radiant heated flooring at no additional charge. Contact Ryan to confirm project qualification.",
       },
     ],
   },

@@ -74,19 +74,19 @@ const GLOBAL_SCHEMA = {
         itemListElement: [
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Essential Seamless Bathroom Overlay", description: "Microcement or tadelakt overlay on an existing bathroom footprint — no demolition, no plumbing changes." },
+            itemOffered: { "@type": "Service", name: "Essential Seamless Bathroom Overlay", description: "Microcement or tadelakt overlay on an existing bathroom footprint. Starting at $5,500. Most qualifying overlays range from $5,500–$9,500." },
             priceCurrency: "USD",
             priceSpecification: { "@type": "PriceSpecification", minPrice: 5500, maxPrice: 9500, priceCurrency: "USD" },
           },
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Signature Grout-Free Transformation", description: "Full bathroom rebuild in seamless surfaces — walls, floor, shower in one continuous shell with new fixtures and lighting." },
+            itemOffered: { "@type": "Service", name: "Signature Grout-Free Bathroom Transformation", description: "Full bathroom rebuild in seamless surfaces — walls, floor, shower in one continuous shell with new fixtures and lighting. Starting at $15,000. Most Signature transformations range from $18,000–$35,000+. Includes up to 30 sq ft of radiant heated flooring at no additional charge." },
             priceCurrency: "USD",
-            priceSpecification: { "@type": "PriceSpecification", minPrice: 18000, maxPrice: 35000, priceCurrency: "USD" },
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 15000, maxPrice: 35000, priceCurrency: "USD" },
           },
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Luxury Seamless Wet Room", description: "Fully custom wet-room build with rockscape or feature-wall integration, radiant heat, layered lighting, and bespoke finishes." },
+            itemOffered: { "@type": "Service", name: "Luxury Seamless Wet Room", description: "Fully custom wet-room build with rockscape or feature-wall integration, radiant heat, layered lighting, and bespoke finishes. Starting at $30,000. Custom luxury projects are priced individually." },
             priceCurrency: "USD",
             priceSpecification: { "@type": "PriceSpecification", minPrice: 30000, priceCurrency: "USD" },
           },
@@ -143,14 +143,14 @@ const SERVICES = [
     description: "Seamless waterproof showers, floors, and walls — installed directly over existing tile.",
     image: "/portfolio/shower-led-niche.jpg",
     href: "/microcement-new-orleans",
-    priceRange: "From $2,000",
+    priceRange: "From $5,500",
   },
   {
     title: "Tadelakt",
     description: "Hand-burnished Moroccan lime plaster. Naturally waterproof. 800-year-old craft.",
     image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=900&fit=crop&fm=jpg&q=85",
     href: "/tadelakt-new-orleans",
-    priceRange: "From $3,500",
+    priceRange: "From $5,500",
   },
   {
     title: "Venetian Plaster",
@@ -250,7 +250,7 @@ export default function HomePage() {
                     data-testid="hero-quote-btn"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Get a Free Quote
+                    Request a Bathroom Assessment
                   </Button>
                 </MagneticButton>
                 <Button
@@ -641,7 +641,7 @@ export default function HomePage() {
               { icon: ShieldCheck, text: "Licensed, insured, and personally accountable for every project" },
               { icon: Star, text: "5-star craftsmanship — I don't cut corners on materials or labor" },
               { icon: Phone, text: "Direct line to Ryan — no call centers, no runaround" },
-              { icon: Gem, text: "High-end results at fair prices — premium doesn't have to mean overpriced" },
+              { icon: Gem, text: "Premium materials, disciplined preparation, and craftsmanship built for long-term value." },
             ].map((item) => (
               <div key={item.text} className="flex items-start gap-3">
                 <item.icon className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
@@ -1173,14 +1173,14 @@ export default function HomePage() {
                 Essential Seamless Bathroom Overlay
               </h3>
               <p className="text-xs text-muted-foreground mb-5">Single bathroom, existing footprint</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">$5,500 <span className="text-base font-normal text-muted-foreground">— $9,500</span></p>
-              <p className="text-xs text-muted-foreground mb-6">Typical investment</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">Starting at $5,500</p>
+              <p className="text-xs text-muted-foreground mb-6">Most qualifying overlays range from $5,500–$9,500.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  "Microcement or tadelakt over existing tile",
+                  "Microcement or tadelakt over existing tile (when stable)",
                   "One shower or tub surround",
                   "Standard bathroom footprint",
-                  "No demolition, no new plumbing",
+                  "Little or no demolition on qualifying projects",
                   "5-year bond warranty, 1-year seal warranty",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
@@ -1191,7 +1191,7 @@ export default function HomePage() {
               </ul>
               <a href={SMS_LINK} className="mt-auto">
                 <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
-                  Text for a Quote
+                  See If Your Bathroom Qualifies
                 </Button>
               </a>
             </div>
@@ -1210,12 +1210,12 @@ export default function HomePage() {
                 className="text-xl font-medium text-white mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Signature Grout-Free Transformation
+                Signature Grout-Free Bathroom Transformation
               </h3>
               <p className="text-xs text-white/40 mb-5">Full bathroom rebuild in seamless</p>
-              <p className="text-3xl font-semibold text-white mb-1">$18,000 <span className="text-base font-normal text-white/40">— $35,000</span></p>
-              <p className="text-xs text-white/40 mb-6">Typical investment</p>
-              <ul className="space-y-3 mb-8 flex-1">
+              <p className="text-3xl font-semibold text-white mb-1">Starting at $15,000</p>
+              <p className="text-xs text-white/40 mb-6">Most Signature transformations range from $18,000–$35,000+.</p>
+              <ul className="space-y-3 mb-6 flex-1">
                 {[
                   "Walls, floor, and shower in one continuous shell",
                   "Fixture upgrades + integrated lighting",
@@ -1229,12 +1229,24 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
+              <div className="rounded-xl border border-[#D97757]/30 bg-[#D97757]/10 px-4 py-3 mb-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
+                  Included, at no charge
+                </p>
+                <p className="text-xs text-white/80 leading-relaxed">
+                  Every qualifying Signature Grout-Free Bathroom Transformation includes up to 30 square feet of radiant heated flooring at no additional charge.
+                </p>
+              </div>
               <Button
-                onClick={() => navigate("/upload")}
+                onClick={() => {
+                  const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
+                  formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  formEl?.querySelector('input')?.focus();
+                }}
                 className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
+                data-testid="pricing-signature-cta"
               >
-                <Upload className="w-4 h-4 mr-2" />
-                Try Seamless Studio Free
+                Get a Seamless Transformation Quote
               </Button>
             </div>
 
@@ -1250,8 +1262,8 @@ export default function HomePage() {
                 Luxury Seamless Wet Room
               </h3>
               <p className="text-xs text-muted-foreground mb-5">Fully custom, no-limits build</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">$30,000<span className="text-base font-normal text-muted-foreground">+</span></p>
-              <p className="text-xs text-muted-foreground mb-6">Custom projects generally begin around this</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">Starting at $30,000</p>
+              <p className="text-xs text-muted-foreground mb-6">Custom luxury projects are priced individually.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   "Open-plan wet-room layouts",
@@ -1268,7 +1280,7 @@ export default function HomePage() {
               </ul>
               <a href={SMS_LINK} className="mt-auto">
                 <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
-                  Text for a Custom Quote
+                  Request a Bathroom Assessment
                 </Button>
               </a>
             </div>

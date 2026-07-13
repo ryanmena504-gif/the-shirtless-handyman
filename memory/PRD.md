@@ -12,7 +12,7 @@ High-converting lead-gen + SEO site for Ryan Mena's NOLA seamless-surfaces busin
 - **Self-serve /book calendar** (NEW, Feb 2026): 60-day calendar with real availability, 4 appointment types (walkthrough / phone / site prep / project start), 60-min slots, Mon–Sat 8–5 CT, server-side double-booking prevention (409 on conflict), 2h same-day cutoff
 - 3-email follow-up sequence (day 1/3/5) for every lead
 - Google Reviews widget (backend cache + graceful degrade — waiting on correct business Place ID)
-- Promo banner (top of every homeowner page) — "FREE radiant heat with any flooring package"
+- Promo banner (top of every homeowner page) — "Signature Offer: up to 30 sq ft of radiant heated flooring at no additional charge with every qualifying Signature Grout-Free Bathroom Transformation"
 - Static Site Generation via GitHub Action
 - 13 local-SEO landing pages + 5 blog posts + full JSON-LD schema
 
@@ -22,6 +22,7 @@ High-converting lead-gen + SEO site for Ryan Mena's NOLA seamless-surfaces busin
 - `/book` — self-serve calendar page
 - PromoBanner replacing the broken ExitIntentModal
 - Chat booking flow, follow-up email sequence, Google Reviews infra
+- **Feb 2026 — Premium pricing/positioning rewrite**: 3 tiers rewritten as "Starting at" copy (Essential $5,500 / Signature $15,000 / Luxury $30,000), heated flooring gift moved into a Signature-tier callout (up to 30 sq ft at no additional charge), Tadelakt priced under "same general service tiers" language, tile-overlay wording tightened ("often be installed…after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable"), bargain CTAs removed sitewide ("Free Quote" → "Request a Bathroom Assessment", "See If Your Bathroom Qualifies", "Get a Seamless Transformation Quote"), TrustStrip positioning replaced with "Premium materials, disciplined preparation, and craftsmanship built for long-term value.", and JSON-LD OfferCatalog + `llms.txt` + `llms-full.txt` all updated to match.
 
 ## Backlog
 - P1: Get correct Google Business Profile Place ID from Ryan → activate reviews widget
