@@ -95,7 +95,7 @@ export default function BookPage() {
       setConfirmation(res.data);
     } catch (err) {
       const msg = err?.response?.data?.detail ||
-        "Something went wrong. Text Ryan directly at 504-264-4919.";
+        "Something went wrong. Text me directly at 504-264-4919.";
       setError(msg);
       // If slot was just taken, refetch availability so it shows unavailable
       if (err?.response?.status === 409) {
@@ -316,7 +316,7 @@ export default function BookPage() {
                       className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
                       data-testid="book-text-fallback"
                     >
-                      <MessageCircle className="w-3.5 h-3.5" /> Nothing fits? Text Ryan
+                      <MessageCircle className="w-3.5 h-3.5" /> Nothing fits? Text me
                     </a>
                   </div>
                 </form>
@@ -415,7 +415,7 @@ function ConfirmationCard({ confirmation, name, phone, onDone }) {
       </h2>
       <p className="text-white/70 mb-2">{confirmation?.message}</p>
       <p className="text-sm text-white/50 mb-8">
-        Ryan will text {phone} 10–15 min before to confirm. Check your email for a copy.
+        I'll text {phone} 10–15 min before to confirm. Check your email for a copy.
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
         <button

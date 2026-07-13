@@ -50,7 +50,7 @@ export const EmailCaptureModal = ({ projectId, projectType, delayMs = 18000 }) =
   const submit = async (e) => {
     e?.preventDefault?.();
     if (!name.trim() || !email.trim() || !email.includes("@")) {
-      toast.error("Add your first name and a real email — that's all we need.");
+      toast.error("Add your first name and a real email — that's all I need.");
       return;
     }
     setLoading(true);
@@ -113,7 +113,7 @@ export const EmailCaptureModal = ({ projectId, projectType, delayMs = 18000 }) =
             Want these designs and a real cost range emailed to you?
           </h2>
           <p className="text-sm text-white/55 leading-relaxed mb-6">
-            We&apos;ll send your design picks + Ryan&apos;s honest cost range to your inbox.
+            I&apos;ll send your design picks and my honest cost range to your inbox.
             No spam, no daily emails — just this one design recap.
           </p>
 

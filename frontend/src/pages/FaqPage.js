@@ -117,7 +117,7 @@ const CATEGORIES = [
       },
       {
         q: "Is The Shirtless Handyman a franchise or a national brand?",
-        a: "No. The Shirtless Handyman is a single-craftsman, owner-operated Louisiana business. Ryan Mena is the only installer. There is no franchise, no crew, no call center. You text Ryan, he shows up.",
+        a: "No. The Shirtless Handyman is a single-craftsman, owner-operated Louisiana business. I'm the only installer. There is no franchise, no crew, no call center. You text me, and I show up.",
       },
       {
         q: "How do I book an appointment with Ryan?",
@@ -269,7 +269,7 @@ export default function FaqPage() {
                 className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold border border-white/20 transition-colors"
                 data-testid="faq-cta-text"
               >
-                <MessageCircle className="w-4 h-4" /> Text Ryan
+                <MessageCircle className="w-4 h-4" /> Text Me
               </a>
               <a
                 href={PHONE_TEL}

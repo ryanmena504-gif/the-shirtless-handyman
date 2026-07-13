@@ -38,7 +38,7 @@ export default function PortfolioPage() {
           {/* Header */}
           <div className="mb-12 text-center">
             <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
-              Our Work
+              My Work
             </p>
             <h1
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"

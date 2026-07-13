@@ -149,13 +149,13 @@ export default function LocalServicePage({ config }) {
               <a href={smsLink}>
                 <Button variant="outline" className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium">
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Text Ryan
+                  Text Me
                 </Button>
               </a>
             </div>
 
             <p className="text-sm text-white/45">
-              Or call Ryan directly:{" "}
+              Or call me directly:{" "}
               <a href={TEL_LINK} className="text-white/70 hover:text-white underline underline-offset-2">{PHONE}</a>
             </p>
 
@@ -226,9 +226,9 @@ export default function LocalServicePage({ config }) {
                 ))}
               </div>
               <p className="text-sm text-muted-foreground mt-8 max-w-xl mx-auto">
-                Don't see your neighborhood? Text Ryan at{" "}
+                Don't see your neighborhood? Text me at{" "}
                 <a href={TEL_LINK} className="underline underline-offset-2 text-foreground">{PHONE}</a>{" "}
-                — we travel for the right project.
+                — I travel for the right project.
               </p>
             </div>
           </section>

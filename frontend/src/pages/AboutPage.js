@@ -226,7 +226,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap gap-3 justify-center mt-6">
               <a href={SMS_LINK}>
                 <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium">
-                  <MessageCircle className="w-4 h-4 mr-2" /> Text Ryan
+                  <MessageCircle className="w-4 h-4 mr-2" /> Text Me
                 </Button>
               </a>
               <a href={TEL_LINK}>

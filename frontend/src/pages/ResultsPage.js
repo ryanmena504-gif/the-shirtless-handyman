@@ -577,7 +577,7 @@ export default function ResultsPage() {
                     This isn&apos;t just a preview —<br />I can build this.
                   </h3>
                   <p className="text-sm text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
-                    Every surface you just saw is something I install. Text Ryan the design you like, get a fast quote, and I&apos;ll make your space seamless for real.
+                    Every surface you just saw is something I install. Text me the design you like, get a fast quote, and I&apos;ll make your space seamless for real.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
                     <Button

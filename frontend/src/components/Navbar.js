@@ -52,7 +52,7 @@ export const Navbar = () => {
             onClick={() => navigate("/portfolio")}
             data-testid="nav-portfolio-btn"
           >
-            Our Work
+            My Work
           </Button>
           <Button
             variant="ghost"
@@ -144,7 +144,7 @@ export const Navbar = () => {
             onClick={() => { navigate("/portfolio"); setMobileOpen(false); }}
             data-testid="mobile-portfolio-btn"
           >
-            Our Work
+            My Work
           </Button>
           <Button
             variant="ghost"

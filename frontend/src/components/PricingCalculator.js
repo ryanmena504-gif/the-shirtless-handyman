@@ -144,9 +144,9 @@ export function PricingCalculator() {
       });
       try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       setDone(true);
-      toast.success("Quote on its way. Ryan will follow up shortly.");
+      toast.success("Quote on its way. I'll follow up shortly.");
     } catch (err) {
-      toast.error("Something went sideways — text Ryan at 504-264-4919.");
+      toast.error("Something went sideways — text me at 504-264-4919.");
     } finally {
       setSubmitting(false);
     }
@@ -340,7 +340,7 @@ export function PricingCalculator() {
                   className="block w-full text-center h-11 leading-[2.75rem] rounded-xl border border-white/15 text-white/85 hover:bg-white/5 text-sm font-medium"
                   data-testid="calc-text-ryan-btn"
                 >
-                  <MessageSquare className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" /> Or text Ryan now
+                  <MessageSquare className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" /> Or text me now
                 </a>
                 <p className="text-[10px] text-white/35 mt-2 flex items-center justify-center gap-1.5">
                   <Lock className="w-2.5 h-2.5" /> Goes to Ryan only. No spam, no sharing.

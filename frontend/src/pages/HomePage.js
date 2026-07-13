@@ -270,7 +270,7 @@ export default function HomePage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 1.5 }}
               >
-                Or text Ryan directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
+                Or text me directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
               </motion.p>
 
               <motion.div
@@ -449,7 +449,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 rounded-full border border-white/15 hover:bg-white/5 text-white text-sm font-semibold h-11 px-6 transition-colors"
                   data-testid="venetian-text-ryan-btn"
                 >
-                  Text Ryan for a quote
+                  Text me for a quote
                 </a>
               </div>
             </div>
@@ -604,7 +604,7 @@ export default function HomePage() {
                 data-testid="problem-cta-btn"
               >
                 <Upload className="w-4 h-4 mr-2" />
-                Show Us Your Room
+                Show Me Your Room
               </Button>
             </div>
           </div>
@@ -634,52 +634,18 @@ export default function HomePage() {
           </div>
 
           {/* Trust bullets — 2 rows of 3 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6">
             {[
-              { icon: CheckCircle, text: "Clean jobsite, every time — we leave it better than we found it" },
+              { icon: CheckCircle, text: "Clean jobsite, every time — I leave it better than I found it" },
               { icon: Clock, text: "On time, on budget — no drawn-out timelines or surprise costs" },
               { icon: ShieldCheck, text: "Licensed, insured, and personally accountable for every project" },
               { icon: Star, text: "5-star craftsmanship — I don't cut corners on materials or labor" },
-              { icon: Phone, text: "Direct line to Ryan — no call centers, no runaround" },
+              { icon: Phone, text: "Direct line to me — no call centers, no runaround" },
               { icon: Gem, text: "Premium materials, disciplined preparation, and craftsmanship built for long-term value." },
             ].map((item) => (
               <div key={item.text} className="flex items-start gap-3">
                 <item.icon className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Testimonials */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "Ryan did our entire master bath in microcement. No more grout to scrub, and it looks like a luxury hotel. Best money we've spent on the house.",
-                name: "Sarah M.",
-                detail: "Bathroom remodel — Metairie, LA",
-              },
-              {
-                quote: "We were nervous about doing something different. The Seamless Studio let us see exactly what it would look like before we committed. Turned out even better in person.",
-                name: "Marcus & Tina D.",
-                detail: "Kitchen surfaces — Harvey, LA",
-              },
-              {
-                quote: "The rockscape wall in our living room is insane. Everyone who walks in asks about it. Ryan built it exactly like the preview showed.",
-                name: "Jason R.",
-                detail: "Feature wall — Gretna, LA",
-              },
-            ].map((t) => (
-              <div key={t.name} className="bg-[#FAFAF9] border border-border/40 rounded-2xl p-7">
-                <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map((s) => (
-                    <Star key={`testimonial-star-${t.name}-${s}`} className="w-3.5 h-3.5 fill-[#D97757] text-[#D97757]" />
-                  ))}
-                </div>
-                <p className="text-sm text-foreground leading-relaxed mb-5 italic">"{t.quote}"</p>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.detail}</p>
-                </div>
               </div>
             ))}
           </div>
@@ -704,7 +670,7 @@ export default function HomePage() {
               Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what The Seamless Studio designs for your space.
             </p>
             <p className="text-muted-foreground leading-relaxed mt-4">
-              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — I handle it all personally, right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for a microcement installer in New Orleans or a seamless surface contractor near you, you just found him.
+              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — I handle it all personally, right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for a microcement installer in New Orleans or a seamless surface contractor near you, you just found me.
             </p>
           </div>
 
@@ -892,7 +858,7 @@ export default function HomePage() {
               className="text-xl md:text-2xl font-light tracking-tight text-foreground mb-3"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Need a handyman? We do that too.
+              Need a handyman? I do that too.
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
               Drywall patches, fixture installs, door and trim work, painting, pressure washing, and general repairs. My main focus is seamless surfaces — but I'm happy to help with the small stuff while I'm already there.
@@ -901,7 +867,7 @@ export default function HomePage() {
           <a href={SMS_LINK} className="flex-shrink-0" data-testid="handyman-text-btn">
             <Button variant="outline" className="h-11 px-6 rounded-full border-border/60 text-foreground hover:bg-accent text-sm font-medium">
               <MessageCircle className="w-4 h-4 mr-2" />
-              Text Ryan — {PHONE}
+              Text me — {PHONE}
             </Button>
           </a>
         </div>
@@ -927,7 +893,7 @@ export default function HomePage() {
               { num: "01", icon: Upload, title: "Upload your space", desc: "Snap a photo of any room, wall, floor, or outdoor area." },
               { num: "02", icon: Sparkles, title: "See it redesigned", desc: "The Seamless Studio shows you 3 seamless surface options — instantly." },
               { num: "03", icon: DollarSign, title: "Get a quote", desc: "Real cost estimates based on your project and location." },
-              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text Ryan, lock in a date, and I make it real." },
+              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text me, lock in a date, and I make it real." },
             ].map((step, i) => (
               <div key={step.title} className="relative flex flex-col items-center text-center px-6 py-8" data-testid={`step-${i}`}>
                 {/* Connector line */}
@@ -1054,7 +1020,7 @@ export default function HomePage() {
             className="rounded-full h-12 px-8 border-[#D97757]/40 text-[#D97757] hover:bg-[#D97757]/5 text-sm font-medium"
             data-testid="home-see-our-work-btn"
           >
-            See Our Work
+            See My Work
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
@@ -1077,7 +1043,7 @@ export default function HomePage() {
                 Add seamless surfaces<br />to your next project.
               </h2>
               <p className="text-base text-white/60 leading-relaxed mb-4">
-                You run the remodel. We install the surfaces. Your client gets a higher-end finish, you increase the project value, and nobody has to learn a new trade.
+                You run the remodel. I install the surfaces. Your client gets a higher-end finish, you increase the project value, and nobody has to learn a new trade.
               </p>
               <p className="text-base text-white/60 leading-relaxed mb-8">
                 I partner with general contractors, bathroom remodelers, kitchen builders, and design firms across Greater New Orleans. You bring the project — I bring the microcement, tadelakt, venetian plaster, and rockscape installs.
@@ -1086,8 +1052,8 @@ export default function HomePage() {
               <div className="space-y-4 mb-10">
                 {[
                   { title: "Increase project value", desc: "Seamless surfaces are a premium upsell your clients will love — higher ticket, same timeline." },
-                  { title: "No extra training needed", desc: "We handle the entire surface installation. You stay focused on your scope." },
-                  { title: "White-label available", desc: "We work under your brand or ours — whatever makes the project smoother." },
+                  { title: "No extra training needed", desc: "I handle the entire surface installation. You stay focused on your scope." },
+                  { title: "White-label available", desc: "I work under your brand or mine — whatever makes the project smoother." },
                   { title: "Fast turnaround", desc: "Most surface installs complete in 2–5 days depending on scope." },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
@@ -1104,7 +1070,7 @@ export default function HomePage() {
                 <a href={SMS_LINK} data-testid="partner-text-btn">
                   <Button className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Text Ryan to Partner
+                    Text me to Partner
                   </Button>
                 </a>
                 <Button
@@ -1308,7 +1274,7 @@ export default function HomePage() {
                 </h2>
 
                 <p className="text-base text-white/50 mb-10 max-w-md mx-auto leading-relaxed">
-                  One photo. Sixty seconds. Three seamless surface designs for your space — free. Or text Ryan right now and get a straight answer today.
+                  One photo. Sixty seconds. Three seamless surface designs for your space — free. Or text me right now and get a straight answer today.
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
@@ -1318,7 +1284,7 @@ export default function HomePage() {
                     data-testid="closing-upload-btn"
                   >
                     <Upload className="w-5 h-5 mr-2" />
-                    Show Us Your Room
+                    Show Me Your Room
                   </Button>
                   <a href={SMS_LINK} data-testid="closing-text-btn">
                     <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
@@ -1380,7 +1346,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
-              <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">Our Work</button>
+              <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">My Work</button>
               <button onClick={() => navigate("/faq")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-faq">FAQ</button>
               <button onClick={() => navigate("/book")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-book">Book</button>
               <button onClick={() => navigate("/contractor/register")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-signup">Contractor Sign Up</button>

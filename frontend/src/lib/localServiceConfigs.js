@@ -19,7 +19,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "New Orleans",
     title: "Microcement New Orleans | Seamless Bathroom & Floor Installation — The Shirtless Handyman",
     description:
-      "Microcement specialist in New Orleans. Seamless, waterproof, zero-grout shower & floor installation across Metairie, Gretna, Lakeview & the Westbank. Free design preview in 60 seconds. Text Ryan: 504-264-4919.",
+      "Microcement specialist in New Orleans. Seamless, waterproof, zero-grout shower & floor installation across Metairie, Gretna, Lakeview & the Westbank. Free design preview in 60 seconds. Text me: 504-264-4919.",
     eyebrow: "Microcement · New Orleans, LA",
     h1: "Microcement in New Orleans — installed over your existing surface.",
     heroParagraph:
@@ -109,7 +109,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Metairie",
     title: "Microcement Metairie | Seamless Bathroom & Floor Installation — The Shirtless Handyman",
     description:
-      "Microcement installation in Metairie, LA. Seamless, waterproof, zero-grout showers and floors over existing tile. Free design preview in 60 seconds. Text Ryan: 504-264-4919.",
+      "Microcement installation in Metairie, LA. Seamless, waterproof, zero-grout showers and floors over existing tile. Free design preview in 60 seconds. Text me: 504-264-4919.",
     eyebrow: "Microcement · Metairie, LA",
     h1: "Microcement in Metairie — installed over your existing surface.",
     heroParagraph:
@@ -151,7 +151,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "New Orleans",
     title: "Tadelakt Shower Installation New Orleans | Moroccan Plaster — The Shirtless Handyman",
     description:
-      "Authentic tadelakt shower and bathroom installation in New Orleans. Hand-applied Moroccan lime plaster — naturally waterproof, antibacterial, seamless. Free design preview. Text Ryan: 504-264-4919.",
+      "Authentic tadelakt shower and bathroom installation in New Orleans. Hand-applied Moroccan lime plaster — naturally waterproof, antibacterial, seamless. Free design preview. Text me: 504-264-4919.",
     eyebrow: "Tadelakt · New Orleans, LA",
     h1: "Tadelakt showers in New Orleans — Moroccan craftsmanship by hand.",
     heroParagraph:
@@ -193,7 +193,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "New Orleans",
     title: "Custom Rockscape Feature Walls New Orleans | Sculpted Stone Accent Walls",
     description:
-      "Custom rockscape accent walls in New Orleans. Hand-sculpted, microaggregate-coated foam panels that look like carved natural stone — optional LED backlighting. Free design preview. Text Ryan: 504-264-4919.",
+      "Custom rockscape accent walls in New Orleans. Hand-sculpted, microaggregate-coated foam panels that look like carved natural stone — optional LED backlighting. Free design preview. Text me: 504-264-4919.",
     eyebrow: "Rockscape Walls · New Orleans, LA",
     h1: "Custom rockscape walls — sculpted stone for your New Orleans home.",
     heroParagraph:
@@ -235,7 +235,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "New Orleans",
     title: "Pool Deck Resurfacing New Orleans | Microterrazzo & Cocciopesto — The Shirtless Handyman",
     description:
-      "Pool deck and patio resurfacing in New Orleans. Microterrazzo and cocciopesto seamless finishes — UV-stable, slip-resistant, weatherproof. Free design preview. Text Ryan: 504-264-4919.",
+      "Pool deck and patio resurfacing in New Orleans. Microterrazzo and cocciopesto seamless finishes — UV-stable, slip-resistant, weatherproof. Free design preview. Text me: 504-264-4919.",
     eyebrow: "Pool Deck · New Orleans, LA",
     h1: "Pool deck resurfacing in New Orleans — built for sun, rain, and bare feet.",
     heroParagraph:
@@ -281,7 +281,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Lakeview",
     title: "Lakeview Handyman & Microcement Specialist | The Shirtless Handyman",
     description:
-      "Lakeview, New Orleans handyman and microcement specialist. Drywall, fixture installs, painting, plus seamless microcement bathrooms and tadelakt showers. Text Ryan: 504-264-4919.",
+      "Lakeview, New Orleans handyman and microcement specialist. Drywall, fixture installs, painting, plus seamless microcement bathrooms and tadelakt showers. Text me: 504-264-4919.",
     eyebrow: "Lakeview · New Orleans, LA",
     h1: "Lakeview handyman — and the only microcement specialist on your block.",
     heroParagraph:
@@ -320,7 +320,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Uptown",
     title: "Uptown New Orleans Handyman & Microcement Specialist | The Shirtless Handyman",
     description:
-      "Uptown New Orleans handyman and seamless-surface specialist. Drywall, fixtures, painting, microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+      "Uptown New Orleans handyman and seamless-surface specialist. Drywall, fixtures, painting, microcement bathrooms, tadelakt showers, rockscape walls. Text me: 504-264-4919.",
     eyebrow: "Uptown · New Orleans, LA",
     h1: "Uptown handyman — for the historic homes that deserve the right craftsman.",
     heroParagraph:
@@ -359,7 +359,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Mid-City",
     title: "Mid-City New Orleans Handyman & Microcement | The Shirtless Handyman",
     description:
-      "Mid-City New Orleans handyman and microcement specialist. Renovations on raised cottages, doubles, and shotguns. Drywall, fixtures, microcement bathrooms. Text Ryan: 504-264-4919.",
+      "Mid-City New Orleans handyman and microcement specialist. Renovations on raised cottages, doubles, and shotguns. Drywall, fixtures, microcement bathrooms. Text me: 504-264-4919.",
     eyebrow: "Mid-City · New Orleans, LA",
     h1: "Mid-City handyman — built for raised cottages and shotgun bathrooms.",
     heroParagraph:
@@ -398,7 +398,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Bywater",
     title: "Bywater Handyman & Microcement Specialist | The Shirtless Handyman",
     description:
-      "Bywater New Orleans handyman and microcement specialist. Renovations on shotguns and doubles. Microcement bathrooms, tadelakt showers, rockscape walls. Text Ryan: 504-264-4919.",
+      "Bywater New Orleans handyman and microcement specialist. Renovations on shotguns and doubles. Microcement bathrooms, tadelakt showers, rockscape walls. Text me: 504-264-4919.",
     eyebrow: "Bywater · New Orleans, LA",
     h1: "Bywater handyman — modern microcement for the most creative neighborhood in NOLA.",
     heroParagraph:
@@ -437,7 +437,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "French Quarter",
     title: "French Quarter Handyman & Microcement Specialist | The Shirtless Handyman",
     description:
-      "French Quarter New Orleans handyman and seamless-surface specialist. Microcement bathrooms, tadelakt, plaster repair, fixture installs in historic Quarter properties. Text Ryan: 504-264-4919.",
+      "French Quarter New Orleans handyman and seamless-surface specialist. Microcement bathrooms, tadelakt, plaster repair, fixture installs in historic Quarter properties. Text me: 504-264-4919.",
     eyebrow: "French Quarter · New Orleans, LA",
     h1: "French Quarter handyman — respectful renovations on 200-year-old buildings.",
     heroParagraph:
@@ -476,7 +476,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     city: "Garden District",
     title: "Garden District Handyman & Microcement Specialist | The Shirtless Handyman",
     description:
-      "Garden District New Orleans handyman and seamless-surface specialist. Historic mansions, microcement bathrooms, tadelakt, plaster restoration. Text Ryan: 504-264-4919.",
+      "Garden District New Orleans handyman and seamless-surface specialist. Historic mansions, microcement bathrooms, tadelakt, plaster restoration. Text me: 504-264-4919.",
     eyebrow: "Garden District · New Orleans, LA",
     h1: "Garden District handyman — high-end finishes for historic mansions.",
     heroParagraph:

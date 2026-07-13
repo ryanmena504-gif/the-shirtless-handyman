@@ -289,7 +289,7 @@ export default function AnalysisPage() {
             Scanning Your Space
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            We're analyzing your {projectType.toLowerCase()} to identify what needs work — and what seamless surfaces will look best.
+            I'm analyzing your {projectType.toLowerCase()} to identify what needs work — and what seamless surfaces will look best.
           </p>
         </div>
 

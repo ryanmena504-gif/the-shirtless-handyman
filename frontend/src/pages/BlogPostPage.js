@@ -188,7 +188,7 @@ export default function BlogPostPage() {
               </Button>
               <a href={SMS_LINK}>
                 <Button variant="outline" className="h-12 px-6 rounded-full font-medium">
-                  <MessageCircle className="w-4 h-4 mr-2" /> Text Ryan
+                  <MessageCircle className="w-4 h-4 mr-2" /> Text Me
                 </Button>
               </a>
             </div>

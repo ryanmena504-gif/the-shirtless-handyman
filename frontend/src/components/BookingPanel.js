@@ -74,7 +74,7 @@ export function BookingPanel({ sessionId, onBooked }) {
     } catch (err) {
       const msg =
         err?.response?.data?.detail ||
-        "Couldn't reach the server. Text Ryan at 504-264-4919.";
+        "Couldn't reach the server. Text me at 504-264-4919.";
       setError(msg);
     } finally {
       setSubmitting(false);
