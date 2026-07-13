@@ -77,7 +77,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does a rockscape wall cost?",
-        a: "Rockscape walls run $50–$120 per square foot depending on sculpting complexity and lighting integration. A typical living-room accent wall is $3,500–$8,000.",
+        a: "Rockscape walls run $50–$120 per square foot depending on sculpting complexity and lighting integration. A typical living-room accent wall is $3,500–$12,000.",
       },
     ],
   },

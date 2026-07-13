@@ -503,7 +503,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Do you work on Garden District historic homes?", a: "Yes — a large portion of my high-end work is Garden District renovations. We move carefully around original moldings, plaster, and trim, and we test every substrate before we apply microcement or tadelakt." },
-      { q: "What does a Garden District tadelakt shower cost?", a: "Larger Garden District tadelakt installations typically run $8,000 to $18,000 — sometimes more for high ceilings, custom color, or full-room (floor + wall) installations." },
+      { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt in the Garden District follows the same three service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room: starting at $30,000, priced individually." },
       { q: "Can you coordinate with our architect or designer?", a: "Absolutely. A lot of my Garden District work is designer-specified — I'm comfortable presenting samples, color matching, and meeting on-site to walk specs." },
     ],
   },
