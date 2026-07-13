@@ -229,6 +229,15 @@ export default function AdminPage() {
               <Camera className="w-4 h-4 mr-1.5" />
               Portfolio ({portfolio.length})
             </Button>
+            <Button
+              variant="ghost"
+              className="rounded-full text-sm ml-auto"
+              onClick={() => (window.location.href = "/admin/schedule")}
+              data-testid="admin-goto-schedule"
+            >
+              <Shield className="w-4 h-4 mr-1.5" />
+              Schedule Blocker
+            </Button>
           </div>
 
           <Separator className="mb-8" />

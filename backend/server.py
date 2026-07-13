@@ -12,7 +12,7 @@ import uuid
 import math
 from pathlib import Path
 from typing import List
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -942,6 +942,7 @@ async def create_booking(data: BookingRequest):
 
     slot_local = None
     slot_utc = None
+    slot_end_utc = None
     if slot_iso:
         slot_local = schedule_service.parse_slot_iso(slot_iso)
         if not slot_local:
@@ -949,6 +950,7 @@ async def create_booking(data: BookingRequest):
         if not await schedule_service.is_slot_available(db, slot_local):
             raise HTTPException(status_code=409, detail="That slot was just booked. Please pick another.")
         slot_utc = slot_local.astimezone(timezone.utc)
+        slot_end_utc = slot_utc + timedelta(minutes=schedule_service.SLOT_MINUTES)
         pref_date = slot_local.strftime("%Y-%m-%d")
         pref_time = slot_local.strftime("%-I:%M %p").lstrip("0")
     else:
@@ -965,6 +967,8 @@ async def create_booking(data: BookingRequest):
         "preferred_date": pref_date,
         "preferred_time": pref_time,
         "slot_start_utc": slot_utc,  # None for chat quick-book
+        "slot_end_utc":   slot_end_utc,
+        "type_label": (appointment_type or "walkthrough").replace("_", " ").title(),
         "appointment_type": appointment_type or "walkthrough",
         "project_type": (data.project_type or "").strip(),
         "notes": (data.notes or "").strip()[:500],
@@ -1308,6 +1312,127 @@ async def get_public_portfolio():
     return {"items": items}
 
 
+# --- Admin Schedule Blocker ---
+import schedule_admin_service
+
+
+def _require_admin(admin_id: str):
+    if admin_id != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+
+@api_router.get("/admin/schedule/rules")
+async def admin_list_rules(admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    rules = await schedule_admin_service.list_rules(db)
+    return {"rules": rules, "total": len(rules)}
+
+
+@api_router.post("/admin/schedule/rules")
+async def admin_create_rule(payload: dict, admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    # Optional conflict guard for recurring rules
+    if not payload.get("acknowledge_conflicts", False):
+        preview = await schedule_admin_service.preview_block_conflicts(
+            db, {**payload, "kind": "weekly"}
+        )
+        if preview["count"] > 0:
+            return JSONResponse(
+                status_code=409,
+                content={"detail": "existing_bookings_conflict", **preview},
+            )
+    try:
+        rule = await schedule_admin_service.create_rule(db, payload, created_by="admin")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"rule": rule}
+
+
+@api_router.patch("/admin/schedule/rules/{rule_id}")
+async def admin_update_rule(rule_id: str, payload: dict,
+                            admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    try:
+        rule = await schedule_admin_service.update_rule(db, rule_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    if not rule:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    return {"rule": rule}
+
+
+@api_router.delete("/admin/schedule/rules/{rule_id}")
+async def admin_delete_rule(rule_id: str, admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    ok = await schedule_admin_service.delete_rule(db, rule_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    return {"message": "Rule deleted"}
+
+
+@api_router.get("/admin/schedule/blocks")
+async def admin_list_blocks(include_past: bool = False,
+                            admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    blocks = await schedule_admin_service.list_blocks(db, include_past=include_past)
+    return {"blocks": blocks, "total": len(blocks)}
+
+
+@api_router.post("/admin/schedule/blocks/preview-conflicts")
+async def admin_preview_conflicts(payload: dict,
+                                  admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    try:
+        result = await schedule_admin_service.preview_block_conflicts(db, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return result
+
+
+@api_router.post("/admin/schedule/blocks")
+async def admin_create_block(payload: dict, admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    if not payload.get("acknowledge_conflicts", False):
+        try:
+            preview = await schedule_admin_service.preview_block_conflicts(
+                db, {**payload, "kind": "one_time"}
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        if preview["count"] > 0:
+            return JSONResponse(
+                status_code=409,
+                content={"detail": "existing_bookings_conflict", **preview},
+            )
+    try:
+        block = await schedule_admin_service.create_block(db, payload, created_by="admin")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"block": block}
+
+
+@api_router.patch("/admin/schedule/blocks/{block_id}")
+async def admin_update_block(block_id: str, payload: dict,
+                             admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    try:
+        block = await schedule_admin_service.update_block(db, block_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    if not block:
+        raise HTTPException(status_code=404, detail="Block not found")
+    return {"block": block}
+
+
+@api_router.delete("/admin/schedule/blocks/{block_id}")
+async def admin_delete_block(block_id: str, admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    ok = await schedule_admin_service.delete_block(db, block_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Block not found")
+    return {"message": "Block deleted"}
+
+
 # --- Seed Data ---
 
 def _build_contractor(cfg):
@@ -1387,6 +1512,7 @@ async def startup():
     await followup_service.ensure_indexes(db)
     await google_reviews.ensure_indexes(db)
     await schedule_service.ensure_indexes(db)
+    await schedule_admin_service.ensure_indexes(db)
     # Background worker: scan for due follow-up emails every 5 min.
     asyncio.create_task(followup_service.background_worker(db, interval_seconds=300))
     logger.info("AI Renovation Visualizer API started")

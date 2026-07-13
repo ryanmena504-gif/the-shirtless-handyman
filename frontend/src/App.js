@@ -13,6 +13,7 @@ import ContractorLoginPage from "./pages/ContractorLoginPage";
 import ContractorRegisterPage from "./pages/ContractorRegisterPage";
 import ContractorDashboardPage from "./pages/ContractorDashboardPage";
 import AdminPage from "./pages/AdminPage";
+import AdminSchedulePage from "./pages/AdminSchedulePage";
 import SharePage from "./pages/SharePage";
 import PortfolioPage from "./pages/PortfolioPage";
 import LocalServiceRoute from "./pages/LocalServiceRoute";
@@ -40,6 +41,7 @@ function App() {
             <Route path="/contractor/register" element={<ContractorRegisterPage />} />
             <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/schedule" element={<AdminSchedulePage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/share/:shareId" element={<SharePage />} />
 

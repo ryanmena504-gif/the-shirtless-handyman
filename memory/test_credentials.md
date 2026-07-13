@@ -1,8 +1,18 @@
 # Test Credentials
 
 ## Admin Panel
-- URL: /admin
+- URL: `/admin`
 - Password: `renovate2024admin`
+
+## Admin Schedule Blocker
+- URL: `/admin/schedule` (same admin password)
+- Timezone: America/Chicago
+- Endpoints:
+  - `GET/POST/PATCH/DELETE /api/admin/schedule/blocks`
+  - `GET/POST/PATCH/DELETE /api/admin/schedule/rules`
+  - `POST /api/admin/schedule/blocks/preview-conflicts`
+- Public availability: `GET /api/schedule/availability?days=30`
+- Direct-API bookings for blocked slots are rejected server-side (verified).
 
 ## Contractor Login
 - URL: /contractor/login

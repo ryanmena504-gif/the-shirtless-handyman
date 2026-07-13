@@ -121,13 +121,48 @@ async def get_availability(db, days_ahead: Optional[int] = None) -> dict:
     )
     blocks = []
     async for bl in block_cursor:
-        blocks.append((bl["start_utc"], bl["end_utc"]))
+        s, e = bl["start_utc"], bl["end_utc"]
+        # Motor returns naive UTC datetimes — re-attach tz
+        if isinstance(s, datetime) and s.tzinfo is None:
+            s = s.replace(tzinfo=timezone.utc)
+        if isinstance(e, datetime) and e.tzinfo is None:
+            e = e.replace(tzinfo=timezone.utc)
+        blocks.append((s, e))
+
+    # Recurring weekly rules — evaluated per-slot below.
+    rules_cursor = db.availability_rules.find({"active": True}, {"_id": 0})
+    rules = await rules_cursor.to_list(500)
 
     def slot_blocked(slot_local: datetime) -> bool:
         slot_utc = slot_local.astimezone(timezone.utc)
         slot_end_utc = slot_utc + timedelta(minutes=SLOT_MINUTES)
+        # One-time blocks
         for start, end in blocks:
             if slot_utc < end and slot_end_utc > start:
+                return True
+        # Recurring weekly rules
+        slot_end_local = slot_local + timedelta(minutes=SLOT_MINUTES)
+        wd = slot_local.weekday()
+        for r in rules:
+            if r.get("kind") != "weekly" or r.get("weekday") != wd:
+                continue
+            if r.get("full_day"):
+                return True
+            try:
+                sh, sm = [int(x) for x in (r.get("start_time_local") or "").split(":")]
+                eh, em = [int(x) for x in (r.get("end_time_local") or "").split(":")]
+            except (ValueError, AttributeError):
+                continue
+            rule_start = slot_local.replace(hour=sh, minute=sm, second=0, microsecond=0)
+            rule_end   = slot_local.replace(hour=eh, minute=em, second=0, microsecond=0)
+            if slot_local < rule_end and slot_end_local > rule_start:
+                return True
+        return False
+
+    def day_fully_blocked_by_rule(day_local: datetime) -> bool:
+        wd = day_local.weekday()
+        for r in rules:
+            if r.get("kind") == "weekly" and r.get("weekday") == wd and r.get("full_day"):
                 return True
         return False
 
@@ -135,6 +170,9 @@ async def get_availability(db, days_ahead: Optional[int] = None) -> dict:
     for i in range(horizon + 1):
         day = today + timedelta(days=i)
         is_open = day.weekday() in WORKING_WEEKDAYS
+        # Recurring full-day rule closes the day entirely
+        if is_open and day_fully_blocked_by_rule(day):
+            is_open = False
         slots_out = []
         if is_open:
             for s in _iter_slots_for_day(day):
@@ -206,4 +244,24 @@ async def is_slot_available(db, slot_local: datetime) -> bool:
     })
     if block:
         return False
+
+    # Recurring weekly rules (admin-defined)
+    slot_end_local = slot_local + timedelta(minutes=SLOT_MINUTES)
+    rules = await db.availability_rules.find(
+        {"active": True, "kind": "weekly", "weekday": slot_local.weekday()},
+        {"_id": 0},
+    ).to_list(50)
+    for r in rules:
+        if r.get("full_day"):
+            return False
+        try:
+            sh, sm = [int(x) for x in (r.get("start_time_local") or "").split(":")]
+            eh, em = [int(x) for x in (r.get("end_time_local") or "").split(":")]
+        except (ValueError, AttributeError):
+            continue
+        rule_start = slot_local.replace(hour=sh, minute=sm, second=0, microsecond=0)
+        rule_end   = slot_local.replace(hour=eh, minute=em, second=0, microsecond=0)
+        if slot_local < rule_end and slot_end_local > rule_start:
+            return False
+
     return True
