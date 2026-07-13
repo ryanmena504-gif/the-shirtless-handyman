@@ -25,7 +25,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Installed microcement in the New Orleans metro typically runs $14 to $40 per square foot depending on substrate, prep, finish system, and color complexity. A single bathroom install lands between $2,000 and $8,000 all-in. Full multi-room seamless conversions start at $8,000.",
+        a: "Installed microcement in the New Orleans metro runs $25 to $60 per square foot depending on substrate, prep, finish system, and color complexity. Minimum project fee is $5,000 (materials alone for a small bathroom run about $2,500 before labor). A typical single-bathroom install lands between $5,000 and $12,000 all-in. Larger multi-room or high-end installs reach $30,000.",
       },
       {
         q: "Can I install microcement over existing tile?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt runs $30–$60 per square foot installed in New Orleans, higher than microcement due to the labor-intensive multi-pass burnishing process. Single showers typically land $3,500–$7,000.",
+        a: "Tadelakt runs $40–$80 per square foot installed in New Orleans, higher than microcement due to the labor-intensive multi-pass hand-burnishing process. Single showers typically land $6,500–$15,000. Full tadelakt bathrooms $9,000–$20,000.",
       },
     ],
   },

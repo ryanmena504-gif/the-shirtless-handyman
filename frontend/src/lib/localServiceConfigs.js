@@ -29,8 +29,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Preview My Bathroom Free",
     smsBody: "Hey Ryan, I'm interested in microcement in New Orleans.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 2000,
-    priceHigh: 12000,
+    priceLow: 5000,
+    priceHigh: 30000,
     benefits: [
       { icon: "Droplets", title: "100% Waterproof", body: "Sealed microcement has zero seams or grout — no path for water to enter. Built for NOLA wet zones, humidity, and decades of use." },
       { icon: "Layers", title: "Installs Over Existing Tile", body: "We bond directly to your existing shower tile, floor, or walls. No demolition, no debris, no dumpster in your driveway." },
@@ -48,7 +48,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, specializes in microcement installation across Greater New Orleans — including Metairie, Gretna, Harvey, Lakeview, Uptown, Mid-City, Marigny, Algiers, and the Westbank." },
-      { q: "How much does microcement cost per square foot in New Orleans?", a: "Microcement in the New Orleans area typically runs $14 to $40 per square foot installed depending on the substrate, finish color, and prep work required. A single bathroom usually lands between $2,000 and $8,000." },
+      { q: "How much does microcement cost per square foot in New Orleans?", a: "Microcement in the New Orleans area typically runs $25 to $60 per square foot installed depending on the substrate, finish color, and prep work required. Minimum project fee is $5,000. A single bathroom usually lands between $5,000 and $12,000 all-in." },
       { q: "Can microcement be installed over existing tile in a New Orleans shower?", a: "Yes. Microcement bonds directly to existing tile after proper prep — no demolition required. This is one of the main reasons New Orleans homeowners choose microcement over a full tile tear-out for shower renovations." },
       { q: "Is microcement a good choice for New Orleans humidity?", a: "Microcement is fully waterproof when properly sealed and is widely used in wet zones including showers, pool decks, and exterior surfaces. Its sealed, jointless surface makes it especially well-suited to high-humidity climates like New Orleans, where grout is prone to mold and failure." },
     ],
@@ -74,8 +74,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Get My Installer Quote Free",
     smsBody: "Hey Ryan, I'm looking for a microcement installer in New Orleans.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 2000,
-    priceHigh: 12000,
+    priceLow: 5000,
+    priceHigh: 30000,
     benefits: [
       { icon: "Award", title: "The Installer Touches Every Job", body: "I install every microcement project personally — same hands from estimate to final seal. No 'we'll send a crew.' No language-barrier subs. You get one accountable craftsman." },
       { icon: "ShieldCheck", title: "Licensed, Insured & NOLA-Based", body: "Fully licensed and insured Louisiana home-improvement business. Local addresses, local references, local accountability. No national franchise pulling permits from Texas." },
@@ -94,7 +94,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (I use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
       { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
-      { q: "How much do microcement installers charge in New Orleans?", a: "New Orleans microcement installers typically charge $14 to $40 per square foot installed, depending on the substrate, prep work, finish system, and color complexity. A single bathroom usually lands $2,000 to $8,000. We give a fixed, all-in price after a free in-home consultation — no hidden 'change order' add-ons." },
+      { q: "How much do microcement installers charge in New Orleans?", a: "New Orleans microcement installers typically charge $25 to $60 per square foot installed, depending on the substrate, prep work, finish system, and color complexity. Minimum project fee is $5,000 (materials alone for a small bathroom run about $2,500 before labor). A typical single-bathroom install lands $5,000 to $12,000. Larger multi-room installs go up to $30,000. I give a fixed, all-in price after a free in-home consultation — no hidden 'change order' add-ons." },
       { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
       { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. I schedule around your life — you can keep using the rest of the house while I work, and the room is back in service within 48 hours of the final seal." },
       { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Yes — that's the most common install I do. Microcement bonds directly to existing tile after proper prep (cleaning, mechanical scarification, and a bonding primer). No demolition. No dumpster. No tile removal cost." },
@@ -119,8 +119,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Preview My Bathroom Free",
     smsBody: "Hey Ryan, I'm in Metairie and interested in microcement.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 2000,
-    priceHigh: 12000,
+    priceLow: 5000,
+    priceHigh: 30000,
     benefits: [
       { icon: "Droplets", title: "Built for slab-on-grade homes", body: "Most Metairie homes sit on a concrete slab — the perfect substrate for microcement. We bond directly with zero subfloor work." },
       { icon: "Layers", title: "Installs Over Existing Tile", body: "Keep your current bathroom intact. We bond microcement directly to the tile — no demolition, no debris in your driveway." },
@@ -137,8 +137,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in Metairie?", a: "The Shirtless Handyman, run by Ryan Mena, installs microcement throughout Metairie, Old Metairie, Bucktown, Bonnabel, and the rest of Jefferson Parish." },
-      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "A typical Metairie bathroom microcement project runs $2,000 to $8,000 depending on square footage and prep. Full multi-room transformations start around $8,000." },
-      { q: "Can microcement be installed on a concrete slab home?", a: "Yes — concrete slab homes (very common in Metairie) are an ideal substrate for microcement. We can install directly on properly prepped concrete, often without any subfloor work." },
+      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "A typical Metairie bathroom microcement project runs $5,000 to $12,000 depending on square footage and prep. Minimum project fee is $5,000. Larger multi-room seamless transformations reach $30,000." },
+      { q: "Can microcement be installed on a concrete slab home?", a: "Yes — concrete slab homes (very common in Metairie) are an ideal substrate for microcement. I install directly on properly prepped concrete, often without any subfloor work." },
       { q: "How does microcement hold up in Louisiana humidity?", a: "Properly sealed microcement is fully waterproof and mold-resistant — making it especially well-suited to Metairie's humid, year-round wet climate. It's used in walk-in showers, wet rooms, and outdoor patios across the metro." },
     ],
   },
@@ -161,8 +161,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Preview My Shower Free",
     smsBody: "Hey Ryan, I'm interested in a tadelakt shower in New Orleans.",
     defaultProjectType: "Tadelakt Shower",
-    priceLow: 3500,
-    priceHigh: 18000,
+    priceLow: 6500,
+    priceHigh: 20000,
     benefits: [
       { icon: "Droplets", title: "Naturally Waterproof", body: "Tadelakt has been used in Moroccan hammams for 800+ years because the lime + olive-soap finish self-seals against water. No surface coating required." },
       { icon: "Sparkles", title: "Antibacterial by Chemistry", body: "The high-pH lime substrate naturally resists mold, mildew, and bacteria — a real advantage in New Orleans humidity." },
@@ -179,7 +179,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs tadelakt in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, installs tadelakt across Greater New Orleans — including Uptown, Garden District, Lakeview, Mid-City, and the Westbank." },
-      { q: "How much does a tadelakt shower cost in New Orleans?", a: "A tadelakt shower in the New Orleans area typically runs $3,500 to $12,000 depending on square footage, ceiling height, and color complexity. Full bathroom installs can reach $18,000." },
+      { q: "How much does a tadelakt shower cost in New Orleans?", a: "A tadelakt shower in the New Orleans area typically runs $6,500 to $15,000 depending on square footage, ceiling height, and color complexity. Full tadelakt bathroom installs reach $20,000." },
       { q: "Is tadelakt really waterproof without a sealer?", a: "Yes. Authentic tadelakt is burnished with river stone and treated with olive-oil soap, which creates a self-sealing surface. It has been the traditional finish for Moroccan hammams (steam baths) for centuries." },
       { q: "How long does a tadelakt shower take to install?", a: "Most tadelakt shower installs take 5 to 8 days because of the multiple hand-applied layers and burnishing time. The result is a one-of-a-kind hand-finished surface that machine-made tile can never replicate." },
     ],
@@ -203,8 +203,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Design My Rockscape Wall",
     smsBody: "Hey Ryan, I want a custom rockscape wall in New Orleans.",
     defaultProjectType: "Rockscape Feature Wall",
-    priceLow: 3500,
-    priceHigh: 25000,
+    priceLow: 5000,
+    priceHigh: 30000,
     benefits: [
       { icon: "Award", title: "Built for Your Exact Space", body: "We sculpt each panel to fit your wall dimensions, ceiling line, and architectural features. No two rockscape walls are alike." },
       { icon: "Sparkles", title: "LED Backlighting Available", body: "Integrate warm or color-shifting LED behind the sculpted face for cinematic depth — perfect for living rooms and lobbies." },
@@ -245,8 +245,8 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Preview My Pool Deck Free",
     smsBody: "Hey Ryan, I need pool deck resurfacing in New Orleans.",
     defaultProjectType: "Pool Deck",
-    priceLow: 3000,
-    priceHigh: 18000,
+    priceLow: 5000,
+    priceHigh: 30000,
     benefits: [
       { icon: "Droplets", title: "Weatherproof + UV-Stable", body: "Sealed microterrazzo handles year-round NOLA sun, summer thunderstorms, and the occasional flood. No cracking. No fading." },
       { icon: "ShieldCheck", title: "Slip-Resistant Finish", body: "We add a fine aggregate to the topcoat so the deck stays grippy when wet — important for pools and bare feet." },
@@ -309,7 +309,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Do you cover all of Lakeview?", a: "Yes — from Robert E. Lee down to West End and across to Lake Vista. Lakeview is one of my most-requested neighborhoods because of its post-Katrina rebuild density." },
       { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while I'm there. One trip, one invoice." },
-      { q: "How much does a Lakeview microcement bathroom cost?", a: "Most Lakeview bathrooms land between $2,500 and $8,500 installed depending on size and prep. Smaller powder rooms can be under $2,000." },
+      { q: "How much does a Lakeview microcement bathroom cost?", a: "Most Lakeview bathrooms land between $5,000 and $12,000 installed depending on size and prep. Minimum project fee is $5,000." },
     ],
   },
 

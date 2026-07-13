@@ -30,10 +30,10 @@ export const BLOG_POSTS = [
       { type: "p", content: "For a typical New Orleans bathroom (around 60 sq ft of floor, 120 sq ft of walls), here's what we see most often in 2026 pricing:" },
       { type: "ul", items: [
         "Mid-range tile renovation: $9,000 – $18,000 installed",
-        "Microcement seamless renovation: $5,000 – $9,500 installed",
-        "Tadelakt shower-only renovation: $6,500 – $12,000 installed",
+        "Microcement seamless renovation: $5,000 – $15,000 installed",
+        "Tadelakt shower-only renovation: $6,500 – $15,000 installed",
       ]},
-      { type: "p", content: "Microcement comes in lower on the installed number for one main reason: no demolition. We bond directly to existing surfaces. No dumpster. No two-day tile-removal labor. No drywall repairs. Roughly 30% of a tile renovation's cost goes into stuff that has nothing to do with the new finish." },
+      { type: "p", content: "Microcement comes in lower on the installed number for one main reason: no demolition. Bonds directly to existing surfaces. No dumpster. No two-day tile-removal labor. No drywall repairs. Roughly 30% of a tile renovation's cost goes into stuff that has nothing to do with the new finish." },
       { type: "h2", content: "What the quote sheet often hides" },
       { type: "p", content: "Here's where tile gets you over the long haul — costs that almost never appear in the original quote:" },
       { type: "ul", items: [
@@ -122,9 +122,9 @@ export const BLOG_POSTS = [
       { type: "p", content: "Microcement reads modern, industrial, minimalist. Walls feel smooth and cool. Tadelakt reads warm, sculptural, hand-finished. The surface has depth and slight texture — the kind of finish you keep touching." },
       { type: "h2", content: "Cost in New Orleans" },
       { type: "ul", items: [
-        "Microcement bathroom: $5,000 – $9,500",
-        "Tadelakt shower: $6,500 – $12,000",
-        "Full tadelakt bathroom: $9,000 – $18,000",
+        "Microcement bathroom: $5,000 – $15,000",
+        "Tadelakt shower: $6,500 – $15,000",
+        "Full tadelakt bathroom: $9,000 – $20,000",
       ]},
       { type: "p", content: "Tadelakt is hand-burnished with river stones. The labor hours per square foot are 2–3x what microcement requires. That's the price gap." },
       { type: "h2", content: "When microcement is the right call" },

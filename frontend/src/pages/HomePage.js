@@ -72,11 +72,11 @@ const GLOBAL_SCHEMA = {
         "@type": "OfferCatalog",
         name: "Seamless surface services",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Microcement installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 2000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tadelakt installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3500, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Rockscape feature wall" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3500, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pool deck resurfacing" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 3000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Venetian plaster" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 1800, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Microcement installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tadelakt installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 6500, maxPrice: 30000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Rockscape feature wall" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pool deck resurfacing" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Venetian plaster" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
         ],
       },
       knowsAbout: [
