@@ -25,7 +25,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Installed microcement in the New Orleans metro runs $25 to $60 per square foot depending on substrate, prep, finish system, and color complexity. Minimum project fee is $5,000 (materials alone for a small bathroom run about $2,500 before labor). A typical single-bathroom install lands between $5,000 and $12,000 all-in. Larger multi-room or high-end installs reach $30,000.",
+        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: $5,500–$9,500 (microcement or tadelakt over an existing bathroom footprint, no demo). Signature Grout-Free Transformation: $18,000–$35,000 (full bathroom rebuild in seamless — walls, floor, shower). Luxury Seamless Wet Room: custom projects generally begin around $30,000. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
       },
       {
         q: "Can I install microcement over existing tile?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt runs $40–$80 per square foot installed in New Orleans, higher than microcement due to the labor-intensive multi-pass hand-burnishing process. Single showers typically land $6,500–$15,000. Full tadelakt bathrooms $9,000–$20,000.",
+        a: "Tadelakt is priced under the same three tiers as microcement. Essential Seamless Bathroom Overlay: $5,500–$9,500 (existing footprint). Signature Grout-Free Transformation: $18,000–$35,000 (full tadelakt bathroom rebuild). Luxury Seamless Wet Room: from $30,000. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
       },
     ],
   },

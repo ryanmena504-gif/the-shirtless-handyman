@@ -70,13 +70,26 @@ const GLOBAL_SCHEMA = {
       employee: { "@id": `${SITE_URL}/about#ryan` },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Seamless surface services",
+        name: "Seamless bathroom packages",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Microcement installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tadelakt installation" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 6500, maxPrice: 30000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Rockscape feature wall" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pool deck resurfacing" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Venetian plaster" }, priceCurrency: "USD", priceSpecification: { "@type": "PriceSpecification", minPrice: 5000, maxPrice: 30000, priceCurrency: "USD" } },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Essential Seamless Bathroom Overlay", description: "Microcement or tadelakt overlay on an existing bathroom footprint — no demolition, no plumbing changes." },
+            priceCurrency: "USD",
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 5500, maxPrice: 9500, priceCurrency: "USD" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Signature Grout-Free Transformation", description: "Full bathroom rebuild in seamless surfaces — walls, floor, shower in one continuous shell with new fixtures and lighting." },
+            priceCurrency: "USD",
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 18000, maxPrice: 35000, priceCurrency: "USD" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Luxury Seamless Wet Room", description: "Fully custom wet-room build with rockscape or feature-wall integration, radiant heat, layered lighting, and bespoke finishes." },
+            priceCurrency: "USD",
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 30000, priceCurrency: "USD" },
+          },
         ],
       },
       knowsAbout: [
@@ -1140,30 +1153,36 @@ export default function HomePage() {
               className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Straight pricing. No surprises.
+              Three ways I build seamless.
             </h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Every project is different — The Seamless Studio helps you (and me) understand the scope before I quote numbers. Here's the general range.
+              Every seamless bathroom I install falls into one of three tiers. The Seamless Studio helps you (and me) figure out which one fits your space before I quote a fixed number.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
-            {/* Tier 1 */}
-            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-handyman">
+            {/* Tier 1 — Essential */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-essential">
               <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
                 <Wrench className="w-5 h-5 text-muted-foreground" />
               </div>
               <h3
-                className="text-xl font-medium text-foreground mb-1"
+                className="text-xl font-medium text-foreground mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Small Jobs
+                Essential Seamless Bathroom Overlay
               </h3>
-              <p className="text-xs text-muted-foreground mb-5">Handyman & repairs</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">$150 <span className="text-base font-normal text-muted-foreground">— $500</span></p>
-              <p className="text-xs text-muted-foreground mb-6">Per job</p>
+              <p className="text-xs text-muted-foreground mb-5">Single bathroom, existing footprint</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">$5,500 <span className="text-base font-normal text-muted-foreground">— $9,500</span></p>
+              <p className="text-xs text-muted-foreground mb-6">Typical investment</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Drywall patches & paint touch-ups", "Fixture & hardware installs", "Door and trim repairs", "Pressure washing", "Caulking & sealing"].map((item) => (
+                {[
+                  "Microcement or tadelakt over existing tile",
+                  "One shower or tub surround",
+                  "Standard bathroom footprint",
+                  "No demolition, no new plumbing",
+                  "5-year bond warranty, 1-year seal warranty",
+                ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                     <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
                     {item}
@@ -1177,10 +1196,10 @@ export default function HomePage() {
               </a>
             </div>
 
-            {/* Tier 2 — highlighted */}
-            <div className="bg-[#0E0E0E] border-2 border-[#D97757]/40 rounded-2xl p-8 flex flex-col relative" data-testid="pricing-surface">
+            {/* Tier 2 — Signature (highlighted) */}
+            <div className="bg-[#0E0E0E] border-2 border-[#D97757]/40 rounded-2xl p-8 flex flex-col relative" data-testid="pricing-signature">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                <span className="px-4 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider">
+                <span className="px-4 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
                   Most Popular
                 </span>
               </div>
@@ -1188,16 +1207,22 @@ export default function HomePage() {
                 <Paintbrush className="w-5 h-5 text-[#D97757]" />
               </div>
               <h3
-                className="text-xl font-medium text-white mb-1"
+                className="text-xl font-medium text-white mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Surface Upgrades
+                Signature Grout-Free Transformation
               </h3>
-              <p className="text-xs text-white/40 mb-5">Single room or area</p>
-              <p className="text-3xl font-semibold text-white mb-1">$2,000 <span className="text-base font-normal text-white/40">— $8,000</span></p>
-              <p className="text-xs text-white/40 mb-6">Per room / zone</p>
+              <p className="text-xs text-white/40 mb-5">Full bathroom rebuild in seamless</p>
+              <p className="text-3xl font-semibold text-white mb-1">$18,000 <span className="text-base font-normal text-white/40">— $35,000</span></p>
+              <p className="text-xs text-white/40 mb-6">Typical investment</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Shower or tub surround in tadelakt", "Bathroom walls in microcement", "Kitchen backsplash in venetian plaster", "Single accent or rockscape wall", "Floor coating for one room"].map((item) => (
+                {[
+                  "Walls, floor, and shower in one continuous shell",
+                  "Fixture upgrades + integrated lighting",
+                  "Selective demolition + waterproofing rebuild",
+                  "New plumbing runs & niche builds",
+                  "Custom color, texture, and hand-finish",
+                ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-white/60">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0 mt-1.5" />
                     {item}
@@ -1213,22 +1238,28 @@ export default function HomePage() {
               </Button>
             </div>
 
-            {/* Tier 3 */}
-            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-full">
+            {/* Tier 3 — Luxury */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-luxury">
               <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
                 <Home className="w-5 h-5 text-muted-foreground" />
               </div>
               <h3
-                className="text-xl font-medium text-foreground mb-1"
+                className="text-xl font-medium text-foreground mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Full Transformations
+                Luxury Seamless Wet Room
               </h3>
-              <p className="text-xs text-muted-foreground mb-5">Multi-room seamless overhaul</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">$8,000<span className="text-base font-normal text-muted-foreground">+</span></p>
-              <p className="text-xs text-muted-foreground mb-6">Full project scope</p>
+              <p className="text-xs text-muted-foreground mb-5">Fully custom, no-limits build</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">$30,000<span className="text-base font-normal text-muted-foreground">+</span></p>
+              <p className="text-xs text-muted-foreground mb-6">Custom projects generally begin around this</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Entire bathroom seamless conversion", "Kitchen walls, counters & floors", "Multiple rooms wall-to-wall", "Pool deck + outdoor kitchen", "Custom rockscape feature walls"].map((item) => (
+                {[
+                  "Open-plan wet-room layouts",
+                  "Rockscape or feature-wall integration",
+                  "Radiant floor heating included",
+                  "Layered lighting + smart controls",
+                  "Bespoke tadelakt or Venetian finishes",
+                ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                     <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
                     {item}
@@ -1243,8 +1274,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-8 max-w-md mx-auto">
-            Not sure which tier? Try The Seamless Studio — it'll show you the scope and give you a cost estimate before you commit to anything.
+          <p className="text-center text-xs md:text-sm text-muted-foreground/80 mt-10 max-w-2xl mx-auto leading-relaxed">
+            Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.
           </p>
         </div>
       </section>
