@@ -18,7 +18,8 @@ Design contract:
   5. **Debuggable.** The last N send attempts are kept in an in-process ring
      buffer for the `/api/admin/webhook-events` endpoint.
 
-Configure via env: `MAKE_WEBHOOK_URL`. Empty/unset → no-op (warns once).
+Configure via env: `MAKE_LEAD_WEBHOOK_URL` (falls back to legacy `MAKE_WEBHOOK_URL`).
+Empty/unset → no-op (warns once).
 """
 import asyncio
 import logging
@@ -36,6 +37,7 @@ MAX_LOG_EVENTS = 25    # ring buffer size for debug endpoint
 
 _recent_events: deque = deque(maxlen=MAX_LOG_EVENTS)
 _missing_url_warned = False
+_inflight_tasks: set = set()  # keep strong refs so GC doesn't drop tasks
 
 
 def _now_iso() -> str:
@@ -43,7 +45,13 @@ def _now_iso() -> str:
 
 
 def _webhook_url() -> str:
-    return (os.environ.get("MAKE_WEBHOOK_URL") or "").strip()
+    # Preferred prod name is MAKE_LEAD_WEBHOOK_URL. Fall back to legacy
+    # MAKE_WEBHOOK_URL so any older env config keeps working.
+    return (
+        os.environ.get("MAKE_LEAD_WEBHOOK_URL")
+        or os.environ.get("MAKE_WEBHOOK_URL")
+        or ""
+    ).strip()
 
 
 # =====================================================================
@@ -143,7 +151,7 @@ def forward_lead(payload: dict) -> None:
     if not url:
         if not _missing_url_warned:
             logger.warning(
-                "lead_webhook: MAKE_WEBHOOK_URL is not configured — skipping "
+                "lead_webhook: MAKE_LEAD_WEBHOOK_URL is not configured — skipping "
                 "webhook forwarding. Set it in backend/.env to enable Make/Airtable."
             )
             _missing_url_warned = True
@@ -155,7 +163,7 @@ def forward_lead(payload: dict) -> None:
             "payload": payload,
             "status": None,
             "response_snippet": None,
-            "error": "MAKE_WEBHOOK_URL not configured",
+            "error": "MAKE_LEAD_WEBHOOK_URL not configured",
         })
         return
 
@@ -165,7 +173,9 @@ def forward_lead(payload: dict) -> None:
 
     # Schedule on the running event loop without awaiting.
     try:
-        asyncio.create_task(_run())
+        task = asyncio.create_task(_run())
+        _inflight_tasks.add(task)
+        task.add_done_callback(_inflight_tasks.discard)
     except RuntimeError:
         # No running loop (shouldn't happen inside FastAPI) — run synchronously
         # in a fresh loop so we don't drop the event silently.

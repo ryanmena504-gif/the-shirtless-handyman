@@ -776,8 +776,8 @@ async def create_lead(data: LeadCreate):
         phone=lead_clean.get("phone", ""),
         email=lead_clean.get("email", ""),
         project_address=lead_clean.get("zip_code", ""),
-        project_type=lead_clean.get("project_type", ""),
-        notes=lead_clean.get("project_description", "") or lead_clean.get("selected_design_style", ""),
+        project_type=lead_clean.get("selected_design_style", "") or (lead_clean.get("project_description", "") or "")[:120],
+        notes=lead_clean.get("project_description", ""),
         lead_id=lead_id,
         source_endpoint="POST /api/leads",
     ))
