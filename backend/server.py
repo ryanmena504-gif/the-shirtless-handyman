@@ -29,6 +29,7 @@ from prompts import (
     SHIRTLESS_HANDYMAN_ZIP, SHIRTLESS_HANDYMAN_PROFILE,
 )
 from notifications import notify_new_lead
+import lead_webhook
 from image_utils import normalize_image_for_ai
 
 # MongoDB connection
@@ -768,6 +769,18 @@ async def create_lead(data: LeadCreate):
     lead_clean = {k: v for k, v in lead.items() if k != "_id"}
     asyncio.create_task(notify_new_lead(lead_clean))
     asyncio.create_task(followup_service.schedule_followups(db, lead_clean))
+    # Forward to Make/Airtable webhook (fire-and-forget, never blocks customer)
+    lead_webhook.forward_lead(lead_webhook.build_lead_payload(
+        "Website Quote Form",
+        full_name=lead_clean.get("name", ""),
+        phone=lead_clean.get("phone", ""),
+        email=lead_clean.get("email", ""),
+        project_address=lead_clean.get("zip_code", ""),
+        project_type=lead_clean.get("project_type", ""),
+        notes=lead_clean.get("project_description", "") or lead_clean.get("selected_design_style", ""),
+        lead_id=lead_id,
+        source_endpoint="POST /api/leads",
+    ))
     return {"id": lead_id, "status": "new", "message": "Quote request submitted successfully"}
 
 
@@ -807,6 +820,23 @@ async def create_quick_lead(data: QuickLead):
     lead_clean = {k: v for k, v in lead.items() if k != "_id"}
     asyncio.create_task(notify_new_lead(lead_clean))
     asyncio.create_task(followup_service.schedule_followups(db, lead_clean))
+    # Forward to Make/Airtable webhook (fire-and-forget)
+    source_map = {
+        "hero_form": "Website Quick Form (Hero)",
+        "email_capture": "Website Email Capture (Studio)",
+        "exit_intent": "Website Exit Intent",
+        "sticky_cta": "Website Sticky CTA",
+    }
+    lead_webhook.forward_lead(lead_webhook.build_lead_payload(
+        source_map.get(lead_clean.get("source"), f"Website Quick Form ({lead_clean.get('source') or 'unknown'})"),
+        full_name=lead_clean.get("name", ""),
+        phone=lead_clean.get("phone", ""),
+        email=lead_clean.get("email", ""),
+        project_address=lead_clean.get("zip_code", ""),
+        project_type=lead_clean.get("project_type", ""),
+        lead_id=lead_id,
+        source_endpoint="POST /api/leads/quick",
+    ))
     return {"id": lead_id, "status": "new", "message": "Got it — Ryan will reach out within 1 hour."}
 
 
@@ -886,6 +916,16 @@ async def chat_endpoint(req: ChatRequest):
         lead_clean_chat = {k: v for k, v in lead_doc.items() if k != "_id"}
         asyncio.create_task(notify_new_lead(lead_clean_chat))
         asyncio.create_task(followup_service.schedule_followups(db, lead_clean_chat))
+        # Forward to Make/Airtable webhook (fire-and-forget)
+        lead_webhook.forward_lead(lead_webhook.build_lead_payload(
+            "Website Chatbot",
+            full_name=lead_clean_chat.get("name", ""),
+            phone=lead_clean_chat.get("phone", ""),
+            email=lead_clean_chat.get("email", ""),
+            notes=lead_clean_chat.get("project_description", ""),
+            lead_id=lead_id,
+            source_endpoint="POST /api/chat",
+        ))
 
     return {"reply": reply, "lead_id": lead_id}
 
@@ -1073,6 +1113,21 @@ async def create_booking(data: BookingRequest):
             return_exceptions=True,
         )
     asyncio.create_task(_all_booking_notifs())
+
+    # Forward ONE webhook per booking submission (dedupe: not fired again for
+    # the companion lead_doc above). "Website Booking" lead_source per spec.
+    lead_webhook.forward_lead(lead_webhook.build_lead_payload(
+        "Website Booking",
+        full_name=name,
+        phone=phone,
+        email=booking["email"],
+        project_address=booking["zip_code"],
+        project_type=booking["project_type"] or booking["appointment_type"] or "Booked consultation",
+        timeline=f"{pref_date} {pref_time}".strip(),
+        notes=booking["notes"],
+        lead_id=booking["id"],
+        source_endpoint="POST /api/bookings",
+    ))
 
     return {
         "id": booking["id"],
@@ -1431,6 +1486,21 @@ async def admin_delete_block(block_id: str, admin_id: str = Depends(decode_token
     if not ok:
         raise HTTPException(status_code=404, detail="Block not found")
     return {"message": "Block deleted"}
+
+
+@api_router.get("/admin/webhook-events")
+async def admin_get_webhook_events(limit: int = 25, admin_id: str = Depends(decode_token)):
+    """Debug: return the most recent Make webhook attempts (payload + Make's
+    HTTP response) for troubleshooting. Admin-only."""
+    _require_admin(admin_id)
+    return {"events": lead_webhook.recent_events(limit=limit), "limit": limit}
+
+
+@api_router.delete("/admin/webhook-events")
+async def admin_clear_webhook_events(admin_id: str = Depends(decode_token)):
+    _require_admin(admin_id)
+    lead_webhook.clear_recent_events()
+    return {"message": "Webhook event log cleared"}
 
 
 # --- Seed Data ---

@@ -1,0 +1,33 @@
+{
+  "summary": "Verified Make.com lead webhook wiring across all 4 customer inquiry endpoints. All 8 pytest cases PASS. Confirms user's live /book bug is fixed: POST /api/bookings fires exactly ONE outbound webhook to MAKE_WEBHOOK_URL with lead_source='Website Booking' and the standardized 10-key payload. All 4 endpoints (/api/leads, /api/leads/quick, /api/chat, /api/bookings) fire the webhook with the correct distinct lead_source labels. Chat without contact info correctly does NOT fire. Fire-and-forget contract verified: when MAKE_WEBHOOK_URL points at a dead host, /api/bookings still returns 200 with a valid booking_id to the customer.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_lead_webhook.py",
+    "/app/test_reports/pytest/lead_webhook_tests.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is 1594 lines — still exceeds the 700-line guideline. Consider splitting lead/booking/chat/admin routers into separate modules. Not blocking the webhook fix.",
+    "In /api/leads, the code does `lead_clean.get('project_type', '')` but the LeadCreate Pydantic schema (models/schemas.py) does not include `project_type`, so this always sends '' to the webhook for the main quote form. If Airtable maps project_type from this endpoint, the value will always be blank. Consider adding project_type to LeadCreate or wiring project_description as project_type fallback.",
+    "lead_webhook.forward_lead uses asyncio.create_task without keeping a reference — GC could theoretically drop the task before it runs. In practice on FastAPI this is fine because the event loop holds it, but a `_tasks: set = set()` + `t.add_done_callback(_tasks.discard)` pattern is safer.",
+    "Chat webhook only sends full_name/phone/email/notes — does not carry zip_code/project_type since chat contact-extract does not parse those. Acceptable but note: Airtable rows from chat will have blank project_address/project_type by design."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_lead_webhook.py (new pytest suite for the webhook fix)"
+  ],
+  "success_rate": {"backend": "100% (8/8)", "frontend": "n/a (backend-only run per request)"},
+  "test_credentials": "Admin: password renovate2024admin at POST /api/admin/login (per /app/memory/test_credentials.md)",
+  "seed_data_creation": "None. Test docs are prefixed 'TEST_' (email TEST_webhook_...) and cleaned up via a session-scoped mongo fixture teardown; chat_messages with session_id TEST_* were cleaned manually after the run. Confirmed 0 leftover TEST_ docs.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "MAKE_WEBHOOK_URL points at a REAL Make.com scenario — cap live test hits to ~10. The debug ring buffer /api/admin/webhook-events (admin JWT) plus DELETE variant make it easy to isolate one submission at a time. The test suite hits BASE_URL=http://localhost:8001 to bypass the Cloudflare edge which 403s Python UAs. Fire-and-forget async task typically completes within 2-3s; the test uses _wait_for_events polling up to 8s. For the /api/bookings dedupe assertion, the test waits an EXTRA 2s after seeing 1 event to catch any late-arriving duplicate — verified only 1 is emitted even though a companion db.leads doc is inserted. The webhook-failure test rewrites backend/.env in place then restarts supervisor and restores at teardown — .env is confirmed restored after the run.",
+  "rca of the issue": "USER REPORT: /book form submissions were not reaching Make.com. RCA (per E1's fix and now verified): prior to this iteration, POST /api/bookings did not call lead_webhook.forward_lead — only notify_new_lead/email flows fired. E1's fix (line ~1119 of server.py) added a single forward_lead call at the end of /api/bookings AFTER the _all_booking_notifs task. IMPORTANT dedupe: /api/bookings internally inserts a companion doc into db.leads for the follow-up pipeline, but forward_lead is invoked exactly once at the endpoint boundary (not from the companion insert), so exactly ONE outbound Make call happens per booking. Test TestBookingWebhook.test_booking_fires_exactly_one_webhook_website_booking waits 2s after first event to catch any duplicates and asserts len(events)==1. Make responded HTTP 200 'Accepted' for every valid submission during this run."
+}
