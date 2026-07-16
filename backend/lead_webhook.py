@@ -54,6 +54,28 @@ def _webhook_url() -> str:
     ).strip()
 
 
+def _mask_url(url: str) -> str:
+    """Redact the webhook URL for logs, admin panels, or debug output.
+    Returns e.g. 'hook.us2.make.com/•••ddm' — enough for humans to sanity-check
+    that the right hook is configured, without ever printing the secret."""
+    if not url:
+        return "(unset)"
+    try:
+        from urllib.parse import urlparse
+        u = urlparse(url)
+        host = u.hostname or ""
+        tail = (u.path or "").rstrip("/").split("/")[-1]
+        tail4 = tail[-4:] if len(tail) >= 4 else tail
+        return f"{host}/•••{tail4}"
+    except Exception:  # noqa: BLE001
+        return "(malformed)"
+
+
+def masked_webhook_target() -> str:
+    """Public safe representation of the configured hook."""
+    return _mask_url(_webhook_url())
+
+
 # =====================================================================
 # Payload builders — normalize every entrypoint to the same schema
 # =====================================================================

@@ -1491,9 +1491,13 @@ async def admin_delete_block(block_id: str, admin_id: str = Depends(decode_token
 @api_router.get("/admin/webhook-events")
 async def admin_get_webhook_events(limit: int = 25, admin_id: str = Depends(decode_token)):
     """Debug: return the most recent Make webhook attempts (payload + Make's
-    HTTP response) for troubleshooting. Admin-only."""
+    HTTP response) for troubleshooting. Admin-only. Webhook URL is redacted."""
     _require_admin(admin_id)
-    return {"events": lead_webhook.recent_events(limit=limit), "limit": limit}
+    return {
+        "events": lead_webhook.recent_events(limit=limit),
+        "limit": limit,
+        "target": lead_webhook.masked_webhook_target(),
+    }
 
 
 @api_router.delete("/admin/webhook-events")
