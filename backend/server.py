@@ -1507,6 +1507,32 @@ async def admin_clear_webhook_events(admin_id: str = Depends(decode_token)):
     return {"message": "Webhook event log cleared"}
 
 
+@api_router.delete("/admin/leads/{lead_id}")
+async def admin_delete_lead(lead_id: str, admin_id: str = Depends(decode_token)):
+    """Remove a single lead. Used to clean up test/spam entries."""
+    _require_admin(admin_id)
+    result = await db.leads.delete_one({"id": lead_id})
+    if not result.deleted_count:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"message": "Lead deleted", "id": lead_id}
+
+
+@api_router.delete("/admin/bookings/{booking_id}")
+async def admin_delete_booking(booking_id: str, admin_id: str = Depends(decode_token)):
+    """Remove a booking AND its companion lead (both share the same id)."""
+    _require_admin(admin_id)
+    b_res = await db.bookings.delete_one({"id": booking_id})
+    l_res = await db.leads.delete_one({"id": booking_id})
+    if not (b_res.deleted_count or l_res.deleted_count):
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return {
+        "message": "Booking deleted",
+        "id": booking_id,
+        "bookings_removed": b_res.deleted_count,
+        "companion_leads_removed": l_res.deleted_count,
+    }
+
+
 # --- Seed Data ---
 
 def _build_contractor(cfg):
