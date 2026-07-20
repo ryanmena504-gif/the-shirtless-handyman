@@ -29,6 +29,9 @@ const CHAPTERS = [
     year: "The start",
     icon: Hammer,
     title: "A handyman with a truck and a phone",
+    image: "/story/chapter-1-handyman.jpg",
+    imageAlt: "The Shirtless Handyman illustration — Ryan Mena with a drill, tool belt, and heart tattoo",
+    imageCaption: "The Shirtless Handyman, day one — one guy, one phone.",
     body:
       "The Shirtless Handyman didn't start as a high-end finish studio. It started with me — one guy, one truck, and a phone that wouldn't stop ringing. Doors that wouldn't close. Drywall a kid put a foot through. Leaky faucets. Ceiling fans nobody could figure out. If it was broken in a New Orleans house, I'd show up and fix it.",
   },
@@ -36,6 +39,7 @@ const CHAPTERS = [
     year: "The turn",
     icon: Wrench,
     title: "Bathrooms kept finding me",
+    image: null,
     body:
       "Handyman jobs led to bathroom jobs. Bathroom jobs led to tile work. I spent years installing tile across the metro — Lakeview, Uptown, Metairie, Bywater. Good work at fair prices. But every ten years I'd get called back to the same houses. Same story every time: black grout lines, peeling caulk, mold behind the drywall, humidity chewing through the seams. The tile was fine. Everything holding it together wasn't.",
   },
@@ -43,6 +47,9 @@ const CHAPTERS = [
     year: "The shift",
     icon: Layers,
     title: "I went and learned something better",
+    image: "/story/chapter-3-microcement-mid-job.png",
+    imageAlt: "A bathroom mid-installation — microcement walls, a hand-formed sink, terrazzo-look floor, and tools still on the ground",
+    imageCaption: "Mid-job. Microcement walls, hand-formed sink, tools still on the floor.",
     body:
       "I started telling clients straight up: tile is the wrong material for this climate. They'd ask what to use instead — and I didn't have a real answer. So I found one. I trained on European microcement systems from Spain and Italy. I studied authentic Moroccan tadelakt the way it's been hand-burnished in hammams for 800 years. I learned Venetian plaster, sculpted rockscape walls, and how to make all of it work in old NOLA houses that shift, sink, and sweat.",
   },
@@ -50,6 +57,9 @@ const CHAPTERS = [
     year: "Today",
     icon: Sparkles,
     title: "Still one craftsman. Just a sharper craft.",
+    image: "/story/chapter-4-finished-shower.jpg",
+    imageAlt: "A finished seamless microcement shower with an LED-lit niche and a brick accent detail",
+    imageCaption: "A recent finish — seamless microcement, LED niche, brick accent.",
     body:
       "Now this is all I do. Microcement, tadelakt, rockscape, seamless — full stop. Same phone. Same truck. Same guy showing up. The handyman roots are still here — I still help clients with smaller fixes while I'm on a bigger job — but the main work is high-end finish craft that outlasts the humidity and looks like nothing else in the city. If you called me five years ago to patch drywall and you call me today for a wet-room, you're still getting the same person on the other end.",
   },
@@ -134,6 +144,27 @@ export default function HowIStartedPage() {
                   <p className="text-base text-foreground/75 leading-relaxed max-w-2xl">
                     {c.body}
                   </p>
+
+                  {c.image && (
+                    <figure
+                      className="mt-6 max-w-2xl"
+                      data-testid={`story-chapter-${i}-figure`}
+                    >
+                      <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-[#F5F1EA] shadow-sm">
+                        <img
+                          src={c.image}
+                          alt={c.imageAlt}
+                          loading="lazy"
+                          className="w-full h-auto max-h-[520px] object-cover"
+                        />
+                      </div>
+                      {c.imageCaption && (
+                        <figcaption className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                          {c.imageCaption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  )}
                 </motion.article>
               ))}
             </div>
