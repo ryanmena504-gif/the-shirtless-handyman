@@ -11,7 +11,7 @@ export const TrustStrip = ({ variant = "dark" }) => {
     { icon: Star, label: "4.9★ Local Reviews" },
     { icon: MapPin, label: "Born in NOLA" },
     { icon: Clock, label: "Avg. response under 1 hr" },
-    { icon: Award, label: "200+ NOLA Homes" },
+    { icon: Award, label: "50+ NOLA Homes" },
   ];
 
   return (

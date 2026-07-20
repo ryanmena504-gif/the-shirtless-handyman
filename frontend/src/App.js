@@ -20,6 +20,7 @@ import LocalServiceRoute from "./pages/LocalServiceRoute";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
+import HowIStartedPage from "./pages/HowIStartedPage";
 import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 
@@ -67,6 +68,7 @@ function App() {
 
             {/* About */}
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/how-i-started" element={<HowIStartedPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

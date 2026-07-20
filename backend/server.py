@@ -1020,8 +1020,9 @@ async def create_booking(data: BookingRequest):
     await db.bookings.insert_one(booking)
 
     # Also persist as a lead so it flows through the normal lead pipeline + follow-ups.
+    # Share the booking's id so DELETE /admin/bookings/{id} auto-cleans both.
     lead_doc = {
-        "id": str(uuid.uuid4()),
+        "id": booking["id"],
         "name": name,
         "phone": phone,
         "email": booking["email"],

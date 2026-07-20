@@ -232,36 +232,26 @@ export default function HomePage() {
                 I'm Ryan Mena. I install <strong className="text-white font-medium">microcement, tadelakt, and custom rockscape walls</strong> in NOLA homes — over your existing tile, with zero grout, zero seams, and zero demolition. One craftsman. One continuous surface. Built to outlast the humidity.
               </motion.p>
 
-              {/* CTAs */}
+              {/* CTAs — one clear, singular action so visitors know exactly what this site does */}
               <motion.div
-                className="flex flex-wrap gap-3"
+                className="flex flex-col items-start gap-3"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.3 }}
               >
                 <MagneticButton>
                   <Button
-                    onClick={() => {
-                      const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
-                      formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
-                      formEl?.querySelector('input')?.focus();
-                    }}
-                    className="h-13 px-7 rounded-full bg-[#D97757] text-white font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-                    data-testid="hero-quote-btn"
+                    onClick={() => navigate("/upload")}
+                    className="h-14 px-9 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-xl shadow-[#D97757]/30 hover:bg-[#C56545]"
+                    data-testid="hero-studio-btn"
                   >
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Request a Bathroom Assessment
+                    <Sparkles className="w-5 h-5 mr-2.5" />
+                    Try The Seamless Studio
                   </Button>
                 </MagneticButton>
-                <Button
-                  onClick={() => navigate("/upload")}
-                  variant="outline"
-                  className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium"
-                  data-testid="hero-studio-btn"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  See Your Space — Try The Studio
-                </Button>
+                <p className="text-sm text-white/50">
+                  Upload a photo of your space — see it redesigned in ~60 seconds. Free.
+                </p>
               </motion.div>
 
               <motion.p
@@ -1347,6 +1337,7 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
               <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">My Work</button>
+              <button onClick={() => navigate("/how-i-started")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-how-i-started">How I Started</button>
               <button onClick={() => navigate("/faq")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-faq">FAQ</button>
               <button onClick={() => navigate("/book")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-book">Book</button>
               <button onClick={() => navigate("/contractor/register")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-signup">Contractor Sign Up</button>
