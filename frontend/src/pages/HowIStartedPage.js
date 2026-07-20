@@ -39,7 +39,9 @@ const CHAPTERS = [
     year: "The turn",
     icon: Wrench,
     title: "Bathrooms kept finding me",
-    image: null,
+    image: "/story/chapter-2-tile-bathroom.jpg",
+    imageAlt: "A patterned encaustic-tile bathroom Ryan installed — glass shower door, decorative floor tile, wall niche",
+    imageCaption: "One of my tile jobs — patterned encaustic floor, glass shower, wall niche.",
     body:
       "Handyman jobs led to bathroom jobs. Bathroom jobs led to tile work. I spent years installing tile across the metro — Lakeview, Uptown, Metairie, Bywater. Good work at fair prices. But every ten years I'd get called back to the same houses. Same story every time: black grout lines, peeling caulk, mold behind the drywall, humidity chewing through the seams. The tile was fine. Everything holding it together wasn't.",
   },
@@ -155,7 +157,7 @@ export default function HowIStartedPage() {
                           src={c.image}
                           alt={c.imageAlt}
                           loading="lazy"
-                          className="w-full h-auto max-h-[520px] object-cover"
+                          className="block w-full h-auto"
                         />
                       </div>
                       {c.imageCaption && (
