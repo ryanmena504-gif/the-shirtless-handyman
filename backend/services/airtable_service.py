@@ -238,6 +238,8 @@ class AirtableOpportunityService:
         self._lock = threading.Lock()
         self._cache: Dict[str, Dict[str, Any]] = {}
         self._last_refresh: float = 0.0
+        self._refresh_started: float = 0.0
+        self._refreshing: bool = False
         self._readonly_field_names: set = set()
         self._field_map: Dict[str, str] = {}  # airtable name -> snake_case
         self._reverse_map: Dict[str, str] = {}  # snake_case -> airtable name
@@ -391,10 +393,15 @@ class AirtableOpportunityService:
         now = time.time()
         if not force and (now - self._last_refresh) < self._cache_ttl and self._cache:
             return
+        with self._lock:
+            self._refreshing = True
+            self._refresh_started = now
         try:
             records = self._table.all()
         except Exception:
             log.exception("Airtable: list failed")
+            with self._lock:
+                self._refreshing = False
             raise
         new_cache: Dict[str, Dict[str, Any]] = {}
         for r in records:
@@ -405,6 +412,30 @@ class AirtableOpportunityService:
         with self._lock:
             self._cache = new_cache
             self._last_refresh = time.time()
+            self._refreshing = False
+
+    def cache_status(self) -> Dict[str, Any]:
+        now = time.time()
+        with self._lock:
+            last = self._last_refresh
+            refreshing = self._refreshing
+            count = len(self._cache)
+        age = (now - last) if last else None
+        stale = age is None or age > self._cache_ttl
+        return {
+            "backend": self.backend_name,
+            "count": count,
+            "last_refresh": datetime.fromtimestamp(last, tz=timezone.utc).isoformat() if last else None,
+            "age_seconds": age,
+            "ttl_seconds": self._cache_ttl,
+            "next_refresh_in": max(0.0, self._cache_ttl - age) if age is not None else 0.0,
+            "is_stale": stale,
+            "is_refreshing": refreshing,
+        }
+
+    def force_refresh(self) -> Dict[str, Any]:
+        self._refresh_cache(force=True)
+        return self.cache_status()
 
     def _all_cached(self) -> List[Dict[str, Any]]:
         self._refresh_cache()

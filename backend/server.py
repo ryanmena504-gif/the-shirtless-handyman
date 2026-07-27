@@ -187,6 +187,18 @@ async def schema():
     return {"backend": svc.backend_name, "note": "No schema — running on sample data."}
 
 
+@api_router.get("/cache-status")
+async def cache_status():
+    svc = get_opportunity_service()
+    return svc.cache_status()
+
+
+@api_router.post("/cache-refresh")
+async def cache_refresh():
+    svc = get_opportunity_service()
+    return svc.force_refresh()
+
+
 @api_router.post("/admin/reload")
 async def reload_service():
     reset_opportunity_service()

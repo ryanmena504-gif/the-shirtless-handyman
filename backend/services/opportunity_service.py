@@ -51,6 +51,22 @@ class SampleOpportunityService:
             o["id"]: deepcopy(o) for o in SAMPLE_OPPORTUNITIES
         }
 
+    def cache_status(self) -> Dict[str, Any]:
+        # Sample data lives in-process forever; report as fresh.
+        return {
+            "backend": self.backend_name,
+            "count": len(self._data),
+            "last_refresh": datetime.now(timezone.utc).isoformat(),
+            "age_seconds": 0,
+            "ttl_seconds": None,
+            "next_refresh_in": None,
+            "is_stale": False,
+            "is_refreshing": False,
+        }
+
+    def force_refresh(self) -> Dict[str, Any]:
+        return self.cache_status()
+
     # ---------- reads ----------
     def all(self) -> List[Dict[str, Any]]:
         return list(self._data.values())

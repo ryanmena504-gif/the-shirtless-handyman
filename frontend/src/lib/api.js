@@ -31,4 +31,6 @@ export const api = {
       .then((r) => r.data),
   config: () => client.get("/config").then((r) => r.data),
   schema: () => client.get("/schema").then((r) => r.data),
+  cacheStatus: () => client.get("/cache-status").then((r) => r.data),
+  refreshCache: () => client.post("/cache-refresh").then((r) => r.data),
 };

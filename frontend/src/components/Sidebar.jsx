@@ -10,6 +10,7 @@ import {
   Settings as SettingsIcon,
 } from "lucide-react";
 import BloodhoundLogo from "@/components/BloodhoundLogo";
+import LiveRefreshIndicator from "@/components/LiveRefreshIndicator";
 
 const nav = [
   { to: "/", label: "Command Center", icon: LayoutDashboard, code: "CC" },
@@ -65,18 +66,7 @@ export const Sidebar = () => (
     </nav>
 
     <div className="p-4 border-t bh-hairline">
-      <div className="bh-surface-2 rounded p-3">
-        <div className="mono text-[9px] uppercase tracking-widest text-neutral-500">
-          Live Signal Source
-        </div>
-        <div className="mt-1.5 flex items-center gap-2 text-xs text-neutral-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 bh-pulse-dot" />
-          New Orleans permits
-        </div>
-        <div className="mono text-[10px] text-neutral-500 mt-1">
-          onestop.nola.gov
-        </div>
-      </div>
+      <LiveRefreshIndicator />
     </div>
   </aside>
 );
