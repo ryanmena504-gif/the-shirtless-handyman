@@ -168,27 +168,34 @@ def _first(value: Any) -> Optional[Any]:
 
 
 def _normalize_priority_band(v: Any) -> Optional[str]:
-    """Map any Airtable formula output to A/B/C/D bands for UI coloring."""
+    """Map any Airtable formula output to A/B/C/D bands for UI coloring.
+    Aligned to the Bloodhound base band vocabulary:
+      🟢 High Priority     -> A
+      🟡 Good Opportunity  -> B
+      🟠 Research First    -> C
+      🔴 Low Priority      -> D
+      ⚪ Not Scored Yet    -> None (no band)
+    """
     if v is None or v == "":
         return None
     s = str(v).lower()
+    if "not scored" in s or "unscored" in s:
+        return None
     # Order matters: check specific first.
     if "medium-high" in s or "medium high" in s:
         return "B"
     if "high" in s:
         return "A"
+    if "good" in s:
+        return "B"
     if "medium" in s:
+        return "C"
+    if "research" in s:
         return "C"
     if "low" in s:
         return "D"
-    if "a" == s.strip() or " a " in f" {s} ":
-        return "A"
-    if "b" == s.strip():
-        return "B"
-    if "c" == s.strip():
-        return "C"
-    if "d" == s.strip():
-        return "D"
+    if s.strip() in {"a", "b", "c", "d"}:
+        return s.strip().upper()
     return None
 
 
