@@ -86,14 +86,25 @@ const KV = ({ label, value, mono, testId }) => (
 
 const Meter = ({ label, level }) => {
   const map = { High: 3, Hot: 3, Direct: 3, Medium: 2, Warm: 2, "Warm intro": 2, Low: 1, Cold: 1, Indirect: 1, Unknown: 0, "Not confirmed": 0 };
-  const val = map[level] ?? 0;
+  let val = 0;
+  let display = level ?? "—";
+  if (typeof level === "number") {
+    // Numeric score — normalise: 0–3 direct, 0–10 tenths, 0–100 percent.
+    const n = level;
+    if (n <= 3) val = n;
+    else if (n <= 10) val = n >= 7 ? 3 : n >= 4 ? 2 : n >= 1 ? 1 : 0;
+    else val = n >= 70 ? 3 : n >= 40 ? 2 : n >= 1 ? 1 : 0;
+    display = n;
+  } else if (typeof level === "string") {
+    val = map[level] ?? 0;
+  }
   const color =
     val === 3 ? "bg-emerald-500" : val === 2 ? "bg-amber-500" : val === 1 ? "bg-red-500/70" : "bg-neutral-700";
   return (
     <div>
       <div className="flex items-center justify-between">
         <span className="mono text-[10px] uppercase tracking-widest text-neutral-500">{label}</span>
-        <span className="text-xs text-neutral-200">{level || "—"}</span>
+        <span className="text-xs text-neutral-200">{display}</span>
       </div>
       <div className="mt-1.5 flex gap-1">
         {[1, 2, 3].map((i) => (

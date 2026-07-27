@@ -30,56 +30,59 @@ log = logging.getLogger("bloodhound.airtable")
 
 
 # Airtable field name -> snake_case internal key.
-# Kept human-readable; entries missing from the live schema are silently dropped.
+# ALIGNED to the real Bloodhound base (appuyAHSSzJrPWlec / table Opportunities).
+# Note: user's schema uses sentence-case with lowercase after the first word,
+# and "Ryans decision" is stored without an apostrophe.
 KNOWN_FIELD_MAP: Dict[str, str] = {
-    "Opportunity ID": "opportunity_id",
-    "Opportunity Name": "name",
+    "Opportunity id": "opportunity_id",
+    "Opportunity name": "name",
     "Source": "source",
-    "Signal Type": "signal_type",
-    "Project Type": "project_type",
-    "Project Address": "project_address",
-    "Permit Number": "permit_number",
-    "Permit Source": "permit_source",
-    "Permit Filing Date": "permit_filing_date",
-    "Permit Description": "permit_description",
-    "Construction Value": "construction_value",
-    "Estimated Value": "estimated_value",
-    "Decision Maker": "decision_maker",
+    "Signal type": "signal_type",
+    "Project type": "project_type",
+    "Project address": "project_address",
+    "Permit number": "permit_number",
+    "Estimated value": "estimated_value",
+    "Decision maker": "decision_maker",
     "Phone": "phone",
+    "Opportunity fit": "opportunity_fit",
+    "Momentum": "momentum",
+    "Reachability": "reachability",
+    "Contact confidence": "contact_confidence",
+    "Evidence confidence": "evidence_confidence",
+    "Evidence summary": "evidence_summary",
+    "Recommendation reason": "recommendation_reason",
+    "Missing information": "missing_information",
+    "Risk flags": "risk_flags",
+    "Next best action": "next_best_action",
+    "Recommended action": "recommended_action",
+    "Recommended action code": "recommended_action_code",
+    "Daily mission": "daily_mission",
+    "Daily mission code": "daily_mission_code",
+    "Bloodhound priority score": "priority_score",
+    "Priority band": "priority_band",
+    "Status": "status",
+    "Next follow up": "next_follow_up",
+    "Ryans decision": "ryans_decision",
+    "Outcome": "outcome",
+    "Last reviewed": "last_reviewed",
+    # Retained as optional if the base ever adds them:
     "Email": "email",
     "Company": "company",
     "Applicant": "applicant",
     "Contractor": "contractor",
     "Owner": "owner",
-    "Opportunity Fit": "opportunity_fit",
-    "Momentum": "momentum",
-    "Reachability": "reachability",
-    "Contact Confidence": "contact_confidence",
-    "Evidence Confidence": "evidence_confidence",
-    "Evidence Summary": "evidence_summary",
-    "Recommendation Reason": "recommendation_reason",
-    "Missing Information": "missing_information",
-    "Risk Flags": "risk_flags",
-    "Next Best Action": "next_best_action",
-    "Recommended Action": "recommended_action",
-    "Recommended Action Code": "recommended_action_code",
-    "Daily Mission": "daily_mission",
-    "Daily Mission Code": "daily_mission_code",
-    "Bloodhound Priority Score": "priority_score",
-    "Priority Band": "priority_band",
-    "Status": "status",
-    "Created Time": "created_time_field",  # separate from Airtable's implicit createdTime
-    "Next Follow Up": "next_follow_up",
-    "Ryan's Decision": "ryans_decision",
-    "Outcome": "outcome",
+    "Permit source": "permit_source",
+    "Permit filing date": "permit_filing_date",
+    "Permit description": "permit_description",
+    "Construction value": "construction_value",
 }
 
 # Only these Airtable field names may ever be written from the app.
 # Even if listed here, formula/computed fields are stripped at write time.
 EDITABLE_FIELDS = {
     "Status",
-    "Ryan's Decision",
-    "Next Follow Up",
+    "Ryans decision",
+    "Next follow up",
     "Outcome",
 }
 
@@ -143,6 +146,65 @@ def _first(value: Any) -> Optional[Any]:
     if isinstance(value, list):
         return value[0] if value else None
     return value
+
+
+def _normalize_priority_band(v: Any) -> Optional[str]:
+    """Map any Airtable formula output to A/B/C/D bands for UI coloring."""
+    if v is None or v == "":
+        return None
+    s = str(v).lower()
+    # Order matters: check specific first.
+    if "medium-high" in s or "medium high" in s:
+        return "B"
+    if "high" in s:
+        return "A"
+    if "medium" in s:
+        return "C"
+    if "low" in s:
+        return "D"
+    if "a" == s.strip() or " a " in f" {s} ":
+        return "A"
+    if "b" == s.strip():
+        return "B"
+    if "c" == s.strip():
+        return "C"
+    if "d" == s.strip():
+        return "D"
+    return None
+
+
+_MISSION_KEYWORDS = [
+    ("Call Today", ("call today", "call now", "call the")),
+    ("Send Text", ("text", "sms")),
+    ("Send Email", ("email",)),
+    ("Research First", ("research",)),
+    ("Visit Property", ("visit", "site visit", "walk")),
+    ("Prepare Estimate", ("estimate", "quote", "bid")),
+    ("Ask for Referral", ("referral", "intro", "introduction")),
+    ("Follow Up", ("follow up", "follow-up", "check in", "check-in")),
+    ("Wait", ("wait", "not assigned", "unassigned", "hold", "monitor")),
+]
+
+
+def _normalize_daily_mission(v: Any) -> str:
+    """Map any Airtable formula output to one of the 9 mission buckets."""
+    if v is None or v == "":
+        return "Wait"
+    s = str(v).lower()
+    for bucket, keywords in _MISSION_KEYWORDS:
+        if any(k in s for k in keywords):
+            return bucket
+    return "Wait"
+
+
+def _strip_emoji_prefix(v: Any) -> Any:
+    """For display, strip a leading emoji+space if present."""
+    if not isinstance(v, str):
+        return v
+    parts = v.split(" ", 1)
+    if len(parts) == 2 and not parts[0].isascii():
+        return parts[1].strip()
+    return v
 
 
 class AirtableOpportunityService:
@@ -239,6 +301,19 @@ class AirtableOpportunityService:
                   "status", "source", "signal_type", "project_type"):
             if isinstance(opp.get(k), list):
                 opp[k] = _first(opp[k])
+
+        # Preserve the raw formula outputs (may include emoji labels) and
+        # provide UI-normalised values.
+        opp["priority_band_raw"] = opp.get("priority_band")
+        opp["priority_band"] = _normalize_priority_band(opp["priority_band_raw"])
+
+        opp["daily_mission_raw"] = opp.get("daily_mission")
+        opp["daily_mission"] = _normalize_daily_mission(opp["daily_mission_raw"])
+
+        # Also strip a leading emoji from status so pipeline stages match.
+        if isinstance(opp.get("status"), str):
+            opp["status_raw"] = opp["status"]
+            opp["status"] = _strip_emoji_prefix(opp["status"])
 
         # Ensure numeric types where sensible
         for k in ("priority_score", "estimated_value", "construction_value"):
