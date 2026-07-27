@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime, timezone
 
-from services.opportunity_service import get_opportunity_service
+from services.opportunity_service import get_opportunity_service, reset_opportunity_service
 
 
 ROOT_DIR = Path(__file__).parent
@@ -34,6 +34,13 @@ class MissionUpdate(BaseModel):
 class ActivityEntry(BaseModel):
     type: str
     note: Optional[str] = None
+
+
+class FieldUpdate(BaseModel):
+    status: Optional[str] = None
+    ryans_decision: Optional[str] = None
+    next_follow_up: Optional[str] = None
+    outcome: Optional[str] = None
 
 
 @api_router.get("/")
@@ -135,16 +142,56 @@ async def add_activity(opp_id: str, body: ActivityEntry):
     return updated
 
 
+@api_router.patch("/opportunities/{opp_id}/fields")
+async def update_fields(opp_id: str, body: FieldUpdate):
+    svc = get_opportunity_service()
+    payload = {k: v for k, v in body.model_dump(exclude_none=True).items()}
+    if not payload:
+        raise HTTPException(status_code=400, detail="No editable fields provided")
+    if hasattr(svc, "update_fields"):
+        updated = svc.update_fields(opp_id, payload)
+    else:
+        # Sample backend: apply supported keys one-by-one
+        updated = svc.get(opp_id)
+        if not updated:
+            raise HTTPException(status_code=404, detail="Opportunity not found")
+        if "status" in payload:
+            updated = svc.update_status(opp_id, payload["status"])
+        for k in ("ryans_decision", "next_follow_up", "outcome"):
+            if k in payload and updated is not None:
+                updated[k] = payload[k]
+    if not updated:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return updated
+
+
 @api_router.get("/config")
 async def config():
+    svc = get_opportunity_service()
     return {
         "airtable_configured": bool(
             os.environ.get("AIRTABLE_API_KEY")
             and os.environ.get("AIRTABLE_BASE_ID")
             and os.environ.get("AIRTABLE_OPPORTUNITIES_TABLE")
         ),
-        "backend": get_opportunity_service().backend_name,
+        "airtable_enabled": os.environ.get("AIRTABLE_ENABLED", "").lower() == "true",
+        "backend": svc.backend_name,
     }
+
+
+@api_router.get("/schema")
+async def schema():
+    svc = get_opportunity_service()
+    if hasattr(svc, "schema_report"):
+        return svc.schema_report()
+    return {"backend": svc.backend_name, "note": "No schema — running on sample data."}
+
+
+@api_router.post("/admin/reload")
+async def reload_service():
+    reset_opportunity_service()
+    svc = get_opportunity_service()
+    return {"ok": True, "backend": svc.backend_name}
 
 
 app.include_router(api_router)

@@ -1,8 +1,10 @@
 import React from "react";
 import { Bell, Search } from "lucide-react";
 import BloodhoundLogo from "@/components/BloodhoundLogo";
+import { useCommandPalette } from "@/layouts/AppLayout";
 
 export const TopHeader = ({ pageTitle, subtitle, right, mobileMenu }) => {
+  const palette = useCommandPalette();
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-US", {
     weekday: "short",
@@ -34,17 +36,30 @@ export const TopHeader = ({ pageTitle, subtitle, right, mobileMenu }) => {
 
         <div className="flex-1" />
 
-        <div className="hidden md:flex items-center gap-2 bh-surface-2 rounded px-3 h-9 min-w-[240px] max-w-sm">
+        <button
+          type="button"
+          onClick={() => palette.open()}
+          data-testid="global-search"
+          className="hidden md:flex items-center gap-2 bh-surface-2 rounded px-3 h-9 min-w-[240px] max-w-sm text-left hover:bg-white/[0.05] transition-colors duration-150"
+        >
           <Search size={14} className="text-neutral-500" />
-          <input
-            data-testid="global-search"
-            placeholder="Search addresses, names, permit #…"
-            className="bg-transparent outline-none text-sm flex-1 text-neutral-200 placeholder:text-neutral-600"
-          />
-          <span className="mono text-[10px] text-neutral-600 border bh-hairline rounded px-1">
+          <span className="text-sm flex-1 text-neutral-500">
+            Search opportunities, addresses, permits…
+          </span>
+          <span className="mono text-[10px] text-neutral-500 border bh-hairline rounded px-1.5 py-0.5">
             ⌘K
           </span>
-        </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => palette.open()}
+          data-testid="mobile-search-btn"
+          aria-label="Open command palette"
+          className="md:hidden w-9 h-9 flex items-center justify-center rounded bh-surface-2 hover:bg-white/[0.05] transition-colors duration-150"
+        >
+          <Search size={15} className="text-neutral-300" />
+        </button>
 
         <div className="hidden lg:flex items-center gap-3 text-xs text-neutral-400">
           <div className="mono uppercase tracking-widest text-[10px]">

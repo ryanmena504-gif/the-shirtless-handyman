@@ -7,11 +7,15 @@ are configured, `get_opportunity_service()` will return an AirtableOpportunitySe
 instead. No UI code needs to change.
 """
 import os
+import logging
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone
 from copy import deepcopy
 
 from data.sample_opportunities import SAMPLE_OPPORTUNITIES
+from services.airtable_service import build_airtable_service_from_env
+
+log = logging.getLogger("bloodhound.service")
 
 
 PIPELINE_STATUSES = [
@@ -179,32 +183,27 @@ class SampleOpportunityService:
         })
 
 
-class AirtableOpportunityService(SampleOpportunityService):
-    """Placeholder Airtable-backed service.
-    Reads env vars but currently delegates to sample data.
-    Wire in `pyairtable` here when Airtable is ready to be activated.
+_service_singleton = None
+
+
+def get_opportunity_service():
+    """Return the active opportunity service.
+    Prefers a live Airtable-backed service when AIRTABLE_ENABLED=true and
+    credentials are present; otherwise falls back to sample data.
     """
-    backend_name = "airtable"
-
-    def __init__(self):
-        super().__init__()
-        self.api_key = os.environ.get("AIRTABLE_API_KEY")
-        self.base_id = os.environ.get("AIRTABLE_BASE_ID")
-        self.table = os.environ.get("AIRTABLE_OPPORTUNITIES_TABLE")
-        # TODO: initialize pyairtable client and map records here.
-
-
-_service_singleton: Optional[SampleOpportunityService] = None
-
-
-def get_opportunity_service() -> SampleOpportunityService:
     global _service_singleton
     if _service_singleton is None:
-        if (os.environ.get("AIRTABLE_API_KEY")
-                and os.environ.get("AIRTABLE_BASE_ID")
-                and os.environ.get("AIRTABLE_OPPORTUNITIES_TABLE")
-                and os.environ.get("AIRTABLE_ENABLED", "").lower() == "true"):
-            _service_singleton = AirtableOpportunityService()
+        airtable = build_airtable_service_from_env()
+        if airtable is not None:
+            log.info("Opportunity service: using live Airtable backend")
+            _service_singleton = airtable
         else:
+            log.info("Opportunity service: using in-memory sample backend")
             _service_singleton = SampleOpportunityService()
     return _service_singleton
+
+
+def reset_opportunity_service():
+    """Force the next call to rebuild the service. Handy after env changes."""
+    global _service_singleton
+    _service_singleton = None

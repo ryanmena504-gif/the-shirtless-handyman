@@ -23,9 +23,12 @@ export const api = {
     client
       .patch(`/opportunities/${id}/mission`, { daily_mission })
       .then((r) => r.data),
+  updateFields: (id, patch) =>
+    client.patch(`/opportunities/${id}/fields`, patch).then((r) => r.data),
   addActivity: (id, type, note) =>
     client
       .post(`/opportunities/${id}/activity`, { type, note })
       .then((r) => r.data),
   config: () => client.get("/config").then((r) => r.data),
+  schema: () => client.get("/schema").then((r) => r.data),
 };

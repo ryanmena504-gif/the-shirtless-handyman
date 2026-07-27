@@ -1,0 +1,35 @@
+{
+  "summary": "Iteration 2 tests all pass. Backend: 27/27 pytest cases green — includes 8 new tests (GET /api/schema returns sample note, POST /api/admin/reload resets singleton and preserves count=15, GET /api/config airtable_enabled=false, PATCH /api/opportunities/opp_004/fields with all 4 fields returns 200 and persists across GET, PATCH with empty body → 400, PATCH missing_id → 404, structural checks on AirtableOpportunityService (KNOWN_FIELD_MAP snake_case mapping, EDITABLE_FIELDS is exactly the 4 whitelisted, READONLY_FIELD_TYPES includes formula/rollup/lookup/createdTime/lastModifiedTime), and build_airtable_service_from_env() returns None with AIRTABLE_ENABLED=false so backend stays on sample). Frontend: global-search button opens palette, palette-input renders, Escape closes, Ctrl+K opens globally, palette search for 'chartres' returns palette-opp-opp_001, palette Pages group navigates to /settings, /opportunities/opp_004 renders decision-panel with all 3 inputs + save-next-follow-up, changing input-ryans-decision to 'Pursue' fires PATCH and success toast shows, outcome→Pending persists, next-follow-up 2026-04-15 saves and persists across reload, Settings Section 1 renders 4 rows with airtable-pill='Sample' and settings-reload button works. No console errors of severity 'error' beyond Radix Dialog a11y warning.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Settings.Pill", "issue": "Original Pill component did not spread extra props, so data-testid='airtable-pill' was dropped from DOM. Fixed by spreading ...rest on the span.", "selector": "[data-testid=airtable-pill]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "CommandPalette (Radix Dialog)", "issues": ["Radix warns: 'DialogContent requires a DialogTitle for accessibility'. Not a functional break but shows as console.error. Wrap with VisuallyHidden DialogTitle in CommandPalette.jsx."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Add a VisuallyHidden <DialogTitle> inside CommandPalette's DialogContent to silence the Radix a11y console.error (screen-reader accessibility improvement)."
+  ],
+  "critical_code_review_comments": [
+    "server.py update_fields fallback for the sample backend manually mutates the dict for ryans_decision/next_follow_up/outcome but only routes 'status' through update_status (which appends the activity_timeline entry). Non-status field changes therefore skip the timeline. Not a spec violation (writes are only supposed to persist), but note the inconsistency.",
+    "SampleOpportunityService doesn't implement update_fields, so the server.py fallback branch is what handles PATCH /fields for the running backend. When Airtable is enabled and AirtableOpportunityService.update_fields is used, sample fallback dead-code paths will diverge — consider centralising by adding update_fields to SampleOpportunityService for parity.",
+    "Settings Pill component was not forwarding data-testid — a common oversight for wrapper components. Enforce a lint rule or convention to spread `...rest` on presentational atoms."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py",
+    "/app/frontend/src/pages/Settings.jsx"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "N/A (no auth)",
+  "seed_data_creation": "None — 15 sample opportunities. PATCH tests mutated opp_003 (status=Ready), opp_005 (mission=Follow Up), opp_004 (ryans_decision=Pursue, outcome=Pending, next_follow_up=2026-04-15). Backend restart / /api/admin/reload resets state.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Extended /app/backend/tests/backend_test.py to 27 tests. Airtable module tested structurally only (AIRTABLE_ENABLED=false); when the user drops real creds, add live schema/CRUD tests. Fixed Settings Pill to forward data-testid so airtable-pill is discoverable. Remaining minor issue: Radix Dialog a11y warning from CommandPalette — cosmetic console.error, does not affect functionality."
+}

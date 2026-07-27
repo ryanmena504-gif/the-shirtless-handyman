@@ -5,6 +5,7 @@ import TopHeader from "@/components/TopHeader";
 import { PriorityBand, PriorityScore } from "@/components/PriorityBadge";
 import StatusBadge from "@/components/StatusBadge";
 import MissionBadge from "@/components/MissionBadge";
+import EditableDecisionPanel from "@/components/EditableDecisionPanel";
 import { api } from "@/lib/api";
 import { fmtMoney, fmtMoneyFull, fmtDate, fmtDateTime, sourceLabel } from "@/lib/formatters";
 import {
@@ -377,6 +378,8 @@ const OpportunityDetail = () => {
                 />
               </div>
             </section>
+
+            <EditableDecisionPanel opp={opp} onUpdated={setOpp} />
           </div>
 
           {/* Right col: Relationships + Activity */}
