@@ -1,0 +1,84 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import clsx from "clsx";
+import {
+  LayoutDashboard,
+  Target,
+  Crosshair,
+  Network,
+  Radar,
+  Settings as SettingsIcon,
+} from "lucide-react";
+import BloodhoundLogo from "@/components/BloodhoundLogo";
+
+const nav = [
+  { to: "/", label: "Command Center", icon: LayoutDashboard, code: "CC" },
+  { to: "/opportunities", label: "Opportunities", icon: Crosshair, code: "OP" },
+  { to: "/missions", label: "Today's Missions", icon: Target, code: "MS" },
+  { to: "/relationships", label: "Relationships", icon: Network, code: "RE" },
+  { to: "/intelligence", label: "Intelligence", icon: Radar, code: "IN" },
+  { to: "/settings", label: "Settings", icon: SettingsIcon, code: "SE" },
+];
+
+export const Sidebar = () => (
+  <aside
+    data-testid="sidebar"
+    className="hidden lg:flex fixed inset-y-0 left-0 w-60 flex-col bh-surface border-r bh-hairline z-30"
+  >
+    <div className="px-5 pt-6 pb-4 border-b bh-hairline">
+      <BloodhoundLogo />
+    </div>
+
+    <nav className="flex-1 px-3 py-5 space-y-0.5">
+      {nav.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          end={item.to === "/"}
+          data-testid={`nav-${item.label.toLowerCase().replace(/[^a-z]+/g, "-")}`}
+          className={({ isActive }) =>
+            clsx(
+              "group flex items-center gap-3 px-3 py-2 rounded text-sm transition-colors duration-150",
+              isActive
+                ? "bg-white/[0.04] text-neutral-100"
+                : "text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.03]",
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <span
+                className={clsx(
+                  "w-1 h-5 rounded-full transition-colors duration-150",
+                  isActive ? "bg-amber-500" : "bg-transparent",
+                )}
+              />
+              <item.icon size={15} strokeWidth={2} />
+              <span className="flex-1">{item.label}</span>
+              <span className="mono text-[9px] text-neutral-600 tracking-widest">
+                {item.code}
+              </span>
+            </>
+          )}
+        </NavLink>
+      ))}
+    </nav>
+
+    <div className="p-4 border-t bh-hairline">
+      <div className="bh-surface-2 rounded p-3">
+        <div className="mono text-[9px] uppercase tracking-widest text-neutral-500">
+          Live Signal Source
+        </div>
+        <div className="mt-1.5 flex items-center gap-2 text-xs text-neutral-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 bh-pulse-dot" />
+          New Orleans permits
+        </div>
+        <div className="mono text-[10px] text-neutral-500 mt-1">
+          onestop.nola.gov
+        </div>
+      </div>
+    </div>
+  </aside>
+);
+
+export default Sidebar;

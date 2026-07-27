@@ -1,72 +1,152 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
-import uuid
+from pydantic import BaseModel
+from typing import Optional, List
 from datetime import datetime, timezone
+
+from services.opportunity_service import get_opportunity_service
 
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
-# Create the main app without a prefix
-app = FastAPI()
-
-# Create a router with the /api prefix
+app = FastAPI(title="Bloodhound Intelligence API")
 api_router = APIRouter(prefix="/api")
 
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("bloodhound")
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class StatusUpdate(BaseModel):
+    status: str
 
-# Add your routes to the router instead of directly to app
+
+class MissionUpdate(BaseModel):
+    daily_mission: str
+
+
+class ActivityEntry(BaseModel):
+    type: str
+    note: Optional[str] = None
+
+
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"service": "Bloodhound Intelligence API", "status": "online"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.get("/health")
+async def health():
+    svc = get_opportunity_service()
+    return {"ok": True, "backend": svc.backend_name, "count": svc.count()}
 
-# Include the router in the main app
+
+@api_router.get("/opportunities")
+async def list_opportunities(
+    source: Optional[str] = None,
+    status: Optional[str] = None,
+    priority_band: Optional[str] = None,
+    daily_mission: Optional[str] = None,
+    project_type: Optional[str] = None,
+    min_score: Optional[float] = None,
+    q: Optional[str] = None,
+):
+    svc = get_opportunity_service()
+    return svc.list(
+        source=source,
+        status=status,
+        priority_band=priority_band,
+        daily_mission=daily_mission,
+        project_type=project_type,
+        min_score=min_score,
+        q=q,
+    )
+
+
+@api_router.get("/opportunities/summary")
+async def summary():
+    svc = get_opportunity_service()
+    return svc.summary()
+
+
+@api_router.get("/opportunities/missions")
+async def missions_grouped():
+    svc = get_opportunity_service()
+    return svc.group_by_mission()
+
+
+@api_router.get("/opportunities/pipeline")
+async def pipeline():
+    svc = get_opportunity_service()
+    return svc.pipeline_counts()
+
+
+@api_router.get("/opportunities/recent")
+async def recent(limit: int = 10):
+    svc = get_opportunity_service()
+    return svc.recent(limit=limit)
+
+
+@api_router.get("/opportunities/top")
+async def top(limit: int = 10):
+    svc = get_opportunity_service()
+    return svc.top(limit=limit)
+
+
+@api_router.get("/opportunities/{opp_id}")
+async def get_opportunity(opp_id: str):
+    svc = get_opportunity_service()
+    opp = svc.get(opp_id)
+    if not opp:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return opp
+
+
+@api_router.patch("/opportunities/{opp_id}/status")
+async def update_status(opp_id: str, body: StatusUpdate):
+    svc = get_opportunity_service()
+    updated = svc.update_status(opp_id, body.status)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return updated
+
+
+@api_router.patch("/opportunities/{opp_id}/mission")
+async def update_mission(opp_id: str, body: MissionUpdate):
+    svc = get_opportunity_service()
+    updated = svc.update_mission(opp_id, body.daily_mission)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return updated
+
+
+@api_router.post("/opportunities/{opp_id}/activity")
+async def add_activity(opp_id: str, body: ActivityEntry):
+    svc = get_opportunity_service()
+    updated = svc.add_activity(opp_id, body.type, body.note)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return updated
+
+
+@api_router.get("/config")
+async def config():
+    return {
+        "airtable_configured": bool(
+            os.environ.get("AIRTABLE_API_KEY")
+            and os.environ.get("AIRTABLE_BASE_ID")
+            and os.environ.get("AIRTABLE_OPPORTUNITIES_TABLE")
+        ),
+        "backend": get_opportunity_service().backend_name,
+    }
+
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -76,14 +156,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()

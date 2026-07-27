@@ -1,0 +1,31 @@
+import axios from "axios";
+
+const BASE = process.env.REACT_APP_BACKEND_URL;
+export const API = `${BASE}/api`;
+
+const client = axios.create({ baseURL: API });
+
+export const api = {
+  listOpportunities: (params = {}) =>
+    client.get("/opportunities", { params }).then((r) => r.data),
+  getOpportunity: (id) =>
+    client.get(`/opportunities/${id}`).then((r) => r.data),
+  summary: () => client.get("/opportunities/summary").then((r) => r.data),
+  missions: () => client.get("/opportunities/missions").then((r) => r.data),
+  pipeline: () => client.get("/opportunities/pipeline").then((r) => r.data),
+  recent: (limit = 10) =>
+    client.get("/opportunities/recent", { params: { limit } }).then((r) => r.data),
+  top: (limit = 10) =>
+    client.get("/opportunities/top", { params: { limit } }).then((r) => r.data),
+  updateStatus: (id, status) =>
+    client.patch(`/opportunities/${id}/status`, { status }).then((r) => r.data),
+  updateMission: (id, daily_mission) =>
+    client
+      .patch(`/opportunities/${id}/mission`, { daily_mission })
+      .then((r) => r.data),
+  addActivity: (id, type, note) =>
+    client
+      .post(`/opportunities/${id}/activity`, { type, note })
+      .then((r) => r.data),
+  config: () => client.get("/config").then((r) => r.data),
+};
