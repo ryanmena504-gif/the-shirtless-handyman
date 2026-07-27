@@ -240,9 +240,12 @@ class AirtableOpportunityService:
         self._last_refresh: float = 0.0
         self._refresh_started: float = 0.0
         self._refreshing: bool = False
+        self._last_error: Optional[str] = None
+        self._last_error_ts: float = 0.0
+        self._consecutive_failures: int = 0
         self._readonly_field_names: set = set()
-        self._field_map: Dict[str, str] = {}  # airtable name -> snake_case
-        self._reverse_map: Dict[str, str] = {}  # snake_case -> airtable name
+        self._field_map: Dict[str, str] = {}
+        self._reverse_map: Dict[str, str] = {}
         self._load_schema()
 
     # ---------- schema ----------
@@ -389,6 +392,8 @@ class AirtableOpportunityService:
         return timeline
 
     # ---------- cache ----------
+    RETRY_DELAYS = [0.0, 1.0, 2.5]  # up to 3 attempts, ~3.5s worst case
+
     def _refresh_cache(self, force: bool = False) -> None:
         now = time.time()
         if not force and (now - self._last_refresh) < self._cache_ttl and self._cache:
@@ -396,23 +401,48 @@ class AirtableOpportunityService:
         with self._lock:
             self._refreshing = True
             self._refresh_started = now
-        try:
-            records = self._table.all()
-        except Exception:
-            log.exception("Airtable: list failed")
-            with self._lock:
-                self._refreshing = False
-            raise
-        new_cache: Dict[str, Dict[str, Any]] = {}
-        for r in records:
-            dto = self._record_to_opportunity(r)
-            rid = dto.get("id")
-            if rid:
-                new_cache[rid] = dto
+
+        last_exc: Optional[BaseException] = None
+        for attempt, delay in enumerate(self.RETRY_DELAYS, start=1):
+            if delay:
+                time.sleep(delay)
+            try:
+                records = self._table.all()
+                new_cache: Dict[str, Dict[str, Any]] = {}
+                for r in records:
+                    dto = self._record_to_opportunity(r)
+                    rid = dto.get("id")
+                    if rid:
+                        new_cache[rid] = dto
+                with self._lock:
+                    self._cache = new_cache
+                    self._last_refresh = time.time()
+                    self._refreshing = False
+                    self._last_error = None
+                    self._last_error_ts = 0.0
+                    self._consecutive_failures = 0
+                if attempt > 1:
+                    log.info("Airtable: refresh recovered on attempt %d", attempt)
+                return
+            except Exception as e:  # noqa: BLE001
+                last_exc = e
+                log.warning("Airtable: refresh attempt %d/%d failed: %s",
+                            attempt, len(self.RETRY_DELAYS), e)
+
+        # All attempts failed — mark state and either serve stale or raise.
         with self._lock:
-            self._cache = new_cache
-            self._last_refresh = time.time()
             self._refreshing = False
+            self._consecutive_failures += 1
+            self._last_error = (str(last_exc) or last_exc.__class__.__name__)[:240]
+            self._last_error_ts = time.time()
+            have_cache = bool(self._cache)
+        log.error("Airtable: refresh failed after %d attempts (%d consecutive): %s",
+                  len(self.RETRY_DELAYS), self._consecutive_failures, last_exc)
+        if have_cache:
+            # Serve stale data rather than break the UI.
+            return
+        if last_exc is not None:
+            raise last_exc
 
     def cache_status(self) -> Dict[str, Any]:
         now = time.time()
@@ -420,6 +450,9 @@ class AirtableOpportunityService:
             last = self._last_refresh
             refreshing = self._refreshing
             count = len(self._cache)
+            last_error = self._last_error
+            last_error_ts = self._last_error_ts
+            failures = self._consecutive_failures
         age = (now - last) if last else None
         stale = age is None or age > self._cache_ttl
         return {
@@ -431,10 +464,17 @@ class AirtableOpportunityService:
             "next_refresh_in": max(0.0, self._cache_ttl - age) if age is not None else 0.0,
             "is_stale": stale,
             "is_refreshing": refreshing,
+            "last_error": last_error,
+            "last_error_at": datetime.fromtimestamp(last_error_ts, tz=timezone.utc).isoformat() if last_error_ts else None,
+            "consecutive_failures": failures,
         }
 
     def force_refresh(self) -> Dict[str, Any]:
-        self._refresh_cache(force=True)
+        try:
+            self._refresh_cache(force=True)
+        except Exception:
+            # cache_status() will already reflect the error state.
+            pass
         return self.cache_status()
 
     def _all_cached(self) -> List[Dict[str, Any]]:

@@ -62,6 +62,9 @@ class SampleOpportunityService:
             "next_refresh_in": None,
             "is_stale": False,
             "is_refreshing": False,
+            "last_error": None,
+            "last_error_at": None,
+            "consecutive_failures": 0,
         }
 
     def force_refresh(self) -> Dict[str, Any]:
