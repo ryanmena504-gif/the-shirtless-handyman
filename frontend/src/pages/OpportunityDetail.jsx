@@ -79,7 +79,7 @@ const KV = ({ label, value, mono, testId }) => (
       {label}
     </div>
     <div className={"mt-1 text-sm text-neutral-100 " + (mono ? "mono" : "")}>
-      {value ?? <span className="text-neutral-600">Missing</span>}
+      {value ?? <span className="text-neutral-600 italic">Not available yet</span>}
     </div>
   </div>
 );

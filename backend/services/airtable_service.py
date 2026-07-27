@@ -29,17 +29,19 @@ from pyairtable import Api
 log = logging.getLogger("bloodhound.airtable")
 
 
-# Airtable field name -> snake_case internal key.
-# ALIGNED to the real Bloodhound base (appuyAHSSzJrPWlec / table Opportunities).
-# Note: user's schema uses sentence-case with lowercase after the first word,
-# and "Ryans decision" is stored without an apostrophe.
-KNOWN_FIELD_MAP: Dict[str, str] = {
+# =============================================================================
+# CENTRAL FIELD MAP — exact mirror of the Bloodhound Airtable base schema.
+# Rule: never rename, delete, or recreate Airtable fields; only map.
+# Airtable field name (exact, case-sensitive) -> internal snake_case key.
+# =============================================================================
+LIVE_FIELDS: Dict[str, str] = {
     "Opportunity id": "opportunity_id",
     "Opportunity name": "name",
+    "Created Time": "created_time",
     "Source": "source",
     "Signal type": "signal_type",
-    "Project type": "project_type",
     "Project address": "project_address",
+    "Project type": "project_type",
     "Permit number": "permit_number",
     "Estimated value": "estimated_value",
     "Decision maker": "decision_maker",
@@ -47,25 +49,29 @@ KNOWN_FIELD_MAP: Dict[str, str] = {
     "Opportunity fit": "opportunity_fit",
     "Momentum": "momentum",
     "Reachability": "reachability",
-    "Contact confidence": "contact_confidence",
     "Evidence confidence": "evidence_confidence",
+    "Contact confidence": "contact_confidence",
+    "Recommended action": "recommended_action",
+    "Recommended action code": "recommended_action_code",
     "Evidence summary": "evidence_summary",
+    "Status": "status",
+    "Last reviewed": "last_reviewed",
+    "Ryans decision": "ryans_decision",
+    "Outcome": "outcome",
     "Recommendation reason": "recommendation_reason",
     "Missing information": "missing_information",
     "Risk flags": "risk_flags",
     "Next best action": "next_best_action",
-    "Recommended action": "recommended_action",
-    "Recommended action code": "recommended_action_code",
-    "Daily mission": "daily_mission",
-    "Daily mission code": "daily_mission_code",
     "Bloodhound priority score": "priority_score",
     "Priority band": "priority_band",
-    "Status": "status",
     "Next follow up": "next_follow_up",
-    "Ryans decision": "ryans_decision",
-    "Outcome": "outcome",
-    "Last reviewed": "last_reviewed",
-    # Retained as optional if the base ever adds them:
+    "Daily mission": "daily_mission",
+    "Daily mission code": "daily_mission_code",
+}
+
+# Fields the app knows about but which are NOT in the base yet.
+# They render as "Not available yet" — we never invent values or create fields.
+PENDING_FIELDS: Dict[str, str] = {
     "Email": "email",
     "Company": "company",
     "Applicant": "applicant",
@@ -77,13 +83,26 @@ KNOWN_FIELD_MAP: Dict[str, str] = {
     "Construction value": "construction_value",
 }
 
+KNOWN_FIELD_MAP: Dict[str, str] = {**LIVE_FIELDS, **PENDING_FIELDS}
+
+# Fields we will read but NEVER write. These are formulas, auto-numbers, or
+# system-managed timestamps. Enforced in addition to the schema's own type check.
+EXPLICIT_READONLY: set = {
+    "Opportunity id",
+    "Created Time",
+    "Recommended action",
+    "Bloodhound priority score",
+    "Priority band",
+    "Daily mission",
+    "Last reviewed",
+}
+
 # Only these Airtable field names may ever be written from the app.
-# Even if listed here, formula/computed fields are stripped at write time.
 EDITABLE_FIELDS = {
     "Status",
     "Ryans decision",
-    "Next follow up",
     "Outcome",
+    "Next follow up",
 }
 
 # Airtable field types that are ALWAYS read-only regardless of allowlist.
@@ -245,6 +264,12 @@ class AirtableOpportunityService:
                 if getattr(f, "type", None) in READONLY_FIELD_TYPES:
                     self._readonly_field_names.add(f.name)
 
+            # The user has explicitly requested certain formula/system fields
+            # be treated as read-only even if the schema type didn't flag them.
+            for name in EXPLICIT_READONLY:
+                if name in available:
+                    self._readonly_field_names.add(name)
+
             self._field_map = {
                 airtable_name: snake
                 for airtable_name, snake in KNOWN_FIELD_MAP.items()
@@ -254,7 +279,7 @@ class AirtableOpportunityService:
 
             missing = sorted(set(KNOWN_FIELD_MAP) - set(self._field_map))
             if missing:
-                log.info("Airtable: %d expected fields not present in schema: %s",
+                log.info("Airtable: %d expected fields not present in schema (will render as 'Not available yet'): %s",
                          len(missing), ", ".join(missing))
             log.info("Airtable: schema loaded — %d fields mapped, %d read-only",
                      len(self._field_map), len(self._readonly_field_names))
@@ -284,13 +309,12 @@ class AirtableOpportunityService:
         fields = record.get("fields", {}) or {}
         opp: Dict[str, Any] = {
             "id": record.get("id"),
-            "created_time": record.get("createdTime"),
         }
         for at_name, snake in self._field_map.items():
-            if snake in ("created_time_field",):
-                # keep the Airtable-native createdTime as `created_time`
-                continue
             opp[snake] = fields.get(at_name)
+
+        # created_time: prefer explicit field, fall back to Airtable metadata.
+        opp["created_time"] = opp.get("created_time") or record.get("createdTime")
 
         # Coerce list-typed fields
         opp["missing_information"] = _to_list(opp.get("missing_information"))
