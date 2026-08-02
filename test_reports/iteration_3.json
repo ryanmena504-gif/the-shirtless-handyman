@@ -1,0 +1,32 @@
+{
+  "summary": "Iteration 3 focused on the new Next Best Action (NBA) leads panel + Airtable-backed leads service. Backend: 11/11 new pytest cases green in /app/backend/tests/leads_nba_test.py — GET /api/leads/next-best-action returns a populated lead (name+next_action non-empty, opportunity_type or source present, id starts 'rec'), queue stats are all ints with eligible(21) < total(113) confirming the skeleton-lead gate; POST skip returns state='skipped' and next GET returns a different lead id; PATCH /api/leads/{id}/message persists and was restored to original value in finally; POST hold returns state='hold' and lead disappears from eligible queue (on_hold >=1); POST approve returns state='approved' with ISO approved_at timestamp and persisted['Approval status']=true / persisted['Outreach status']=true (Airtable writes confirmed); POST do_not_contact without confirm → 400, with confirm:true → 200 state='do_not_contact' with persisted_to field; unknown action → 400. Regression: /api/opportunities list and PATCH /api/opportunities/{id}/fields still pass. Frontend (Playwright, live URL): / renders nba-card, nba-recommended-action headline non-empty ('Research permit records and CRM to collect address, phone number, estimated valu…'), all 4 action buttons (nba-approve/hold/skip/dnc) present. Clicking nba-skip reloads a different lead ('Call Keith Deshautreaux…'). Clicking nba-dnc reveals nba-dnc-confirm. Sidebar navigation to /opportunities renders opportunity cards. Ctrl+K opens command palette with palette-input. No console errors observed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/leads_nba_test.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/leads_nba_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "leads_service.LeadsAirtableService keeps per-process sets (_skipped/_held/_approvals) — a single-worker assumption. If uvicorn ever runs multi-worker, skip/hold state will diverge across workers. Document or centralise (Redis / DB) before scaling.",
+    "leads_service.do_not_contact writes the literal string 'Do Not Contact' into a Status/Outreach status/Approval status field. If those fields are Airtable single-select without that option, pyairtable will raise and _safe_update swallows the exception silently → the endpoint still returns state='do_not_contact' with persisted_to=None. Consider surfacing the write failure to the client (e.g. include the underlying error in note) so operators know it was session-only.",
+    "GET /api/leads/next-best-action returns None-valued fields for every mapped Airtable column even when the lead has no data — response is heavy (35+ keys). Consider stripping None values or using a lean DTO for the NBA endpoint.",
+    "server.py leads_action approve/hold/skip/do_not_contact do not validate that lead_id exists before mutating — a stale/bad id will still return state='approved' with persisted=False. Add existence check via svc.get(lead_id) → 404 if missing.",
+    "server.py /api/config still reports backend='sample' while AIRTABLE_ENABLED=true because that flag applies to Opportunities. This is confusing — expose an explicit 'leads_backend' key so operators can see the leads table is live even when opps are still on sample."
+  ],
+  "updated_files": [
+    "/app/backend/tests/leads_nba_test.py"
+  ],
+  "success_rate": {"backend": "100% (11/11 new + 27/27 pre-existing pass)", "frontend": "100% of NBA + regression checks"},
+  "test_credentials": "N/A (no auth). Airtable creds loaded from backend/.env.",
+  "seed_data_creation": "None created. Mutations performed against live Airtable Leads table during backend tests: 1 lead approved (Approval status/Outreach status set to Approved), 1 lead held (Outreach status=Hold), 1 lead DNC'd (Status=Do Not Contact). First message field was mutated then restored to original. Backend was restarted after pytest to clear in-memory skip/hold/approve sets before frontend testing. During frontend Playwright run: 1 additional lead was skipped in-session (state cleared on next backend restart); nba-dnc-confirm was revealed but NOT clicked, so no additional Airtable writes from the UI test.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend tests live in /app/backend/tests/leads_nba_test.py — run with `python -m pytest /app/backend/tests/ -n 0` (serial required because leads tests depend on session order: first-populated → skip → message → hold → approve → dnc). pytest.ini enforces -n 2 --dist loadscope; use `-n 0` to override. All new NBA endpoints work end-to-end with real Airtable. If leads queue drains (queue.eligible=0), the approve/dnc/hold tests will skip / fail — restart backend or seed more leads. Frontend NBA card is fully wired. Only cosmetic/hardening items remain (see critical_code_review_comments).",
+  "rca of the issue": "Not applicable — iteration 3 is a feature verification, not a bug repro. The previously fixed regression (skeleton lead recc3XdCwwpTslkLx surfacing as NBA) is confirmed fixed: queue.eligible dropped from 113 to 21 and the returned lead has populated name+next_action."
+}

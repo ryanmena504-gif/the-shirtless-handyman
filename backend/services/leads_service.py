@@ -31,7 +31,6 @@ LEADS_FIELD_MAP: Dict[str, str] = {
     "Priority": "priority",
     "Status": "status",
     "Ai summary": "ai_summary",
-    "AI lead summary": "ai_lead_summary",
     "Why lead matters": "why_lead_matters",
     "Next action": "next_action",
     "First message": "first_message",
@@ -166,6 +165,12 @@ class LeadsAirtableService:
             return True
         if lead.get("job_won") is True:
             return True
+        # A lead is not actionable without a name AND a recommended next action.
+        # Empty/skeleton rows in Airtable must never surface as the NBA.
+        name = (lead.get("name") or "").strip() if isinstance(lead.get("name"), str) else ""
+        next_action = (lead.get("next_action") or "").strip() if isinstance(lead.get("next_action"), str) else ""
+        if not name or not next_action:
+            return True
         for key in ("status", "outreach_status", "approval_status"):
             v = (lead.get(key) or "")
             v = v if isinstance(v, str) else str(v)
@@ -173,6 +178,20 @@ class LeadsAirtableService:
             if any(tok in low for tok in EXCLUDE_TOKENS):
                 return True
         return False
+
+    def _completeness(self, lead: Dict[str, Any]) -> int:
+        """Higher is better. Rewards leads with rich, actionable data."""
+        score = 0
+        for k in ("name", "next_action"):
+            if lead.get(k):
+                score += 2
+        for k in ("first_message", "why_lead_matters", "ai_summary",
+                  "opportunity_type", "source", "priority", "lead_score"):
+            if lead.get(k):
+                score += 1
+        if self._has_usable_contact(lead):
+            score += 3
+        return score
 
     def _has_usable_contact(self, lead: Dict[str, Any]) -> bool:
         return bool(
@@ -205,7 +224,11 @@ class LeadsAirtableService:
             parts.append(f"priority {lead['priority']}")
         if lead.get("lead_score"):
             parts.append(f"score {lead['lead_score']}")
-        return " · ".join(parts) if parts else "next in queue"
+        if lead.get("opportunity_type"):
+            parts.append(str(lead["opportunity_type"]).lower())
+        if lead.get("source"):
+            parts.append(f"from {lead['source']}")
+        return " · ".join(parts) if parts else "top of actionable queue"
 
     def pick_next_best_action(self) -> Optional[Dict[str, Any]]:
         candidates = [
@@ -215,6 +238,7 @@ class LeadsAirtableService:
         if not candidates:
             return None
         candidates.sort(key=lambda l: (
+            -self._completeness(l),
             -int(self._ai_complete(l)),
             -int(self._has_usable_contact(l)),
             -self._priority_rank(l.get("priority")),

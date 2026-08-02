@@ -194,7 +194,7 @@ export const NextBestAction = () => {
       </div>
 
       {/* Why + AI summary */}
-      {(l.why_lead_matters || l.ai_summary || l.ai_lead_summary) && (
+      {(l.why_lead_matters || l.ai_summary) && (
         <div className="px-5 sm:px-7 pb-4 border-t bh-hairline pt-4 space-y-3">
           {l.why_lead_matters && (
             <div>
@@ -206,13 +206,13 @@ export const NextBestAction = () => {
               </div>
             </div>
           )}
-          {(l.ai_summary || l.ai_lead_summary) && (
+          {(l.ai_summary) && (
             <div>
               <div className="mono text-[9px] uppercase tracking-widest text-neutral-500 mb-1">
                 AI summary
               </div>
               <div className="text-sm text-neutral-300 leading-relaxed">
-                {l.ai_summary || l.ai_lead_summary}
+                {l.ai_summary}
               </div>
             </div>
           )}
