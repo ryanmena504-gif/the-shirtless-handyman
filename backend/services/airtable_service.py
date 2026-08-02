@@ -30,57 +30,115 @@ log = logging.getLogger("bloodhound.airtable")
 
 
 # =============================================================================
-# CENTRAL FIELD MAP — exact mirror of the Bloodhound Airtable base schema.
+# CENTRAL FIELD MAP — projects the LIVE `Leads` Airtable table into the
+# dashboard's Opportunity DTO. The dashboard was originally built for an
+# "Opportunities" table which no longer exists in this base (Perplexity's
+# Make.com scenario rebuild dropped it). Instead of asking Ryan to recreate a
+# duplicate table, we adapt the read layer to the source of truth: Leads.
+#
 # Rule: never rename, delete, or recreate Airtable fields; only map.
 # Airtable field name (exact, case-sensitive) -> internal snake_case key.
 # =============================================================================
 LIVE_FIELDS: Dict[str, str] = {
-    "Opportunity id": "opportunity_id",
-    "Opportunity name": "name",
-    "Created Time": "created_time",
+    # Identity + timestamps
+    "ID": "opportunity_id",
+    "Leads Name": "name",
+    "Created time": "created_time",
+    "Contact data updated": "last_reviewed",
+    "Action trigger time": "action_trigger_time",
+    "Validated at": "validated_at",
+    "Message generated at": "message_generated_at",
+
+    # Signal / property
     "Source": "source",
-    "Signal type": "signal_type",
-    "Project address": "project_address",
-    "Project type": "project_type",
+    "Source URL": "source_url",
+    "Source category": "source_category",
+    "Signal found": "signal_type",
+    "Address": "project_address",
+    "City": "city",
+    "Opportunity type": "project_type",
     "Permit number": "permit_number",
-    "Estimated value": "estimated_value",
-    "Decision maker": "decision_maker",
-    "Phone": "phone",
-    "Opportunity fit": "opportunity_fit",
-    "Momentum": "momentum",
-    "Reachability": "reachability",
-    "Evidence confidence": "evidence_confidence",
-    "Contact confidence": "contact_confidence",
-    "Recommended action": "recommended_action",
-    "Recommended action code": "recommended_action_code",
-    "Evidence summary": "evidence_summary",
-    "Status": "status",
-    "Last reviewed": "last_reviewed",
-    "Ryans decision": "ryans_decision",
-    "Outcome": "outcome",
-    "Recommendation reason": "recommendation_reason",
+    "Permit description": "permit_description",
+    "Estimated job value": "estimated_value",
+
+    # Contact block
+    "Contact name": "decision_maker",
+    "Contact phone": "phone",
+    "Contact email": "email",
+    "Contact company": "company",
+    "Contact website": "website",
+    "Contact instagram": "instagram",
+    "Contact facebook": "facebook",
+    "Phone number": "phone_alt",
+    "Email": "email_alt",
+    "Website": "website_alt",
+    "Instagram": "instagram_alt",
+    "contact confidence": "contact_confidence_raw",
+    "Best contact method": "best_contact_method",
+    "Preferred contact method": "preferred_contact_method",
+
+    # AI intelligence
+    "Ai status": "ai_status",
+    "Ai summary": "evidence_summary",
+    "Why lead matters": "recommendation_reason",
     "Missing information": "missing_information",
     "Risk flags": "risk_flags",
-    "Next best action": "next_best_action",
-    "Bloodhound priority score": "priority_score",
-    "Priority band": "priority_band",
-    "Next follow up": "next_follow_up",
-    "Daily mission": "daily_mission",
-    "Daily mission code": "daily_mission_code",
+    "Next action": "next_best_action",
+    "recommended action": "recommended_action",
+    "Recommended offer": "recommended_offer",
+    "Outreach angle": "outreach_angle",
+    "First message": "first_message",
+    "Confidence score": "confidence_score",
+    "Lead score": "lead_score",
+    "Priority": "priority_raw",
+    "Revenue potential": "revenue_potential",
+
+    # Workflow state
+    "Status": "status_raw",
+    "Approval status": "approval_status",
+    "Outreach status": "outreach_status",
+    "Hunt status": "hunt_status",
+    "Enrichment status": "enrichment_status",
+    "Reply summary": "reply_summary",
+    "Reply classification": "reply_classification",
+    "Rejection reason": "outcome",
+    "Notes": "notes",
+    "Outreach channel": "outreach_channel",
+
+    # Dates
+    "Next followup": "next_follow_up",
+    "Date contacted": "date_contacted",
+    "Date replied": "date_replied",
+    "Message sent date": "message_sent_date",
+
+    # Signal / property flags (checkboxes from the automation)
+    "Local service area": "flag_local_service",
+    "Bathroom or renovation signal": "flag_bathroom_signal",
+    "Premium property or client ": "flag_premium",
+    "Recent activity ": "flag_recent_activity",
+    "Partnership potential ": "flag_partnership",
+
+    # Funnel checkboxes (drive derived Status)
+    "Verified opportunity": "flag_verified",
+    "Qualified opportunity": "flag_qualified",
+    "Outreach sent": "flag_outreach_sent",
+    "Reply received": "flag_reply_received",
+    "Positive conversation": "flag_positive_conversation",
+    "Estimate opportunity": "flag_estimate",
+    "Job won": "flag_won",
+
+    # Money
+    "Closed revenue": "closed_revenue",
+    "Estimated gross profit": "estimated_gross_profit",
 }
 
-# Fields the app knows about but which are NOT in the base yet.
+# Fields the app talks about but which are NOT on the Leads table.
 # They render as "Not available yet" — we never invent values or create fields.
 PENDING_FIELDS: Dict[str, str] = {
-    "Email": "email",
-    "Company": "company",
     "Applicant": "applicant",
     "Contractor": "contractor",
     "Owner": "owner",
-    "Permit source": "permit_source",
     "Permit filing date": "permit_filing_date",
-    "Permit description": "permit_description",
-    "Construction value": "construction_value",
 }
 
 KNOWN_FIELD_MAP: Dict[str, str] = {**LIVE_FIELDS, **PENDING_FIELDS}
@@ -88,21 +146,67 @@ KNOWN_FIELD_MAP: Dict[str, str] = {**LIVE_FIELDS, **PENDING_FIELDS}
 # Fields we will read but NEVER write. These are formulas, auto-numbers, or
 # system-managed timestamps. Enforced in addition to the schema's own type check.
 EXPLICIT_READONLY: set = {
-    "Opportunity id",
-    "Created Time",
-    "Recommended action",
-    "Bloodhound priority score",
-    "Priority band",
-    "Daily mission",
-    "Last reviewed",
+    "ID",
+    "Leads Name",
+    "Created time",
+    "Contact data updated",
+    "Action trigger time",
+    "Validated at",
+    "Message generated at",
+    "Ai status",
+    "Ai summary",
+    "Why lead matters",
+    "Missing information",
+    "Risk flags",
+    "Next action",
+    "recommended action",
+    "Recommended offer",
+    "Outreach angle",
+    "First message",
+    "Confidence score",
+    "Lead score",
+    "Enrichment status",
+    "Reply summary",
+    "Reply classification",
+    "Verified opportunity",
+    "Qualified opportunity",
+    "Outreach sent",
+    "Reply received",
+    "Positive conversation",
+    "Estimate opportunity",
+    "Job won",
+    "Closed revenue",
+    "Estimated gross profit",
 }
 
 # Only these Airtable field names may ever be written from the app.
+# The dashboard's Decision Panel sends: status, ryans_decision,
+# next_follow_up, outcome. We project those onto Leads columns:
+#   status         -> Status
+#   ryans_decision -> Hunt status
+#   next_follow_up -> Next followup
+#   outcome        -> Rejection reason
 EDITABLE_FIELDS = {
     "Status",
-    "Ryans decision",
-    "Outcome",
-    "Next follow up",
+    "Hunt status",
+    "Next followup",
+    "Rejection reason",
+    "Notes",
+    "Approval status",
+    "Outreach status",
+}
+
+# Snake_case aliases the frontend/API layer speaks -> Airtable field name.
+# Overrides the reverse of KNOWN_FIELD_MAP where UI wording differs from the
+# Airtable column name.
+WRITE_ALIAS: Dict[str, str] = {
+    "status": "Status",
+    "ryans_decision": "Hunt status",
+    "next_follow_up": "Next followup",
+    "outcome": "Rejection reason",
+    "notes": "Notes",
+    "approval_status": "Approval status",
+    "outreach_status": "Outreach status",
 }
 
 # Airtable field types that are ALWAYS read-only regardless of allowlist.
@@ -134,6 +238,118 @@ PIPELINE_STATUSES = [
     "Lost",
     "Disqualified",
 ]
+
+# Derive a dashboard-pipeline stage from the Leads workflow state.
+def _derive_status(opp: Dict[str, Any]) -> str:
+    if opp.get("flag_won"):
+        return "Won"
+    if opp.get("outcome"):
+        return "Lost"
+    if opp.get("flag_estimate"):
+        return "Estimate sent"
+    if opp.get("flag_reply_received") or opp.get("flag_positive_conversation"):
+        return "Conversation started"
+    if opp.get("flag_outreach_sent"):
+        return "Estimate requested"
+    appr = (opp.get("approval_status") or "").lower() if isinstance(opp.get("approval_status"), str) else ""
+    if "approved" in appr:
+        return "Ready"
+    enrich = (opp.get("enrichment_status") or "").lower() if isinstance(opp.get("enrichment_status"), str) else ""
+    if "needs research" in enrich or "research" in enrich:
+        return "Needs research"
+    raw = (opp.get("status_raw") or "") if isinstance(opp.get("status_raw"), str) else ""
+    if raw:
+        return raw
+    return "New"
+
+
+# Derive a 0-100 priority score from what the Leads table actually populates.
+# Real Lead score / Confidence score are almost always 0 in this base, so we
+# synthesise from richness signals until the automation starts scoring.
+def _derive_priority_score(opp: Dict[str, Any]) -> Optional[float]:
+    raw = opp.get("lead_score")
+    try:
+        if raw is not None and float(raw) > 0:
+            return float(raw)
+    except (TypeError, ValueError):
+        pass
+    score = 0
+    if (opp.get("ai_status") or "").lower() == "complete":
+        score += 35
+    if opp.get("evidence_summary"):
+        score += 10
+    if opp.get("recommendation_reason"):
+        score += 5
+    if opp.get("phone") or opp.get("email") or opp.get("phone_alt") or opp.get("email_alt"):
+        score += 15
+    if opp.get("decision_maker") or opp.get("company"):
+        score += 10
+    if opp.get("permit_number"):
+        score += 10
+    if opp.get("project_address"):
+        score += 5
+    if opp.get("estimated_value"):
+        score += 5
+    if opp.get("flag_verified"):
+        score += 5
+    if opp.get("flag_qualified"):
+        score += 5
+    if opp.get("flag_premium"):
+        score += 3
+    if opp.get("flag_partnership"):
+        score += 2
+    return score if score > 0 else None
+
+
+def _derive_priority_band(opp: Dict[str, Any]) -> Optional[str]:
+    # Honour explicit Airtable Priority if set.
+    b = _normalize_priority_band(opp.get("priority_raw"))
+    if b:
+        return b
+    s = opp.get("priority_score")
+    if s is None:
+        return None
+    try:
+        s = float(s)
+    except (TypeError, ValueError):
+        return None
+    if s >= 70:
+        return "A"
+    if s >= 50:
+        return "B"
+    if s >= 30:
+        return "C"
+    return "D"
+
+
+def _derive_daily_mission(opp: Dict[str, Any]) -> str:
+    # Prefer the recommended action / next best action free text.
+    for source in ("next_best_action", "recommended_action", "recommended_offer",
+                   "outreach_angle"):
+        v = opp.get(source)
+        if v:
+            m = _normalize_daily_mission(v)
+            if m != "Wait":
+                return m
+    # Fall back to channel hints.
+    for src in ("best_contact_method", "outreach_channel", "preferred_contact_method"):
+        v = opp.get(src)
+        if v:
+            m = _normalize_daily_mission(v)
+            if m != "Wait":
+                return m
+    # Enrichment-heavy leads without a message yet -> Research First.
+    enrich = (opp.get("enrichment_status") or "").lower() if isinstance(opp.get("enrichment_status"), str) else ""
+    if "needs research" in enrich or "research" in enrich:
+        return "Research First"
+    return "Wait"
+
+
+# Contact confidence — pyairtable can return string or number for this select.
+def _normalize_contact_confidence(v: Any) -> Optional[str]:
+    if v is None or v == "":
+        return None
+    return str(v)
 
 ACTIONABLE_MISSIONS = [
     "Call Today",
@@ -319,40 +535,35 @@ class AirtableOpportunityService:
     # ---------- record transform ----------
     def _record_to_opportunity(self, record: Dict[str, Any]) -> Dict[str, Any]:
         fields = record.get("fields", {}) or {}
-        opp: Dict[str, Any] = {
-            "id": record.get("id"),
-        }
+        opp: Dict[str, Any] = {"id": record.get("id")}
         for at_name, snake in self._field_map.items():
             opp[snake] = fields.get(at_name)
 
-        # created_time: prefer explicit field, fall back to Airtable metadata.
+        # created_time: prefer Airtable metadata (guaranteed present) over the
+        # user-visible "Created time" field which may be re-typed.
         opp["created_time"] = opp.get("created_time") or record.get("createdTime")
+
+        # opportunity_id fallback: Airtable record id.
+        opp["opportunity_id"] = opp.get("opportunity_id") or opp["id"]
 
         # Coerce list-typed fields
         opp["missing_information"] = _to_list(opp.get("missing_information"))
         opp["risk_flags"] = _to_list(opp.get("risk_flags"))
 
         # Some fields may come back as arrays from linked-record / rollup formulas
-        for k in ("daily_mission", "recommended_action", "priority_band",
-                  "status", "source", "signal_type", "project_type"):
+        for k in ("source", "signal_type", "project_type", "status_raw",
+                  "priority_raw", "revenue_potential", "outcome",
+                  "approval_status", "outreach_status", "hunt_status",
+                  "enrichment_status", "reply_classification",
+                  "best_contact_method", "preferred_contact_method",
+                  "outreach_channel", "source_category",
+                  "contact_confidence_raw"):
             if isinstance(opp.get(k), list):
                 opp[k] = _first(opp[k])
 
-        # Preserve the raw formula outputs (may include emoji labels) and
-        # provide UI-normalised values.
-        opp["priority_band_raw"] = opp.get("priority_band")
-        opp["priority_band"] = _normalize_priority_band(opp["priority_band_raw"])
-
-        opp["daily_mission_raw"] = opp.get("daily_mission")
-        opp["daily_mission"] = _normalize_daily_mission(opp["daily_mission_raw"])
-
-        # Also strip a leading emoji from status so pipeline stages match.
-        if isinstance(opp.get("status"), str):
-            opp["status_raw"] = opp["status"]
-            opp["status"] = _strip_emoji_prefix(opp["status"])
-
         # Ensure numeric types where sensible
-        for k in ("priority_score", "estimated_value", "construction_value"):
+        for k in ("lead_score", "confidence_score", "estimated_value",
+                  "closed_revenue", "estimated_gross_profit"):
             v = opp.get(k)
             if isinstance(v, list):
                 v = _first(v)
@@ -363,10 +574,69 @@ class AirtableOpportunityService:
             except (TypeError, ValueError):
                 opp[k] = None
 
+        # ---- derived fields the dashboard consumes ----
+        # Contact confidence rendered as a string label the UI already handles.
+        opp["contact_confidence"] = _normalize_contact_confidence(opp.get("contact_confidence_raw"))
+        # Evidence confidence — reuse Confidence score when present, else lead score.
+        opp["evidence_confidence"] = opp.get("confidence_score") or opp.get("lead_score")
+
+        # Priority — synthesise until Airtable starts scoring.
+        opp["priority_score"] = _derive_priority_score(opp)
+        opp["priority_band_raw"] = opp.get("priority_raw")
+        opp["priority_band"] = _derive_priority_band(opp)
+
+        # Daily mission — synthesise from Next action + channel hints.
+        opp["daily_mission_raw"] = opp.get("next_best_action")
+        opp["daily_mission"] = _derive_daily_mission(opp)
+        opp["daily_mission_code"] = None
+
+        # Recommended action fallback — prefer AI's "recommended action" over
+        # the shorter "Next action", but expose both.
+        if not opp.get("recommended_action"):
+            opp["recommended_action"] = opp.get("next_best_action")
+        opp["recommended_action_code"] = None
+
+        # Dashboard pipeline status — collapse Leads workflow onto the 9 stages.
+        opp["status"] = _derive_status(opp)
+        if isinstance(opp["status"], str):
+            opp["status_raw_display"] = _strip_emoji_prefix(opp["status"])
+            opp["status"] = _strip_emoji_prefix(opp["status"])
+
+        # Legacy "Ryans decision" field maps to Hunt status.
+        opp["ryans_decision"] = opp.get("hunt_status")
+
+        # Fit / momentum / reachability — derived qualitative labels the UI shows.
+        rev = (opp.get("revenue_potential") or "").lower() if isinstance(opp.get("revenue_potential"), str) else ""
+        if "high" in rev:
+            opp["opportunity_fit"] = "Strong"
+        elif "medium" in rev or "med" in rev:
+            opp["opportunity_fit"] = "Moderate"
+        elif "low" in rev:
+            opp["opportunity_fit"] = "Weak"
+        else:
+            opp["opportunity_fit"] = None
+
+        opp["momentum"] = "High" if opp.get("flag_recent_activity") else (
+            "Stalled" if opp.get("flag_won") or opp.get("outcome") else "Normal"
+        )
+
+        if opp.get("phone") or opp.get("email") or opp.get("phone_alt") or opp.get("email_alt"):
+            opp["reachability"] = "Direct"
+        elif opp.get("company") or opp.get("website"):
+            opp["reachability"] = "Indirect"
+        else:
+            opp["reachability"] = "Unknown"
+
         # Ensure every downstream key exists so the frontend never crashes on
         # missing schema fields.
         for snake in set(KNOWN_FIELD_MAP.values()):
             opp.setdefault(snake, None)
+        for extra in ("priority_score", "priority_band", "daily_mission",
+                      "status", "ryans_decision", "opportunity_fit",
+                      "momentum", "reachability", "contact_confidence",
+                      "evidence_confidence", "recommended_action_code",
+                      "daily_mission_code"):
+            opp.setdefault(extra, None)
 
         # Synthetic activity timeline (real timestamps only, no invented events)
         opp["activity_timeline"] = self._synthesize_activity(opp)
@@ -381,18 +651,35 @@ class AirtableOpportunityService:
                 "note": f"Discovered via {src}",
                 "timestamp": opp["created_time"],
             })
-        pfd = opp.get("permit_filing_date")
-        if pfd:
+        if opp.get("validated_at"):
             timeline.append({
                 "type": "analysis",
-                "note": f"Permit filed on {pfd}",
-                "timestamp": f"{pfd}T00:00:00Z" if len(str(pfd)) == 10 else pfd,
+                "note": "Lead validated",
+                "timestamp": opp["validated_at"],
             })
-        if opp.get("status") and opp["status"] != "New":
+        if opp.get("message_generated_at"):
+            timeline.append({
+                "type": "message",
+                "note": "AI drafted outbound message",
+                "timestamp": opp["message_generated_at"],
+            })
+        if opp.get("message_sent_date"):
+            timeline.append({
+                "type": "outreach",
+                "note": "Outreach sent",
+                "timestamp": opp["message_sent_date"],
+            })
+        if opp.get("date_replied"):
+            timeline.append({
+                "type": "reply",
+                "note": opp.get("reply_summary") or "Reply received",
+                "timestamp": opp["date_replied"],
+            })
+        if opp.get("last_reviewed") and opp.get("status") and opp["status"] != "New":
             timeline.append({
                 "type": "status_change",
                 "note": f"Current status: {opp['status']}",
-                "timestamp": opp.get("created_time"),
+                "timestamp": opp["last_reviewed"],
             })
         # newest first
         timeline.sort(key=lambda x: x.get("timestamp") or "", reverse=True)
@@ -608,7 +895,7 @@ class AirtableOpportunityService:
         allowed: Dict[str, Any] = {}
         rejected: List[str] = []
         for snake, val in updates_by_snake.items():
-            at_name = self._reverse_map.get(snake)
+            at_name = WRITE_ALIAS.get(snake) or self._reverse_map.get(snake)
             if not at_name:
                 rejected.append(snake)
                 continue
