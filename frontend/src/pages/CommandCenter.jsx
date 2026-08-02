@@ -6,6 +6,7 @@ import OpportunityRow from "@/components/OpportunityRow";
 import StatusPipeline from "@/components/StatusPipeline";
 import { PriorityBand, PriorityScore } from "@/components/PriorityBadge";
 import MissionBadge from "@/components/MissionBadge";
+import NextBestAction from "@/components/NextBestAction";
 import { api } from "@/lib/api";
 import { fmtMoney, fmtRelative, sourceLabel } from "@/lib/formatters";
 import { MISSIONS } from "@/lib/constants";
@@ -70,6 +71,9 @@ const CommandCenter = () => {
       />
 
       <div className="px-4 lg:px-8 py-6 space-y-8">
+        {/* Next Best Action — dominant top section */}
+        <NextBestAction />
+
         {/* Metric row */}
         <section
           data-testid="metric-strip"

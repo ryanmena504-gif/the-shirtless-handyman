@@ -33,4 +33,10 @@ export const api = {
   schema: () => client.get("/schema").then((r) => r.data),
   cacheStatus: () => client.get("/cache-status").then((r) => r.data),
   refreshCache: () => client.post("/cache-refresh").then((r) => r.data),
+  leadsNextBestAction: () =>
+    client.get("/leads/next-best-action").then((r) => r.data),
+  leadsAction: (id, body) =>
+    client.post(`/leads/${id}/action`, body).then((r) => r.data),
+  leadsUpdateMessage: (id, message) =>
+    client.patch(`/leads/${id}/message`, { message }).then((r) => r.data),
 };

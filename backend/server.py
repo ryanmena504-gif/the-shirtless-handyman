@@ -10,6 +10,7 @@ from typing import Optional, List
 from datetime import datetime, timezone
 
 from services.opportunity_service import get_opportunity_service, reset_opportunity_service
+from services.leads_service import get_leads_service, reset_leads_service
 
 
 ROOT_DIR = Path(__file__).parent
@@ -197,6 +198,67 @@ async def cache_status():
 async def cache_refresh():
     svc = get_opportunity_service()
     return svc.force_refresh()
+
+
+# ---------- Leads / Next Best Action ----------
+
+class LeadAction(BaseModel):
+    action: str  # approve | hold | skip | do_not_contact
+    confirm: Optional[bool] = False
+
+
+class LeadMessageUpdate(BaseModel):
+    message: str
+
+
+@api_router.get("/leads/next-best-action")
+async def leads_next_best_action():
+    svc = get_leads_service()
+    if not svc:
+        return {
+            "lead": None,
+            "queue": None,
+            "note": "Leads service not available — set AIRTABLE_ENABLED=true and ensure the Leads table exists.",
+        }
+    lead = svc.pick_next_best_action()
+    if not lead:
+        return {
+            "lead": None,
+            "queue": svc.queue_stats(),
+            "note": "No qualified leads remaining in the queue.",
+        }
+    return {"lead": lead, "queue": svc.queue_stats()}
+
+
+@api_router.post("/leads/{lead_id}/action")
+async def leads_action(lead_id: str, body: LeadAction):
+    svc = get_leads_service()
+    if not svc:
+        raise HTTPException(status_code=503, detail="Leads service not available")
+    action = (body.action or "").lower()
+    if action == "approve":
+        return svc.approve(lead_id)
+    if action == "hold":
+        return svc.hold(lead_id)
+    if action == "skip":
+        return svc.skip(lead_id)
+    if action == "do_not_contact":
+        if not body.confirm:
+            raise HTTPException(status_code=400,
+                                detail="Confirmation required for Do Not Contact")
+        return svc.do_not_contact(lead_id)
+    raise HTTPException(status_code=400, detail=f"Unknown action: {body.action}")
+
+
+@api_router.patch("/leads/{lead_id}/message")
+async def leads_update_message(lead_id: str, body: LeadMessageUpdate):
+    svc = get_leads_service()
+    if not svc:
+        raise HTTPException(status_code=503, detail="Leads service not available")
+    updated = svc.update_message(lead_id, body.message)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Message update failed")
+    return updated
 
 
 @api_router.post("/admin/reload")
