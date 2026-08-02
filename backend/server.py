@@ -235,6 +235,8 @@ async def leads_action(lead_id: str, body: LeadAction):
     svc = get_leads_service()
     if not svc:
         raise HTTPException(status_code=503, detail="Leads service not available")
+    if svc.get(lead_id) is None:
+        raise HTTPException(status_code=404, detail=f"Lead {lead_id} not found")
     action = (body.action or "").lower()
     if action == "approve":
         return svc.approve(lead_id)
