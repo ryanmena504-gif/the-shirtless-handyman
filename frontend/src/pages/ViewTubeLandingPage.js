@@ -29,7 +29,7 @@ const BEATS = [
   {
     icon: Eye,
     title: "A coach who can see",
-    copy: "Tap Check me. The camera sends a still. Cole or Avery looks before they let you keep going.",
+    copy: "The camera stays on. Cole or Avery glances while you work. Check me is a real look. They only freeze you when they are sure.",
   },
   {
     icon: OctagonX,
@@ -73,7 +73,7 @@ export default function ViewTubeLandingPage() {
             {VIEWTUBE.tagline}
           </h1>
           <p className="mt-6 max-w-xl text-white/65 text-lg leading-relaxed">
-            {VIEWTUBE.promise} AI voices. A real look at the bench. Six structured projects to start.
+            {VIEWTUBE.promise} Six structured projects. AI voices. They only stop you when they are sure.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <button
@@ -125,7 +125,7 @@ export default function ViewTubeLandingPage() {
             className="text-3xl md:text-5xl font-light max-w-2xl mb-14"
             style={{ fontFamily: "'Fraunces', serif" }}
           >
-            Gemini can chat about a leaky faucet. viewTube can freeze the session.
+            Gemini can chat about a leaky faucet. viewTube can freeze the session — without making you wait on a spinner.
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
             {BEATS.map((beat) => (

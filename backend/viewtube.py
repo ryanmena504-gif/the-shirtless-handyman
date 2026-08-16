@@ -35,6 +35,7 @@ VALID_EVENTS = {
     "confirm_safety",
     "bypass_safety",
     "check_me",
+    "glance",
     "complete_step",
     "flag_wrong",
     "acknowledge_interrupt",
@@ -44,6 +45,14 @@ VALID_EVENTS = {
 # Brightness below this means the bench is not visible enough to judge.
 DARK_THRESHOLD = 0.12
 
+# Background glances only freeze the session when the model is this sure.
+GLANCE_MIN_CONFIDENCE = 0.7
+
+# Instant filler while Check me waits on vision. Prefetched and cached.
+LOOKING_LINE = "Looking."
+
+# Fast live path. gpt-4o-mini-tts sounds nicer and costs a spinner.
+LIVE_TTS_MODEL = "tts-1"
 
 MAX_SPEAK_CHARS = 500
 
@@ -55,7 +64,7 @@ COACHES = [
         "voice": "male",
         "voice_source": "ai",
         "tts_voice": "onyx",
-        "tts_model": "gpt-4o-mini-tts",
+        "tts_model": LIVE_TTS_MODEL,
         "tts_instructions": (
             "You are Cole, an AI shop coach. Warm, slightly cocky, never sultry. "
             "Speak like a friend who will stop a bad cut. American English. Medium pace. "
@@ -73,7 +82,7 @@ COACHES = [
         "voice": "female",
         "voice_source": "ai",
         "tts_voice": "nova",
-        "tts_model": "gpt-4o-mini-tts",
+        "tts_model": LIVE_TTS_MODEL,
         "tts_instructions": (
             "You are Avery, an AI finish-carpenter coach. Sharp, encouraging, never sultry. "
             "Speak like someone who has seen every board go on backwards. American English. "
@@ -313,7 +322,7 @@ def tts_spec(coach_id: str) -> dict:
         "coach_name": coach["name"],
         "voice_source": "ai",
         "tts_voice": coach["tts_voice"],
-        "tts_model": coach.get("tts_model", "gpt-4o-mini-tts"),
+        "tts_model": coach.get("tts_model", LIVE_TTS_MODEL),
         "tts_instructions": coach["tts_instructions"],
     }
 
@@ -328,6 +337,47 @@ def speak_request(coach_id: str, text: str) -> dict:
     spec = tts_spec(coach_id)
     spec["text"] = cleaned
     return spec
+
+
+def prefetch_lines(session: dict) -> list[str]:
+    """Known lines we can synthesize before they are spoken. Cache beats a spinner.
+
+    Keep this short. Prefetching the whole project saturates TTS and delays the
+    first line — the opposite of feeling live.
+    """
+    coach = session.get("coach") or {}
+    name = coach.get("name") or "Coach"
+    texts: list[str] = []
+    seen: set[str] = set()
+
+    def add(text: str) -> None:
+        cleaned = (text or "").strip()
+        if not cleaned or cleaned in seen or len(cleaned) > MAX_SPEAK_CHARS:
+            return
+        seen.add(cleaned)
+        texts.append(cleaned)
+
+    add(LOOKING_LINE)
+    add((session.get("coach_line") or {}).get("text") or "")
+    add(
+        f"I'm {name}. Prop the phone so I can see the bench — not your face. "
+        "When the work is in frame, tap I'm set."
+    )
+    steps = (session.get("project") or {}).get("steps") or []
+    idx = max(0, int(session.get("step_index") or 0))
+    for step in steps[idx : idx + 3]:
+        title = step.get("title") or ""
+        coach_text = step.get("coach") or ""
+        add(coach_text)
+        add(f"You're set. First move: {title}. {coach_text}")
+        add(f"You're set. {coach_text} Skip if that is not you — I will not freeze the session over it.")
+        add(f"Next: {title}. {coach_text}")
+        add(f"Good. Back to it — {title}. {coach_text}")
+    add("That piece is backwards. Do not drive another fastener. Flip it.")
+    add("The guard is not snapping shut. Unplug it. We are not cutting on a sticky guard.")
+    add("Hold. Do not take the next bite. Show me what you just did — slowly.")
+    add("Got it. I will not freeze you over glasses. Let's work.")
+    return texts
 
 
 def _line(coach: dict, text: str) -> dict:
@@ -448,6 +498,8 @@ VISION_BOOLS = (
     "bench_in_frame",
 )
 
+VISION_LOOK_EVENTS = {"check_me", "glance"}
+
 LOW_CONFIDENCE = 0.55
 
 
@@ -566,11 +618,15 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
             _set_line(session, f"Good. Back to it — {step['title']}. {step['coach']}")
         return session
 
+    if event_type == "glance":
+        return _apply_glance(session, signals)
+
     if session["status"] == STATUS_HARD_STOP and event_type not in {
         "acknowledge_interrupt",
         "resume",
         "confirm_safety",
         "bypass_safety",
+        "glance",
     }:
         raise ValueError("Session is stopped. Acknowledge, then resume.")
 
@@ -588,10 +644,10 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
         if step and step.get("optional"):
             _set_line(
                 session,
-                f"I can see the bench. {step['coach']} Skip if that is not you — I will not freeze the session over it.",
+                f"You're set. {step['coach']} Skip if that is not you — I will not freeze the session over it.",
             )
         elif step:
-            _set_line(session, f"I can see the bench. First move: {step['title']}. {step['coach']}")
+            _set_line(session, f"You're set. First move: {step['title']}. {step['coach']}")
         return session
 
     if event_type in {"confirm_safety", "bypass_safety"}:
@@ -641,11 +697,78 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
             "verdict": signals.get("vision_verdict"),
             "confidence": signals.get("vision_confidence"),
             "note": signals.get("vision_note") or "",
+            "source": "check_me",
         }
         return _evaluate_check(session, signals)
 
     if event_type == "complete_step":
         return _complete_step(session, signals)
+
+    return session
+
+
+def _glance_confidence_ok(signals: dict) -> bool:
+    """Glances stay quiet unless the look is clearly sure."""
+    if signals.get("vision_unsure"):
+        return False
+    conf = signals.get("vision_confidence")
+    if conf is None:
+        return True
+    try:
+        return float(conf) >= GLANCE_MIN_CONFIDENCE
+    except (TypeError, ValueError):
+        return False
+
+
+def _apply_glance(session: dict, signals: dict) -> dict:
+    """Background look. Silent unless a high-confidence hard stop. Never nag."""
+    if session["status"] != STATUS_LIVE or session.get("interrupt"):
+        return session
+
+    session["last_look"] = {
+        "at": _now(),
+        "verdict": signals.get("vision_verdict"),
+        "confidence": signals.get("vision_confidence"),
+        "note": signals.get("vision_note") or "",
+        "source": "glance",
+    }
+    session["updated_at"] = _now()
+
+    # Dark, unsure, missing glasses — ignore. A glance that nags feels like a spinner.
+    if not _glance_confidence_ok(signals):
+        return session
+
+    step = current_step(session)
+    if step and (step.get("optional") or step.get("verify") == "ppe"):
+        return session
+
+    if signals.get("part_inverted") is True:
+        return _raise_interrupt(
+            session,
+            HARD_STOP,
+            "part_inverted",
+            "That piece is backwards. Do not drive another fastener. Flip it.",
+            "Flip the part, tap I hear you, then Resume.",
+        )
+
+    if signals.get("guard_stuck") is True:
+        return _raise_interrupt(
+            session,
+            HARD_STOP,
+            "guard_stuck",
+            "The guard is not snapping shut. Unplug it. We are not cutting on a sticky guard.",
+            "Fix or swap the saw. Then Resume.",
+        )
+
+    if signals.get("vision_wrong"):
+        note = signals.get("vision_note") or "That is not the move."
+        return _raise_interrupt(
+            session,
+            HARD_STOP,
+            "vision_wrong",
+            f"Hold. {note}",
+            "Fix it, then Check me again.",
+        )
 
     return session
 
@@ -774,6 +897,7 @@ def session_public(session: dict) -> dict:
     """API-safe snapshot."""
     out = deepcopy(session)
     out.pop("_id", None)
+    out["prefetch_lines"] = prefetch_lines(out)
     return out
 
 
@@ -781,6 +905,7 @@ def catalog() -> dict[str, Any]:
     return {
         "name": "viewTube",
         "tagline": "YouTube shows you how. viewTube watches you do it.",
+        "promise": "Feels like a person in the room — not a loading spinner.",
         "coaches": list_coaches(),
         "projects": list_projects(),
     }

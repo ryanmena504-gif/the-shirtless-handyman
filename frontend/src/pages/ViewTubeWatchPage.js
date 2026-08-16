@@ -3,9 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
 import { ViewTubeHardStop } from "../components/viewtube/ViewTubeHardStop";
 import {
+  GLANCE_MS,
+  LOOKING_LINE,
   captureFrame,
   fetchViewTubeSession,
+  peekViewTubeSpeakCache,
   postViewTubeEvent,
+  prefetchViewTubeLines,
   sampleFrameSignals,
   speakViewTubeLine,
 } from "../lib/viewtube";
@@ -18,16 +22,35 @@ export default function ViewTubeWatchPage() {
   const streamRef = useRef(null);
   const lastSpoken = useRef("");
   const audioRef = useRef(null);
-  const audioUrlRef = useRef("");
+  const busyRef = useRef(false);
+  const glanceInFlight = useRef(false);
+  const genRef = useRef(0);
+  const mutedRef = useRef(false);
   const [session, setSession] = useState(null);
   const [camError, setCamError] = useState("");
   const [busy, setBusy] = useState(false);
   const [looking, setLooking] = useState(false);
   const [muted, setMuted] = useState(false);
 
+  mutedRef.current = muted;
+
+  const playUrl = useCallback(async (url) => {
+    if (!url || mutedRef.current) return;
+    if (!audioRef.current) audioRef.current = new Audio();
+    audioRef.current.src = url;
+    try {
+      await audioRef.current.play();
+    } catch {
+      // Autoplay can fail until a tap. The next user action retries.
+    }
+  }, []);
+
   useEffect(() => {
     fetchViewTubeSession(sessionId)
-      .then(setSession)
+      .then((data) => {
+        setSession(data);
+        prefetchViewTubeLines(data.coach_id, data.prefetch_lines || []);
+      })
       .catch(() => toast.error("Session not found"));
   }, [sessionId]);
 
@@ -54,6 +77,7 @@ export default function ViewTubeWatchPage() {
     return () => {
       cancelled = true;
       streamRef.current?.getTracks().forEach((t) => t.stop());
+      audioRef.current?.pause();
     };
   }, []);
 
@@ -67,15 +91,8 @@ export default function ViewTubeWatchPage() {
     (async () => {
       try {
         const url = await speakViewTubeLine(coachId, text);
-        if (cancelled) {
-          URL.revokeObjectURL(url);
-          return;
-        }
-        if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
-        audioUrlRef.current = url;
-        if (!audioRef.current) audioRef.current = new Audio();
-        audioRef.current.src = url;
-        await audioRef.current.play();
+        if (cancelled) return;
+        await playUrl(url);
       } catch (err) {
         toast.error(err?.response?.data?.detail || "AI voice could not speak that line");
       }
@@ -85,14 +102,21 @@ export default function ViewTubeWatchPage() {
       cancelled = true;
       audioRef.current?.pause();
     };
-  }, [session?.coach_line?.text, session?.coach_id, muted]);
+  }, [session?.coach_line?.text, session?.coach_id, muted, playUrl]);
 
   const send = useCallback(
     async (type, extraSignals = {}) => {
-      if (!sessionId || busy) return;
+      if (!sessionId || busyRef.current) return;
+      busyRef.current = true;
+      genRef.current += 1;
       setBusy(true);
-      const shouldLook = ["check_me", "confirm_setup", "confirm_safety"].includes(type);
-      if (shouldLook) setLooking(true);
+      const shouldLook = type === "check_me";
+      if (shouldLook) {
+        setLooking(true);
+        const coachId = session?.coach_id;
+        const filler = coachId ? peekViewTubeSpeakCache(coachId, LOOKING_LINE) : "";
+        if (filler) playUrl(filler);
+      }
       try {
         const frameSignals = sampleFrameSignals(videoRef.current);
         const frame = shouldLook ? captureFrame(videoRef.current) : "";
@@ -103,18 +127,49 @@ export default function ViewTubeWatchPage() {
           frame,
         );
         setSession(next);
+        if (next?.prefetch_lines) {
+          prefetchViewTubeLines(next.coach_id, next.prefetch_lines);
+        }
       } catch (err) {
         toast.error(err?.response?.data?.detail || "The coach could not take that");
       } finally {
         setLooking(false);
         setBusy(false);
+        busyRef.current = false;
       }
     },
-    [sessionId, busy],
+    [sessionId, session?.coach_id, playUrl],
   );
+
+  const glance = useCallback(async () => {
+    if (!sessionId || busyRef.current || glanceInFlight.current) return;
+    glanceInFlight.current = true;
+    const gen = genRef.current;
+    try {
+      const frameSignals = sampleFrameSignals(videoRef.current);
+      const frame = captureFrame(videoRef.current, 480, 0.55);
+      if (!frame) return;
+      const next = await postViewTubeEvent(sessionId, "glance", frameSignals, frame);
+      if (busyRef.current || gen !== genRef.current) return;
+      setSession(next);
+    } catch {
+      // Background looks fail closed and stay quiet.
+    } finally {
+      glanceInFlight.current = false;
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (session?.status !== "live" || session?.interrupt) return;
+    const id = setInterval(() => {
+      glance();
+    }, GLANCE_MS);
+    return () => clearInterval(id);
+  }, [session?.status, session?.interrupt, glance]);
 
   const step = session?.project?.steps?.[session?.step_index];
   const stopped = Boolean(session?.interrupt);
+  const lastLook = session?.last_look;
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden" data-testid="viewtube-watch">
@@ -168,7 +223,7 @@ export default function ViewTubeWatchPage() {
           <div className="max-w-md rounded-2xl border border-white/15 bg-black/70 p-4">
             <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold mb-2">Phone on a stand</p>
             <p className="text-sm text-white/80 leading-relaxed">
-              Clamp it so I see the bench, not your face. Hands free. Then tap I&apos;m set — I will look at a still before we start.
+              Clamp it so I see the bench, not your face. Hands free. Tap I&apos;m set — we start talking right away. I glance while you work.
             </p>
           </div>
         </div>
@@ -196,9 +251,9 @@ export default function ViewTubeWatchPage() {
                 <p className="text-sm text-white/90 leading-snug mt-1" data-testid="viewtube-coach-line">
                   {session.coach_line?.text}
                 </p>
-                {session.last_look?.note && (
+                {lastLook?.note && lastLook.source !== "glance" && (
                   <p className="mt-2 text-[11px] text-white/45" data-testid="viewtube-last-look">
-                    Last look · {session.last_look.note}
+                    Last look · {lastLook.note}
                   </p>
                 )}
               </div>

@@ -14,6 +14,7 @@ from viewtube import (
     HARD_STOP,
     SOFT_PAUSE,
     ASK,
+    LOOKING_LINE,
     MAX_SPEAK_CHARS,
     STATUS_COMPLETED,
     STATUS_HARD_STOP,
@@ -26,6 +27,8 @@ from viewtube import (
     get_project,
     list_coaches,
     list_projects,
+    prefetch_lines,
+    session_public,
     speak_request,
     tts_spec,
 )
@@ -52,6 +55,8 @@ def test_catalog_has_two_coaches_and_six_projects():
     assert get_coach("avery")["voice_source"] == "ai"
     assert get_coach("cole")["tts_voice"] == "onyx"
     assert get_coach("avery")["tts_voice"] == "nova"
+    assert get_coach("cole")["tts_model"] == "tts-1"
+    assert "spinner" in data["promise"].lower()
 
 
 def test_unknown_coach_or_project_raises():
@@ -196,7 +201,7 @@ def test_speak_request_is_ai_only():
     assert "sultry" in req["tts_instructions"]
     avery = tts_spec("avery")
     assert avery["tts_voice"] == "nova"
-    assert avery["tts_model"] == "gpt-4o-mini-tts"
+    assert avery["tts_model"] == "tts-1"
 
 
 def test_speak_request_rejects_empty_and_unknown():
@@ -295,3 +300,79 @@ def test_list_helpers_do_not_leak_mutability():
     projects = list_projects()
     projects[0]["title"] = "MUTATED"
     assert get_project("flatpack-shelf")["title"] == "Flat-pack shelf"
+
+
+def test_glance_unsure_does_not_interrupt():
+    session = _live_session("flatpack-shelf")
+    line = session["coach_line"]["text"]
+    session = apply_event(session, "glance", {
+        "vision_unsure": True,
+        "vision_note": "I only see a knee.",
+        "vision_confidence": 0.3,
+        "brightness": 0.04,
+    })
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == line
+    assert session["last_look"]["source"] == "glance"
+
+
+def test_glance_inverted_still_stops():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "glance", {
+        "part_inverted": True,
+        "vision_wrong": True,
+        "vision_confidence": 0.82,
+        "vision_note": "The finished edge faces in.",
+    })
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["interrupt"]["reason"] == "part_inverted"
+    assert "backwards" in session["coach_line"]["text"].lower()
+
+
+def test_glance_low_confidence_danger_is_silent():
+    session = _live_session("flatpack-shelf")
+    line = session["coach_line"]["text"]
+    session = apply_event(session, "glance", {
+        "part_inverted": True,
+        "vision_unsure": True,
+        "vision_confidence": 0.4,
+    })
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == line
+
+
+def test_glance_ignores_optional_ppe_wrong():
+    session = apply_event(create_session("cole", "tool-safety"), "confirm_setup")
+    line = session["coach_line"]["text"]
+    session = apply_event(session, "glance", {
+        "vision_wrong": True,
+        "vision_confidence": 0.95,
+        "vision_note": "No glasses in frame.",
+    })
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == line
+
+
+def test_glance_while_stopped_is_noop():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "flag_wrong")
+    session = apply_event(session, "glance", {
+        "part_inverted": True,
+        "vision_confidence": 0.99,
+    })
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["interrupt"]["reason"] == "flag_wrong"
+
+
+def test_prefetch_lines_include_looking_and_steps():
+    session = create_session("cole", "flatpack-shelf")
+    lines = prefetch_lines(session)
+    assert lines[0] == LOOKING_LINE
+    assert session["coach_line"]["text"] in lines
+    assert any("Lay out every part" in text for text in lines)
+    public = session_public(session)
+    assert public["prefetch_lines"][0] == LOOKING_LINE
+    assert "prefetch_lines" not in session

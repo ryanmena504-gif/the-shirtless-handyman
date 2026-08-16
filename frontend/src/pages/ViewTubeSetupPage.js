@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
-import { createViewTubeSession, fetchViewTubeCatalog, speakViewTubeLine } from "../lib/viewtube";
+import { createViewTubeSession, fetchViewTubeCatalog, prefetchViewTubeLines, speakViewTubeLine } from "../lib/viewtube";
 import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { toast } from "sonner";
 
@@ -28,7 +28,6 @@ export default function ViewTubeSetupPage() {
     try {
       const url = await speakViewTubeLine(coachId, `I'm ${coach.name}. This is an AI voice. Prop the phone so I can see the bench.`);
       const audio = new Audio(url);
-      audio.onended = () => URL.revokeObjectURL(url);
       await audio.play();
     } catch (err) {
       toast.error(err?.response?.data?.detail || "AI voice preview failed");
@@ -41,6 +40,7 @@ export default function ViewTubeSetupPage() {
     setStarting(true);
     try {
       const session = await createViewTubeSession(coachId, projectId);
+      prefetchViewTubeLines(session.coach_id, session.prefetch_lines || []);
       navigate(`/viewtube/watch/${session.id}`);
     } catch (err) {
       toast.error(err?.response?.data?.detail || "Could not start the session");

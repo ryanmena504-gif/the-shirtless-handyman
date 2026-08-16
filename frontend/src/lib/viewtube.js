@@ -2,11 +2,34 @@ import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+export const LOOKING_LINE = "Looking.";
+export const GLANCE_MS = 2800;
+
 export const VIEWTUBE = {
   name: "viewTube",
   tagline: "YouTube shows you how. viewTube watches you do it.",
-  promise: "A live coach in your pocket. Charming. Strict. Stops you before the board goes on backwards.",
+  promise:
+    "Feels like a person in the room — not a loading spinner. Charming. Strict. Stops you before the board goes on backwards.",
 };
+
+const speakCache = new Map();
+const speakInflight = new Map();
+
+export function speakCacheKey(coachId, text) {
+  return `${coachId}|${String(text || "").trim()}`;
+}
+
+export function peekViewTubeSpeakCache(coachId, text) {
+  return speakCache.get(speakCacheKey(coachId, text)) || "";
+}
+
+export function clearViewTubeSpeakCache() {
+  for (const url of speakCache.values()) {
+    URL.revokeObjectURL(url);
+  }
+  speakCache.clear();
+  speakInflight.clear();
+}
 
 export async function fetchViewTubeCatalog() {
   const { data } = await axios.get(`${API}/viewtube/catalog`);
@@ -36,16 +59,53 @@ export async function postViewTubeEvent(sessionId, type, signals = {}, frame = "
 }
 
 export async function speakViewTubeLine(coachId, text) {
-  const { data } = await axios.post(
-    `${API}/viewtube/speak`,
-    { coach_id: coachId, text },
-    { responseType: "blob" },
-  );
-  if (data.type && data.type.includes("json")) {
-    const err = JSON.parse(await data.text());
-    throw new Error(err.detail || "AI voice failed");
+  const cleaned = String(text || "").trim();
+  if (!coachId || !cleaned) {
+    throw new Error("Nothing to say");
   }
-  return URL.createObjectURL(data);
+  const key = speakCacheKey(coachId, cleaned);
+  if (speakCache.has(key)) return speakCache.get(key);
+  if (speakInflight.has(key)) return speakInflight.get(key);
+
+  const pending = (async () => {
+    const { data } = await axios.post(
+      `${API}/viewtube/speak`,
+      { coach_id: coachId, text: cleaned },
+      { responseType: "blob" },
+    );
+    if (data.type && data.type.includes("json")) {
+      const err = JSON.parse(await data.text());
+      throw new Error(err.detail || "AI voice failed");
+    }
+    const url = URL.createObjectURL(data);
+    speakCache.set(key, url);
+    return url;
+  })();
+
+  speakInflight.set(key, pending);
+  try {
+    return await pending;
+  } finally {
+    speakInflight.delete(key);
+  }
+}
+
+export async function prefetchViewTubeLines(coachId, texts = []) {
+  const unique = [];
+  const seen = new Set();
+  for (const text of texts) {
+    const cleaned = String(text || "").trim();
+    if (!cleaned || seen.has(cleaned)) continue;
+    seen.add(cleaned);
+    unique.push(cleaned);
+  }
+  if (!coachId || unique.length === 0) return;
+  const urgent = unique.slice(0, 3);
+  const rest = unique.slice(3);
+  await Promise.all(urgent.map((text) => speakViewTubeLine(coachId, text).catch(() => null)));
+  rest.forEach((text) => {
+    speakViewTubeLine(coachId, text).catch(() => null);
+  });
 }
 
 export function sampleFrameSignals(videoEl) {
@@ -81,4 +141,3 @@ export function captureFrame(videoEl, maxWidth = 640, quality = 0.72) {
   ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
   return canvas.toDataURL("image/jpeg", quality);
 }
-

@@ -15,7 +15,7 @@ from viewtube import speak_request
 logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, bytes] = {}
-_CACHE_MAX = 64
+_CACHE_MAX = 128
 
 
 def cache_key(coach_id: str, text: str) -> str:
@@ -60,16 +60,19 @@ def synthesize_sync(coach_id: str, text: str) -> bytes:
     client = _openai_client()
     audio: Optional[bytes] = None
     try:
-        response = client.audio.speech.create(
-            model=req["tts_model"],
-            voice=req["tts_voice"],
-            input=req["text"],
-            instructions=req["tts_instructions"],
-            response_format="mp3",
-        )
+        kwargs = {
+            "model": req["tts_model"],
+            "voice": req["tts_voice"],
+            "input": req["text"],
+            "response_format": "mp3",
+        }
+        # tts-1 is the live path. Instructions only exist on the slower steerable models.
+        if req["tts_model"] not in {"tts-1", "tts-1-hd"} and req.get("tts_instructions"):
+            kwargs["instructions"] = req["tts_instructions"]
+        response = client.audio.speech.create(**kwargs)
         audio = _audio_bytes(response)
     except Exception as exc:
-        logger.warning("Steerable TTS failed (%s); falling back to tts-1", exc)
+        logger.warning("Primary TTS failed (%s); falling back to tts-1", exc)
         response = client.audio.speech.create(
             model="tts-1",
             voice=req["tts_voice"],
