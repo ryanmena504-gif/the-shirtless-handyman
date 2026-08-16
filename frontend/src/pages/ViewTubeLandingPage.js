@@ -4,18 +4,19 @@ import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
 import { VIEWTUBE } from "../lib/viewtube";
+import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { Eye, OctagonX, Smartphone, Volume2 } from "lucide-react";
 
 const COACH_STILLS = [
   {
+    id: "cole",
     name: "Cole",
     line: "Calm. A little cocky. Will not let you skip the glasses.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&h=1200&fit=crop&fm=jpg&q=80",
   },
   {
+    id: "avery",
     name: "Avery",
     line: "Sharp. Encouraging. Catches the board before it goes on backwards.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&h=1200&fit=crop&fm=jpg&q=80",
   },
 ];
 
@@ -37,8 +38,8 @@ const BEATS = [
   },
   {
     icon: Volume2,
-    title: "You pick the voice",
-    copy: "Cole or Avery. Charming on purpose. The safety layer is not flirty.",
+    title: "You pick the AI voice",
+    copy: "Cole or Avery. Generated speech. Nothing recorded by a person — including you.",
   },
 ];
 
@@ -72,7 +73,7 @@ export default function ViewTubeLandingPage() {
             {VIEWTUBE.tagline}
           </h1>
           <p className="mt-6 max-w-xl text-white/65 text-lg leading-relaxed">
-            {VIEWTUBE.promise} Four structured projects to start. No open-world guessing. No Vision Pro.
+            {VIEWTUBE.promise} AI voices only. Four structured projects to start. No open-world guessing. No Vision Pro.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <button
@@ -105,8 +106,8 @@ export default function ViewTubeLandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 * i }}
             >
-              <img src={coach.image} alt={`${coach.name}, viewTube coach`} className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+              <ViewTubeCoachPortrait coachId={coach.id} className="absolute inset-0 w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
               <figcaption className="absolute bottom-0 p-8">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#D97757] font-bold mb-2">Coach</p>
                 <p className="text-4xl font-light" style={{ fontFamily: "'Fraunces', serif" }}>{coach.name}</p>

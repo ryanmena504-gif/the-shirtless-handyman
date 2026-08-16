@@ -34,6 +34,19 @@ export async function postViewTubeEvent(sessionId, type, signals = {}) {
   return data;
 }
 
+export async function speakViewTubeLine(coachId, text) {
+  const { data } = await axios.post(
+    `${API}/viewtube/speak`,
+    { coach_id: coachId, text },
+    { responseType: "blob" },
+  );
+  if (data.type && data.type.includes("json")) {
+    const err = JSON.parse(await data.text());
+    throw new Error(err.detail || "AI voice failed");
+  }
+  return URL.createObjectURL(data);
+}
+
 export function sampleFrameSignals(videoEl) {
   const signals = {};
   if (!videoEl || videoEl.readyState < 2) {
@@ -55,14 +68,3 @@ export function sampleFrameSignals(videoEl) {
   return signals;
 }
 
-export function pickSpeechVoice(voices, gender) {
-  const pool = voices.filter((v) => {
-    const name = `${v.name} ${v.lang}`.toLowerCase();
-    if (!name.includes("en")) return false;
-    if (gender === "female") {
-      return /female|samantha|victoria|karen|moira|siri|zira|susan|fiona|karen/.test(name);
-    }
-    return /male|daniel|alex|fred|david|tom|daniel|aaron|oliver/.test(name);
-  });
-  return pool[0] || voices.find((v) => v.lang.startsWith("en")) || voices[0] || null;
-}

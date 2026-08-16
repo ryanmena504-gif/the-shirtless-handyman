@@ -14,6 +14,7 @@ from viewtube import (
     HARD_STOP,
     SOFT_PAUSE,
     ASK,
+    MAX_SPEAK_CHARS,
     STATUS_COMPLETED,
     STATUS_HARD_STOP,
     STATUS_LIVE,
@@ -25,6 +26,8 @@ from viewtube import (
     get_project,
     list_coaches,
     list_projects,
+    speak_request,
+    tts_spec,
 )
 
 
@@ -44,6 +47,10 @@ def test_catalog_has_two_coaches_and_four_projects():
     assert len(data["projects"]) == 4
     assert get_coach("cole")["voice"] == "male"
     assert get_coach("avery")["voice"] == "female"
+    assert get_coach("cole")["voice_source"] == "ai"
+    assert get_coach("avery")["voice_source"] == "ai"
+    assert get_coach("cole")["tts_voice"] == "onyx"
+    assert get_coach("avery")["tts_voice"] == "nova"
 
 
 def test_unknown_coach_or_project_raises():
@@ -173,6 +180,39 @@ def test_hands_missing_asks_instead_of_stopping():
     session = apply_event(session, "check_me", {"hands_in_frame": False})
     assert session["interrupt"]["kind"] == ASK
     assert session["interrupt"]["reason"] == "hands_missing"
+
+
+def test_speak_request_is_ai_only():
+    req = speak_request("cole", "  Hold. Flip that panel.  ")
+    assert req["voice_source"] == "ai"
+    assert req["tts_voice"] == "onyx"
+    assert req["text"] == "Hold. Flip that panel."
+    assert "sultry" in req["tts_instructions"]
+    avery = tts_spec("avery")
+    assert avery["tts_voice"] == "nova"
+    assert avery["tts_model"] == "gpt-4o-mini-tts"
+
+
+def test_speak_request_rejects_empty_and_unknown():
+    with pytest.raises(ValueError, match="Nothing to say"):
+        speak_request("cole", "   ")
+    with pytest.raises(ValueError, match="Unknown coach"):
+        speak_request("ryan", "Hey")
+    with pytest.raises(ValueError, match="too long"):
+        speak_request("avery", "x" * (MAX_SPEAK_CHARS + 1))
+
+
+def test_coach_line_marks_ai_voice():
+    session = create_session("avery", "paint-wall")
+    assert session["coach_line"]["voice_source"] == "ai"
+    assert session["coach_line"]["tts_voice"] == "nova"
+
+
+def test_tts_cache_key_is_stable():
+    from viewtube_tts import cache_key
+
+    assert cache_key("cole", "Hold.") == cache_key("cole", "Hold.")
+    assert cache_key("cole", "Hold.") != cache_key("avery", "Hold.")
 
 
 def test_list_helpers_do_not_leak_mutability():

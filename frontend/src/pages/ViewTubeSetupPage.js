@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
-import { createViewTubeSession, fetchViewTubeCatalog } from "../lib/viewtube";
+import { createViewTubeSession, fetchViewTubeCatalog, speakViewTubeLine } from "../lib/viewtube";
+import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { toast } from "sonner";
 
 export default function ViewTubeSetupPage() {
@@ -12,12 +13,29 @@ export default function ViewTubeSetupPage() {
   const [coachId, setCoachId] = useState("avery");
   const [projectId, setProjectId] = useState("flatpack-shelf");
   const [starting, setStarting] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
 
   useEffect(() => {
     fetchViewTubeCatalog()
       .then(setCatalog)
       .catch(() => toast.error("Could not load viewTube catalog"));
   }, []);
+
+  const previewVoice = async () => {
+    const coach = catalog?.coaches?.find((c) => c.id === coachId);
+    if (!coach) return;
+    setPreviewing(true);
+    try {
+      const url = await speakViewTubeLine(coachId, `I'm ${coach.name}. This is an AI voice. Prop the phone so I can see the bench.`);
+      const audio = new Audio(url);
+      audio.onended = () => URL.revokeObjectURL(url);
+      await audio.play();
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || "AI voice preview failed");
+    } finally {
+      setPreviewing(false);
+    }
+  };
 
   const start = async () => {
     setStarting(true);
@@ -47,7 +65,7 @@ export default function ViewTubeSetupPage() {
           Who is in your ear?
         </h1>
         <p className="mt-3 text-white/60 max-w-xl">
-          Attractive on purpose. PG on purpose. The stop button does not care who you picked.
+          AI voices. Nothing recorded — not by a voice actor, not by you. The stop button does not care who you picked.
         </p>
 
         <div className="mt-10 grid md:grid-cols-2 gap-4" data-testid="viewtube-coach-grid">
@@ -63,12 +81,12 @@ export default function ViewTubeSetupPage() {
                   selected ? "border-[#D97757]" : "border-white/10"
                 }`}
               >
-                <div className="relative h-64">
-                  <img src={coach.portrait} alt={coach.name} className="w-full h-full object-cover" />
+                <div className="relative h-64 bg-[#141414]">
+                  <ViewTubeCoachPortrait coachId={coach.id} className="w-full h-full" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-4 left-5">
                     <p className="text-3xl font-light" style={{ fontFamily: "'Fraunces', serif" }}>{coach.name}</p>
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/60">{coach.pronouns} · {coach.voice}</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white/60">{coach.pronouns} · AI voice</p>
                   </div>
                 </div>
                 <div className="p-5">
@@ -117,15 +135,26 @@ export default function ViewTubeSetupPage() {
           })}
         </div>
 
-        <button
-          type="button"
-          data-testid="viewtube-go-live-btn"
-          onClick={start}
-          disabled={starting || !catalog}
-          className="mt-10 h-14 px-10 rounded-full bg-[#D97757] text-white font-semibold disabled:opacity-50"
-        >
-          {starting ? "Going live…" : "Go live"}
-        </button>
+        <div className="mt-10 flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            data-testid="viewtube-preview-voice-btn"
+            onClick={previewVoice}
+            disabled={previewing || !catalog}
+            className="h-14 px-10 rounded-full border border-white/20 text-white font-semibold disabled:opacity-50"
+          >
+            {previewing ? "Speaking…" : "Hear this AI voice"}
+          </button>
+          <button
+            type="button"
+            data-testid="viewtube-go-live-btn"
+            onClick={start}
+            disabled={starting || !catalog}
+            className="h-14 px-10 rounded-full bg-[#D97757] text-white font-semibold disabled:opacity-50"
+          >
+            {starting ? "Going live…" : "Go live"}
+          </button>
+        </div>
       </div>
     </div>
   );

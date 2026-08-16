@@ -44,26 +44,44 @@ VALID_EVENTS = {
 DARK_THRESHOLD = 0.12
 
 
+MAX_SPEAK_CHARS = 500
+
 COACHES = [
     {
         "id": "cole",
         "name": "Cole",
         "pronouns": "he/him",
         "voice": "male",
+        "voice_source": "ai",
+        "tts_voice": "onyx",
+        "tts_model": "gpt-4o-mini-tts",
+        "tts_instructions": (
+            "You are Cole, an AI shop coach. Warm, slightly cocky, never sultry. "
+            "Speak like a friend who will stop a bad cut. American English. Medium pace. "
+            "No whisper. No flirt. Clear consonants."
+        ),
         "tagline": "Calm, a little cocky, will not let you skip the glasses.",
-        "bio": "Former shop teacher. Talks like a friend. Stops you like a foreman.",
+        "bio": "AI shop teacher. Talks like a friend. Stops you like a foreman.",
         "style": "warm-direct",
-        "portrait": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=1000&fit=crop&fm=jpg&q=80",
+        "portrait": None,
     },
     {
         "id": "avery",
         "name": "Avery",
         "pronouns": "she/her",
         "voice": "female",
+        "voice_source": "ai",
+        "tts_voice": "nova",
+        "tts_model": "gpt-4o-mini-tts",
+        "tts_instructions": (
+            "You are Avery, an AI finish-carpenter coach. Sharp, encouraging, never sultry. "
+            "Speak like someone who has seen every board go on backwards. American English. "
+            "Medium pace. No whisper. No flirt. Clear consonants."
+        ),
         "tagline": "Sharp, encouraging, catches the board before it goes on backwards.",
-        "bio": "Finish carpenter who got tired of watching people learn the hard way on YouTube.",
+        "bio": "AI finish carpenter who got tired of people learning the hard way on YouTube.",
         "style": "warm-direct",
-        "portrait": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1000&fit=crop&fm=jpg&q=80",
+        "portrait": None,
     },
 ]
 
@@ -223,11 +241,40 @@ def public_project(project: dict) -> dict:
     return deepcopy(project)
 
 
+def tts_spec(coach_id: str) -> dict:
+    """AI voice contract for a coach. No human recordings."""
+    coach = get_coach(coach_id)
+    if not coach:
+        raise ValueError("Unknown coach")
+    return {
+        "coach_id": coach["id"],
+        "coach_name": coach["name"],
+        "voice_source": "ai",
+        "tts_voice": coach["tts_voice"],
+        "tts_model": coach.get("tts_model", "gpt-4o-mini-tts"),
+        "tts_instructions": coach["tts_instructions"],
+    }
+
+
+def speak_request(coach_id: str, text: str) -> dict:
+    """Validate a line before it hits the TTS provider."""
+    cleaned = (text or "").strip()
+    if not cleaned:
+        raise ValueError("Nothing to say")
+    if len(cleaned) > MAX_SPEAK_CHARS:
+        raise ValueError("Line too long")
+    spec = tts_spec(coach_id)
+    spec["text"] = cleaned
+    return spec
+
+
 def _line(coach: dict, text: str) -> dict:
     return {
         "coach_id": coach["id"],
         "coach_name": coach["name"],
         "voice": coach["voice"],
+        "voice_source": coach.get("voice_source", "ai"),
+        "tts_voice": coach.get("tts_voice"),
         "text": text,
     }
 

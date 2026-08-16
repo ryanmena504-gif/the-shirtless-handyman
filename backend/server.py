@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
@@ -35,7 +35,9 @@ from viewtube import (
     catalog as viewtube_catalog,
     create_session as viewtube_create_session,
     session_public as viewtube_session_public,
+    speak_request as viewtube_speak_request,
 )
+from viewtube_tts import synthesize_sync as viewtube_synthesize
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -1142,6 +1144,11 @@ class ViewTubeSessionEvent(BaseModel):
     signals: dict = {}
 
 
+class ViewTubeSpeak(BaseModel):
+    coach_id: str
+    text: str
+
+
 @api_router.get("/viewtube/catalog")
 async def get_viewtube_catalog():
     """Coaches + structured projects. No camera required."""
@@ -1177,6 +1184,23 @@ async def post_viewtube_event(session_id: str, req: ViewTubeSessionEvent):
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     await db.viewtube_sessions.replace_one({"id": session_id}, updated)
     return viewtube_session_public(updated)
+
+
+@api_router.post("/viewtube/speak")
+async def viewtube_speak(req: ViewTubeSpeak):
+    """AI voice only. Cole and Avery are synthetic — no human recordings."""
+    try:
+        viewtube_speak_request(req.coach_id, req.text)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    try:
+        audio = await asyncio.to_thread(viewtube_synthesize, req.coach_id, req.text)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("viewTube AI voice failed: %s", exc)
+        raise HTTPException(status_code=502, detail="AI voice is unavailable right now") from exc
+    return Response(content=audio, media_type="audio/mpeg")
 
 
 @api_router.post("/seed")

@@ -4,10 +4,11 @@ import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
 import { ViewTubeHardStop } from "../components/viewtube/ViewTubeHardStop";
 import {
   fetchViewTubeSession,
-  pickSpeechVoice,
   postViewTubeEvent,
   sampleFrameSignals,
+  speakViewTubeLine,
 } from "../lib/viewtube";
+import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { toast } from "sonner";
 
 export default function ViewTubeWatchPage() {
@@ -15,6 +16,8 @@ export default function ViewTubeWatchPage() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const lastSpoken = useRef("");
+  const audioRef = useRef(null);
+  const audioUrlRef = useRef("");
   const [session, setSession] = useState(null);
   const [camError, setCamError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -55,23 +58,33 @@ export default function ViewTubeWatchPage() {
 
   useEffect(() => {
     const text = session?.coach_line?.text;
-    if (!text || muted || text === lastSpoken.current) return;
+    const coachId = session?.coach_id;
+    if (!text || !coachId || muted || text === lastSpoken.current) return;
     lastSpoken.current = text;
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    const utter = new SpeechSynthesisUtterance(text);
-    const speak = () => {
-      const voice = pickSpeechVoice(window.speechSynthesis.getVoices(), session?.coach?.voice);
-      if (voice) utter.voice = voice;
-      utter.rate = 1.02;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utter);
-    };
-    speak();
-    window.speechSynthesis.onvoiceschanged = speak;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const url = await speakViewTubeLine(coachId, text);
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+        audioUrlRef.current = url;
+        if (!audioRef.current) audioRef.current = new Audio();
+        audioRef.current.src = url;
+        await audioRef.current.play();
+      } catch (err) {
+        toast.error(err?.response?.data?.detail || "AI voice could not speak that line");
+      }
+    })();
+
     return () => {
-      window.speechSynthesis.onvoiceschanged = null;
+      cancelled = true;
+      audioRef.current?.pause();
     };
-  }, [session?.coach_line?.text, session?.coach?.voice, muted]);
+  }, [session?.coach_line?.text, session?.coach_id, muted]);
 
   const send = useCallback(
     async (type, extraSignals = {}) => {
@@ -127,8 +140,10 @@ export default function ViewTubeWatchPage() {
             type="button"
             data-testid="viewtube-mute-btn"
             onClick={() => {
-              setMuted((m) => !m);
-              window.speechSynthesis?.cancel();
+              setMuted((m) => {
+                if (!m) audioRef.current?.pause();
+                return !m;
+              });
             }}
             className="h-9 px-3 rounded-full border border-white/20 text-xs"
           >
@@ -150,10 +165,9 @@ export default function ViewTubeWatchPage() {
         <>
           <div className="absolute left-5 bottom-36 z-20 max-w-sm">
             <div className="flex items-end gap-3">
-              <img
-                src={session.coach.portrait}
-                alt={session.coach.name}
-                className="w-16 h-20 object-cover rounded-xl border border-white/20"
+              <ViewTubeCoachPortrait
+                coachId={session.coach_id}
+                className="w-16 h-20 rounded-xl border border-white/20 overflow-hidden"
               />
               <div>
                 <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold">{session.coach.name}</p>
