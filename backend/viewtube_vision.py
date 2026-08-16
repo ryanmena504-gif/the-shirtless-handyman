@@ -34,7 +34,7 @@ def validate_frame(frame: Optional[str]) -> Optional[str]:
     return cleaned
 
 
-def look_at_frame_sync(session: dict, frame: str) -> dict:
+def look_at_frame_sync(session: dict, frame: str, frame_ref: Optional[str] = None) -> dict:
     """Call the vision model. Raises on config/provider failure."""
     api_key = os.environ.get("EMERGENT_LLM_KEY", "") or os.environ.get("OPENAI_API_KEY", "")
     if not api_key:
@@ -53,17 +53,21 @@ def look_at_frame_sync(session: dict, frame: str) -> dict:
 
     brief = vision_brief(session)
     prompt = vision_prompt(brief)
+    content: list = [{"type": "text", "text": prompt}]
+    if frame_ref:
+        content.extend(
+            [
+                {"type": "text", "text": "Image 1 is the reference — the right way."},
+                {"type": "image_url", "image_url": {"url": frame_ref}},
+                {"type": "text", "text": "Image 2 is now."},
+                {"type": "image_url", "image_url": {"url": frame}},
+            ]
+        )
+    else:
+        content.append({"type": "image_url", "image_url": {"url": frame}})
     response = litellm.completion(
         model="openai/gpt-4o",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": prompt},
-                    {"type": "image_url", "image_url": {"url": frame}},
-                ],
-            }
-        ],
+        messages=[{"role": "user", "content": content}],
         max_tokens=300,
         timeout=35,
         **kwargs,

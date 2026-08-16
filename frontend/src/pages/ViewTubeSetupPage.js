@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
@@ -10,9 +10,10 @@ import { toast } from "sonner";
 
 export default function ViewTubeSetupPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [catalog, setCatalog] = useState(null);
   const [coachId, setCoachId] = useState("avery");
-  const [projectId, setProjectId] = useState("flatpack-shelf");
+  const [projectId, setProjectId] = useState(params.get("project") || "the-stop");
   const [starting, setStarting] = useState(false);
   const [previewing, setPreviewing] = useState(false);
 
@@ -105,7 +106,7 @@ export default function ViewTubeSetupPage() {
           What are we building?
         </h2>
         <p className="mt-2 text-white/55 text-sm mb-6">
-          Structured projects only. Open-world DIY is how you get a false green light on a live circuit.
+          Start with Feel the stop — thirty seconds, any rectangular thing. Then a real project. Open-world DIY is how you get a false green light.
         </p>
         <div className="grid md:grid-cols-2 gap-4" data-testid="viewtube-project-grid">
           {(catalog?.projects || []).map((project) => {
@@ -126,7 +127,9 @@ export default function ViewTubeSetupPage() {
                 <div className="p-5">
                   <div className="flex items-center justify-between gap-3 mb-2">
                     <p className="text-lg font-medium">{project.title}</p>
-                    <span className="text-[10px] uppercase tracking-widest text-white/45">{project.difficulty}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-white/45">
+                      {project.hero ? "The moment" : project.difficulty}
+                    </span>
                   </div>
                   <p className="text-sm text-white/60">{project.blurb}</p>
                   <p className="mt-3 text-xs text-white/40">{project.duration} · {project.steps.length} watched steps</p>

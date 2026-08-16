@@ -53,8 +53,9 @@ def test_catalog_has_two_coaches_and_six_projects():
     assert data["name"] == "viewTube"
     assert "watches you" in data["tagline"]
     assert {c["id"] for c in data["coaches"]} == {"cole", "avery"}
-    assert len(data["projects"]) == 6
-    assert {p["id"] for p in data["projects"]} >= {"flatpack-shelf", "floating-shelf", "faucet-swap", "tool-safety"}
+    assert len(data["projects"]) == 7
+    assert data["projects"][0]["id"] == "the-stop"
+    assert {p["id"] for p in data["projects"]} >= {"the-stop", "flatpack-shelf", "floating-shelf", "faucet-swap", "tool-safety"}
     assert get_coach("cole")["voice"] == "male"
     assert get_coach("avery")["voice"] == "female"
     assert get_coach("cole")["voice_source"] == "ai"
@@ -444,7 +445,10 @@ def test_js_sense_spec_matches_backend():
     assert f"settleFrames: {spec['settle_frames']}" in js
     assert f"shockCooldownMs: {spec['shock_cooldown_ms']}" in js
     assert f"heartbeatMs: {spec['heartbeat_ms']}" in js
+    assert f"benchHands: {spec['bench_hands']}" in js
+    assert f"benchEmpty: {spec['bench_empty']}" in js
     assert "export function motionMatters" in js
+    assert "export function localHandsSignal" in js
 
 
 def test_tts_disk_cache_skips_the_network(tmp_path, monkeypatch):
@@ -493,3 +497,37 @@ def test_placement_settled_glance_still_stops_inverted():
     })
     assert session["status"] == STATUS_HARD_STOP
     assert session["interrupt"]["reason"] == "part_inverted"
+
+
+def test_rehearsal_is_the_hero_path():
+    session = create_session("cole", "the-stop")
+    assert "Thirty seconds" in session["coach_line"]["text"]
+    session = apply_event(session, "confirm_setup")
+    assert session["project"]["steps"][0]["captures_reference"] is True
+    session = apply_event(session, "complete_step")
+    assert session["interrupt"]["reason"] == "unchecked_step"
+    session = apply_event(session, "resume")
+    session = apply_event(session, "check_me")
+    session = apply_event(session, "complete_step")
+    assert session["step_index"] == 1
+    assert session["project"]["steps"][1]["compare_reference"] is True
+    session = apply_event(session, "glance", {
+        "look_source": "settled",
+        "part_inverted": True,
+        "vision_confidence": 0.9,
+    })
+    assert session["status"] == STATUS_HARD_STOP
+    assert "whole product" in session["coach_line"]["text"].lower()
+
+
+def test_compare_reference_prompt_names_the_right_way():
+    from viewtube import vision_brief, vision_prompt
+
+    session = _live_session("the-stop")
+    session = apply_event(session, "check_me")
+    session = apply_event(session, "complete_step")
+    brief = vision_brief(session)
+    assert brief["compare_reference"] is True
+    prompt = vision_prompt(brief)
+    assert "RIGHT way" in prompt
+    assert "Never invent a green light" in prompt

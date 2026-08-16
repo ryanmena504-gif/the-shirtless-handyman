@@ -21,10 +21,21 @@ export const SENSE = {
   settleFrames: 6,
   shockCooldownMs: 8000,
   heartbeatMs: 15000,
+  benchHands: 0.04,
+  benchEmpty: 0.012,
 };
 
 export function motionMatters(watch) {
   return watch === "placement" || watch === "danger";
+}
+
+export function localHandsSignal(sample) {
+  if (!sample || sample.brightness == null || sample.brightness < 0.18) return {};
+  if (sample.benchSkin >= SENSE.benchHands) return { hands_in_frame: true };
+  if (sample.benchSkin < SENSE.benchEmpty && sample.face < 0.12) {
+    return { hands_in_frame: false };
+  }
+  return {};
 }
 
 export function createSenseState() {
@@ -55,6 +66,7 @@ export function analyzeFrame(pixels, prevGray, width, height) {
   let upperN = 0;
   let motionBench = 0;
   let benchN = 0;
+  let skinBench = 0;
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
@@ -66,13 +78,15 @@ export function analyzeFrame(pixels, prevGray, width, height) {
       const yv = luminance(r, g, b);
       gray[i] = yv;
       brightSum += yv;
-      if (isSkin(r, g, b)) {
+      const skinPx = isSkin(r, g, b);
+      if (skinPx) {
         skin += 1;
         if (y < benchStart) skinUpper += 1;
       }
       if (y < benchStart) upperN += 1;
       if (y >= benchStart) {
         benchN += 1;
+        if (skinPx) skinBench += 1;
         if (prevGray) motionBench += Math.abs(yv - prevGray[i]);
       }
     }
@@ -82,6 +96,7 @@ export function analyzeFrame(pixels, prevGray, width, height) {
     brightness: brightSum / n / 255,
     skin: skin / n,
     face: upperN ? skinUpper / upperN : 0,
+    benchSkin: benchN ? skinBench / benchN : 0,
     motion: benchN && prevGray ? motionBench / benchN / 255 : 0,
     gray,
   };

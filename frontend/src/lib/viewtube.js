@@ -58,11 +58,12 @@ export async function fetchViewTubeSession(sessionId) {
   return data;
 }
 
-export async function postViewTubeEvent(sessionId, type, signals = {}, frame = "") {
+export async function postViewTubeEvent(sessionId, type, signals = {}, frame = "", frameRef = "") {
   const { data } = await axios.post(`${API}/viewtube/sessions/${sessionId}/events`, {
     type,
     signals,
     frame: frame || "",
+    frame_ref: frameRef || "",
   });
   return data;
 }

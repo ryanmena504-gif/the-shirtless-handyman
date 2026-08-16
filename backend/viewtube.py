@@ -78,6 +78,8 @@ SENSE_SPEC = {
     "settle_frames": 6,
     "shock_cooldown_ms": 8000,
     "heartbeat_ms": 15000,
+    "bench_hands": 0.04,
+    "bench_empty": 0.012,
 }
 
 CAMERA_SENSE_REASONS = {"camera_lost", "face_not_bench"}
@@ -160,6 +162,37 @@ COACHES = [
 
 PROJECTS = [
     {
+        "id": "the-stop",
+        "title": "Feel the stop",
+        "blurb": "Thirty seconds. A book, a box, anything with a front. Set it down backwards — I will freeze the session.",
+        "duration": "30–45 sec",
+        "difficulty": "The moment",
+        "requires_ppe": False,
+        "category": "rehearsal",
+        "hero": True,
+        "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=1200&h=800&fit=crop&fm=jpg&q=80",
+        "steps": [
+            {
+                "id": "show-face",
+                "title": "Show me the front",
+                "coach": "Grab a book, a box, a cutting board — anything with a front. Hold it so I can see that face. Tap Check me once. That still is the right way.",
+                "verify": "parts_visible",
+                "require_check": True,
+                "captures_reference": True,
+                "look_for": "Is a rectangular object visible on the bench, with a clear front face (cover, label, or finished side)?",
+            },
+            {
+                "id": "set-backwards",
+                "title": "Now flip it and set it down",
+                "coach": "Turn it over or backwards. Set it on the bench. Don't tap. I will see the motion, then look. If it's flipped, the session freezes. That's the product.",
+                "verify": "orientation",
+                "watch": "placement",
+                "compare_reference": True,
+                "look_for": "Is the object upside down, back-side up, or flipped so the front face is hidden?",
+            },
+        ],
+    },
+    {
         "id": "flatpack-shelf",
         "title": "Flat-pack shelf",
         "blurb": "The IKEA-class build. Parts, orientation, cam locks — we watch the bench.",
@@ -178,7 +211,7 @@ PROJECTS = [
             {
                 "id": "side-panel",
                 "title": "Stand the first side panel",
-                "coach": "The factory holes face in. If the finished edge is on the inside, you have it backwards.",
+                "coach": "This is the whole product. Factory holes face in. If the finished edge is on the inside, stop — that board is backwards.",
                 "verify": "orientation",
             },
             {
@@ -455,6 +488,7 @@ def prefetch_lines(session: dict) -> list[str]:
         add(f"Next: {title}. {coach_text}")
         add(f"Good. Back to it — {title}. {coach_text}")
     add("That piece is backwards. Do not drive another fastener. Flip it.")
+    add("That's backwards. That's the whole product. Flip it.")
     add("The guard is not snapping shut. Unplug it. We are not cutting on a sticky guard.")
     add("Hold. Do not take the next bite. Show me what you just did — slowly.")
     add("Got it. I will not freeze you over glasses. Let's work.")
@@ -493,8 +527,13 @@ def create_session(coach_id: str, project_id: str) -> dict:
         raise ValueError("Unknown project")
 
     greeting = (
-        f"I'm {coach['name']}. Prop the phone so I can see the bench — not your face. "
-        "When the work is in frame, tap I'm set."
+        f"I'm {coach['name']}. Thirty seconds. Grab a book, a box, anything with a front. "
+        "Prop the phone at the bench, then tap I'm set."
+        if project["id"] == "the-stop"
+        else (
+            f"I'm {coach['name']}. Prop the phone so I can see the bench — not your face. "
+            "When the work is in frame, tap I'm set."
+        )
     )
     return {
         "id": f"vt_{uuid.uuid4().hex[:16]}",
@@ -599,6 +638,9 @@ def vision_brief(session: dict) -> dict:
         "look_for": step.get("look_for") or LOOK_FOR.get(verify) or step.get("coach", ""),
         "requires_ppe": bool(project.get("requires_ppe")),
         "coach_name": session["coach"]["name"],
+        "compare_reference": bool(step.get("compare_reference")),
+        "captures_reference": bool(step.get("captures_reference")),
+        "hero": bool(project.get("hero")),
     }
 
 
@@ -643,6 +685,12 @@ def merge_vision_signals(client_signals: Optional[dict], vision: Optional[dict])
 
 
 def vision_prompt(brief: dict) -> str:
+    compare = (
+        "- A reference image may be attached first. That is the RIGHT way. "
+        "part_inverted=true only when the second image is clearly flipped, rotated 180, or showing the back.\n"
+        if brief.get("compare_reference")
+        else ""
+    )
     return (
         "You are a conservative DIY inspector looking at one still from a phone camera.\n"
         f"Project: {brief.get('project_title')}\n"
@@ -657,8 +705,21 @@ def vision_prompt(brief: dict) -> str:
         "Rules:\n"
         "- If you cannot see clearly, verdict is unsure. Never invent a green light.\n"
         "- part_inverted=true only when a part is clearly backwards or upside down.\n"
+        f"{compare}"
         "- Never fail or mark wrong because safety glasses are missing. That is optional.\n"
         "- Keep note under 140 characters. No flirt. No filler."
+    )
+
+
+def _inverted_copy(session: dict) -> tuple[str, str]:
+    if session.get("project", {}).get("id") == "the-stop":
+        return (
+            "That's backwards. That's the whole product. Flip it.",
+            "Flip it right-way up, tap I hear you, then Resume.",
+        )
+    return (
+        "That piece is backwards. Do not drive another fastener. Flip it.",
+        "Flip the part, tap I hear you, then Resume.",
     )
 
 
@@ -899,12 +960,13 @@ def _apply_glance(session: dict, signals: dict) -> dict:
         return session
 
     if signals.get("part_inverted") is True:
+        line, hint = _inverted_copy(session)
         return _raise_interrupt(
             session,
             HARD_STOP,
             "part_inverted",
-            "That piece is backwards. Do not drive another fastener. Flip it.",
-            "Flip the part, tap I hear you, then Resume.",
+            line,
+            hint,
         )
 
     if signals.get("guard_stuck") is True:
@@ -937,12 +999,13 @@ def _evaluate_check(session: dict, signals: dict) -> dict:
         return session
 
     if signals.get("part_inverted") is True:
+        line, hint = _inverted_copy(session)
         return _raise_interrupt(
             session,
             HARD_STOP,
             "part_inverted",
-            "That piece is backwards. Do not drive another fastener. Flip it.",
-            "Flip the part, tap I hear you, then Resume.",
+            line,
+            hint,
         )
 
     if signals.get("guard_stuck") is True:
@@ -1023,7 +1086,8 @@ def _complete_step(session: dict, signals: dict) -> dict:
             "Flip it, Check me, then Done with this step.",
         )
 
-    if step.get("verify") in {"orientation", "guard"} and not session.get("checked_current") and not step.get("optional"):
+    needs_check = bool(step.get("require_check") or step.get("verify") in {"orientation", "guard"})
+    if needs_check and not session.get("checked_current") and not step.get("optional"):
         return _raise_interrupt(
             session,
             SOFT_PAUSE,
@@ -1040,7 +1104,10 @@ def _complete_step(session: dict, signals: dict) -> dict:
     if session["step_index"] >= len(steps):
         session["status"] = STATUS_COMPLETED
         session["completed_at"] = _now()
-        _set_line(session, "Clean finish. That is how you do it when someone is actually watching.")
+        if session["project"]["id"] == "the-stop":
+            _set_line(session, "That's the product. You felt the stop. Now go build something.")
+        else:
+            _set_line(session, "Clean finish. That is how you do it when someone is actually watching.")
         return session
 
     nxt = current_step(session)

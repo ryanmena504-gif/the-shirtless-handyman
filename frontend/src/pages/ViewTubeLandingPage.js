@@ -73,24 +73,24 @@ export default function ViewTubeLandingPage() {
             {VIEWTUBE.tagline}
           </h1>
           <p className="mt-6 max-w-xl text-white/65 text-lg leading-relaxed">
-            {VIEWTUBE.promise} Six structured projects. AI voices. They only stop you when they are sure.
+            {VIEWTUBE.promise} Thirty seconds to feel the stop. Then six structured projects.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <button
               type="button"
-              data-testid="viewtube-start-btn"
-              onClick={() => navigate("/viewtube/setup")}
+              data-testid="viewtube-feel-stop-btn"
+              onClick={() => navigate("/viewtube/setup?project=the-stop")}
               className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-semibold"
             >
-              Pick a coach
+              Feel the stop
             </button>
             <button
               type="button"
-              data-testid="viewtube-how-btn"
-              onClick={() => document.getElementById("viewtube-how")?.scrollIntoView({ behavior: "smooth" })}
+              data-testid="viewtube-start-btn"
+              onClick={() => navigate("/viewtube/setup")}
               className="h-14 px-10 rounded-full border border-white/20 text-white text-base font-medium"
             >
-              How the stop works
+              Pick a project
             </button>
           </div>
         </div>

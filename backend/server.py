@@ -1146,6 +1146,7 @@ class ViewTubeSessionEvent(BaseModel):
     type: str
     signals: dict = {}
     frame: str = ""
+    frame_ref: str = ""
 
 
 class ViewTubeSpeak(BaseModel):
@@ -1186,11 +1187,12 @@ async def post_viewtube_event(session_id: str, req: ViewTubeSessionEvent):
     started_updated = session.get("updated_at")
     try:
         frame = viewtube_validate_frame(req.frame)
+        frame_ref = viewtube_validate_frame(req.frame_ref)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if frame and req.type in VIEWTUBE_VISION_LOOK_EVENTS:
         try:
-            vision = await asyncio.to_thread(look_at_frame_sync, session, frame)
+            vision = await asyncio.to_thread(look_at_frame_sync, session, frame, frame_ref)
             signals = viewtube_merge_vision(signals, vision)
         except Exception as exc:
             logger.warning("viewTube vision skipped: %s", exc)

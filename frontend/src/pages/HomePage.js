@@ -187,7 +187,7 @@ export default function HomePage() {
               <span className="block text-white/80 italic mt-2">watches you do the work.</span>
             </h2>
             <p className="mt-4 text-white/60 max-w-lg">
-              The phone watches the bench. Cole or Avery talk in the room. The cloud only looks when you move — and hard-stops you if the part is backwards.
+              Thirty seconds. Any rectangular thing. Cole or Avery will freeze the session if you set it down backwards.
             </p>
           </div>
           <button
@@ -196,7 +196,7 @@ export default function HomePage() {
             onClick={() => navigate("/viewtube")}
             className="h-12 px-8 rounded-full bg-[#D97757] text-white font-semibold self-start md:self-auto"
           >
-            Open viewTube
+            Feel the stop
           </button>
         </div>
       </section>

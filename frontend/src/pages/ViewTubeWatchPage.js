@@ -17,6 +17,7 @@ import {
   SENSE,
   analyzeFrame,
   createSenseState,
+  localHandsSignal,
   motionMatters,
   reduceSense,
   sampleVideo,
@@ -36,6 +37,8 @@ export default function ViewTubeWatchPage() {
   const mutedRef = useRef(false);
   const sessionRef = useRef(null);
   const lookingRef = useRef(false);
+  const lastSampleRef = useRef(null);
+  const referenceFrameRef = useRef("");
   const [session, setSession] = useState(null);
   const [camError, setCamError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -129,14 +132,27 @@ export default function ViewTubeWatchPage() {
         if (filler) playUrl(filler);
       }
       try {
+        const sess = sessionRef.current;
+        const step = sess?.project?.steps?.[sess?.step_index];
+        const hands = localHandsSignal(lastSampleRef.current);
+        const skipCloud =
+          shouldLook &&
+          hands.hands_in_frame === false &&
+          ["orientation", "stance"].includes(step?.verify) &&
+          !step?.compare_reference;
         const frameSignals = sampleFrameSignals(videoRef.current);
-        const frame = shouldLook ? captureFrame(videoRef.current) : "";
+        const frame = shouldLook && !skipCloud ? captureFrame(videoRef.current) : "";
+        const frameRef = shouldLook && step?.compare_reference ? referenceFrameRef.current : "";
         const next = await postViewTubeEvent(
           sessionId,
           type,
-          { ...frameSignals, ...extraSignals },
+          { ...frameSignals, ...hands, ...extraSignals },
           frame,
+          frameRef,
         );
+        if (shouldLook && frame && step?.captures_reference && next?.checked_current && !next?.interrupt) {
+          referenceFrameRef.current = frame;
+        }
         setSession(next);
         if (next?.prefetch_lines) {
           prefetchViewTubeLines(next.coach_id, next.prefetch_lines);
@@ -160,13 +176,17 @@ export default function ViewTubeWatchPage() {
     const gen = genRef.current;
     try {
       const frameSignals = sampleFrameSignals(videoRef.current);
+      const hands = localHandsSignal(lastSampleRef.current);
+      const step = sess.project?.steps?.[sess.step_index];
       const frame = captureFrame(videoRef.current, 480, 0.55);
       if (!frame) return;
+      const frameRef = step?.compare_reference ? referenceFrameRef.current : "";
       const next = await postViewTubeEvent(
         sessionId,
         "glance",
-        { ...frameSignals, ...extraSignals },
+        { ...frameSignals, ...hands, ...extraSignals },
         frame,
+        frameRef,
       );
       if (busyRef.current || gen !== genRef.current) return;
       setSession(next);
@@ -207,6 +227,7 @@ export default function ViewTubeWatchPage() {
       if (!pixels) return;
       const sample = analyzeFrame(pixels, prevGray, SENSE.width, SENSE.height);
       prevGray = sample.gray;
+      lastSampleRef.current = sample;
       sense = reduceSense(sense, sample, Date.now());
       if (sense.mode !== lastHud) {
         lastHud = sense.mode;
@@ -314,9 +335,13 @@ export default function ViewTubeWatchPage() {
       {session && session.status === "setup" && !stopped && (
         <div className="absolute inset-x-0 top-20 z-20 px-5" data-testid="viewtube-tripod-hint">
           <div className="max-w-md rounded-2xl border border-white/15 bg-black/70 p-4">
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold mb-2">Phone on a stand</p>
+            <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold mb-2">
+              {session.project_id === "the-stop" ? "Thirty seconds" : "Phone on a stand"}
+            </p>
             <p className="text-sm text-white/80 leading-relaxed">
-              Clamp it so I see the bench, not your face. Hands free. Tap I&apos;m set — I start talking. I watch motion on this phone. The cloud only looks when you move.
+              {session.project_id === "the-stop"
+                ? "Clamp the phone at the bench. Grab a book or a box. I'll freeze the session when you set it down backwards. That's the product."
+                : "Clamp it so I see the bench, not your face. Hands free. Tap I'm set — I start talking. I watch motion on this phone. The cloud only looks when you move."}
             </p>
           </div>
         </div>
@@ -369,6 +394,15 @@ export default function ViewTubeWatchPage() {
             </ol>
             {session.status === "completed" && (
               <p className="mt-4 text-sm text-[#D97757]" data-testid="viewtube-complete">Session complete.</p>
+            )}
+            {session.status === "completed" && session.project_id === "the-stop" && (
+              <Link
+                to="/viewtube/setup"
+                data-testid="viewtube-build-next-btn"
+                className="mt-4 inline-flex h-10 px-4 rounded-full bg-[#D97757] text-white text-xs font-semibold items-center"
+              >
+                Now go build something
+              </Link>
             )}
           </aside>
 
