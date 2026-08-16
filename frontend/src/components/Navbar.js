@@ -38,6 +38,14 @@ export const Navbar = () => {
           <Button
             variant="ghost"
             className="rounded-full text-sm font-medium"
+            onClick={() => navigate("/viewtube")}
+            data-testid="nav-viewtube-btn"
+          >
+            view<span className="text-[#D97757]">Tube</span>
+          </Button>
+          <Button
+            variant="ghost"
+            className="rounded-full text-sm font-medium"
             onClick={() => navigate("/upload")}
             data-testid="nav-start-btn"
           >
@@ -111,6 +119,14 @@ export const Navbar = () => {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden glass-card border-t border-border/40 p-4 flex flex-col gap-2 animate-fade-in">
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/viewtube"); setMobileOpen(false); }}
+            data-testid="mobile-viewtube-btn"
+          >
+            viewTube
+          </Button>
           <Button
             variant="ghost"
             className="w-full justify-start rounded-lg"

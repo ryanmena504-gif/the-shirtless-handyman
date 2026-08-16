@@ -19,6 +19,9 @@ import LocalServiceRoute from "./pages/LocalServiceRoute";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
+import ViewTubeLandingPage from "./pages/ViewTubeLandingPage";
+import ViewTubeSetupPage from "./pages/ViewTubeSetupPage";
+import ViewTubeWatchPage from "./pages/ViewTubeWatchPage";
 
 function App() {
   return (
@@ -60,6 +63,11 @@ function App() {
 
             {/* About */}
             <Route path="/about" element={<AboutPage />} />
+
+            {/* viewTube — live camera DIY coach */}
+            <Route path="/viewtube" element={<ViewTubeLandingPage />} />
+            <Route path="/viewtube/setup" element={<ViewTubeSetupPage />} />
+            <Route path="/viewtube/watch/:sessionId" element={<ViewTubeWatchPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

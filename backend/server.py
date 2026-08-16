@@ -30,6 +30,12 @@ from prompts import (
 )
 from notifications import notify_new_lead
 from image_utils import normalize_image_for_ai
+from viewtube import (
+    apply_event as viewtube_apply_event,
+    catalog as viewtube_catalog,
+    create_session as viewtube_create_session,
+    session_public as viewtube_session_public,
+)
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -1126,6 +1132,53 @@ async def seed_data():
     return {"message": f"Seeded {len(contractors)} contractors with specialty routing", "count": len(contractors)}
 
 
+class ViewTubeSessionCreate(BaseModel):
+    coach_id: str
+    project_id: str
+
+
+class ViewTubeSessionEvent(BaseModel):
+    type: str
+    signals: dict = {}
+
+
+@api_router.get("/viewtube/catalog")
+async def get_viewtube_catalog():
+    """Coaches + structured projects. No camera required."""
+    return viewtube_catalog()
+
+
+@api_router.post("/viewtube/sessions")
+async def create_viewtube_session(req: ViewTubeSessionCreate):
+    try:
+        session = viewtube_create_session(req.coach_id, req.project_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    await db.viewtube_sessions.insert_one({**session})
+    return viewtube_session_public(session)
+
+
+@api_router.get("/viewtube/sessions/{session_id}")
+async def get_viewtube_session(session_id: str):
+    session = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    return viewtube_session_public(session)
+
+
+@api_router.post("/viewtube/sessions/{session_id}/events")
+async def post_viewtube_event(session_id: str, req: ViewTubeSessionEvent):
+    session = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    try:
+        updated = viewtube_apply_event(session, req.type, req.signals or {})
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    await db.viewtube_sessions.replace_one({"id": session_id}, updated)
+    return viewtube_session_public(updated)
+
+
 @api_router.post("/seed")
 async def seed_endpoint():
     """Idempotent seed endpoint for first-run setup."""
@@ -1155,6 +1208,7 @@ async def startup():
     await db.shares.create_index("id")
     await db.shares.create_index("project_id")
     await db.portfolio.create_index("id")
+    await db.viewtube_sessions.create_index("id", unique=True)
     logger.info("AI Renovation Visualizer API started")
 
 
