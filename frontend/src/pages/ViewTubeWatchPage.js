@@ -17,6 +17,7 @@ import {
   SENSE,
   analyzeFrame,
   createSenseState,
+  motionMatters,
   reduceSense,
   sampleVideo,
 } from "../lib/viewtubeSense";
@@ -178,11 +179,12 @@ export default function ViewTubeWatchPage() {
 
   useEffect(() => {
     if (session?.status !== "live" || session?.interrupt) return;
+    if (!motionMatters(session.watch)) return;
     const id = setInterval(() => {
       glance({ look_source: "heartbeat" });
     }, SENSE.heartbeatMs);
     return () => clearInterval(id);
-  }, [session?.status, session?.interrupt, glance]);
+  }, [session?.status, session?.interrupt, session?.watch, glance]);
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
@@ -212,8 +214,11 @@ export default function ViewTubeWatchPage() {
       }
       const edge = sense.lastEdge;
       if (!edge) return;
+      const watch = sess.watch || sess.project?.steps?.[sess.step_index]?.watch || "ambient";
+      const care = motionMatters(watch);
 
       if (edge === "shock") {
+        if (!care) return;
         const url = peekViewTubeSpeakCache(sess.coach_id, SAW_THAT_LINE);
         if (url && !mutedRef.current) playViewTubeUrl(url).catch(() => {});
         postViewTubeEvent(sessionId, "sense", {
@@ -222,11 +227,13 @@ export default function ViewTubeWatchPage() {
           motion: sample.motion,
           skin: sample.skin,
           face: sample.face,
+          watch,
         }, "").catch(() => {});
         return;
       }
 
       if (edge === "settled") {
+        if (!care) return;
         glance({ look_source: "settled" });
         return;
       }
@@ -254,7 +261,7 @@ export default function ViewTubeWatchPage() {
   const step = session?.project?.steps?.[session?.step_index];
   const stopped = Boolean(session?.interrupt) && !session?.interrupt?.auto_recover;
   const lastLook = session?.last_look;
-  const watching = ["stirring", "shock", "settled"].includes(senseMode);
+  const watching = motionMatters(step?.watch) && ["stirring", "shock", "settled"].includes(senseMode);
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden" data-testid="viewtube-watch">

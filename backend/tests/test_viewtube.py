@@ -36,6 +36,7 @@ from viewtube import (
     session_public,
     speak_request,
     tts_spec,
+    watch_mode,
 )
 
 
@@ -443,6 +444,7 @@ def test_js_sense_spec_matches_backend():
     assert f"settleFrames: {spec['settle_frames']}" in js
     assert f"shockCooldownMs: {spec['shock_cooldown_ms']}" in js
     assert f"heartbeatMs: {spec['heartbeat_ms']}" in js
+    assert "export function motionMatters" in js
 
 
 def test_tts_disk_cache_skips_the_network(tmp_path, monkeypatch):
@@ -453,3 +455,41 @@ def test_tts_disk_cache_skips_the_network(tmp_path, monkeypatch):
     key = tts.cache_key("cole", "Hold. I saw that.")
     (tmp_path / f"{key}.mp3").write_bytes(b"cached-mp3")
     assert tts.synthesize_sync("cole", "Hold. I saw that.") == b"cached-mp3"
+
+
+def test_every_step_knows_how_closely_to_watch():
+    for project in list_projects():
+        for step in project["steps"]:
+            assert step["watch"] in {"ambient", "placement", "danger"}
+    shelf = get_project("flatpack-shelf")
+    assert shelf["steps"][0]["watch"] == "ambient"
+    assert shelf["steps"][1]["watch"] == "placement"
+    assert get_project("tool-safety")["steps"][1]["watch"] == "danger"
+    assert catalog()["watch_modes"]["placement"]
+
+
+def test_ambient_settled_glance_does_not_look():
+    session = _live_session("flatpack-shelf")
+    assert watch_mode(session["project"]["steps"][session["step_index"]]) == "ambient"
+    line = session["coach_line"]["text"]
+    session = apply_event(session, "glance", {
+        "look_source": "settled",
+        "part_inverted": True,
+        "vision_confidence": 0.92,
+    })
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == line
+
+
+def test_placement_settled_glance_still_stops_inverted():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "complete_step")
+    assert watch_mode(session["project"]["steps"][session["step_index"]]) == "placement"
+    session = apply_event(session, "glance", {
+        "look_source": "settled",
+        "part_inverted": True,
+        "vision_confidence": 0.92,
+    })
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["interrupt"]["reason"] == "part_inverted"

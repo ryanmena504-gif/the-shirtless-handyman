@@ -23,6 +23,10 @@ export const SENSE = {
   heartbeatMs: 15000,
 };
 
+export function motionMatters(watch) {
+  return watch === "placement" || watch === "danger";
+}
+
 export function createSenseState() {
   return {
     mode: "idle",

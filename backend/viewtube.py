@@ -82,6 +82,37 @@ SENSE_SPEC = {
 
 CAMERA_SENSE_REASONS = {"camera_lost", "face_not_bench"}
 
+# How closely we watch this beat. Ambient motion is the work. Placement
+# is when a part just landed. Danger is a blade or a stance.
+WATCH_AMBIENT = "ambient"
+WATCH_PLACEMENT = "placement"
+WATCH_DANGER = "danger"
+
+VERIFY_WATCH = {
+    "parts_visible": WATCH_AMBIENT,
+    "prep": WATCH_AMBIENT,
+    "cut_in": WATCH_AMBIENT,
+    "coverage": WATCH_AMBIENT,
+    "ppe": WATCH_AMBIENT,
+    "orientation": WATCH_PLACEMENT,
+    "square": WATCH_PLACEMENT,
+    "cut_square": WATCH_PLACEMENT,
+    "backing": WATCH_PLACEMENT,
+    "proud": WATCH_PLACEMENT,
+    "level": WATCH_PLACEMENT,
+    "flush": WATCH_PLACEMENT,
+    "shutoff": WATCH_PLACEMENT,
+    "lines": WATCH_PLACEMENT,
+    "guard": WATCH_DANGER,
+    "stance": WATCH_DANGER,
+}
+
+WATCH_MODES = {
+    WATCH_AMBIENT: "Motion is the work. Stay quiet. Still catch a lost bench.",
+    WATCH_PLACEMENT: "They just set a part. Say I saw that, then look.",
+    WATCH_DANGER: "Blade or stance. Same as placement — less patience later.",
+}
+
 # Fast live path. gpt-4o-mini-tts sounds nicer and costs a spinner.
 LIVE_TTS_MODEL = "tts-1"
 
@@ -327,7 +358,8 @@ def get_coach(coach_id: str) -> Optional[dict]:
 
 
 def get_project(project_id: str) -> Optional[dict]:
-    return next((deepcopy(p) for p in PROJECTS if p["id"] == project_id), None)
+    raw = next((p for p in PROJECTS if p["id"] == project_id), None)
+    return public_project(raw) if raw else None
 
 
 def list_coaches() -> list[dict]:
@@ -335,12 +367,29 @@ def list_coaches() -> list[dict]:
 
 
 def list_projects() -> list[dict]:
-    return deepcopy(PROJECTS)
+    return [public_project(p) for p in PROJECTS]
+
+
+def watch_mode(step: Optional[dict]) -> str:
+    """What the on-device loop should do on this beat."""
+    if not step:
+        return WATCH_AMBIENT
+    explicit = str(step.get("watch") or "").strip().lower()
+    if explicit in WATCH_MODES:
+        return explicit
+    return VERIFY_WATCH.get(str(step.get("verify") or ""), WATCH_AMBIENT)
+
+
+def motion_matters(watch: str) -> bool:
+    return watch in {WATCH_PLACEMENT, WATCH_DANGER}
 
 
 def public_project(project: dict) -> dict:
-    """Catalog card — steps stay, used by both API and session payloads."""
-    return deepcopy(project)
+    """Catalog card — each step carries a watch mode for the phone loop."""
+    out = deepcopy(project)
+    for step in out.get("steps") or []:
+        step["watch"] = watch_mode(step)
+    return out
 
 
 def tts_spec(coach_id: str) -> dict:
@@ -828,12 +877,16 @@ def _apply_glance(session: dict, signals: dict) -> dict:
     if session["status"] != STATUS_LIVE or session.get("interrupt"):
         return session
 
+    look_source = signals.get("look_source") or "glance"
+    if look_source in {"settled", "heartbeat"} and not motion_matters(watch_mode(current_step(session))):
+        return session
+
     session["last_look"] = {
         "at": _now(),
         "verdict": signals.get("vision_verdict"),
         "confidence": signals.get("vision_confidence"),
         "note": signals.get("vision_note") or "",
-        "source": signals.get("look_source") or "glance",
+        "source": look_source,
     }
     session["updated_at"] = _now()
 
@@ -1003,6 +1056,7 @@ def session_public(session: dict) -> dict:
     out["prefetch_lines"] = prefetch_lines(out)
     out["instant_lines"] = list(INSTANT_LINES)
     out["sense"] = dict(SENSE_SPEC)
+    out["watch"] = watch_mode(current_step(out))
     return out
 
 
@@ -1013,6 +1067,7 @@ def catalog() -> dict[str, Any]:
         "promise": "The phone watches motion. The cloud only looks when something changes.",
         "sense": dict(SENSE_SPEC),
         "instant_lines": list(INSTANT_LINES),
+        "watch_modes": dict(WATCH_MODES),
         "coaches": list_coaches(),
         "projects": list_projects(),
     }

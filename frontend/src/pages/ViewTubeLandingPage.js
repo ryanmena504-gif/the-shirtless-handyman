@@ -29,7 +29,7 @@ const BEATS = [
   {
     icon: Eye,
     title: "The phone watches. The cloud looks.",
-    copy: "Motion is scored on this device, every fraction of a second. Cole says “I saw that” before any model wakes up. A full look only happens after the bench settles — and only if it might be wrong.",
+    copy: "Dumping screws is ambient — we stay quiet. Standing a panel is placement — Cole says “I saw that,” then looks. A stuck guard is danger. Same eyes. Different job.",
   },
   {
     icon: OctagonX,
