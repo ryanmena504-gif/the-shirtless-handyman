@@ -193,7 +193,7 @@ export default function HomePage() {
           <button
             type="button"
             data-testid="viewtube-home-cta"
-            onClick={() => navigate("/viewtube")}
+            onClick={() => navigate("/viewtube/show")}
             className="h-12 px-8 rounded-full bg-[#D97757] text-white font-semibold self-start md:self-auto"
           >
             Feel the stop

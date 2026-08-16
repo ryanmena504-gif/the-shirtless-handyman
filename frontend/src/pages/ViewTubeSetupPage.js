@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
-import { createViewTubeSession, fetchViewTubeCatalog, prefetchViewTubeLines, speakViewTubeLine } from "../lib/viewtube";
+import { createViewTubeSession, fetchViewTubeCatalog, prefetchViewTubeLines, speakViewTubeLine, VIEWTUBE_FALLBACK_CATALOG } from "../lib/viewtube";
 import { playViewTubeUrl, unlockViewTubeVoice } from "../lib/viewtubeVoice";
 import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { toast } from "sonner";
@@ -11,16 +11,23 @@ import { toast } from "sonner";
 export default function ViewTubeSetupPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const [catalog, setCatalog] = useState(null);
+  const [catalog, setCatalog] = useState(VIEWTUBE_FALLBACK_CATALOG);
+  const [offline, setOffline] = useState(null);
   const [coachId, setCoachId] = useState("avery");
   const [projectId, setProjectId] = useState(params.get("project") || "the-stop");
   const [starting, setStarting] = useState(false);
   const [previewing, setPreviewing] = useState(false);
 
   useEffect(() => {
-    fetchViewTubeCatalog()
-      .then(setCatalog)
-      .catch(() => toast.error("Could not load viewTube catalog"));
+    let live = true;
+    fetchViewTubeCatalog().then((data) => {
+      if (!live) return;
+      setCatalog(data);
+      setOffline(Boolean(data.offline));
+    });
+    return () => {
+      live = false;
+    };
   }, []);
 
   const previewVoice = async () => {
@@ -45,7 +52,10 @@ export default function ViewTubeSetupPage() {
       prefetchViewTubeLines(session.coach_id, session.prefetch_lines || []);
       navigate(`/viewtube/watch/${session.id}`);
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Could not start the session");
+      toast.error(
+        err?.response?.data?.detail ||
+          "Live camera needs the viewTube API. Watch the 15-second stop instead."
+      );
       setStarting(false);
     }
   };
@@ -69,6 +79,22 @@ export default function ViewTubeSetupPage() {
         <p className="mt-3 text-white/60 max-w-xl">
           AI voices. Nothing recorded — not by a voice actor, not by you. The stop button does not care who you picked.
         </p>
+        {offline && (
+          <div
+            className="mt-6 rounded-2xl border border-[#D97757]/40 bg-[#D97757]/10 p-4 text-sm text-white/80 max-w-xl"
+            data-testid="viewtube-setup-offline"
+          >
+            The live coach is not on this host yet. You can still pick Cole or Avery — or{" "}
+            <button
+              type="button"
+              className="underline underline-offset-4 text-[#D97757]"
+              onClick={() => navigate("/viewtube/show")}
+            >
+              watch the 15-second stop
+            </button>
+            {" "}with no API.
+          </div>
+        )}
 
         <div className="mt-10 grid md:grid-cols-2 gap-4" data-testid="viewtube-coach-grid">
           {(catalog?.coaches || []).map((coach) => {
@@ -121,8 +147,10 @@ export default function ViewTubeSetupPage() {
                   selected ? "border-[#D97757]" : "border-white/10"
                 }`}
               >
-                <div className="h-40 overflow-hidden">
-                  <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                <div className="h-40 overflow-hidden bg-gradient-to-br from-[#5a3a22] to-[#120c08]">
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                  ) : null}
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between gap-3 mb-2">
@@ -142,9 +170,17 @@ export default function ViewTubeSetupPage() {
         <div className="mt-10 flex flex-col sm:flex-row gap-3">
           <button
             type="button"
+            data-testid="viewtube-watch-stop-btn"
+            onClick={() => navigate("/viewtube/show")}
+            className="h-14 px-10 rounded-full border border-white/20 text-white font-semibold"
+          >
+            Watch the stop
+          </button>
+          <button
+            type="button"
             data-testid="viewtube-preview-voice-btn"
             onClick={previewVoice}
-            disabled={previewing || !catalog}
+            disabled={previewing || offline !== false}
             className="h-14 px-10 rounded-full border border-white/20 text-white font-semibold disabled:opacity-50"
           >
             {previewing ? "Speaking…" : "Hear this AI voice"}
@@ -153,10 +189,10 @@ export default function ViewTubeSetupPage() {
             type="button"
             data-testid="viewtube-go-live-btn"
             onClick={start}
-            disabled={starting || !catalog}
+            disabled={starting}
             className="h-14 px-10 rounded-full bg-[#D97757] text-white font-semibold disabled:opacity-50"
           >
-            {starting ? "Going live…" : "Go live"}
+            {starting ? "Going live…" : offline ? "Go live (needs API)" : "Go live"}
           </button>
         </div>
       </div>

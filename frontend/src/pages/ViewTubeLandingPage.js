@@ -73,13 +73,13 @@ export default function ViewTubeLandingPage() {
             {VIEWTUBE.tagline}
           </h1>
           <p className="mt-6 max-w-xl text-white/65 text-lg leading-relaxed">
-            {VIEWTUBE.promise} Thirty seconds to feel the stop. Then six structured projects.
+            {VIEWTUBE.promise} Fifteen seconds to see the freeze. Then do it with a book and a phone.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <button
               type="button"
               data-testid="viewtube-feel-stop-btn"
-              onClick={() => navigate("/viewtube/setup?project=the-stop")}
+              onClick={() => navigate("/viewtube/show")}
               className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-semibold"
             >
               Feel the stop
@@ -93,10 +93,25 @@ export default function ViewTubeLandingPage() {
               Pick a project
             </button>
           </div>
-          <p className="mt-6">
-            <a href="/viewtube-show.html" className="text-sm text-white/45 underline underline-offset-4 hover:text-white/80" data-testid="viewtube-show-link">
-              Watch the stop in 15 seconds
-            </a>
+          <p className="mt-6 text-sm text-white/45">
+            The clip loads with no camera and no API.{" "}
+            <button
+              type="button"
+              className="underline underline-offset-4 hover:text-white/80"
+              data-testid="viewtube-show-link"
+              onClick={() => navigate("/viewtube/show")}
+            >
+              Watch the stop
+            </button>
+            {" · "}
+            <button
+              type="button"
+              className="underline underline-offset-4 hover:text-white/80"
+              data-testid="viewtube-live-link"
+              onClick={() => navigate("/viewtube/setup?project=the-stop")}
+            >
+              Do it live
+            </button>
           </p>
         </div>
       </section>

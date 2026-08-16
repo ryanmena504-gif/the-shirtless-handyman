@@ -21,6 +21,43 @@ export const VIEWTUBE = {
     "The phone watches motion. The cloud only looks when something changes. Charming. Strict. Stops you before the board goes on backwards.",
 };
 
+/** Shown instantly so setup never renders empty when the API is not deployed. */
+export const VIEWTUBE_FALLBACK_CATALOG = {
+  name: "viewTube",
+  tagline: VIEWTUBE.tagline,
+  promise: VIEWTUBE.promise,
+  offline: true,
+  coaches: [
+    {
+      id: "cole",
+      name: "Cole",
+      pronouns: "he/him",
+      tagline: "Calm, a little cocky, stops you when the part is backwards.",
+    },
+    {
+      id: "avery",
+      name: "Avery",
+      pronouns: "she/her",
+      tagline: "Sharp, encouraging, catches the board before it goes on backwards.",
+    },
+  ],
+  projects: [
+    {
+      id: "the-stop",
+      title: "Feel the stop",
+      blurb: "Thirty seconds. A book, a box, anything with a front. Set it down backwards — I will freeze the session.",
+      duration: "30–45 sec",
+      difficulty: "The moment",
+      hero: true,
+      image: "",
+      steps: [
+        { id: "show-face", title: "Show me the front" },
+        { id: "set-backwards", title: "Now flip it and set it down" },
+      ],
+    },
+  ],
+};
+
 const speakCache = new Map();
 const speakInflight = new Map();
 
@@ -41,8 +78,15 @@ export function clearViewTubeSpeakCache() {
 }
 
 export async function fetchViewTubeCatalog() {
-  const { data } = await axios.get(`${API}/viewtube/catalog`);
-  return data;
+  try {
+    const { data } = await axios.get(`${API}/viewtube/catalog`, { timeout: 6000 });
+    if (data?.coaches?.length && data?.projects?.length) {
+      return { ...data, offline: false };
+    }
+  } catch {
+    /* Host has no viewTube API yet — keep the page usable. */
+  }
+  return { ...VIEWTUBE_FALLBACK_CATALOG };
 }
 
 export async function createViewTubeSession(coachId, projectId) {

@@ -22,6 +22,7 @@ import AboutPage from "./pages/AboutPage";
 import ViewTubeLandingPage from "./pages/ViewTubeLandingPage";
 import ViewTubeSetupPage from "./pages/ViewTubeSetupPage";
 import ViewTubeWatchPage from "./pages/ViewTubeWatchPage";
+import ViewTubeShowPage from "./pages/ViewTubeShowPage";
 
 function App() {
   return (
@@ -66,6 +67,8 @@ function App() {
 
             {/* viewTube — live camera DIY coach */}
             <Route path="/viewtube" element={<ViewTubeLandingPage />} />
+            <Route path="/viewtube/show" element={<ViewTubeShowPage />} />
+            <Route path="/viewtube-show.html" element={<ViewTubeShowPage />} />
             <Route path="/viewtube/setup" element={<ViewTubeSetupPage />} />
             <Route path="/viewtube/watch/:sessionId" element={<ViewTubeWatchPage />} />
           </Routes>

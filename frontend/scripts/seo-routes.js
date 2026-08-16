@@ -150,7 +150,11 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
   },
   {
-    path: "/viewtube/setup",
+    path: "/viewtube/show",
+    title: "Feel the stop | viewTube",
+    description: "Fifteen seconds. Cole watches a book get flipped backwards and freezes the session.",
+    ogImage: DEFAULT_OG,
+  },
     title: "Pick a coach | viewTube",
     description: "Choose Cole or Avery and a structured DIY project. viewTube watches the bench and stops you if the part is backwards.",
     ogImage: DEFAULT_OG,
