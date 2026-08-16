@@ -28,8 +28,8 @@ const BEATS = [
   },
   {
     icon: Eye,
-    title: "A coach who can see",
-    copy: "The camera stays on. Cole or Avery glances while you work. Check me is a real look. They only freeze you when they are sure.",
+    title: "The phone watches. The cloud looks.",
+    copy: "Motion is scored on this device, every fraction of a second. Cole says “I saw that” before any model wakes up. A full look only happens after the bench settles — and only if it might be wrong.",
   },
   {
     icon: OctagonX,
@@ -125,7 +125,7 @@ export default function ViewTubeLandingPage() {
             className="text-3xl md:text-5xl font-light max-w-2xl mb-14"
             style={{ fontFamily: "'Fraunces', serif" }}
           >
-            Gemini can chat about a leaky faucet. viewTube can freeze the session — without making you wait on a spinner.
+            Gemini can chat about a leaky faucet. viewTube watches the bench the way a person does — motion first, judgment second.
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
             {BEATS.map((beat) => (

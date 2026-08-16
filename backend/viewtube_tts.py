@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
+from pathlib import Path
 from typing import Optional
 
 from viewtube import speak_request
@@ -16,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, bytes] = {}
 _CACHE_MAX = 128
+_DISK = Path(os.environ.get("VIEWTUBE_TTS_CACHE", "/tmp/viewtube-tts"))
 
 
 def cache_key(coach_id: str, text: str) -> str:
@@ -57,6 +59,16 @@ def synthesize_sync(coach_id: str, text: str) -> bytes:
     if cached:
         return cached
 
+    disk_path = _DISK / f"{key}.mp3"
+    try:
+        if disk_path.is_file():
+            audio = disk_path.read_bytes()
+            if audio:
+                _remember(key, audio)
+                return audio
+    except OSError:
+        logger.warning("TTS disk cache unreadable")
+
     client = _openai_client()
     audio: Optional[bytes] = None
     try:
@@ -84,7 +96,18 @@ def synthesize_sync(coach_id: str, text: str) -> bytes:
     if not audio:
         raise RuntimeError("AI voice returned empty audio")
 
+    _remember(key, audio)
+    try:
+        _DISK.mkdir(parents=True, exist_ok=True)
+        disk_path.write_bytes(audio)
+    except OSError:
+        logger.warning("TTS disk cache unwritable")
+    return audio
+
+
+def _remember(key: str, audio: bytes) -> None:
+    if key in _CACHE:
+        return
     if len(_CACHE) >= _CACHE_MAX:
         _CACHE.pop(next(iter(_CACHE)))
     _CACHE[key] = audio
-    return audio

@@ -36,6 +36,7 @@ VALID_EVENTS = {
     "bypass_safety",
     "check_me",
     "glance",
+    "sense",
     "complete_step",
     "flag_wrong",
     "acknowledge_interrupt",
@@ -48,8 +49,38 @@ DARK_THRESHOLD = 0.12
 # Background glances only freeze the session when the model is this sure.
 GLANCE_MIN_CONFIDENCE = 0.7
 
-# Instant filler while Check me waits on vision. Prefetched and cached.
+# Instant lines — prefetched, cached, spoken from the phone. No cloud wait.
 LOOKING_LINE = "Looking."
+SAW_THAT_LINE = "Hold. I saw that."
+LOST_LINE = "I lost the bench. Tip the phone down."
+FOUND_LINE = "Got you. Keep going."
+FACE_LINE = "I see you, not the work. Point me at the bench."
+
+INSTANT_LINES = (
+    LOOKING_LINE,
+    SAW_THAT_LINE,
+    LOST_LINE,
+    FOUND_LINE,
+    FACE_LINE,
+)
+
+# On-device nervous system. Keep in sync with frontend/src/lib/viewtubeSense.js
+SENSE_SPEC = {
+    "width": 96,
+    "height": 54,
+    "sample_ms": 120,
+    "dark": 0.12,
+    "motion_stir": 0.045,
+    "motion_shock": 0.11,
+    "motion_settle": 0.028,
+    "skin_face": 0.22,
+    "lost_frames": 8,
+    "settle_frames": 6,
+    "shock_cooldown_ms": 8000,
+    "heartbeat_ms": 15000,
+}
+
+CAMERA_SENSE_REASONS = {"camera_lost", "face_not_bench"}
 
 # Fast live path. gpt-4o-mini-tts sounds nicer and costs a spinner.
 LIVE_TTS_MODEL = "tts-1"
@@ -357,7 +388,8 @@ def prefetch_lines(session: dict) -> list[str]:
         seen.add(cleaned)
         texts.append(cleaned)
 
-    add(LOOKING_LINE)
+    for line in INSTANT_LINES:
+        add(line)
     add((session.get("coach_line") or {}).get("text") or "")
     add(
         f"I'm {name}. Prop the phone so I can see the bench — not your face. "
@@ -434,6 +466,7 @@ def create_session(coach_id: str, project_id: str) -> dict:
         "coach": coach,
         "project": public_project(project),
         "last_look": None,
+        "last_sense": None,
     }
 
 
@@ -621,12 +654,16 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
     if event_type == "glance":
         return _apply_glance(session, signals)
 
+    if event_type == "sense":
+        return _apply_sense(session, signals)
+
     if session["status"] == STATUS_HARD_STOP and event_type not in {
         "acknowledge_interrupt",
         "resume",
         "confirm_safety",
         "bypass_safety",
         "glance",
+        "sense",
     }:
         raise ValueError("Session is stopped. Acknowledge, then resume.")
 
@@ -707,6 +744,72 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
     return session
 
 
+def _apply_sense(session: dict, signals: dict) -> dict:
+    """Phone-side edges. No JPEG. Instant. Auto-recovers when the bench returns."""
+    edge = str(signals.get("edge") or "").strip().lower()
+    session["last_sense"] = {
+        "at": _now(),
+        "edge": edge,
+        "brightness": signals.get("brightness"),
+        "motion": signals.get("motion"),
+        "skin": signals.get("skin"),
+        "face": signals.get("face"),
+    }
+    session["updated_at"] = _now()
+
+    if session["status"] in {STATUS_HARD_STOP, STATUS_COMPLETED}:
+        return session
+
+    if session["status"] == STATUS_SETUP:
+        if edge in {"lost", "face"}:
+            _set_line(session, LOST_LINE if edge == "lost" else FACE_LINE)
+        elif edge == "found":
+            name = session["coach"]["name"]
+            _set_line(
+                session,
+                f"I'm {name}. Prop the phone so I can see the bench — not your face. "
+                "When the work is in frame, tap I'm set.",
+            )
+        return session
+
+    if edge == "lost":
+        if session.get("interrupt") and session["interrupt"].get("reason") == "camera_lost":
+            return session
+        interrupt = _raise_interrupt(
+            session,
+            ASK,
+            "camera_lost",
+            LOST_LINE,
+            "When the bench is back, I pick up. No tap needed.",
+        )
+        interrupt["interrupt"]["auto_recover"] = True
+        return interrupt
+
+    if edge == "face":
+        if session.get("interrupt") and session["interrupt"].get("reason") == "face_not_bench":
+            return session
+        interrupt = _raise_interrupt(
+            session,
+            ASK,
+            "face_not_bench",
+            FACE_LINE,
+            "Point me at the work. I keep going when I see the bench.",
+        )
+        interrupt["interrupt"]["auto_recover"] = True
+        return interrupt
+
+    if edge in {"found", "settled"}:
+        interrupt = session.get("interrupt")
+        if interrupt and interrupt.get("reason") in CAMERA_SENSE_REASONS:
+            _clear_interrupt(session)
+            session["status"] = STATUS_LIVE if session.get("setup_confirmed") else STATUS_SETUP
+            _set_line(session, FOUND_LINE)
+        return session
+
+    # shock is local voice + a later settled glance. Do not steal the step line.
+    return session
+
+
 def _glance_confidence_ok(signals: dict) -> bool:
     """Glances stay quiet unless the look is clearly sure."""
     if signals.get("vision_unsure"):
@@ -730,7 +833,7 @@ def _apply_glance(session: dict, signals: dict) -> dict:
         "verdict": signals.get("vision_verdict"),
         "confidence": signals.get("vision_confidence"),
         "note": signals.get("vision_note") or "",
-        "source": "glance",
+        "source": signals.get("look_source") or "glance",
     }
     session["updated_at"] = _now()
 
@@ -898,6 +1001,8 @@ def session_public(session: dict) -> dict:
     out = deepcopy(session)
     out.pop("_id", None)
     out["prefetch_lines"] = prefetch_lines(out)
+    out["instant_lines"] = list(INSTANT_LINES)
+    out["sense"] = dict(SENSE_SPEC)
     return out
 
 
@@ -905,7 +1010,9 @@ def catalog() -> dict[str, Any]:
     return {
         "name": "viewTube",
         "tagline": "YouTube shows you how. viewTube watches you do it.",
-        "promise": "Feels like a person in the room — not a loading spinner.",
+        "promise": "The phone watches motion. The cloud only looks when something changes.",
+        "sense": dict(SENSE_SPEC),
+        "instant_lines": list(INSTANT_LINES),
         "coaches": list_coaches(),
         "projects": list_projects(),
     }

@@ -1,15 +1,24 @@
 import axios from "axios";
+import { idbGetMp3, idbPutMp3 } from "./viewtubeVoice";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-export const LOOKING_LINE = "Looking.";
-export const GLANCE_MS = 2800;
+export const INSTANT = {
+  looking: "Looking.",
+  sawThat: "Hold. I saw that.",
+  lost: "I lost the bench. Tip the phone down.",
+  found: "Got you. Keep going.",
+  face: "I see you, not the work. Point me at the bench.",
+};
+
+export const LOOKING_LINE = INSTANT.looking;
+export const SAW_THAT_LINE = INSTANT.sawThat;
 
 export const VIEWTUBE = {
   name: "viewTube",
   tagline: "YouTube shows you how. viewTube watches you do it.",
   promise:
-    "Feels like a person in the room — not a loading spinner. Charming. Strict. Stops you before the board goes on backwards.",
+    "The phone watches motion. The cloud only looks when something changes. Charming. Strict. Stops you before the board goes on backwards.",
 };
 
 const speakCache = new Map();
@@ -68,6 +77,12 @@ export async function speakViewTubeLine(coachId, text) {
   if (speakInflight.has(key)) return speakInflight.get(key);
 
   const pending = (async () => {
+    const stored = await idbGetMp3(key);
+    if (stored) {
+      const url = URL.createObjectURL(stored);
+      speakCache.set(key, url);
+      return url;
+    }
     const { data } = await axios.post(
       `${API}/viewtube/speak`,
       { coach_id: coachId, text: cleaned },
@@ -79,6 +94,7 @@ export async function speakViewTubeLine(coachId, text) {
     }
     const url = URL.createObjectURL(data);
     speakCache.set(key, url);
+    idbPutMp3(key, data).catch(() => {});
     return url;
   })();
 
@@ -100,8 +116,8 @@ export async function prefetchViewTubeLines(coachId, texts = []) {
     unique.push(cleaned);
   }
   if (!coachId || unique.length === 0) return;
-  const urgent = unique.slice(0, 3);
-  const rest = unique.slice(3);
+  const urgent = unique.slice(0, 5);
+  const rest = unique.slice(5);
   await Promise.all(urgent.map((text) => speakViewTubeLine(coachId, text).catch(() => null)));
   rest.forEach((text) => {
     speakViewTubeLine(coachId, text).catch(() => null);

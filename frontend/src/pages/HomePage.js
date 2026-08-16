@@ -187,7 +187,7 @@ export default function HomePage() {
               <span className="block text-white/80 italic mt-2">watches you do the work.</span>
             </h2>
             <p className="mt-4 text-white/60 max-w-lg">
-              Point the phone at the bench. Cole or Avery talk like they are in the room — and hard-stop you if the part is backwards.
+              The phone watches the bench. Cole or Avery talk in the room. The cloud only looks when you move — and hard-stops you if the part is backwards.
             </p>
           </div>
           <button

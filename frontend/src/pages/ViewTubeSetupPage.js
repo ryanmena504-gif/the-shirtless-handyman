@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
 import { createViewTubeSession, fetchViewTubeCatalog, prefetchViewTubeLines, speakViewTubeLine } from "../lib/viewtube";
+import { playViewTubeUrl, unlockViewTubeVoice } from "../lib/viewtubeVoice";
 import { ViewTubeCoachPortrait } from "../components/viewtube/ViewTubeCoachPortrait";
 import { toast } from "sonner";
 
@@ -26,9 +27,9 @@ export default function ViewTubeSetupPage() {
     if (!coach) return;
     setPreviewing(true);
     try {
+      unlockViewTubeVoice();
       const url = await speakViewTubeLine(coachId, `I'm ${coach.name}. This is an AI voice. Prop the phone so I can see the bench.`);
-      const audio = new Audio(url);
-      await audio.play();
+      await playViewTubeUrl(url);
     } catch (err) {
       toast.error(err?.response?.data?.detail || "AI voice preview failed");
     } finally {

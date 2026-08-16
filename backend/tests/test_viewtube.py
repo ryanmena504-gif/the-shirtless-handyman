@@ -14,8 +14,13 @@ from viewtube import (
     HARD_STOP,
     SOFT_PAUSE,
     ASK,
+    FOUND_LINE,
+    INSTANT_LINES,
     LOOKING_LINE,
+    LOST_LINE,
     MAX_SPEAK_CHARS,
+    SAW_THAT_LINE,
+    STATUS_ASK,
     STATUS_COMPLETED,
     STATUS_HARD_STOP,
     STATUS_LIVE,
@@ -56,7 +61,9 @@ def test_catalog_has_two_coaches_and_six_projects():
     assert get_coach("cole")["tts_voice"] == "onyx"
     assert get_coach("avery")["tts_voice"] == "nova"
     assert get_coach("cole")["tts_model"] == "tts-1"
-    assert "spinner" in data["promise"].lower()
+    assert "motion" in data["promise"].lower()
+    assert data["sense"]["motion_shock"] == 0.11
+    assert "Hold. I saw that." in data["instant_lines"]
 
 
 def test_unknown_coach_or_project_raises():
@@ -371,8 +378,78 @@ def test_prefetch_lines_include_looking_and_steps():
     session = create_session("cole", "flatpack-shelf")
     lines = prefetch_lines(session)
     assert lines[0] == LOOKING_LINE
+    assert SAW_THAT_LINE in lines
+    assert LOST_LINE in lines
     assert session["coach_line"]["text"] in lines
     assert any("Lay out every part" in text for text in lines)
     public = session_public(session)
     assert public["prefetch_lines"][0] == LOOKING_LINE
+    assert public["instant_lines"] == list(INSTANT_LINES)
     assert "prefetch_lines" not in session
+
+
+def test_sense_lost_asks_and_found_resumes_without_a_tap():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "sense", {"edge": "lost", "brightness": 0.04})
+    assert session["status"] == STATUS_ASK
+    assert session["interrupt"]["reason"] == "camera_lost"
+    assert session["interrupt"]["auto_recover"] is True
+    assert session["coach_line"]["text"] == LOST_LINE
+    session = apply_event(session, "sense", {"edge": "found", "brightness": 0.6})
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == FOUND_LINE
+
+
+def test_sense_shock_does_not_steal_the_step_line():
+    session = _live_session("flatpack-shelf")
+    line = session["coach_line"]["text"]
+    session = apply_event(session, "sense", {"edge": "shock", "motion": 0.2})
+    assert session["status"] == STATUS_LIVE
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == line
+    assert session["last_sense"]["edge"] == "shock"
+
+
+def test_sense_during_setup_does_not_block_im_set():
+    session = create_session("avery", "paint-wall")
+    session = apply_event(session, "sense", {"edge": "lost"})
+    assert session["status"] == STATUS_SETUP
+    assert session["interrupt"] is None
+    assert session["coach_line"]["text"] == LOST_LINE
+    session = apply_event(session, "confirm_setup")
+    assert session["status"] == STATUS_LIVE
+
+
+def test_sense_does_not_override_a_hard_stop():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "flag_wrong")
+    session = apply_event(session, "sense", {"edge": "lost"})
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["interrupt"]["reason"] == "flag_wrong"
+
+
+def test_js_sense_spec_matches_backend():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    js = (root / "frontend/src/lib/viewtubeSense.js").read_text()
+    spec = catalog()["sense"]
+    assert f"dark: {spec['dark']}" in js
+    assert f"motionShock: {spec['motion_shock']}" in js
+    assert f"motionSettle: {spec['motion_settle']}" in js
+    assert f"skinFace: {spec['skin_face']}" in js
+    assert f"lostFrames: {spec['lost_frames']}" in js
+    assert f"settleFrames: {spec['settle_frames']}" in js
+    assert f"shockCooldownMs: {spec['shock_cooldown_ms']}" in js
+    assert f"heartbeatMs: {spec['heartbeat_ms']}" in js
+
+
+def test_tts_disk_cache_skips_the_network(tmp_path, monkeypatch):
+    import viewtube_tts as tts
+
+    monkeypatch.setattr(tts, "_DISK", tmp_path)
+    tts._CACHE.clear()
+    key = tts.cache_key("cole", "Hold. I saw that.")
+    (tmp_path / f"{key}.mp3").write_bytes(b"cached-mp3")
+    assert tts.synthesize_sync("cole", "Hold. I saw that.") == b"cached-mp3"

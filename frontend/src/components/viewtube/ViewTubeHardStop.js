@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { OctagonX } from "lucide-react";
 
 export const ViewTubeHardStop = ({ interrupt, onAcknowledge, onResume, onBypass, acknowledging }) => {
-  if (!interrupt) return null;
+  if (!interrupt || interrupt.auto_recover) return null;
   const isHard = interrupt.kind === "hard_stop";
   const acked = Boolean(interrupt.acknowledged);
   const canSkip = Boolean(interrupt.bypassable) && typeof onBypass === "function";
