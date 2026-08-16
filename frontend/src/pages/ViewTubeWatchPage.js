@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ViewTubeWordmark } from "../components/viewtube/ViewTubeWordmark";
 import { ViewTubeHardStop } from "../components/viewtube/ViewTubeHardStop";
 import {
+  captureFrame,
   fetchViewTubeSession,
   postViewTubeEvent,
   sampleFrameSignals,
@@ -21,7 +22,7 @@ export default function ViewTubeWatchPage() {
   const [session, setSession] = useState(null);
   const [camError, setCamError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [invertDemo, setInvertDemo] = useState(false);
+  const [looking, setLooking] = useState(false);
   const [muted, setMuted] = useState(false);
 
   useEffect(() => {
@@ -90,28 +91,29 @@ export default function ViewTubeWatchPage() {
     async (type, extraSignals = {}) => {
       if (!sessionId || busy) return;
       setBusy(true);
+      const shouldLook = ["check_me", "confirm_setup", "confirm_safety"].includes(type);
+      if (shouldLook) setLooking(true);
       try {
-        const frame = sampleFrameSignals(videoRef.current);
-        const signals = {
-          ...frame,
-          ...(invertDemo ? { part_inverted: true } : {}),
-          ...extraSignals,
-        };
-        const next = await postViewTubeEvent(sessionId, type, signals);
+        const frameSignals = sampleFrameSignals(videoRef.current);
+        const frame = shouldLook ? captureFrame(videoRef.current) : "";
+        const next = await postViewTubeEvent(
+          sessionId,
+          type,
+          { ...frameSignals, ...extraSignals },
+          frame,
+        );
         setSession(next);
-        if (type === "check_me" || type === "complete_step") {
-          setInvertDemo(false);
-        }
       } catch (err) {
         toast.error(err?.response?.data?.detail || "The coach could not take that");
       } finally {
+        setLooking(false);
         setBusy(false);
       }
     },
-    [sessionId, busy, invertDemo],
+    [sessionId, busy],
   );
 
-  const step = session?.project?.steps?.[session.step_index];
+  const step = session?.project?.steps?.[session?.step_index];
   const stopped = Boolean(session?.interrupt);
 
   return (
@@ -157,7 +159,24 @@ export default function ViewTubeWatchPage() {
 
       {camError && (
         <div className="relative z-20 mx-5 mt-6 rounded-2xl border border-white/15 bg-black/70 p-5" data-testid="viewtube-cam-error">
-          <p className="text-sm text-white/80">{camError}. Grant camera access, or keep going with the demo flags — the coach still runs.</p>
+          <p className="text-sm text-white/80">{camError}. Grant camera access so the coach can see the bench. The session still runs if you continue.</p>
+        </div>
+      )}
+
+      {session && session.status === "setup" && !stopped && (
+        <div className="absolute inset-x-0 top-20 z-20 px-5" data-testid="viewtube-tripod-hint">
+          <div className="max-w-md rounded-2xl border border-white/15 bg-black/70 p-4">
+            <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold mb-2">Phone on a stand</p>
+            <p className="text-sm text-white/80 leading-relaxed">
+              Clamp it so I see the bench, not your face. Hands free. Then tap I&apos;m set — I will look at a still before we start.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {looking && (
+        <div className="absolute top-20 right-5 z-30 text-[10px] uppercase tracking-[0.28em] text-white/70" data-testid="viewtube-looking">
+          Looking at the bench
         </div>
       )}
 
@@ -170,10 +189,18 @@ export default function ViewTubeWatchPage() {
                 className="w-16 h-20 rounded-xl border border-white/20 overflow-hidden"
               />
               <div>
-                <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold">{session.coach.name}</p>
+                <p className="text-[10px] uppercase tracking-[0.28em] text-[#D97757] font-bold">
+                  {session.coach.name}
+                  {looking ? " · looking" : ""}
+                </p>
                 <p className="text-sm text-white/90 leading-snug mt-1" data-testid="viewtube-coach-line">
                   {session.coach_line?.text}
                 </p>
+                {session.last_look?.note && (
+                  <p className="mt-2 text-[11px] text-white/45" data-testid="viewtube-last-look">
+                    Last look · {session.last_look.note}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -218,7 +245,7 @@ export default function ViewTubeWatchPage() {
                 {session.status !== "setup" && session.status !== "completed" && (
                   <>
                     <button type="button" data-testid="viewtube-check-btn" disabled={busy || stopped} onClick={() => send("check_me")} className="viewtube-action">
-                      Check me
+                      {looking ? "Looking…" : "Check me"}
                     </button>
                     <button type="button" data-testid="viewtube-done-btn" disabled={busy || stopped} onClick={() => send("complete_step")} className="viewtube-action-ghost">
                       Done with this step
@@ -231,15 +258,6 @@ export default function ViewTubeWatchPage() {
                       className="viewtube-action-danger"
                     >
                       That&apos;s wrong
-                    </button>
-                    <button
-                      type="button"
-                      data-testid="viewtube-invert-btn"
-                      disabled={busy || stopped}
-                      onClick={() => setInvertDemo((v) => !v)}
-                      className={`viewtube-action-ghost ${invertDemo ? "ring-1 ring-[#D97757]" : ""}`}
-                    >
-                      {invertDemo ? "Demo: part inverted ON" : "Demo: part inverted"}
                     </button>
                   </>
                 )}

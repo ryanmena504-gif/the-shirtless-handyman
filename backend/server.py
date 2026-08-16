@@ -34,10 +34,12 @@ from viewtube import (
     apply_event as viewtube_apply_event,
     catalog as viewtube_catalog,
     create_session as viewtube_create_session,
+    merge_vision_signals as viewtube_merge_vision,
     session_public as viewtube_session_public,
     speak_request as viewtube_speak_request,
 )
 from viewtube_tts import synthesize_sync as viewtube_synthesize
+from viewtube_vision import look_at_frame_sync, validate_frame as viewtube_validate_frame
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -1142,6 +1144,7 @@ class ViewTubeSessionCreate(BaseModel):
 class ViewTubeSessionEvent(BaseModel):
     type: str
     signals: dict = {}
+    frame: str = ""
 
 
 class ViewTubeSpeak(BaseModel):
@@ -1178,8 +1181,25 @@ async def post_viewtube_event(session_id: str, req: ViewTubeSessionEvent):
     session = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+    signals = dict(req.signals or {})
     try:
-        updated = viewtube_apply_event(session, req.type, req.signals or {})
+        frame = viewtube_validate_frame(req.frame)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if frame and req.type in {"check_me", "confirm_setup", "confirm_safety"}:
+        try:
+            vision = await asyncio.to_thread(look_at_frame_sync, session, frame)
+            signals = viewtube_merge_vision(signals, vision)
+        except Exception as exc:
+            logger.warning("viewTube vision skipped: %s", exc)
+            signals = viewtube_merge_vision(signals, {
+                "vision_verdict": "unsure",
+                "vision_confidence": 0,
+                "vision_note": "I lost the picture for a second.",
+                "vision_unsure": req.type == "check_me",
+            })
+    try:
+        updated = viewtube_apply_event(session, req.type, signals)
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     await db.viewtube_sessions.replace_one({"id": session_id}, updated)

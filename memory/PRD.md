@@ -189,6 +189,7 @@ The live camera DIY coach from the market brief is now a first-class product nam
 - API: `GET /api/viewtube/catalog`, `POST /api/viewtube/sessions`, `GET /api/viewtube/sessions/{id}`, `POST /api/viewtube/sessions/{id}/events`.
 - Existing Shirtless Handyman lead-gen site is unchanged. viewTube is a new surface.
 - **AI voices only** (2026-08-16): Cole = OpenAI `onyx`, Avery = `nova` via `POST /api/viewtube/speak`. No browser speechSynthesis, no human recordings. Illustrated AI portraits replace stock photos of real people.
+- **Look at the bench** (2026-08-16): `Check me` / `I'm set` / `I am safe` send a still. gpt-4o inspects it conservatively (unsure = ask, never a fake green light). Two more projects: floating shelf, faucet swap. Demo invert toggle removed.
 
 ## Backlog
 - **P2** Real ZIP geocoding API (currently mocked).

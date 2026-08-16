@@ -29,7 +29,7 @@ const BEATS = [
   {
     icon: Eye,
     title: "A coach who can see",
-    copy: "Not a YouTube tab. A person-shaped voice watching the actual parts.",
+    copy: "Tap Check me. The camera sends a still. Cole or Avery looks before they let you keep going.",
   },
   {
     icon: OctagonX,
@@ -73,7 +73,7 @@ export default function ViewTubeLandingPage() {
             {VIEWTUBE.tagline}
           </h1>
           <p className="mt-6 max-w-xl text-white/65 text-lg leading-relaxed">
-            {VIEWTUBE.promise} AI voices only. Four structured projects to start. No open-world guessing. No Vision Pro.
+            {VIEWTUBE.promise} AI voices. A real look at the bench. Six structured projects to start.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <button

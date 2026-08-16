@@ -26,10 +26,11 @@ export async function fetchViewTubeSession(sessionId) {
   return data;
 }
 
-export async function postViewTubeEvent(sessionId, type, signals = {}) {
+export async function postViewTubeEvent(sessionId, type, signals = {}, frame = "") {
   const { data } = await axios.post(`${API}/viewtube/sessions/${sessionId}/events`, {
     type,
     signals,
+    frame: frame || "",
   });
   return data;
 }
@@ -66,5 +67,18 @@ export function sampleFrameSignals(videoEl) {
   }
   signals.brightness = sum / (pixels.length / 4) / 255;
   return signals;
+}
+
+export function captureFrame(videoEl, maxWidth = 640, quality = 0.72) {
+  if (!videoEl || videoEl.readyState < 2) return "";
+  const vw = videoEl.videoWidth || 640;
+  const vh = videoEl.videoHeight || 360;
+  const scale = Math.min(1, maxWidth / vw);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(vw * scale));
+  canvas.height = Math.max(1, Math.round(vh * scale));
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", quality);
 }
 

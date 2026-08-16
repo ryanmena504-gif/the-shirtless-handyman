@@ -39,12 +39,13 @@ def _live_session(project_id="flatpack-shelf", coach_id="cole"):
     return session
 
 
-def test_catalog_has_two_coaches_and_four_projects():
+def test_catalog_has_two_coaches_and_six_projects():
     data = catalog()
     assert data["name"] == "viewTube"
     assert "watches you" in data["tagline"]
     assert {c["id"] for c in data["coaches"]} == {"cole", "avery"}
-    assert len(data["projects"]) == 4
+    assert len(data["projects"]) == 6
+    assert {p["id"] for p in data["projects"]} >= {"flatpack-shelf", "floating-shelf", "faucet-swap", "tool-safety"}
     assert get_coach("cole")["voice"] == "male"
     assert get_coach("avery")["voice"] == "female"
     assert get_coach("cole")["voice_source"] == "ai"
@@ -213,6 +214,80 @@ def test_tts_cache_key_is_stable():
 
     assert cache_key("cole", "Hold.") == cache_key("cole", "Hold.")
     assert cache_key("cole", "Hold.") != cache_key("avery", "Hold.")
+
+
+def test_vision_unsure_asks_instead_of_green_light():
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "check_me", {
+        "vision_unsure": True,
+        "vision_note": "I only see a knee.",
+    })
+    assert session["interrupt"]["kind"] == ASK
+    assert session["interrupt"]["reason"] == "vision_unsure"
+    assert session["checked_current"] is False
+    assert "knee" in session["coach_line"]["text"].lower()
+
+
+def test_vision_wrong_hard_stops_with_note():
+    session = _live_session("floating-shelf")
+    session = apply_event(session, "complete_step")  # onto orientation bracket
+    session = apply_event(session, "check_me", {
+        "vision_wrong": True,
+        "vision_note": "The bracket fingers point at the floor.",
+    })
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["interrupt"]["reason"] == "vision_wrong"
+    assert "floor" in session["coach_line"]["text"].lower()
+
+
+def test_bench_not_in_frame_blocks_setup():
+    session = create_session("cole", "faucet-swap")
+    session = apply_event(session, "confirm_setup", {"bench_in_frame": False})
+    assert session["interrupt"]["kind"] == ASK
+    assert session["interrupt"]["reason"] == "bench_missing"
+    assert session["setup_confirmed"] is False
+
+
+def test_confirm_safety_rejects_missing_glasses_in_frame():
+    session = apply_event(create_session("avery", "tool-safety"), "confirm_setup")
+    session = apply_event(session, "confirm_safety", {"ppe_visible": False})
+    assert session["status"] == STATUS_HARD_STOP
+    assert session["safety_cleared"] is False
+
+
+def test_parse_and_merge_vision_never_invents_ok():
+    from viewtube import merge_vision_signals, parse_vision_payload
+    from viewtube_vision import extract_json_object
+
+    parsed = parse_vision_payload({
+        "verdict": "OK",
+        "confidence": "0.4",
+        "part_inverted": None,
+        "note": "Too dark to judge the cam arrows " + ("x" * 200),
+    })
+    assert parsed["vision_verdict"] == "ok"
+    assert parsed["vision_unsure"] is True
+    assert "part_inverted" not in parsed
+    assert len(parsed["vision_note"]) <= 140
+
+    merged = merge_vision_signals({"brightness": 0.8}, parsed)
+    assert merged["brightness"] == 0.8
+    assert merged["vision_unsure"] is True
+
+    blob = extract_json_object("Sure.\n```json\n{\"verdict\": \"unsure\", \"confidence\": 0.2, \"note\": \"face\"}\n```")
+    assert blob["verdict"] == "unsure"
+
+
+def test_vision_brief_names_the_step():
+    from viewtube import vision_brief, vision_prompt
+
+    session = _live_session("flatpack-shelf")
+    brief = vision_brief(session)
+    assert brief["verify"] == "parts_visible"
+    assert "hardware" in brief["look_for"].lower()
+    prompt = vision_prompt(brief)
+    assert "Never invent a green light" in prompt
+    assert "Flat-pack shelf" in prompt
 
 
 def test_list_helpers_do_not_leak_mutability():
