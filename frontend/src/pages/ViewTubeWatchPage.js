@@ -237,9 +237,20 @@ export default function ViewTubeWatchPage() {
                     I&apos;m set
                   </button>
                 )}
-                {session.project.requires_ppe && !session.safety_cleared && session.status !== "setup" && (
-                  <button type="button" data-testid="viewtube-safe-btn" disabled={busy} onClick={() => send("confirm_safety")} className="viewtube-action">
-                    I am safe
+                {step?.optional && session.status !== "setup" && session.status !== "completed" && (
+                  <button
+                    type="button"
+                    data-testid="viewtube-skip-optional-btn"
+                    disabled={busy}
+                    onClick={() => send("bypass_safety")}
+                    className="viewtube-action-ghost"
+                  >
+                    Skip this
+                  </button>
+                )}
+                {session.project.requires_ppe && !session.safety_cleared && !step?.optional && session.status !== "setup" && (
+                  <button type="button" data-testid="viewtube-safe-btn" disabled={busy} onClick={() => send("bypass_safety")} className="viewtube-action-ghost">
+                    Skip glasses
                   </button>
                 )}
                 {session.status !== "setup" && session.status !== "completed" && (
@@ -270,6 +281,7 @@ export default function ViewTubeWatchPage() {
             acknowledging={busy}
             onAcknowledge={() => send("acknowledge_interrupt")}
             onResume={() => send("resume")}
+            onBypass={() => send("bypass_safety")}
           />
         </>
       )}

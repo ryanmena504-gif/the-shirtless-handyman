@@ -33,6 +33,7 @@ VALID_EVENTS = {
     "start",
     "confirm_setup",
     "confirm_safety",
+    "bypass_safety",
     "check_me",
     "complete_step",
     "flag_wrong",
@@ -60,7 +61,7 @@ COACHES = [
             "Speak like a friend who will stop a bad cut. American English. Medium pace. "
             "No whisper. No flirt. Clear consonants."
         ),
-        "tagline": "Calm, a little cocky, will not let you skip the glasses.",
+        "tagline": "Calm, a little cocky, stops you when the part is backwards.",
         "bio": "AI shop teacher. Talks like a friend. Stops you like a foreman.",
         "style": "warm-direct",
         "portrait": None,
@@ -186,7 +187,7 @@ PROJECTS = [
     {
         "id": "tool-safety",
         "title": "Circular saw basics",
-        "blurb": "Glasses, guard, hands, line. Hard-stop only. This is the safety loop.",
+        "blurb": "Guard, hands, line. Glasses if you have them — we will not freeze you over PPE.",
         "duration": "10–15 min",
         "difficulty": "Safety",
         "requires_ppe": True,
@@ -195,9 +196,10 @@ PROJECTS = [
         "steps": [
             {
                 "id": "ppe",
-                "title": "Glasses on, sleeves clear",
-                "coach": "I need to see glasses on your face before that trigger gets a finger. Non-negotiable.",
+                "title": "Optional: glasses",
+                "coach": "If you have glasses, throw them on. If you don't, skip this — I am not the shop-class hall monitor.",
                 "verify": "ppe",
+                "optional": True,
             },
             {
                 "id": "guard",
@@ -339,13 +341,14 @@ def _line(coach: dict, text: str) -> dict:
     }
 
 
-def _interrupt(kind: str, reason: str, line: dict, resume_hint: str) -> dict:
+def _interrupt(kind: str, reason: str, line: dict, resume_hint: str, bypassable: bool = False) -> dict:
     return {
         "id": f"int_{uuid.uuid4().hex[:10]}",
         "kind": kind,
         "reason": reason,
         "line": line,
         "resume_hint": resume_hint,
+        "bypassable": bypassable,
         "at": _now(),
     }
 
@@ -369,6 +372,7 @@ def create_session(coach_id: str, project_id: str) -> dict:
         "status": STATUS_SETUP,
         "step_index": 0,
         "safety_cleared": False,
+        "safety_bypassed": False,
         "setup_confirmed": False,
         "checked_current": False,
         "coach_line": _line(coach, greeting),
@@ -396,9 +400,9 @@ def _set_line(session: dict, text: str) -> None:
     session["updated_at"] = _now()
 
 
-def _raise_interrupt(session: dict, kind: str, reason: str, text: str, resume_hint: str) -> dict:
+def _raise_interrupt(session: dict, kind: str, reason: str, text: str, resume_hint: str, bypassable: bool = False) -> dict:
     line = _line(session["coach"], text)
-    interrupt = _interrupt(kind, reason, line, resume_hint)
+    interrupt = _interrupt(kind, reason, line, resume_hint, bypassable=bypassable)
     session["interrupt"] = interrupt
     session["interrupts"].append(interrupt)
     session["coach_line"] = line
@@ -427,7 +431,7 @@ LOOK_FOR = {
     "prep": "Is the wall taped and reasonably clean of dust and junk?",
     "cut_in": "Is there a cut-in band along the edges, or is paint dripping?",
     "coverage": "Are there obvious holidays, missed patches, or lap marks?",
-    "ppe": "If a face is visible, are safety glasses on? If a power tool is visible, is anyone unprotected?",
+    "ppe": "Ignore missing safety glasses. Do not fail a step because someone is not wearing PPE. Real DIYers often work without glasses.",
     "guard": "Is a circular-saw blade guard stuck open?",
     "stance": "Are both hands on the saw, and is the cord out from under the shoe?",
     "level": "Is a level on the wall, and does the bubble look off-center?",
@@ -519,8 +523,7 @@ def vision_prompt(brief: dict) -> str:
         "Rules:\n"
         "- If you cannot see clearly, verdict is unsure. Never invent a green light.\n"
         "- part_inverted=true only when a part is clearly backwards or upside down.\n"
-        "- ppe_visible=false only when a face is visible and glasses are clearly absent, "
-        "or a power tool is in use without glasses.\n"
+        "- Never fail or mark wrong because safety glasses are missing. That is optional.\n"
         "- Keep note under 140 characters. No flirt. No filler."
     )
 
@@ -567,6 +570,7 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
         "acknowledge_interrupt",
         "resume",
         "confirm_safety",
+        "bypass_safety",
     }:
         raise ValueError("Session is stopped. Acknowledge, then resume.")
 
@@ -581,33 +585,35 @@ def apply_event(session: dict, event_type: str, signals: Optional[dict] = None) 
             )
         session["setup_confirmed"] = True
         session["status"] = STATUS_LIVE
-        if project["requires_ppe"] and not session["safety_cleared"]:
+        if step and step.get("optional"):
             _set_line(
                 session,
-                "I can see the bench. Glasses on. Sleeves out of the way. Then tap I am safe.",
+                f"I can see the bench. {step['coach']} Skip if that is not you — I will not freeze the session over it.",
             )
         elif step:
             _set_line(session, f"I can see the bench. First move: {step['title']}. {step['coach']}")
         return session
 
-    if event_type == "confirm_safety":
-        if signals.get("ppe_visible") is False:
-            return _raise_interrupt(
-                session,
-                HARD_STOP,
-                "ppe_missing",
-                "I can see a face and I do not see glasses. They go on before we call this safe.",
-                "Glasses on, then I am safe.",
-            )
+    if event_type in {"confirm_safety", "bypass_safety"}:
+        skipped = event_type == "bypass_safety"
         session["safety_cleared"] = True
+        session["safety_bypassed"] = skipped or session.get("safety_bypassed", False)
         session["status"] = STATUS_LIVE
-        if session.get("interrupt") and session["interrupt"].get("reason") == "ppe_missing":
+        if session.get("interrupt") and session["interrupt"].get("bypassable"):
             session["interrupt"]["acknowledged"] = True
             _clear_interrupt(session)
-        if project["requires_ppe"] and step and step.get("verify") == "ppe":
-            # Safety confirmation completes the PPE step.
+        elif session.get("interrupt") and session["interrupt"].get("reason") == "ppe_missing":
+            session["interrupt"]["acknowledged"] = True
+            _clear_interrupt(session)
+        if step and (step.get("verify") == "ppe" or step.get("optional")):
             session["checked_current"] = True
-        _set_line(session, "Glasses. Good. Now I will get picky.")
+            return _complete_step(session, signals)
+        _set_line(
+            session,
+            "Got it. I will not freeze you over glasses. Let's work."
+            if skipped
+            else "Glasses. Good. Now the actual work.",
+        )
         return session
 
     if event_type == "flag_wrong":
@@ -651,25 +657,6 @@ def _evaluate_check(session: dict, signals: dict) -> dict:
         _set_line(session, "We are done. Admire it, then put the tools away.")
         return session
 
-    if project["requires_ppe"] and not session["safety_cleared"]:
-        return _raise_interrupt(
-            session,
-            HARD_STOP,
-            "ppe_missing",
-            "Stop. I do not see glasses. Trigger stays untouched until they are on.",
-            "Put glasses on, tap I am safe, then Resume.",
-        )
-
-    if signals.get("ppe_visible") is False and project["requires_ppe"]:
-        session["safety_cleared"] = False
-        return _raise_interrupt(
-            session,
-            HARD_STOP,
-            "ppe_missing",
-            "Glasses came off. We are frozen until they are back on.",
-            "Glasses on. I am safe. Resume.",
-        )
-
     if signals.get("part_inverted") is True:
         return _raise_interrupt(
             session,
@@ -697,6 +684,12 @@ def _evaluate_check(session: dict, signals: dict) -> dict:
             "Get both in frame, then Check me again.",
         )
 
+    if signals.get("vision_wrong") and step.get("optional"):
+        session["checked_current"] = True
+        session["status"] = STATUS_LIVE
+        _set_line(session, "That check is optional. Skip it if you want — I will not freeze you over glasses.")
+        return session
+
     if signals.get("vision_wrong") and signals.get("part_inverted") is not True and signals.get("guard_stuck") is not True:
         note = signals.get("vision_note") or "That is not the move."
         return _raise_interrupt(
@@ -706,6 +699,12 @@ def _evaluate_check(session: dict, signals: dict) -> dict:
             f"Hold. {note}",
             "Fix it, then Check me again.",
         )
+
+    if signals.get("vision_unsure") and step.get("optional"):
+        session["checked_current"] = True
+        session["status"] = STATUS_LIVE
+        _set_line(session, "I cannot see glasses and that is fine. Skip or move on.")
+        return session
 
     if signals.get("vision_unsure"):
         note = signals.get("vision_note") or "I cannot tell from this angle."
@@ -736,15 +735,6 @@ def _complete_step(session: dict, signals: dict) -> dict:
         _set_line(session, "That's a wrap. You did it without me having to yell twice.")
         return session
 
-    if project["requires_ppe"] and not session["safety_cleared"]:
-        return _raise_interrupt(
-            session,
-            HARD_STOP,
-            "ppe_missing",
-            "No. Safety first. Glasses, then we move.",
-            "Tap I am safe, then Resume.",
-        )
-
     if signals.get("part_inverted") is True:
         return _raise_interrupt(
             session,
@@ -754,7 +744,7 @@ def _complete_step(session: dict, signals: dict) -> dict:
             "Flip it, Check me, then Done with this step.",
         )
 
-    if step.get("verify") in {"orientation", "ppe", "guard"} and not session.get("checked_current"):
+    if step.get("verify") in {"orientation", "guard"} and not session.get("checked_current") and not step.get("optional"):
         return _raise_interrupt(
             session,
             SOFT_PAUSE,

@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { OctagonX } from "lucide-react";
 
-export const ViewTubeHardStop = ({ interrupt, onAcknowledge, onResume, acknowledging }) => {
+export const ViewTubeHardStop = ({ interrupt, onAcknowledge, onResume, onBypass, acknowledging }) => {
   if (!interrupt) return null;
   const isHard = interrupt.kind === "hard_stop";
   const acked = Boolean(interrupt.acknowledged);
+  const canSkip = Boolean(interrupt.bypassable) && typeof onBypass === "function";
 
   return (
     <motion.div
@@ -34,7 +35,18 @@ export const ViewTubeHardStop = ({ interrupt, onAcknowledge, onResume, acknowled
         </h2>
         <p className="text-sm text-white/70 mb-8">{interrupt.resume_hint}</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          {!acked && (
+          {canSkip && (
+            <button
+              type="button"
+              data-testid="viewtube-bypass-btn"
+              onClick={onBypass}
+              disabled={acknowledging}
+              className="h-12 px-8 rounded-full bg-white text-black text-sm font-semibold"
+            >
+              Skip and keep going
+            </button>
+          )}
+          {!acked && !canSkip && (
             <button
               type="button"
               data-testid="viewtube-ack-btn"
@@ -49,7 +61,7 @@ export const ViewTubeHardStop = ({ interrupt, onAcknowledge, onResume, acknowled
             type="button"
             data-testid="viewtube-resume-btn"
             onClick={onResume}
-            disabled={isHard && !acked}
+            disabled={isHard && !acked && !canSkip}
             className="h-12 px-8 rounded-full border border-white/40 text-white text-sm font-semibold disabled:opacity-40"
           >
             Resume

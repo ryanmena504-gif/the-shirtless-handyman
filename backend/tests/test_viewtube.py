@@ -78,31 +78,36 @@ def test_confirm_setup_goes_live_and_reads_first_step():
     assert "Lay out every part" in session["coach_line"]["text"]
 
 
-def test_ppe_project_hard_stops_before_safety_cleared():
+def test_ppe_is_optional_and_never_hard_stops():
     session = apply_event(create_session("cole", "tool-safety"), "confirm_setup")
     session = apply_event(session, "check_me")
-    assert session["status"] == STATUS_HARD_STOP
-    assert session["interrupt"]["kind"] == HARD_STOP
-    assert session["interrupt"]["reason"] == "ppe_missing"
-    assert "glasses" in session["coach_line"]["text"].lower()
+    assert session["status"] != STATUS_HARD_STOP
+    assert not session.get("interrupt") or session["interrupt"]["reason"] != "ppe_missing"
 
 
 def test_cannot_resume_hard_stop_without_ack():
-    session = apply_event(create_session("avery", "tool-safety"), "confirm_setup")
-    session = apply_event(session, "check_me")
+    session = _live_session("flatpack-shelf")
+    session = apply_event(session, "flag_wrong")
     with pytest.raises(ValueError, match="Acknowledge"):
         apply_event(session, "resume")
 
 
-def test_ack_then_resume_after_safety():
+def test_bypass_safety_skips_glasses_and_moves_on():
     session = apply_event(create_session("avery", "tool-safety"), "confirm_setup")
-    session = apply_event(session, "check_me")
-    session = apply_event(session, "acknowledge_interrupt")
-    assert session["interrupt"]["acknowledged"] is True
-    session = apply_event(session, "confirm_safety")
-    session = apply_event(session, "resume")
+    assert session["project"]["steps"][0]["verify"] == "ppe"
+    session = apply_event(session, "bypass_safety")
+    assert session["safety_cleared"] is True
+    assert session["safety_bypassed"] is True
     assert session["status"] == STATUS_LIVE
     assert session["interrupt"] is None
+    assert session["step_index"] == 1
+    assert session["project"]["steps"][session["step_index"]]["id"] == "guard"
+
+
+def test_confirm_safety_does_not_reject_missing_glasses():
+    session = apply_event(create_session("avery", "tool-safety"), "confirm_setup")
+    session = apply_event(session, "confirm_safety", {"ppe_visible": False})
+    assert session["status"] != STATUS_HARD_STOP
     assert session["safety_cleared"] is True
 
 
@@ -246,13 +251,6 @@ def test_bench_not_in_frame_blocks_setup():
     assert session["interrupt"]["kind"] == ASK
     assert session["interrupt"]["reason"] == "bench_missing"
     assert session["setup_confirmed"] is False
-
-
-def test_confirm_safety_rejects_missing_glasses_in_frame():
-    session = apply_event(create_session("avery", "tool-safety"), "confirm_setup")
-    session = apply_event(session, "confirm_safety", {"ppe_visible": False})
-    assert session["status"] == STATUS_HARD_STOP
-    assert session["safety_cleared"] is False
 
 
 def test_parse_and_merge_vision_never_invents_ok():

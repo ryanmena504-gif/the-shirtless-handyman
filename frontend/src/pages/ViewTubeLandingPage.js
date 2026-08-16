@@ -11,7 +11,7 @@ const COACH_STILLS = [
   {
     id: "cole",
     name: "Cole",
-    line: "Calm. A little cocky. Will not let you skip the glasses.",
+    line: "Calm. A little cocky. Stops you when the part is backwards.",
   },
   {
     id: "avery",
@@ -24,7 +24,7 @@ const BEATS = [
   {
     icon: Smartphone,
     title: "Phone on a stand",
-    copy: "Clamp it so the bench is in frame. Hands stay free. Glasses later.",
+    copy: "Clamp it so the bench is in frame. Hands stay free.",
   },
   {
     icon: Eye,
@@ -34,7 +34,7 @@ const BEATS = [
   {
     icon: OctagonX,
     title: "A real stop",
-    copy: "Wrong orientation, no PPE, blade guard stuck — the session freezes.",
+    copy: "Wrong orientation, stuck blade guard — the session freezes. Missing glasses will not.",
   },
   {
     icon: Volume2,
