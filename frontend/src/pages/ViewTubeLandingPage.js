@@ -93,6 +93,11 @@ export default function ViewTubeLandingPage() {
               Pick a project
             </button>
           </div>
+          <p className="mt-6">
+            <a href="/viewtube-show.html" className="text-sm text-white/45 underline underline-offset-4 hover:text-white/80" data-testid="viewtube-show-link">
+              Watch the stop in 15 seconds
+            </a>
+          </p>
         </div>
       </section>
 
