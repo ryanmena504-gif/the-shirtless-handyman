@@ -173,6 +173,34 @@ export default function HomePage() {
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
       <TrustStrip variant="dark" />
 
+      {/* ===== VIEWTUBE ===== */}
+      <section className="px-6 md:px-12 py-16 bg-[#0B0B0B] text-white" data-testid="viewtube-home-strip">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.35em] text-[#D97757] font-bold mb-3">New · Live coach</p>
+            <h2
+              className="text-3xl md:text-5xl font-light leading-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              <span className="text-white">view</span>
+              <span className="text-[#D97757]">Tube</span>
+              <span className="block text-white/80 italic mt-2">watches you do the work.</span>
+            </h2>
+            <p className="mt-4 text-white/60 max-w-lg">
+              Thirty seconds. Any rectangular thing. Cole or Avery will freeze the session if you set it down backwards.
+            </p>
+          </div>
+          <button
+            type="button"
+            data-testid="viewtube-home-cta"
+            onClick={() => navigate("/viewtube/show")}
+            className="h-12 px-8 rounded-full bg-[#D97757] text-white font-semibold self-start md:self-auto"
+          >
+            Feel the stop
+          </button>
+        </div>
+      </section>
+
       {/* ===== WHAT I DO ===== */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
         <div className="max-w-7xl mx-auto">

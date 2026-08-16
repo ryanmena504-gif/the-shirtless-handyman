@@ -179,6 +179,19 @@ Ryan's feedback: the site read like an AI room-visualizer SaaS, not like a craft
 3. **(Optional)** Paste GA4 measurement ID (G-XXXXXXXXXX) and Meta Pixel ID into the placeholders in `frontend/public/index.html` for analytics + retargeting.
 4. **Redeploy** to push the lead-gen layer to theshirtlesshandyman.com.
 
+### 2026-08-16 — viewTube
+The live camera DIY coach from the market brief is now a first-class product named **viewTube**.
+- Brand: `viewTube` — "YouTube shows you how. viewTube watches you do it."
+- Coaches: Cole (he/him) and Avery (she/her). Charming, gendered, PG.
+- Four structured projects: flat-pack shelf, drywall patch, paint a wall, circular-saw safety.
+- Hard stop / soft pause / ask live in `backend/viewtube.py` and are unit-tested without Mongo.
+- Routes: `/viewtube`, `/viewtube/setup`, `/viewtube/watch/:sessionId`.
+- API: `GET /api/viewtube/catalog`, `POST /api/viewtube/sessions`, `GET /api/viewtube/sessions/{id}`, `POST /api/viewtube/sessions/{id}/events`.
+- Existing Shirtless Handyman lead-gen site is unchanged. viewTube is a new surface.
+- **AI voices only** (2026-08-16): Cole = OpenAI `onyx`, Avery = `nova` via `POST /api/viewtube/speak`. No browser speechSynthesis, no human recordings. Illustrated AI portraits replace stock photos of real people.
+- **Look at the bench** (2026-08-16): `Check me` / `I'm set` / `I am safe` send a still. gpt-4o inspects it conservatively (unsure = ask, never a fake green light). Two more projects: floating shelf, faucet swap. Demo invert toggle removed.
+- **PPE is optional** (2026-08-16): Missing glasses never hard-stops a session. `bypass_safety` / Skip this. Stickler shop-class rules are a product killer.
+
 ## Backlog
 - **P2** Real ZIP geocoding API (currently mocked).
 - **Optimization** Batch the N+1 contractor query in admin leads endpoint.

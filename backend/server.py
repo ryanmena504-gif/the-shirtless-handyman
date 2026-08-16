@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
@@ -30,6 +30,17 @@ from prompts import (
 )
 from notifications import notify_new_lead
 from image_utils import normalize_image_for_ai
+from viewtube import (
+    apply_event as viewtube_apply_event,
+    catalog as viewtube_catalog,
+    create_session as viewtube_create_session,
+    merge_vision_signals as viewtube_merge_vision,
+    session_public as viewtube_session_public,
+    speak_request as viewtube_speak_request,
+    VISION_LOOK_EVENTS as VIEWTUBE_VISION_LOOK_EVENTS,
+)
+from viewtube_tts import synthesize_sync as viewtube_synthesize
+from viewtube_vision import look_at_frame_sync, validate_frame as viewtube_validate_frame
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -1126,6 +1137,112 @@ async def seed_data():
     return {"message": f"Seeded {len(contractors)} contractors with specialty routing", "count": len(contractors)}
 
 
+class ViewTubeSessionCreate(BaseModel):
+    coach_id: str
+    project_id: str
+
+
+class ViewTubeSessionEvent(BaseModel):
+    type: str
+    signals: dict = {}
+    frame: str = ""
+    frame_ref: str = ""
+
+
+class ViewTubeSpeak(BaseModel):
+    coach_id: str
+    text: str
+
+
+@api_router.get("/viewtube/catalog")
+async def get_viewtube_catalog():
+    """Coaches + structured projects. No camera required."""
+    return viewtube_catalog()
+
+
+@api_router.post("/viewtube/sessions")
+async def create_viewtube_session(req: ViewTubeSessionCreate):
+    try:
+        session = viewtube_create_session(req.coach_id, req.project_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    await db.viewtube_sessions.insert_one({**session})
+    return viewtube_session_public(session)
+
+
+@api_router.get("/viewtube/sessions/{session_id}")
+async def get_viewtube_session(session_id: str):
+    session = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    return viewtube_session_public(session)
+
+
+@api_router.post("/viewtube/sessions/{session_id}/events")
+async def post_viewtube_event(session_id: str, req: ViewTubeSessionEvent):
+    session = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    signals = dict(req.signals or {})
+    started_updated = session.get("updated_at")
+    try:
+        frame = viewtube_validate_frame(req.frame)
+        frame_ref = viewtube_validate_frame(req.frame_ref)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if frame and req.type in VIEWTUBE_VISION_LOOK_EVENTS:
+        try:
+            vision = await asyncio.to_thread(look_at_frame_sync, session, frame, frame_ref)
+            signals = viewtube_merge_vision(signals, vision)
+        except Exception as exc:
+            logger.warning("viewTube vision skipped: %s", exc)
+            signals = viewtube_merge_vision(signals, {
+                "vision_verdict": "unsure",
+                "vision_confidence": 0,
+                "vision_note": "I lost the picture for a second.",
+                "vision_unsure": req.type == "check_me",
+            })
+        if req.type == "glance":
+            fresh = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+            if not fresh:
+                raise HTTPException(status_code=404, detail="Session not found")
+            if fresh.get("updated_at") != started_updated:
+                return viewtube_session_public(fresh)
+            session = fresh
+    original_updated = session.get("updated_at")
+    try:
+        updated = viewtube_apply_event(session, req.type, signals)
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    result = await db.viewtube_sessions.replace_one(
+        {"id": session_id, "updated_at": original_updated},
+        updated,
+    )
+    if result.matched_count == 0:
+        fresh = await db.viewtube_sessions.find_one({"id": session_id}, {"_id": 0})
+        if not fresh:
+            raise HTTPException(status_code=404, detail="Session not found")
+        return viewtube_session_public(fresh)
+    return viewtube_session_public(updated)
+
+
+@api_router.post("/viewtube/speak")
+async def viewtube_speak(req: ViewTubeSpeak):
+    """AI voice only. Cole and Avery are synthetic — no human recordings."""
+    try:
+        viewtube_speak_request(req.coach_id, req.text)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    try:
+        audio = await asyncio.to_thread(viewtube_synthesize, req.coach_id, req.text)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("viewTube AI voice failed: %s", exc)
+        raise HTTPException(status_code=502, detail="AI voice is unavailable right now") from exc
+    return Response(content=audio, media_type="audio/mpeg")
+
+
 @api_router.post("/seed")
 async def seed_endpoint():
     """Idempotent seed endpoint for first-run setup."""
@@ -1155,6 +1272,7 @@ async def startup():
     await db.shares.create_index("id")
     await db.shares.create_index("project_id")
     await db.portfolio.create_index("id")
+    await db.viewtube_sessions.create_index("id", unique=True)
     logger.info("AI Renovation Visualizer API started")
 
 
