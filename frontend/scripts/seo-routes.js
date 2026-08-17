@@ -41,6 +41,24 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
   },
   {
+    path: "/viewtube",
+    title: "viewTube | The DIY coach that watches you — and stops you",
+    description: "YouTube shows you how. viewTube watches you do it. Pick Cole or Avery, point the phone at the bench, and get a live stop if the part is backwards.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/viewtube/show",
+    title: "Feel the stop | viewTube",
+    description: "Fifteen seconds. Cole watches a book get flipped backwards and freezes the session.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/viewtube/setup",
+    title: "Pick a coach | viewTube",
+    description: "Choose Cole or Avery and a structured DIY project. viewTube watches the bench and stops you if the part is backwards.",
+    ogImage: DEFAULT_OG,
+  },
+  {
     path: "/upload",
     title: "The Seamless Studio | Preview Your Renovation Free — The Shirtless Handyman",
     description: "Upload a photo of any room and instantly preview it in microcement, tadelakt, or rockscape. Free 60-second AI preview. Serving Greater New Orleans.",
