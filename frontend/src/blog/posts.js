@@ -163,6 +163,7 @@ export const BLOG_POSTS = [
     tags: ["humidity", "tile failure", "new orleans", "microcement"],
     sections: [
       { type: "p", content: "New Orleans averages 76% relative humidity year-round. That's higher than Houston. Higher than Miami. And it's the single biggest reason why traditional tile bathrooms in this city fail decades earlier than they would anywhere else." },
+      { type: "image", src: "/failures/rust-water-stain.jpg", alt: "Rust bleeding from behind a bathroom wall base with water staining above — classic humidity-driven failure", caption: "Rust bleeding out from behind the wall base — this is water that got past the grout years ago." },
       { type: "h2", content: "Where tile actually fails" },
       { type: "p", content: "It's never the tile itself. Tile is fired clay or porcelain — it lasts essentially forever. The failure happens in:" },
       { type: "ul", items: [
@@ -171,6 +172,7 @@ export const BLOG_POSTS = [
         "The substrate behind the tile (drywall + thinset can soften when moisture penetrates the grout)",
       ]},
       { type: "p", content: "In a typical NOLA shower, moisture penetrates grout within 6 months of install. The grout absorbs, holds it, and slowly releases it back into the room. That's where the black mold lines come from. The tile is fine — the grid around it is hosting a microbial party." },
+      { type: "image", src: "/failures/mold-doorway.jpg", alt: "Mold and peeling paint at the bottom of a bathroom doorway trim next to encaustic floor tile", caption: "Peeling paint and mold at a doorway I opened up — water traveled through the wall from the shower." },
       { type: "h2", content: "The math" },
       { type: "p", content: "An average tile shower in this city needs:" },
       { type: "ul", items: [

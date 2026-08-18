@@ -50,6 +50,24 @@ function SectionRenderer({ section, navigate }) {
           </a>
         </div>
       );
+    case "image":
+      return (
+        <figure className="my-8">
+          <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-[#F5F1EA] shadow-sm">
+            <img
+              src={section.src}
+              alt={section.alt || ""}
+              loading="lazy"
+              className="block w-full h-auto"
+            />
+          </div>
+          {section.caption && (
+            <figcaption className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {section.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
     default:
       return null;
   }

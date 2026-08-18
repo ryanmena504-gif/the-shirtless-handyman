@@ -572,6 +572,21 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+
+              {/* Real damage evidence — this is what humidity does to a seamed install */}
+              <figure className="mt-10" data-testid="problem-evidence-figure">
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+                  <img
+                    src="/failures/substrate-rust.jpg"
+                    alt="Rust and water damage bleeding through the substrate at the base of a bathroom wall — hidden failure from poor installation"
+                    loading="lazy"
+                    className="block w-full h-auto max-h-[380px] object-cover"
+                  />
+                </div>
+                <figcaption className="mt-3 text-[11px] uppercase tracking-[0.2em] text-white/45">
+                  Real bathroom I opened up in NOLA — rust bleeding out of the substrate. Poor installation, hidden for years.
+                </figcaption>
+              </figure>
             </div>
 
             {/* Solution transition */}

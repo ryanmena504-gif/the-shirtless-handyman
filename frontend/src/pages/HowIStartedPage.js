@@ -42,6 +42,9 @@ const CHAPTERS = [
     image: "/story/chapter-2-tile-bathroom.jpg",
     imageAlt: "A patterned encaustic-tile bathroom Ryan installed — glass shower door, decorative floor tile, wall niche",
     imageCaption: "One of my tile jobs — patterned encaustic floor, glass shower, wall niche.",
+    secondImage: "/failures/mold-shower-door.jpg",
+    secondImageAlt: "Black mold blooming around the caulk line at a shower door frame — water infiltration from a failed seal",
+    secondImageCaption: "Same kind of bathroom, ten years later — mold blooming right at the caulk line. This is what humidity does to a seam.",
     body:
       "Handyman jobs led to bathroom jobs. Bathroom jobs led to tile work. I spent years installing tile across the metro — Lakeview, Uptown, Metairie, Bywater. Good work at fair prices. But every ten years I'd get called back to the same houses. Same story every time: black grout lines, peeling caulk, mold behind the drywall, humidity chewing through the seams. The tile was fine. Everything holding it together wasn't.",
   },
@@ -163,6 +166,27 @@ export default function HowIStartedPage() {
                       {c.imageCaption && (
                         <figcaption className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
                           {c.imageCaption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  )}
+
+                  {c.secondImage && (
+                    <figure
+                      className="mt-6 max-w-2xl"
+                      data-testid={`story-chapter-${i}-figure-2`}
+                    >
+                      <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-[#F5F1EA] shadow-sm">
+                        <img
+                          src={c.secondImage}
+                          alt={c.secondImageAlt}
+                          loading="lazy"
+                          className="block w-full h-auto"
+                        />
+                      </div>
+                      {c.secondImageCaption && (
+                        <figcaption className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                          {c.secondImageCaption}
                         </figcaption>
                       )}
                     </figure>
