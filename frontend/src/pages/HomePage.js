@@ -721,10 +721,10 @@ export default function HomePage() {
               className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4 leading-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              This is not a cheap fix.<br />This is a high-value upgrade.
+              This isn't the cheap fix.<br />It's the one you don't do twice.
             </h2>
             <p className="text-sm text-white/45 max-w-xl mx-auto">
-              Seamless surfaces and rockscape walls are luxury finishes — hand-applied, custom-designed, and built to outlast anything tile or grout could ever offer.
+              These are hand-applied finishes, built to your space — and they'll outlast any tile job by a mile.
             </p>
           </div>
 
@@ -831,7 +831,7 @@ export default function HomePage() {
               className="text-lg md:text-xl font-light text-white/80 tracking-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              "Luxury that lasts. Every surface I install is waterproof, mold-resistant, UV-stable, and designed to look better with age — not worse."
+              "I build things to get better with age, not worse. Waterproof, mold-resistant, doesn't fade in the sun — that's the standard, every time."
             </p>
           </div>
         </div>
@@ -1030,21 +1030,21 @@ export default function HomePage() {
                 className="text-3xl md:text-4xl font-light tracking-tight text-white mb-6 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Add seamless surfaces<br />to your next project.
+                Bring me in on your<br />next bathroom or kitchen job.
               </h2>
               <p className="text-base text-white/60 leading-relaxed mb-4">
-                You run the remodel. I install the surfaces. Your client gets a higher-end finish, you increase the project value, and nobody has to learn a new trade.
+                You run the job like normal. I show up, install the surface, and hand it back to you finished. Your client gets a nicer bathroom, you bill more for it, and you don't have to figure out a material you've never worked with.
               </p>
               <p className="text-base text-white/60 leading-relaxed mb-8">
-                I partner with general contractors, bathroom remodelers, kitchen builders, and design firms across Greater New Orleans. You bring the project — I bring the microcement, tadelakt, venetian plaster, and rockscape installs.
+                I've done this with GCs, remodelers, and design firms all over the New Orleans area. You handle the project. I handle microcement, tadelakt, venetian plaster, and rockscape — that's it, that's my whole lane.
               </p>
 
               <div className="space-y-4 mb-10">
                 {[
-                  { title: "Increase project value", desc: "Seamless surfaces are a premium upsell your clients will love — higher ticket, same timeline." },
-                  { title: "No extra training needed", desc: "I handle the entire surface installation. You stay focused on your scope." },
-                  { title: "White-label available", desc: "I work under your brand or mine — whatever makes the project smoother." },
-                  { title: "Fast turnaround", desc: "Most surface installs complete in 2–5 days depending on scope." },
+                  { title: "Bill more, same schedule", desc: "Clients pay more for a seamless finish, and it doesn't add time to your job." },
+                  { title: "You don't touch it", desc: "I do the whole surface install. You keep running your job." },
+                  { title: "Your name or mine", desc: "Whatever's easier for your client to see on the invoice." },
+                  { title: "In and out in 2–5 days", desc: "So I'm not holding up your schedule." },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
                     <CheckCircle className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
@@ -1060,7 +1060,7 @@ export default function HomePage() {
                 <a href={SMS_LINK} data-testid="partner-text-btn">
                   <Button className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Text me to Partner
+                    Text me, let's talk about your next job
                   </Button>
                 </a>
                 <Button
@@ -1069,7 +1069,7 @@ export default function HomePage() {
                   className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium"
                   data-testid="partner-register-btn"
                 >
-                  Create a Contractor Account
+                  Set up a contractor account
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
