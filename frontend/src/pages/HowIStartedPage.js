@@ -52,7 +52,7 @@ const CHAPTERS = [
     year: "The shift",
     icon: Layers,
     title: "I went and learned something better",
-    image: "/story/chapter-3-microcement-mid-job.png",
+    image: "/story/chapter-3-microcement-mid-job.jpg",
     imageAlt: "A bathroom mid-installation — microcement walls, a hand-formed sink, terrazzo-look floor, and tools still on the ground",
     imageCaption: "Mid-job. Microcement walls, hand-formed sink, tools still on the floor.",
     body:

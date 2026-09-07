@@ -61,8 +61,8 @@ export default function ResultsPage() {
 
       await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 15000 });
 
-      const pollInterval = 3000;
-      const maxAttempts = 60;
+      const pollInterval = 2000;
+      const maxAttempts = 90;
       let attempts = 0;
 
       const poll = async () => {
@@ -107,7 +107,7 @@ export default function ResultsPage() {
         }
       };
 
-      setTimeout(poll, 2000);
+      setTimeout(poll, 1000);
 
     } catch (err) {
       const detail = err.response?.data?.detail || "";

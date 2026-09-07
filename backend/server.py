@@ -367,15 +367,27 @@ def _do_generation(project_id: str, project: dict, thread_db, loop):
 
     designs = []
     last_error = None
-    for style in styles:
+    # Generate all styles in parallel — each gpt-image-1 call is independent and
+    # sequential loops were the #1 latency source (N × per-render vs ~max).
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def _one(style):
         try:
             result = _generate_single_design(style, image_bytes, budget_mod, preservation_suffix, api_key, proxy_url)
+            logger.info(f"Generated: {style['name']} for project {project_id} (budget: {budget})")
+            return (style, result, None)
+        except Exception as e:
+            logger.error(f"Image edit error for {style['name']}: {type(e).__name__}: {e}")
+            return (style, None, e)
+
+    with ThreadPoolExecutor(max_workers=len(styles)) as pool:
+        futures = [pool.submit(_one, s) for s in styles]
+        for fut in as_completed(futures):
+            _style, result, err = fut.result()
             if result:
                 designs.append(result)
-            logger.info(f"Generated: {style['name']} for project {project_id} (budget: {budget})")
-        except Exception as e:
-            last_error = e
-            logger.error(f"Image edit error for {style['name']}: {type(e).__name__}: {e}")
+            elif err is not None:
+                last_error = err
 
     cost = estimate_cost(project_type, project["zip_code"])
     status = "completed" if designs else "failed"
