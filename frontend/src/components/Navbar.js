@@ -44,6 +44,13 @@ export const Navbar = () => {
           >
             Start Project
           </Button>
+          <a
+            href="/color-preview.html"
+            className="inline-flex items-center h-9 px-4 rounded-full text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+            data-testid="nav-color-preview-btn"
+          >
+            Color Preview
+          </a>
           <Button
             variant="ghost"
             className="rounded-full text-sm font-medium"
@@ -144,6 +151,14 @@ export const Navbar = () => {
           >
             Start Project
           </Button>
+          <a
+            href="/color-preview.html"
+            className="w-full flex items-center h-10 px-4 rounded-lg text-sm font-medium hover:bg-accent"
+            data-testid="mobile-color-preview-btn"
+            onClick={() => setMobileOpen(false)}
+          >
+            Color Preview
+          </a>
           <Button
             variant="ghost"
             className="w-full justify-start rounded-lg"

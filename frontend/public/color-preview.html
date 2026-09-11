@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Microcement Mood Preview — The Shirtless Handyman</title>
+  <meta name="description" content="Point your phone camera at a wall, tile, or backsplash. Try microcement colors live. Save a concept image or text me for a quote — Ryan Mena, The Shirtless Handyman.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#17150F;--ink-soft:#221F17;--cloud:#EDE6D6;--greige:#B9A88C;--taupe:#7A6F5D;--patina:#4A5D52;--patina-bright:#6C8878;--brick:#C7462F;--line:rgba(237,230,214,0.18);--line-strong:rgba(237,230,214,0.42);}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:var(--ink);color:var(--cloud);font-family:"Space Grotesk",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+    button,input,select,textarea{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+    #stage{position:relative;width:100%;height:100dvh;min-height:100vh;overflow:hidden;background:var(--ink)}
+    video{display:none}
+    canvas#view{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .topbar{position:absolute;top:0;right:0;left:0;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:max(18px,env(safe-area-inset-top)) 20px 14px;background:linear-gradient(to bottom,rgba(23,21,15,0.82),transparent);pointer-events:none}
+    .topbar a.brand-link{pointer-events:auto;color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px}
+    .brand{max-width:80%;font-family:"Fraunces",serif;font-size:15px;font-weight:500;letter-spacing:0.01em;color:var(--cloud)}
+    .brand em{font-style:italic;color:var(--greige)}
+    .status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--greige);white-space:nowrap}
+    .status .dot{width:6px;height:6px;border-radius:50%;background:var(--patina-bright);box-shadow:0 0 6px var(--patina-bright)}
+    .corner{position:absolute;z-index:4;width:28px;height:28px;border-color:var(--cloud);opacity:0;pointer-events:none;animation:cornerIn 900ms ease-out 200ms forwards}
+    .corner.tl{top:74px;left:20px;border-top:2px solid;border-left:2px solid}
+    .corner.tr{top:74px;right:20px;border-top:2px solid;border-right:2px solid}
+    .corner.bl{bottom:270px;left:20px;border-bottom:2px solid;border-left:2px solid}
+    .corner.br{right:20px;bottom:270px;border-right:2px solid;border-bottom:2px solid}
+    @keyframes cornerIn{0%{opacity:0;transform:scale(1.4)}60%{opacity:0.85}100%{opacity:0.55;transform:scale(1)}}
+    #sampleArea{position:absolute;z-index:6;top:34%;left:50%;width:min(72vw,360px);aspect-ratio:1/1;border:2px solid rgba(237,230,214,0.86);border-radius:16px;box-shadow:0 0 0 9999px rgba(23,21,15,0.10),0 6px 28px rgba(0,0,0,0.24),inset 0 0 0 1px rgba(23,21,15,0.22);cursor:grab;touch-action:none;transform:translate(-50%,-50%)}
+    #sampleArea.dragging{cursor:grabbing;border-color:var(--cloud);box-shadow:0 0 0 9999px rgba(23,21,15,0.17),0 8px 32px rgba(0,0,0,0.32),inset 0 0 0 1px rgba(23,21,15,0.22)}
+    .sampleTag{position:absolute;top:-33px;left:50%;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(23,21,15,0.80);color:var(--cloud);font-size:10px;letter-spacing:0.02em;white-space:nowrap;transform:translateX(-50%);pointer-events:none}
+    .sampleHandle{position:absolute;right:-10px;bottom:-10px;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border:2px solid var(--cloud);border-radius:50%;background:var(--patina);color:var(--cloud);box-shadow:0 2px 10px rgba(0,0,0,0.28);font-size:16px;line-height:1;pointer-events:none}
+    #gate{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:40px;background:var(--ink);text-align:center}
+    #gate h1{max-width:300px;margin:0;color:var(--cloud);font-family:"Fraunces",serif;font-size:27px;font-weight:500;line-height:1.22}
+    #gate p{max-width:285px;margin:0;color:var(--greige);font-size:14px;line-height:1.55}
+    #gate .smallPrint{margin-top:-6px;color:var(--taupe);font-size:11px;line-height:1.45}
+    #gate a.studio-link{color:var(--patina-bright);text-decoration:underline;text-underline-offset:3px}
+    .goBtn{margin-top:8px;padding:14px 30px;border:1px solid var(--patina-bright);border-radius:999px;background:var(--patina);color:var(--cloud);font-size:14px;font-weight:500;letter-spacing:0.02em;cursor:pointer}
+    .goBtn:active{transform:scale(0.97)}
+    #gate.error h1{color:var(--brick)}
+    .controls{position:absolute;right:0;bottom:0;left:0;z-index:8;display:flex;flex-direction:column;gap:14px;padding:18px 20px max(22px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(23,21,15,0.96) 42%,rgba(23,21,15,0.68) 76%,transparent)}
+    .previewNote{align-self:center;max-width:340px;color:var(--greige);font-size:10.5px;line-height:1.35;text-align:center;opacity:0.82}
+    .previewNote a{color:var(--patina-bright);text-decoration:underline;text-underline-offset:2px}
+    .compareHint{align-self:center;color:var(--greige);font-size:11.5px;letter-spacing:0.02em;opacity:0.85;transition:opacity 150ms ease,color 150ms ease}
+    .compareHint.active{color:var(--cloud);opacity:1}
+    .swatchRow{display:flex;justify-content:center;gap:10px}
+    .swatch{position:relative;width:44px;height:44px;padding:0;border:2px solid transparent;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.15);cursor:pointer;transition:transform 160ms ease,border-color 160ms ease}
+    .swatch.selected{border-color:var(--cloud);transform:translateY(-3px)}
+    .swatch:focus-visible,#compareBtn:focus-visible,#shutter:focus-visible,#flipCam:focus-visible,#quoteBtn:focus-visible,.goBtn:focus-visible{outline:2px solid var(--cloud);outline-offset:3px}
+    .swatch .label{position:absolute;top:50px;left:50%;color:var(--greige);font-size:9.5px;letter-spacing:0.03em;white-space:nowrap;transform:translateX(-50%);pointer-events:none}
+    .swatch.selected .label{color:var(--cloud)}
+    .actionRow{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:7px}
+    #compareBtn,#flipCam{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border:1px solid var(--line);border-radius:50%;background:rgba(237,230,214,0.06);color:var(--cloud);cursor:pointer}
+    #compareBtn{touch-action:none;-webkit-user-select:none;user-select:none}
+    #compareBtn:active,#flipCam:active{background:rgba(237,230,214,0.14)}
+    #shutter{position:relative;width:72px;height:72px;border:3px solid var(--cloud);border-radius:50%;background:transparent;cursor:pointer}
+    #shutter::after{position:absolute;inset:5px;border-radius:50%;background:var(--cloud);content:"";transition:transform 120ms ease,background 120ms ease}
+    #shutter:active::after{background:var(--brick);transform:scale(0.82)}
+    #quoteBtn{width:100%;margin-top:1px;padding:12px 16px;border:1px solid var(--patina-bright);border-radius:999px;background:rgba(74,93,82,0.82);color:var(--cloud);font-size:13px;font-weight:500;letter-spacing:0.01em;cursor:pointer}
+    #quoteBtn:active{background:var(--patina);transform:scale(0.99)}
+    #flash{position:absolute;inset:0;z-index:25;background:var(--cloud);opacity:0;pointer-events:none}
+    #toast{position:absolute;z-index:20;bottom:286px;left:50%;padding:10px 18px;border:1px solid var(--line);border-radius:999px;background:var(--ink-soft);color:var(--cloud);font-size:12.5px;white-space:nowrap;opacity:0;pointer-events:none;transform:translateX(-50%) translateY(10px);transition:opacity 220ms ease,transform 220ms ease}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    #leadPanel{position:absolute;right:0;bottom:0;left:0;z-index:40;max-height:min(85dvh,700px);padding:22px 20px max(24px,env(safe-area-inset-bottom));overflow-y:auto;border-top:1px solid var(--line-strong);border-radius:22px 22px 0 0;background:var(--ink-soft);box-shadow:0 -20px 60px rgba(0,0,0,0.42);transform:translateY(105%);transition:transform 300ms cubic-bezier(.2,.8,.2,1)}
+    #leadPanel.open{transform:translateY(0)}
+    .panelHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+    .panelHead h2{margin:0;color:var(--cloud);font-family:"Fraunces",serif;font-size:24px;font-weight:500}
+    .panelHead p{margin:6px 0 0;color:var(--greige);font-size:12.5px;line-height:1.45}
+    #closeLead{display:flex;flex:0 0 auto;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--cloud);cursor:pointer;font-size:22px;line-height:1}
+    #leadForm{display:grid;gap:12px}
+    .field{display:grid;gap:6px}
+    .field label{color:var(--greige);font-size:11px;letter-spacing:0.02em}
+    .field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;outline:none;background:rgba(237,230,214,0.06);color:var(--cloud);font-size:14px}
+    .field textarea{min-height:76px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:var(--taupe)}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--patina-bright);box-shadow:0 0 0 3px rgba(108,136,120,0.14)}
+    .field select option{color:var(--ink);background:var(--cloud)}
+    .selectedFinish{padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:rgba(237,230,214,0.06);color:var(--cloud);font-size:13px}
+    .selectedFinish span{color:var(--greige)}
+    .formNote{margin:0;color:var(--taupe);font-size:10.5px;line-height:1.45}
+    #submitLead{padding:14px 16px;border:1px solid var(--patina-bright);border-radius:999px;background:var(--patina);color:var(--cloud);font-size:14px;font-weight:500;cursor:pointer}
+    #submitLead:disabled{opacity:0.6;cursor:not-allowed}
+    #submitLead:active{transform:scale(0.99)}
+    .successState{padding:16px;border:1px solid var(--patina-bright);border-radius:12px;background:rgba(74,93,82,0.20);color:var(--cloud);font-size:14px;line-height:1.5}
+    @media (max-height:680px){
+      .controls{gap:10px;padding-top:12px}
+      .previewNote{display:none}
+      .corner.bl,.corner.br{bottom:220px}
+      #toast{bottom:232px}
+    }
+  </style>
+</head>
+<body>
+  <main id="stage">
+    <video id="cam" playsinline muted></video>
+    <canvas id="view" aria-label="Live microcement mood preview"></canvas>
+    <div id="flash"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <section id="sampleArea" aria-label="Drag this square over the surface you want to preview" role="application">
+      <div class="sampleTag">Drag over the surface</div>
+      <div class="sampleHandle" aria-hidden="true">↘</div>
+    </section>
+    <header class="topbar">
+      <a href="/" class="brand-link" data-testid="color-preview-back-link">
+        <div class="brand">← The Shirtless Handyman — <em>Color Preview</em></div>
+      </a>
+      <div class="status" aria-label="Camera preview active">
+        <span class="dot"></span>preview
+      </div>
+    </header>
+    <section class="controls" aria-label="Preview controls">
+      <div class="previewNote">
+        Color mood tool only — not a photo-realistic render. For a real preview of your room in microcement, <a href="/upload">try The Seamless Studio →</a>
+      </div>
+      <div class="compareHint" id="compareHint">Hold the split circle to see the original surface</div>
+      <div class="swatchRow" id="swatchRow" aria-label="Choose a microcement color"></div>
+      <div class="actionRow">
+        <button id="flipCam" type="button" aria-label="Flip camera">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="M7 23l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        </button>
+        <button id="shutter" type="button" aria-label="Save branded microcement concept image"></button>
+        <button id="compareBtn" type="button" aria-label="Press and hold to compare with the original surface">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"></path></svg>
+        </button>
+      </div>
+      <button id="quoteBtn" type="button" data-testid="color-preview-quote-btn">Get a quote on this finish</button>
+    </section>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <section id="leadPanel" aria-hidden="true">
+      <div class="panelHead">
+        <div>
+          <h2>Text me about this finish</h2>
+          <p>Tell me a little about your space. I'll follow up personally within the hour.</p>
+        </div>
+        <button id="closeLead" type="button" aria-label="Close estimate form">×</button>
+      </div>
+      <form id="leadForm" data-testid="color-preview-lead-form">
+        <div class="selectedFinish"><span>Your finish:</span> <strong id="finishSummary">Warm Greige</strong></div>
+        <div class="field">
+          <label for="leadName">Your name</label>
+          <input id="leadName" name="name" type="text" autocomplete="name" placeholder="Name" required>
+        </div>
+        <div class="field">
+          <label for="leadPhone">Phone number</label>
+          <input id="leadPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(504) 555-0123" required>
+        </div>
+        <div class="field">
+          <label for="leadEmail">Email (optional)</label>
+          <input id="leadEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="leadZip">Project ZIP code</label>
+          <input id="leadZip" name="zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" placeholder="70115" required>
+        </div>
+        <div class="field">
+          <label for="leadRoom">Project area</label>
+          <select id="leadRoom" name="room" required>
+            <option value="" selected disabled>Select project area</option>
+            <option value="Shower or bathroom walls">Shower or bathroom walls</option>
+            <option value="Bathroom floor">Bathroom floor</option>
+            <option value="Kitchen backsplash">Kitchen backsplash</option>
+            <option value="Fireplace or feature wall">Fireplace or feature wall</option>
+            <option value="Flooring">Flooring</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <p class="formNote">By sending, you agree I can text or call you about this request. Nothing else, no spam.</p>
+        <button id="submitLead" type="submit" data-testid="color-preview-submit">Send to Ryan</button>
+      </form>
+      <div id="leadSuccess" class="successState" style="display:none" data-testid="color-preview-success"></div>
+    </section>
+    <section id="gate">
+      <h1>Point your phone at the wall you want to transform.</h1>
+      <p>Pick a microcement tone, drag the sample over the surface, and save a concept image or text me for a real quote.</p>
+      <p class="smallPrint">Your live camera stays in your browser — nothing is uploaded. Want a real render of your room? <a class="studio-link" href="/upload">Try The Seamless Studio →</a></p>
+      <button class="goBtn" id="startBtn" type="button">Turn on camera</button>
+    </section>
+  </main>
+  <script>
+    (function () {
+      const video = document.getElementById("cam");
+      const canvas = document.getElementById("view");
+      const ctx = canvas.getContext("2d", { willReadFrequently: false });
+      const stage = document.getElementById("stage");
+      const gate = document.getElementById("gate");
+      const shutter = document.getElementById("shutter");
+      const compareBtn = document.getElementById("compareBtn");
+      const compareHint = document.getElementById("compareHint");
+      const flipCamBtn = document.getElementById("flipCam");
+      const flash = document.getElementById("flash");
+      const toast = document.getElementById("toast");
+      const swatchRow = document.getElementById("swatchRow");
+      const sampleArea = document.getElementById("sampleArea");
+      const quoteBtn = document.getElementById("quoteBtn");
+      const leadPanel = document.getElementById("leadPanel");
+      const closeLead = document.getElementById("closeLead");
+      const leadForm = document.getElementById("leadForm");
+      const leadSuccess = document.getElementById("leadSuccess");
+      const submitLead = document.getElementById("submitLead");
+      const finishSummary = document.getElementById("finishSummary");
+      const SWATCHES = [
+        { id: "cloud", name: "Soft Cloud", color: [214, 205, 184], grain: 0.05 },
+        { id: "greige", name: "Warm Greige", color: [173, 157, 128], grain: 0.06 },
+        { id: "sand", name: "Limestone Sand", color: [196, 168, 120], grain: 0.06 },
+        { id: "char", name: "Deep Charcoal", color: [54, 50, 44], grain: 0.08 }
+      ];
+      let current = SWATCHES[1];
+      let comparing = false, facing = "environment", stream = null, rafId = null, grainTile = null;
+      let samplePosition = { x: 0.5, y: 0.34 };
+      let draggingSample = false;
+      let dragOffset = { x: 0, y: 0 };
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(showToast.timeout);
+        showToast.timeout = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+      function fitCanvas() {
+        const pr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(window.innerWidth * pr);
+        canvas.height = Math.round(window.innerHeight * pr);
+      }
+      function stopCamera() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+        video.srcObject = null;
+      }
+      function renderGateError(title, description, showRetry = true) {
+        gate.classList.add("error");
+        gate.innerHTML = `<h1>${title}</h1><p>${description}</p>${showRetry ? '<button class="goBtn" id="retryBtn" type="button">Try again</button>' : ''}<p class="smallPrint">Or <a class="studio-link" href="/upload">try The Seamless Studio</a> instead — it works without a camera.</p>`;
+        const retryBtn = document.getElementById("retryBtn");
+        if (retryBtn) retryBtn.addEventListener("click", startCamera);
+      }
+      async function startCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          renderGateError("Camera unavailable", "Open this preview in a modern browser over HTTPS to use your camera.", false);
+          return;
+        }
+        try {
+          stopCamera();
+          stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false });
+          video.srcObject = stream;
+          await video.play();
+          fitCanvas();
+          gate.style.display = "none";
+          gate.classList.remove("error");
+          if (rafId) cancelAnimationFrame(rafId);
+          loop();
+        } catch (error) {
+          const isDenied = error.name === "NotAllowedError" || error.name === "SecurityError";
+          renderGateError(isDenied ? "Camera access needed" : "Could not start the camera", isDenied ? "Allow camera access in your browser's site settings, then try again." : "Make sure no other app is using the camera, then try again.");
+        }
+      }
+      function buildSwatches() {
+        SWATCHES.forEach(sw => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "swatch" + (sw === current ? " selected" : "");
+          b.style.background = `rgb(${sw.color.join(",")})`;
+          b.dataset.id = sw.id;
+          b.setAttribute("aria-label", `Select ${sw.name} microcement finish`);
+          b.setAttribute("aria-pressed", sw === current ? "true" : "false");
+          const l = document.createElement("span");
+          l.className = "label";
+          l.textContent = sw.name.replace(" ", "\n");
+          b.appendChild(l);
+          b.addEventListener("click", () => {
+            current = sw;
+            finishSummary.textContent = sw.name;
+            [...swatchRow.children].forEach(c => { c.classList.remove("selected"); c.setAttribute("aria-pressed", "false"); });
+            b.classList.add("selected");
+            b.setAttribute("aria-pressed", "true");
+            showToast(`${sw.name} selected`);
+          });
+          swatchRow.appendChild(b);
+        });
+      }
+      function setComparing(v) {
+        comparing = v;
+        compareHint.classList.toggle("active", v);
+        compareHint.textContent = v ? "This is the original surface" : "Hold the split circle to see the original surface";
+      }
+      function buildGrain() {
+        const g = document.createElement("canvas");
+        g.width = 96; g.height = 96;
+        const gc = g.getContext("2d");
+        const im = gc.createImageData(96, 96);
+        for (let i = 0; i < im.data.length; i += 4) {
+          const v = 128 + (Math.random() - 0.5) * 70;
+          im.data[i] = v; im.data[i+1] = v; im.data[i+2] = v; im.data[i+3] = 255;
+        }
+        gc.putImageData(im, 0, 0);
+        grainTile = g;
+      }
+      function drawCoverVideo() {
+        const vw = video.videoWidth, vh = video.videoHeight;
+        if (!vw || !vh) return;
+        const cw = canvas.width, ch = canvas.height;
+        const vr = vw / vh, cr = cw / ch;
+        let sx, sy, sw, sh;
+        if (vr > cr) { sh = vh; sw = vh * cr; sy = 0; sx = (vw - sw) / 2; }
+        else { sw = vw; sh = vw / cr; sx = 0; sy = (vh - sh) / 2; }
+        ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
+      }
+      function getSampleCanvasRect() {
+        const sr = stage.getBoundingClientRect(), ar = sampleArea.getBoundingClientRect();
+        const scx = canvas.width / sr.width, scy = canvas.height / sr.height;
+        return { x: (ar.left - sr.left) * scx, y: (ar.top - sr.top) * scy, width: ar.width * scx, height: ar.height * scy };
+      }
+      function drawFinishInSampleArea() {
+        const r = getSampleCanvasRect();
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(r.x, r.y, r.width, r.height, 22);
+        ctx.clip();
+        ctx.globalAlpha = 0.86;
+        ctx.globalCompositeOperation = "color";
+        ctx.fillStyle = `rgb(${current.color.join(",")})`;
+        ctx.fillRect(r.x, r.y, r.width, r.height);
+        ctx.globalAlpha = 0.9;
+        ctx.globalCompositeOperation = "multiply";
+        ctx.fillStyle = `rgb(${current.color.map(c => Math.min(255, c + 30)).join(",")})`;
+        ctx.fillRect(r.x, r.y, r.width, r.height);
+        ctx.globalAlpha = current.grain;
+        ctx.globalCompositeOperation = "overlay";
+        ctx.fillStyle = ctx.createPattern(grainTile, "repeat");
+        ctx.fillRect(r.x, r.y, r.width, r.height);
+        const grd = ctx.createRadialGradient(r.x + r.width/2, r.y + r.height/2, r.height * 0.12, r.x + r.width/2, r.y + r.height/2, r.height * 0.82);
+        grd.addColorStop(0, "rgba(0,0,0,0)");
+        grd.addColorStop(1, "rgba(0,0,0,0.22)");
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = grd;
+        ctx.fillRect(r.x, r.y, r.width, r.height);
+        ctx.restore();
+      }
+      function loop() {
+        drawCoverVideo();
+        if (!comparing) drawFinishInSampleArea();
+        rafId = requestAnimationFrame(loop);
+      }
+      function updateSamplePosition(cx, cy) {
+        const sr = stage.getBoundingClientRect(), ar = sampleArea.getBoundingClientRect();
+        const hw = ar.width / 2, hh = ar.height / 2;
+        const minX = hw, maxX = sr.width - hw, minY = 105 + hh, maxY = sr.height - 235 - hh;
+        const lx = cx - sr.left - dragOffset.x, ly = cy - sr.top - dragOffset.y;
+        const clx = Math.max(minX, Math.min(maxX, lx)), cly = Math.max(minY, Math.min(maxY, ly));
+        samplePosition.x = clx / sr.width; samplePosition.y = cly / sr.height;
+        sampleArea.style.left = `${samplePosition.x * 100}%`;
+        sampleArea.style.top = `${samplePosition.y * 100}%`;
+      }
+      function startDraggingSample(e) {
+        if (leadPanel.classList.contains("open")) return;
+        const ar = sampleArea.getBoundingClientRect();
+        dragOffset.x = e.clientX - ar.left - ar.width / 2;
+        dragOffset.y = e.clientY - ar.top - ar.height / 2;
+        draggingSample = true;
+        sampleArea.classList.add("dragging");
+        sampleArea.setPointerCapture?.(e.pointerId);
+        e.preventDefault();
+      }
+      function moveDraggingSample(e) { if (draggingSample) updateSamplePosition(e.clientX, e.clientY); }
+      function stopDraggingSample() { if (!draggingSample) return; draggingSample = false; sampleArea.classList.remove("dragging"); }
+      function openLeadPanel() {
+        finishSummary.textContent = current.name;
+        leadForm.style.display = "grid";
+        leadSuccess.style.display = "none";
+        leadPanel.classList.add("open");
+        leadPanel.setAttribute("aria-hidden", "false");
+        setTimeout(() => document.getElementById("leadName").focus(), 320);
+      }
+      function closeLeadPanel() {
+        leadPanel.classList.remove("open");
+        leadPanel.setAttribute("aria-hidden", "true");
+      }
+      function capturePreview() {
+        const out = document.createElement("canvas");
+        out.width = canvas.width; out.height = canvas.height;
+        const oc = out.getContext("2d");
+        oc.drawImage(canvas, 0, 0);
+        const r = getSampleCanvasRect();
+        oc.strokeStyle = "rgba(237,230,214,0.9)";
+        oc.lineWidth = Math.max(3, Math.round(out.width * 0.004));
+        oc.roundRect(r.x, r.y, r.width, r.height, Math.round(r.width * 0.05));
+        oc.stroke();
+        const bh = Math.round(out.height * 0.105);
+        oc.fillStyle = "rgba(23,21,15,0.94)";
+        oc.fillRect(0, out.height - bh, out.width, bh);
+        const left = out.width * 0.05;
+        const ts = Math.round(bh * 0.28), ds = Math.round(bh * 0.18);
+        oc.fillStyle = "#EDE6D6";
+        oc.textBaseline = "middle";
+        oc.font = `500 ${ts}px "Space Grotesk", sans-serif`;
+        oc.fillText("The Shirtless Handyman", left, out.height - bh * 0.64);
+        oc.fillStyle = "#B9A88C";
+        oc.font = `400 ${ds}px "Space Grotesk", sans-serif`;
+        oc.fillText(`${current.name} microcement mood preview`, left, out.height - bh * 0.30);
+        return out;
+      }
+      function downloadPreview() {
+        flash.style.transition = "none";
+        flash.style.opacity = "0.85";
+        requestAnimationFrame(() => { flash.style.transition = "opacity 380ms ease"; flash.style.opacity = "0"; });
+        const image = capturePreview();
+        const url = image.toDataURL("image/jpeg", 0.92);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `shirtless-handyman-${current.id}-microcement-preview.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast("Concept image saved to your device");
+      }
+      function flipCamera() {
+        facing = facing === "environment" ? "user" : "environment";
+        showToast(facing === "environment" ? "Back camera selected" : "Front camera selected");
+        startCamera();
+      }
+      async function submitLeadToBackend(payload) {
+        const res = await fetch("/api/leads/quick", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const detail = await res.text().catch(() => "");
+          throw new Error(detail || `HTTP ${res.status}`);
+        }
+        return res.json();
+      }
+      document.getElementById("startBtn").addEventListener("click", startCamera);
+      flipCamBtn.addEventListener("click", flipCamera);
+      shutter.addEventListener("click", downloadPreview);
+      compareBtn.addEventListener("pointerdown", (e) => { e.preventDefault(); compareBtn.setPointerCapture?.(e.pointerId); setComparing(true); });
+      compareBtn.addEventListener("pointerup", () => setComparing(false));
+      compareBtn.addEventListener("pointercancel", () => setComparing(false));
+      compareBtn.addEventListener("pointerleave", () => setComparing(false));
+      compareBtn.addEventListener("lostpointercapture", () => setComparing(false));
+      sampleArea.addEventListener("pointerdown", startDraggingSample);
+      sampleArea.addEventListener("pointermove", moveDraggingSample);
+      sampleArea.addEventListener("pointerup", stopDraggingSample);
+      sampleArea.addEventListener("pointercancel", stopDraggingSample);
+      sampleArea.addEventListener("lostpointercapture", stopDraggingSample);
+      quoteBtn.addEventListener("click", openLeadPanel);
+      closeLead.addEventListener("click", closeLeadPanel);
+      leadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!leadForm.reportValidity()) return;
+        const fd = new FormData(leadForm);
+        const projectType = `${current.name} microcement — ${fd.get("room") || "unspecified area"}`;
+        const payload = {
+          name: (fd.get("name") || "").toString().trim(),
+          phone: (fd.get("phone") || "").toString().trim(),
+          email: (fd.get("email") || "").toString().trim(),
+          zip_code: (fd.get("zip") || "").toString().trim(),
+          project_type: projectType,
+          source: "color_preview",
+        };
+        submitLead.disabled = true;
+        const oldLabel = submitLead.textContent;
+        submitLead.textContent = "Sending…";
+        try {
+          const result = await submitLeadToBackend(payload);
+          leadForm.style.display = "none";
+          leadSuccess.style.display = "block";
+          leadSuccess.textContent = result?.message || "Got it — Ryan will reach out within 1 hour.";
+        } catch (err) {
+          submitLead.disabled = false;
+          submitLead.textContent = oldLabel;
+          showToast("Couldn't send — try again or text 504-264-4919");
+          console.error("Lead submission failed:", err);
+        }
+      });
+      window.addEventListener("resize", fitCanvas);
+      document.addEventListener("visibilitychange", () => { if (document.hidden) stopCamera(); });
+      window.addEventListener("pagehide", stopCamera);
+      buildSwatches();
+      buildGrain();
+      fitCanvas();
+    })();
+  </script>
+</body>
+</html>

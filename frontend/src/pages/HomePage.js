@@ -261,6 +261,8 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 1.5 }}
               >
                 Or text me directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
+                <span className="mx-2 text-white/25">·</span>
+                On your phone? <a href="/color-preview.html" className="text-white/65 hover:text-white underline underline-offset-2" data-testid="hero-color-preview-link">Try the live Color Preview →</a>
               </motion.p>
 
               <motion.div
@@ -1352,6 +1354,7 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
               <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">My Work</button>
+              <a href="/color-preview.html" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-color-preview">Color Preview</a>
               <button onClick={() => navigate("/how-i-started")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-how-i-started">How I Started</button>
               <button onClick={() => navigate("/faq")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-faq">FAQ</button>
               <button onClick={() => navigate("/book")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-book">Book</button>

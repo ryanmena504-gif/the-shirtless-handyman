@@ -838,6 +838,7 @@ async def create_quick_lead(data: QuickLead):
         "email_capture": "Website Email Capture (Studio)",
         "exit_intent": "Website Exit Intent",
         "sticky_cta": "Website Sticky CTA",
+        "color_preview": "Color Preview Tool",
     }
     lead_webhook.forward_lead(lead_webhook.build_lead_payload(
         source_map.get(lead_clean.get("source"), f"Website Quick Form ({lead_clean.get('source') or 'unknown'})"),
