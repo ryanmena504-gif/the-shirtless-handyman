@@ -838,10 +838,22 @@ async def create_quick_lead(data: QuickLead):
         "email_capture": "Website Email Capture (Studio)",
         "exit_intent": "Website Exit Intent",
         "sticky_cta": "Website Sticky CTA",
+        "studio_email_gate": "Studio Email Gate",
+        "pricing_calculator": "Pricing Calculator",
         "color_preview": "Color Preview Tool",
     }
+    raw_source = (lead_clean.get("source") or "").strip()
+    # Any source ending in `_qr` was a lead who scanned a QR code — surface
+    # that clearly in the friendly label so Ryan can filter QR-sourced
+    # leads in Airtable/Make.
+    if raw_source.endswith("_qr"):
+        base = raw_source[:-3]
+        base_label = source_map.get(base, f"Website Form ({base or 'unknown'})")
+        friendly_source = f"{base_label} (QR scan)"
+    else:
+        friendly_source = source_map.get(raw_source, f"Website Quick Form ({raw_source or 'unknown'})")
     lead_webhook.forward_lead(lead_webhook.build_lead_payload(
-        source_map.get(lead_clean.get("source"), f"Website Quick Form ({lead_clean.get('source') or 'unknown'})"),
+        friendly_source,
         full_name=lead_clean.get("name", ""),
         phone=lead_clean.get("phone", ""),
         email=lead_clean.get("email", ""),

@@ -6,6 +6,7 @@ import { ArrowRight, Mail, MessageSquare, Sparkles, Calculator, Lock } from "luc
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { trackEvent, identifyLead } from "../lib/tracking";
+import { tagLeadSource } from "../utils/leadSource";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const SMS_LINK = "sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20priced%20a%20project%20on%20your%20site%20and%20want%20to%20talk.";
@@ -124,12 +125,13 @@ export function PricingCalculator() {
     const cleanedContact = contact.trim();
     setSubmitting(true);
     try {
+      const taggedSource = tagLeadSource("pricing_calculator");
       await axios.post(`${API}/leads/quick`, {
         name: name.trim(),
         phone: looksLikeEmail ? "" : cleanedContact,
         email: looksLikeEmail ? cleanedContact : "",
         project_type: finish.label,
-        source: "pricing_calculator",
+        source: taggedSource,
         // Include the calculated quote in the description so Ryan sees the
         // estimate that the lead is responding to.
         project_description: `Pricing Calculator: ${finish.label} · ${sqft} sq ft · estimate ${fmt(low)}–${fmt(high)}`,
@@ -140,7 +142,7 @@ export function PricingCalculator() {
         phone: looksLikeEmail ? "" : cleanedContact,
         email: looksLikeEmail ? cleanedContact : "",
         project_type: finish.label,
-        source: "pricing_calculator",
+        source: taggedSource,
       });
       try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       setDone(true);

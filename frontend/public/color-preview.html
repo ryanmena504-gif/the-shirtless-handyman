@@ -453,13 +453,17 @@
         if (!leadForm.reportValidity()) return;
         const fd = new FormData(leadForm);
         const projectType = `${current.name} microcement — ${fd.get("room") || "unspecified area"}`;
+        // Detect QR-sourced visitors via UTM params and tag lead separately
+        const params = new URLSearchParams(window.location.search);
+        const isQr = params.get("utm_source") === "qr";
+        const source = isQr ? "color_preview_qr" : "color_preview";
         const payload = {
           name: (fd.get("name") || "").toString().trim(),
           phone: (fd.get("phone") || "").toString().trim(),
           email: (fd.get("email") || "").toString().trim(),
           zip_code: (fd.get("zip") || "").toString().trim(),
           project_type: projectType,
-          source: "color_preview",
+          source,
         };
         submitLead.disabled = true;
         const oldLabel = submitLead.textContent;

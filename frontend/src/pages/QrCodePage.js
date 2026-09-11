@@ -11,23 +11,23 @@ const QR_CODES = [
   {
     id: "color-preview",
     title: "Color Preview Tool",
-    url: `${BASE}/color-preview.html`,
+    url: `${BASE}/color-preview.html?utm_source=qr&utm_medium=print&utm_campaign=color_preview`,
     tagline: "Scan to see this wall in microcement",
-    context: "Perfect for job sites, yard signs, and open houses. Homeowners point their phone, pick a tone, and text me.",
+    context: "Perfect for job sites, yard signs, and open houses. Homeowners point their phone, pick a tone, and text me. QR-sourced leads are tagged separately in your Airtable so you know they came from a scan.",
   },
   {
     id: "text-me",
     title: "Text Me Directly",
-    url: "sms:+15042644919?body=Hi%20Ryan%2C%20saw%20your%20QR%20code%20-%20want%20to%20talk%20about%20a%20project.",
+    url: "sms:+15042644919?body=Hi%20Ryan%20-%20saw%20your%20QR%20code%20and%20want%20to%20talk%20about%20a%20project.",
     tagline: "Scan to text Ryan — 504-264-4919",
-    context: "Business cards, invoices, thank-you notes. Opens their texting app pre-filled.",
+    context: "Business cards, invoices, thank-you notes. Opens their texting app pre-filled with a message that starts with 'saw your QR code' so you know they scanned.",
   },
   {
     id: "main-site",
     title: "Main Site",
-    url: `${BASE}/`,
+    url: `${BASE}/?utm_source=qr&utm_medium=print&utm_campaign=main_site`,
     tagline: "The Shirtless Handyman — Seamless surfaces, New Orleans",
-    context: "General-purpose — social profiles, print ads, truck decal. Sends them to the full site.",
+    context: "General-purpose — social profiles, print ads, truck decal. Any lead form they fill out from this scan gets tagged as QR-sourced in Airtable.",
   },
 ];
 

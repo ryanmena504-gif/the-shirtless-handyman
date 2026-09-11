@@ -5,6 +5,7 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { trackEvent, identifyLead } from "../lib/tracking";
+import { tagLeadSource } from "../utils/leadSource";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -33,14 +34,15 @@ export const InstantQuoteForm = ({
     }
     setLoading(true);
     try {
+      const taggedSource = tagLeadSource(source);
       await axios.post(`${API}/leads/quick`, {
         name: name.trim(),
         phone: phone.trim(),
         project_type: defaultProjectType,
-        source,
+        source: taggedSource,
       });
-      trackEvent("quick_lead_submitted", { source });
-      identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source });
+      trackEvent("quick_lead_submitted", { source: taggedSource });
+      identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source: taggedSource });
       try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       setDone(true);
       toast.success("Got it! I'll text you within an hour.");

@@ -5,6 +5,7 @@ import { X, Mail, ArrowRight, Lock } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { trackEvent, identifyLead } from "../lib/tracking";
+import { tagLeadSource } from "../utils/leadSource";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -55,15 +56,16 @@ export const EmailCaptureModal = ({ projectId, projectType, delayMs = 18000 }) =
     }
     setLoading(true);
     try {
+      const taggedSource = tagLeadSource("studio_email_gate");
       await axios.post(`${API}/leads/quick`, {
         name: name.trim(),
         phone: "",
         email: email.trim(),
         project_type: projectType || "",
-        source: "studio_email_gate",
+        source: taggedSource,
       });
       trackEvent("studio_email_gate_submitted", { project_id: projectId });
-      identifyLead({ name: name.trim(), email: email.trim(), project_type: projectType, source: "studio_email_gate" });
+      identifyLead({ name: name.trim(), email: email.trim(), project_type: projectType, source: taggedSource });
       sessionStorage.setItem(SESSION_LEAD_FLAG, "1");
       setDone(true);
       toast.success("Designs sent. Check your inbox in a sec.");

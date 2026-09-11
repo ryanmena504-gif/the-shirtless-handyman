@@ -1,10 +1,12 @@
 import "@/App.css";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
 import { CustomCursor } from "./components/cinematic";
+import { trackVisit } from "./utils/leadSource";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
 import AnalysisPage from "./pages/AnalysisPage";
@@ -26,6 +28,9 @@ import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 
 function App() {
+  useEffect(() => {
+    trackVisit();
+  }, []);
   return (
     <HelmetProvider>
       <BrowserRouter>
