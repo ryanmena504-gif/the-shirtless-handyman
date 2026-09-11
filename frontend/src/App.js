@@ -21,6 +21,7 @@ import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
 import HowIStartedPage from "./pages/HowIStartedPage";
+import QrCodePage from "./pages/QrCodePage";
 import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 
@@ -69,6 +70,7 @@ function App() {
             {/* About */}
             <Route path="/about" element={<AboutPage />} />
             <Route path="/how-i-started" element={<HowIStartedPage />} />
+            <Route path="/qr" element={<QrCodePage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>
