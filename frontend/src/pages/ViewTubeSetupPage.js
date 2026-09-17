@@ -65,7 +65,7 @@ export default function ViewTubeSetupPage() {
       <SeoHead
         title="Pick a coach | viewTube"
         description="Choose Cole or Avery and a structured DIY project. viewTube watches the bench and stops you if the part is backwards."
-        canonical="https://theshirtlesshandyman.com/viewtube/setup"
+        canonical="https://theshirtlesshandyman.com/viewtube/setup/"
       />
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 md:px-12 pt-28 pb-20">
