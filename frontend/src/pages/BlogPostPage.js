@@ -74,7 +74,7 @@ export default function BlogPostPage() {
     );
   }
 
-  const pageUrl = `https://theshirtlesshandyman.com/blog/${post.slug}`;
+  const pageUrl = `https://theshirtlesshandyman.com/blog/${post.slug}/`;
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const articleSchema = {
