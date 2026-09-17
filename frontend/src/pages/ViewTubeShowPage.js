@@ -94,7 +94,7 @@ export default function ViewTubeShowPage() {
       <SeoHead
         title="Feel the stop | viewTube"
         description="Fifteen seconds. Cole watches a book get flipped backwards and freezes the session. No camera. No API."
-        canonical="https://theshirtlesshandyman.com/viewtube/show"
+        canonical="https://theshirtlesshandyman.com/viewtube/show/"
       />
 
       <div className="w-full max-w-[390px] h-[min(844px,92vh)] rounded-[36px] overflow-hidden relative bg-[#111] shadow-[0_40px_80px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.08)]">
