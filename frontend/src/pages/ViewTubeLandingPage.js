@@ -51,7 +51,7 @@ export default function ViewTubeLandingPage() {
       <SeoHead
         title="viewTube | The DIY coach that watches you — and stops you"
         description="YouTube shows you how. viewTube watches you do it. Pick Cole or Avery, point the phone at the bench, and get a live stop if the part is backwards."
-        canonical="https://theshirtlesshandyman.com/viewtube"
+        canonical="https://theshirtlesshandyman.com/viewtube/"
       />
       <Navbar />
 
