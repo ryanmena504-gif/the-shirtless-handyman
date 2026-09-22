@@ -36,9 +36,10 @@ export function RevealText({ text, as = "span", className = "", delay = 0, stagg
         hidden: {},
       }}
     >
-      {/* SR-only / crawler-accessible full text */}
-      <span className="sr-only">{text}</span>
-      {/* Decorative word-by-word reveal hidden from screen readers + indexed differently */}
+      {/* Full text conveyed to screen readers + crawlers via aria-label on the
+          parent MotionTag. The visible children are the decorative word-by-word
+          reveal, marked aria-hidden so no duplicate text is announced or
+          exposed to link-preview / SEO scrapers. */}
       <span aria-hidden="true">
         {words.map((word, i) => (
           <motion.span

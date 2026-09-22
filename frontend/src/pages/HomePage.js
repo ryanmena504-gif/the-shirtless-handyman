@@ -218,18 +218,27 @@ export default function HomePage() {
                 className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white mb-6"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                <RevealText text="Seamless renovations," as="span" className="block" delay={0.25} />
-                <RevealText text="built by hand in" as="span" className="block" delay={0.45} />
+                <RevealText text="Seamless surfaces," as="span" className="block" delay={0.25} />
+                <RevealText text="hand-troweled in" as="span" className="block" delay={0.45} />
                 <RevealText text="New Orleans." as="span" className="block italic" delay={0.65} />
               </h1>
 
               <motion.p
-                className="text-base md:text-lg leading-relaxed text-white/75 mb-8 max-w-xl"
+                className="text-base md:text-lg leading-relaxed text-white/75 mb-3 max-w-xl"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.1 }}
               >
-                I'm Ryan Mena. I install <strong className="text-white font-medium">microcement, tadelakt, and custom rockscape walls</strong> in NOLA homes — over your existing tile, with zero grout, zero seams, and zero demolition. One craftsman. One continuous surface. Built to outlast the humidity.
+                Microcement, tadelakt, and mineral plaster — built for New Orleans humidity, where grout goes black and mold finds every seam.
+              </motion.p>
+
+              <motion.p
+                className="text-sm text-white/50 mb-8"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+              >
+                Personally installed by Ryan Mena · NOLA, Metairie &amp; Westbank.
               </motion.p>
 
               {/* CTAs — one clear, singular action so visitors know exactly what this site does */}
@@ -246,11 +255,14 @@ export default function HomePage() {
                     data-testid="hero-studio-btn"
                   >
                     <Sparkles className="w-5 h-5 mr-2.5" />
-                    Try The Seamless Studio
+                    Visualize my room
                   </Button>
                 </MagneticButton>
                 <p className="text-sm text-white/50">
-                  Upload a photo of your space — see it redesigned in ~60 seconds. Free.
+                  Upload a photo — see it in microcement in ~60 seconds. Free.{" "}
+                  <a href="#finishes" className="text-white/70 hover:text-white underline underline-offset-2" data-testid="hero-finishes-anchor">
+                    Or explore finishes ↓
+                  </a>
                 </p>
               </motion.div>
 
@@ -300,8 +312,8 @@ export default function HomePage() {
       {/* Google Reviews — auto-hides if API key not yet configured */}
       <GoogleReviews variant="light" />
 
-      {/* ===== WHAT I DO ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
+      {/* ===== FINISHES / WHAT I DO ===== */}
+      <section id="finishes" className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal className="text-center mb-14 max-w-2xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
