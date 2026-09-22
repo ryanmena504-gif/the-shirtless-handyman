@@ -395,6 +395,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== WHY SEAMLESS — 3 mold-forward bullets ===== */}
+      <section className="py-14 md:py-20 px-6 md:px-12 bg-[#0E0E0E]" data-testid="why-seamless-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
+              Why Seamless
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-light tracking-tight text-white leading-tight"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Built for NOLA humidity —<br />
+              <span className="italic text-white/70">not generic "wet areas."</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+            {[
+              {
+                icon: Droplets,
+                title: "No grout, no mold habitat",
+                desc: "Grout is porous cement. It absorbs. It holds moisture. That's where mold lives. Seamless surfaces have none.",
+              },
+              {
+                icon: Layers,
+                title: "No joints, no place to sneak behind",
+                desc: "Every seam is a chance for water to work its way through. My installs have zero — one continuous surface, wall to floor to niche.",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Waterproof for New Orleans, specifically",
+                desc: "Not a generic wet-area system. Every material I use is chosen for 76% humidity, foundation shift, and how NOLA houses actually sweat.",
+              },
+            ].map((bullet, i) => (
+              <div
+                key={bullet.title}
+                className="flex flex-col gap-3"
+                data-testid={`why-seamless-bullet-${i}`}
+              >
+                <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <bullet.icon className="w-5 h-5 text-[#D97757]" />
+                </div>
+                <h3 className="text-base font-semibold text-white leading-tight">
+                  {bullet.title}
+                </h3>
+                <p className="text-sm text-white/55 leading-relaxed">{bullet.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== VENETIAN PLASTER — large feature strip ===== */}
       <section
         className="relative overflow-hidden bg-[#1A1410]"
@@ -529,7 +580,7 @@ export default function HomePage() {
               </h2>
               <div className="space-y-4 text-base text-[#1A3C34]/80 leading-relaxed">
                 <p>
-                  I'm Ryan, born and raised in New Orleans. I spent years installing tile in NOLA bathrooms — and watching that exact same tile fail inside a decade. Grout turning black. Caulk peeling. Mold finding the smallest seam. It's not the tile's fault. It's just the wrong material for this climate.
+                  I'm Ryan, born and raised in New Orleans. I spent years installing tile in NOLA bathrooms — and watching that exact same tile fail inside a decade. It's not the tile's fault. It's just the wrong material for this climate.
                 </p>
                 <p>
                   So I went and learned the alternative. Microcement. Tadelakt. Marmorino. Sculpted rockscape. Surfaces that don't have seams to fail. Surfaces that look like a Tulum hotel or a Moroccan riad — and last in NOLA humidity for decades.
@@ -539,16 +590,23 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3 mt-8">
-                <Button
-                  onClick={() => navigate("/about")}
-                  variant="outline"
-                  className="h-12 px-6 rounded-full border-[#1A3C34]/25 text-[#1A3C34] hover:bg-[#1A3C34] hover:text-white font-medium"
-                  data-testid="meet-ryan-about-btn"
+              {/* Pull-quote — proven copy, elevated so it lands hard */}
+              <blockquote
+                className="mt-8 mb-8 border-l-4 border-[#D97757] pl-5 md:pl-6"
+                data-testid="ryan-pull-quote"
+              >
+                <p
+                  className="text-2xl md:text-3xl lg:text-[2rem] font-light leading-[1.2] text-[#1A3C34] tracking-tight"
+                  style={{ fontFamily: "'Fraunces', serif" }}
                 >
-                  <User className="w-4 h-4 mr-2" />
-                  Read my full story
-                </Button>
+                  &ldquo;Grout turning black. Caulk peeling. Mold finding the smallest seam.&rdquo;
+                </p>
+                <footer className="mt-3 text-xs uppercase tracking-[0.22em] font-bold text-[#D97757]">
+                  — Every NOLA bathroom I&rsquo;ve been called back to
+                </footer>
+              </blockquote>
+
+              <div className="flex flex-wrap gap-3">
                 <a href={SMS_LINK}>
                   <MagneticButton>
                     <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium" data-testid="meet-ryan-text-btn">
@@ -556,6 +614,16 @@ export default function HomePage() {
                       Text me directly
                     </Button>
                   </MagneticButton>
+                </a>
+                <a
+                  href="https://g.page/r/CZgh4ltLoG1SEBI/review"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-12 px-5 rounded-full border border-[#1A3C34]/25 text-[#1A3C34] hover:bg-[#1A3C34]/5 text-sm font-medium transition-colors"
+                  data-testid="meet-ryan-review-link"
+                >
+                  <Star className="w-4 h-4" />
+                  Worked with me? Leave a Google review
                 </a>
               </div>
             </ScrollReveal>
@@ -950,17 +1018,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          <div className="text-center mt-10">
-            <Button
-              onClick={() => navigate("/upload")}
-              className="h-14 px-10 rounded-full bg-[#D97757] text-white text-base font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-              data-testid="how-it-works-cta"
-            >
-              <Upload className="w-5 h-5 mr-2" />
-              Try Seamless Studio Free
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -1067,85 +1124,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== CONTRACTOR PARTNERS ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="contractor-partner-section">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-            {/* Left — pitch */}
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-                For Contractors & Remodelers
-              </p>
-              <h2
-                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-6 leading-tight"
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                Bring me in on your<br />next bathroom or kitchen job.
-              </h2>
-              <p className="text-base text-white/60 leading-relaxed mb-4">
-                You run the job like normal. I show up, install the surface, and hand it back to you finished. Your client gets a nicer bathroom, you bill more for it, and you don't have to figure out a material you've never worked with.
-              </p>
-              <p className="text-base text-white/60 leading-relaxed mb-8">
-                I've done this with GCs, remodelers, and design firms all over the New Orleans area. You handle the project. I handle microcement, tadelakt, venetian plaster, and rockscape — that's it, that's my whole lane.
-              </p>
-
-              <div className="space-y-4 mb-10">
-                {[
-                  { title: "Bill more, same schedule", desc: "Clients pay more for a seamless finish, and it doesn't add time to your job." },
-                  { title: "You don't touch it", desc: "I do the whole surface install. You keep running your job." },
-                  { title: "Your name or mine", desc: "Whatever's easier for your client to see on the invoice." },
-                  { title: "In and out in 2–5 days", desc: "So I'm not holding up your schedule." },
-                ].map((item) => (
-                  <div key={item.title} className="flex items-start gap-3">
-                    <CheckCircle className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-semibold text-white">{item.title}</p>
-                      <p className="text-xs text-white/40">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <a href={SMS_LINK} data-testid="partner-text-btn">
-                  <Button className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Text me, let's talk about your next job
-                  </Button>
-                </a>
-                <Button
-                  onClick={() => navigate("/contractor/register")}
-                  variant="outline"
-                  className="h-12 px-8 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium"
-                  data-testid="partner-register-btn"
-                >
-                  Set up a contractor account
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Right — quick stats / value props */}
-            <div className="space-y-6">
-              {[
-                { metric: "2–5 days", label: "Average surface install time" },
-                { metric: "$2K–$8K", label: "Added project value per room" },
-                { metric: "15+", label: "Seamless finish types available" },
-                { metric: "0", label: "Grout lines. Forever." },
-              ].map((stat) => (
-                <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center gap-6">
-                  <p
-                    className="text-3xl md:text-4xl font-light text-[#D97757] min-w-[100px]"
-                    style={{ fontFamily: "'Fraunces', serif" }}
-                  >
-                    {stat.metric}
-                  </p>
-                  <p className="text-sm text-white/50">{stat.label}</p>
-                </div>
-              ))}
-            </div>
+      {/* ===== CONTRACTOR PARTNERS — compact strip, full pitch on /contractors ===== */}
+      <section className="py-10 px-6 md:px-12 bg-[#0E0E0E] border-y border-white/10" data-testid="contractor-partner-section">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[#D97757] mb-2">
+              For Contractors &amp; Remodelers
+            </p>
+            <p className="text-base md:text-lg text-white/85 leading-snug" style={{ fontFamily: "'Fraunces', serif" }}>
+              You run the job. I install the seamless surface — microcement, tadelakt, venetian, rockscape. Bill more, same schedule.
+            </p>
           </div>
+          <button
+            onClick={() => navigate("/contractors")}
+            className="inline-flex items-center gap-2 h-11 px-6 rounded-full border border-white/25 text-white hover:bg-white/10 text-sm font-medium whitespace-nowrap transition-colors"
+            data-testid="contractor-strip-cta"
+          >
+            See how it works
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
@@ -1311,11 +1308,11 @@ export default function HomePage() {
                   className="text-3xl md:text-5xl font-light tracking-tight text-white mb-5 leading-tight"
                   style={{ fontFamily: "'Fraunces', serif" }}
                 >
-                  Stop imagining it.<br />See it.
+                  Bring me your room,<br />idea, or rough budget.
                 </h2>
 
                 <p className="text-base text-white/50 mb-10 max-w-md mx-auto leading-relaxed">
-                  One photo. Sixty seconds. Three seamless surface designs for your space — free. Or text me right now and get a straight answer today.
+                  Upload a photo and see it in microcement in ~60 seconds. Or text me — I answer them all personally.
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
@@ -1325,12 +1322,12 @@ export default function HomePage() {
                     data-testid="closing-upload-btn"
                   >
                     <Upload className="w-5 h-5 mr-2" />
-                    Show Me Your Room
+                    Visualize my room
                   </Button>
                   <a href={SMS_LINK} data-testid="closing-text-btn">
                     <Button variant="outline" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
                       <MessageCircle className="w-5 h-5 mr-2" />
-                      Text {PHONE}
+                      Text me — {PHONE}
                     </Button>
                   </a>
                 </div>
