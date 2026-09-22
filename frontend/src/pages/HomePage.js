@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
@@ -140,43 +141,63 @@ const GLOBAL_SCHEMA = {
 const SERVICES = [
   {
     title: "Microcement",
+    finishId: "microcement",
     description: "Seamless waterproof showers, floors, and walls — installed directly over existing tile.",
     image: "/portfolio/shower-led-niche.jpg",
-    href: "/microcement-new-orleans",
     priceRange: "From $5,500",
   },
   {
     title: "Tadelakt",
+    finishId: "tadelakt",
     description: "Hand-burnished Moroccan lime plaster. Naturally waterproof. 800-year-old craft.",
     image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=900&fit=crop&fm=jpg&q=85",
-    href: "/tadelakt-new-orleans",
     priceRange: "From $5,500",
   },
   {
     title: "Venetian Plaster",
+    finishId: "venetian",
     description: "Mirror-polished Italian lime plaster. Marbled depth that catches the light. A Renaissance finish, hand-applied today.",
     image: "/venetian-plaster-hero.jpg",
-    href: "/upload",
     priceRange: "From $1,800",
   },
   {
     title: "Rockscape Walls",
+    finishId: "rockscape",
     description: "Sculpted feature walls that look like carved stone. Optional LED backlighting.",
     image: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?w=900&fit=crop&fm=jpg&q=85",
-    href: "/rockscape-walls-new-orleans",
     priceRange: "From $3,500",
   },
   {
     title: "Pool Decks & Outdoor",
+    finishId: "microterrazzo",
     description: "Microterrazzo + cocciopesto resurfacing. UV-stable. Slip-resistant. Built for NOLA sun.",
     image: "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?w=900&fit=crop&fm=jpg&q=85",
-    href: "/pool-deck-resurfacing-new-orleans",
     priceRange: "From $3,000",
   },
 ];
 
 export default function HomePage() {
   const navigate = useNavigate();
+
+  // Scroll-to-hash: when the URL includes #finishes / #pricing / #how-it-works,
+  // smooth-scroll to that section after render. Runs on mount and on hash
+  // changes so nav links from anywhere on the site land in the right place.
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash?.replace("#", "");
+      if (!hash) return;
+      // Wait a tick so the target is definitely mounted
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    };
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background" data-testid="home-page">
@@ -332,11 +353,11 @@ export default function HomePage() {
             {SERVICES.map((service, i) => (
               <ScrollReveal key={service.title} delay={i * 0.08}>
                 <button
-                  onClick={() => navigate(service.href)}
+                  onClick={() => navigate(`/upload?finish=${service.finishId}`)}
                   data-cursor="view"
-                  data-cursor-label="View"
+                  data-cursor-label="Visualize"
                   className="group relative aspect-[3/4] w-full rounded-2xl overflow-hidden text-left bg-muted hover:shadow-xl transition-shadow"
-                  data-testid={`service-card-${service.title.toLowerCase().replace(/[^a-z]/g, "-")}`}
+                  data-testid={`service-card-${service.finishId}`}
                 >
                   <motion.img
                     src={service.image}
@@ -364,7 +385,7 @@ export default function HomePage() {
                       initial={{ opacity: 0, x: -4 }}
                       whileHover={{ opacity: 1, x: 0 }}
                     >
-                      Learn more <ArrowRight className="w-3.5 h-3.5" />
+                      Visualize my room <ArrowRight className="w-3.5 h-3.5" />
                     </motion.span>
                   </div>
                 </button>
@@ -462,7 +483,9 @@ export default function HomePage() {
       </section>
 
       {/* ===== PRICING CALCULATOR — instant estimate ===== */}
-      <PricingCalculator />
+      <div id="pricing">
+        <PricingCalculator />
+      </div>
 
       {/* ===== MEET RYAN ===== (warm hybrid palette: light bone bg, warm taupe accents) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-[#F5F1EA] relative overflow-hidden" data-testid="meet-ryan-section">
@@ -897,26 +920,25 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-              How It Works
+              Process
             </p>
             <h2
               className="text-3xl md:text-4xl font-light tracking-tight text-foreground"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Four steps. That's it.
+              Three steps. That's it.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 md:gap-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-0">
             {[
-              { num: "01", icon: Upload, title: "Upload your space", desc: "Snap a photo of any room, wall, floor, or outdoor area." },
-              { num: "02", icon: Sparkles, title: "See it redesigned", desc: "The Seamless Studio shows you 3 seamless surface options — instantly." },
-              { num: "03", icon: DollarSign, title: "Get a quote", desc: "Real cost estimates based on your project and location." },
-              { num: "04", icon: CalendarCheck, title: "Schedule the build", desc: "Text me, lock in a date, and I make it real." },
+              { num: "01", icon: Upload, title: "Share your space", desc: "Snap a photo of the room, wall, floor, or outdoor area you want to transform." },
+              { num: "02", icon: Sparkles, title: "Align on finish and scope", desc: "See it redesigned in The Seamless Studio, then we lock finish, scope, and budget together." },
+              { num: "03", icon: CalendarCheck, title: "I build it", desc: "One craftsman, one continuous surface. In and out — no subcontractors, no surprises." },
             ].map((step, i) => (
               <div key={step.title} className="relative flex flex-col items-center text-center px-6 py-8" data-testid={`step-${i}`}>
                 {/* Connector line */}
-                {i < 3 && (
+                {i < 2 && (
                   <div className="hidden md:block absolute top-[52px] left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-border/60" />
                 )}
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-5 relative z-10">
@@ -924,7 +946,7 @@ export default function HomePage() {
                 </div>
                 <span className="text-xs font-bold text-[#D97757] mb-2">{step.num}</span>
                 <h3 className="text-base font-semibold text-foreground mb-1.5">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">{step.desc}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-[220px]">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -1366,10 +1388,12 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
               <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">My Work</button>
+              <button onClick={() => navigate("/blog")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-journal">Journal</button>
               <a href="/color-preview.html" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-color-preview">Color Preview</a>
               <button onClick={() => navigate("/how-i-started")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-how-i-started">How I Started</button>
               <button onClick={() => navigate("/faq")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-faq">FAQ</button>
               <button onClick={() => navigate("/book")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-book">Book</button>
+              <button onClick={() => navigate("/contractor/login")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-login">Contractor Login</button>
               <button onClick={() => navigate("/contractor/register")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-signup">Contractor Sign Up</button>
               <button onClick={() => navigate("/contractor/login")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-login">Contractor Login</button>
               <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-admin-link">Admin</button>
