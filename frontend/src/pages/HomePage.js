@@ -286,26 +286,6 @@ export default function HomePage() {
                   </a>
                 </p>
               </motion.div>
-
-              <motion.p
-                className="text-sm text-white/40 mt-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 1.5 }}
-              >
-                Or text me directly: <a href={SMS_LINK} className="text-white/65 hover:text-white underline underline-offset-2">{PHONE}</a>
-                <span className="mx-2 text-white/25">·</span>
-                On your phone? <a href="/color-preview.html" className="text-white/65 hover:text-white underline underline-offset-2" data-testid="hero-color-preview-link">Try the live Color Preview →</a>
-              </motion.p>
-
-              <motion.div
-                className="mt-8 max-w-xl"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 1.6 }}
-              >
-                <InstantQuoteForm variant="dark" source="hero_form" />
-              </motion.div>
             </div>
           </div>
         </div>
@@ -334,59 +314,80 @@ export default function HomePage() {
       <GoogleReviews variant="light" />
 
       {/* ===== FINISHES / WHAT I DO ===== */}
+      {/* ===== FEATURED WORK — 3 large project-type cards ===== */}
       <section id="finishes" className="py-20 md:py-28 px-6 md:px-12 bg-background" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal className="text-center mb-14 max-w-2xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-              What I Install
+              Featured Work
             </p>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground leading-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Five crafts. One philosophy:<br />
-              <span className="italic">no seams, no grout, no shortcuts.</span>
+              Three types of rooms.<br />
+              <span className="italic">One seamless philosophy.</span>
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {SERVICES.map((service, i) => (
-              <ScrollReveal key={service.title} delay={i * 0.08}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                slug: "wet-rooms",
+                image: "/portfolio/shower-led-niche.jpg",
+                title: "Wet rooms",
+                materials: "Microcement · Tadelakt · Rockscape",
+                desc: "Showers, tub surrounds, and full bathroom walls installed as one continuous, waterproof surface — right over your existing tile. Zero grout, zero seams, zero mold habitat.",
+                finishHint: "microcement",
+              },
+              {
+                slug: "architectural-walls",
+                image: "/venetian-plaster-hero.jpg",
+                title: "Architectural walls",
+                materials: "Venetian plaster · Marmorino · Rockscape",
+                desc: "Feature walls, fireplaces, dining rooms, and powder baths. Hand-troweled Italian and Moroccan plasters that catch the light and turn a flat wall into the room's centerpiece.",
+                finishHint: "venetian",
+              },
+              {
+                slug: "floors-outdoor",
+                image: "/portfolio/microcement-vanity-bathroom.jpg",
+                title: "Floors &amp; outdoor",
+                materials: "Microcement · Microterrazzo · Cocciopesto",
+                desc: "Continuous floors that flow from room to room. Pool decks, patios, and outdoor surfaces built for New Orleans sun and humidity. UV-stable, slip-resistant, and won't crack at the joints.",
+                finishHint: "microterrazzo",
+              },
+            ].map((cat, i) => (
+              <ScrollReveal key={cat.slug} delay={i * 0.08}>
                 <button
-                  onClick={() => navigate(`/upload?finish=${service.finishId}`)}
+                  onClick={() => navigate(`/upload?finish=${cat.finishHint}`)}
                   data-cursor="view"
                   data-cursor-label="Visualize"
                   className="group relative aspect-[3/4] w-full rounded-2xl overflow-hidden text-left bg-muted hover:shadow-xl transition-shadow"
-                  data-testid={`service-card-${service.finishId}`}
+                  data-testid={`featured-work-${cat.slug}`}
                 >
                   <motion.img
-                    src={service.image}
-                    alt={`${service.title} installation by The Shirtless Handyman, New Orleans`}
+                    src={cat.image}
+                    alt={`${cat.title.replace('&amp;', '&')} — seamless surface work by The Shirtless Handyman, New Orleans`}
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.08 }}
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-                  <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                    <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-2">
-                      {service.priceRange}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                  <div className="absolute inset-0 p-7 flex flex-col justify-end text-white">
+                    <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-3">
+                      {cat.materials}
                     </p>
                     <h3
-                      className="text-2xl font-light mb-2 leading-tight"
+                      className="text-3xl md:text-4xl font-light mb-3 leading-tight"
                       style={{ fontFamily: "'Fraunces', serif" }}
-                    >
-                      {service.title}
-                    </h3>
-                    <p className="text-sm text-white/70 mb-3 leading-relaxed">{service.description}</p>
-                    <motion.span
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-white"
-                      initial={{ opacity: 0, x: -4 }}
-                      whileHover={{ opacity: 1, x: 0 }}
-                    >
-                      Visualize my room <ArrowRight className="w-3.5 h-3.5" />
-                    </motion.span>
+                      dangerouslySetInnerHTML={{ __html: cat.title }}
+                    />
+                    <p className="text-sm text-white/70 mb-4 leading-relaxed">{cat.desc}</p>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white group-hover:text-[#D97757] transition-colors">
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
                   </div>
                 </button>
               </ScrollReveal>
@@ -443,93 +444,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ===== VENETIAN PLASTER — large feature strip ===== */}
-      <section
-        className="relative overflow-hidden bg-[#1A1410]"
-        data-testid="venetian-plaster-section"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[70vh]">
-          {/* Image side */}
-          <ScrollReveal className="relative md:order-1 order-1">
-            <div className="relative w-full h-[55vh] md:h-full min-h-[480px]">
-              <motion.img
-                src="/venetian-plaster-hero.jpg"
-                alt="Venetian plaster wall — mirror-polished Italian lime plaster with warm, marbled depth — installed by The Shirtless Handyman in New Orleans"
-                className="absolute inset-0 w-full h-full object-cover"
-                initial={{ scale: 1.04 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#1A1410]/60 md:to-[#1A1410]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1410]/70 via-transparent to-transparent md:from-transparent" />
-            </div>
-          </ScrollReveal>
-
-          {/* Copy side */}
-          <ScrollReveal delay={0.15} className="md:order-2 order-2 flex items-center px-6 md:px-12 lg:px-20 py-14 md:py-0">
-            <div className="max-w-xl">
-              <p className="text-[11px] uppercase tracking-[0.28em] font-bold text-[#D97757] mb-4">
-                Featured Craft · Italian Heritage
-              </p>
-              <h2
-                className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.05] mb-6"
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                Venetian Plaster.<br />
-                <span className="italic text-[#E8D2BD]">Light, made tangible.</span>
-              </h2>
-              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-5">
-                Burnished Italian lime plaster, troweled and polished by hand in 5–7 thin layers
-                until it reflects light like a sheet of marble — but warmer, deeper, alive. The same
-                finish that lines Renaissance palazzos in Venice and Florence is now installed in
-                New Orleans living rooms, hallways, dining rooms, and powder baths.
-              </p>
-              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-8">
-                Custom-tinted to any color. Naturally anti-microbial. Zero VOCs. No seams, no grout,
-                no joints — just one continuous, hand-finished plane that turns a flat wall into the
-                room&apos;s most striking feature.
-              </p>
-
-              <div className="grid grid-cols-2 gap-3 mb-8">
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-1">
-                    Best for
-                  </p>
-                  <p className="text-sm text-white/85">Living rooms · Dining · Halls · Powder baths</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#D97757] mb-1">
-                    Starting at
-                  </p>
-                  <p className="text-sm text-white/85">$14/sq ft · most rooms $1,800–$4,500</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => navigate("/upload")}
-                  data-cursor="view"
-                  data-cursor-label="Try"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#D97757] hover:bg-[#C56545] text-white text-sm font-semibold h-11 px-6 transition-colors"
-                  data-testid="venetian-try-studio-btn"
-                >
-                  Preview it in your space <ArrowRight className="w-4 h-4" />
-                </button>
-                <a
-                  href={SMS_LINK}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 hover:bg-white/5 text-white text-sm font-semibold h-11 px-6 transition-colors"
-                  data-testid="venetian-text-ryan-btn"
-                >
-                  Text me for a quote
-                </a>
-              </div>
-            </div>
-          </ScrollReveal>
         </div>
       </section>
 
@@ -631,358 +545,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== THE PROBLEM ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="problem-section">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            {/* Pain points */}
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-                Sound Familiar?
-              </p>
-              <h2
-                className="text-3xl md:text-4xl font-light tracking-tight text-white mb-8 leading-tight"
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                You know your space needs work.<br />
-                You just can't see the finish line.
-              </h2>
-
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <AlertCircle className="w-4 h-4 text-white/40" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Can't picture the upgrade</h3>
-                    <p className="text-sm text-white/45 leading-relaxed">You know you want something better — but choosing materials from a swatch book doesn't tell you how it'll actually look in your space.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <AlertCircle className="w-4 h-4 text-white/40" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Scared of wasting money</h3>
-                    <p className="text-sm text-white/45 leading-relaxed">Renovations aren't cheap. Committing thousands without seeing the result? That keeps people stuck for years.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <AlertCircle className="w-4 h-4 text-white/40" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Tired of grout, mold, and outdated finishes</h3>
-                    <p className="text-sm text-white/45 leading-relaxed">Scrubbing grout lines that turn black. Caulk that peels. Tile that looks like it's from 2005. You deserve better.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Real damage evidence — this is what humidity does to a seamed install */}
-              <figure className="mt-10" data-testid="problem-evidence-figure">
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                  <img
-                    src="/failures/substrate-rust.jpg"
-                    alt="Rust and water damage bleeding through the substrate at the base of a bathroom wall — hidden failure from poor installation"
-                    loading="lazy"
-                    className="block w-full h-auto max-h-[380px] object-cover"
-                  />
-                </div>
-                <figcaption className="mt-3 text-[11px] uppercase tracking-[0.2em] text-white/45">
-                  Real bathroom I opened up in NOLA — rust bleeding out of the substrate. Poor installation, hidden for years.
-                </figcaption>
-              </figure>
-            </div>
-
-            {/* Solution transition */}
-            <div className="bg-gradient-to-br from-[#D97757]/10 to-[#D97757]/5 border border-[#D97757]/20 rounded-3xl p-10 md:p-12">
-              <div className="w-14 h-14 rounded-2xl bg-[#D97757] flex items-center justify-center mb-6">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <h3
-                className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4 leading-tight"
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                Now you can see your upgrade before you commit a single dollar.
-              </h3>
-              <p className="text-sm text-white/60 leading-relaxed mb-8">
-                The Seamless Studio takes a photo of your actual space and shows you exactly what it looks like coated in seamless microcement, tadelakt, venetian plaster, or any of the premium finishes I install. Three design options. Real cost estimates. In about 60 seconds.
-              </p>
-              <Button
-                onClick={() => navigate("/upload")}
-                className="h-12 px-8 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545]"
-                data-testid="problem-cta-btn"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Show Me Your Room
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== TRUST ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-white" data-testid="trust-section">
-        <div className="max-w-7xl mx-auto">
-
-          {/* Result statements */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-20">
-            {[
-              "No grout. Ever.",
-              "One surface. Zero seams.",
-              "Waterproof from day one.",
-            ].map((statement) => (
-              <div key={statement} className="text-center">
-                <p
-                  className="text-xl md:text-2xl font-light text-foreground tracking-tight"
-                  style={{ fontFamily: "'Fraunces', serif" }}
-                >
-                  {statement}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Trust bullets — 2 rows of 3 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6">
-            {[
-              { icon: CheckCircle, text: "Clean jobsite, every time — I leave it better than I found it" },
-              { icon: Clock, text: "On time, on budget — no drawn-out timelines or surprise costs" },
-              { icon: ShieldCheck, text: "Licensed, insured, and personally accountable for every project" },
-              { icon: Star, text: "5-star craftsmanship — I don't cut corners on materials or labor" },
-              { icon: Phone, text: "Direct line to me — no call centers, no runaround" },
-              { icon: Gem, text: "Premium materials, disciplined preparation, and craftsmanship built for long-term value." },
-            ].map((item) => (
-              <div key={item.text} className="flex items-start gap-3">
-                <item.icon className="w-4 h-4 text-[#D97757] flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== WHAT ARE SEAMLESS SURFACES ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12" data-testid="seamless-explainer-section">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl mb-14">
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-              The Future of Surfaces
-            </p>
-            <h2
-              className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4 leading-tight"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              What are seamless surfaces?<br />
-              And why does The Seamless Studio show them?
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Seamless surfaces use microcement, tadelakt, and luxury plaster coatings applied directly over your existing walls, floors, and counters. No demolition. No grout lines. Just one smooth, continuous, waterproof surface — and that's exactly what The Seamless Studio designs for your space.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              Whether you're looking for a microcement bathroom upgrade, a concrete overlay for your kitchen floors, or a custom feature wall that turns heads — I handle it all personally, right here in New Orleans. Seamless surfaces are the modern alternative to tile, stone, and traditional finishes. They're faster to install, easier to maintain, and they look like nothing else on the market. If you're searching for a microcement installer in New Orleans or a seamless surface contractor near you, you just found me.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
-            {[
-              { title: "Bathrooms & Showers", desc: "Waterproof micro quartz and tadelakt replace every tile and grout line with a single seamless shell. Walk-in showers, tub surrounds, vanity walls — all one surface.", icon: Droplets },
-              { title: "Floors & Walls", desc: "Microcement flows wall-to-wall, room-to-room. No joints, no transitions, no seams. Warm underfoot, cool to the eye. Works on concrete, tile, even wood subfloors.", icon: Layers },
-              { title: "Kitchens & Counters", desc: "Beton cire countertops with waterfall edges. Venetian plaster backsplashes that go from counter to ceiling. Zero grout to scrub, ever.", icon: ShieldCheck },
-              { title: "Outdoor & Pool Areas", desc: "Microterrazzo pool decks. Cocciopesto patios. Rockscape accent walls made from sculpted foam and microaggregate. Built for sun, rain, and bare feet.", icon: Paintbrush },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="bg-white border border-border/40 rounded-2xl p-7 hover:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-1 group"
-              >
-                <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5 group-hover:bg-[#D97757] transition-colors duration-300">
-                  <item.icon className="w-5 h-5 text-muted-foreground group-hover:text-white transition-colors duration-300" />
-                </div>
-                <h3 className="text-base font-semibold mb-2 text-foreground">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Surface types */}
-          <div className="bg-[#F5F5F4] rounded-3xl p-8 md:p-12">
-            <h3
-              className="text-xl font-medium text-foreground mb-6"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              Finishes I install — and what The Seamless Studio shows you
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {[
-                "Microcement", "Tadelakt", "Venetian Plaster", "Roman Clay", "Marmorino",
-                "Stucco Lustro", "Grassello di Calce", "Beton Cire", "Cocciopesto", "Microterrazzo",
-                "Micro Quartz", "Lime Wash", "Seamless Epoxy", "Rockscape Walls", "Solid Surface",
-              ].map((finish) => (
-                <div key={finish} className="flex items-center gap-2.5 px-4 py-3 bg-white rounded-xl border border-border/40">
-                  <span className="w-2 h-2 rounded-full bg-[#D97757] flex-shrink-0" />
-                  <span className="text-sm text-foreground font-medium">{finish}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== PREMIUM POSITIONING ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E] overflow-hidden" data-testid="premium-section">
-        <div className="max-w-7xl mx-auto">
-
-          {/* Section header */}
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-4">
-              Premium Craftsmanship
-            </p>
-            <h2
-              className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4 leading-tight"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              This isn't the cheap fix.<br />It's the one you don't do twice.
-            </h2>
-            <p className="text-sm text-white/45 max-w-xl mx-auto">
-              These are hand-applied finishes, built to your space — and they'll outlast any tile job by a mile.
-            </p>
-          </div>
-
-          {/* Two-column: Seamless Surfaces + Rockscape */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-
-            {/* Seamless Surfaces */}
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#D97757]/15 flex items-center justify-center">
-                  <Layers className="w-5 h-5 text-[#D97757]" />
-                </div>
-                <h3
-                  className="text-xl font-medium text-white"
-                  style={{ fontFamily: "'Fraunces', serif" }}
-                >
-                  Seamless Surfaces
-                </h3>
-              </div>
-              <p className="text-sm text-white/50 leading-relaxed mb-6">
-                Microcement, tadelakt, venetian plaster, and beton cire — applied by hand over your existing surfaces. No demolition. No grout. Just one continuous, waterproof plane that transforms the entire feel of a room.
-              </p>
-              <div className="space-y-3 mb-8 flex-1">
-                {[
-                  "Custom color-matched to your vision",
-                  "Rated for wet zones — showers, pools, kitchens",
-                  "Applied over existing tile, concrete, or drywall",
-                  "10+ year lifespan with minimal maintenance",
-                  "Modern European aesthetic that never dates",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
-                    <span className="text-sm text-white/60">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Button
-                onClick={() => navigate("/upload")}
-                className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
-                data-testid="premium-surfaces-btn"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Preview in The Seamless Studio
-              </Button>
-            </div>
-
-            {/* Rockscape Walls */}
-            <div className="relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col">
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85"
-                  alt="Custom sculpted rockscape accent wall with microaggregate stone finish — The Shirtless Handyman, New Orleans"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E] via-transparent to-transparent" />
-                <div className="absolute top-4 right-4">
-                  <span className="px-3 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider">
-                    Signature Piece
-                  </span>
-                </div>
-              </div>
-              <div className="p-8 md:p-10 flex flex-col flex-1">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#D97757]/15 flex items-center justify-center">
-                    <Gem className="w-5 h-5 text-[#D97757]" />
-                  </div>
-                  <h3
-                    className="text-xl font-medium text-white"
-                    style={{ fontFamily: "'Fraunces', serif" }}
-                  >
-                    Custom Rockscape Walls
-                  </h3>
-                </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-6">
-                  Hand-sculpted foam blocks, coated in microaggregate to look and feel like carved natural stone. Backlit, textured, and completely one-of-a-kind. A statement piece that turns any room into a destination.
-                </p>
-                <div className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Sculpted to fit your exact wall and space",
-                    "Microaggregate finish — authentic rock texture",
-                    "Integrated LED backlighting available",
-                    "Bedrooms, living rooms, restaurants, lobbies",
-                    "Lightweight — installs on any standard wall",
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0" />
-                      <span className="text-sm text-white/60">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href={SMS_LINK} className="mt-auto" data-testid="premium-rockscape-btn">
-                  <Button variant="outline" className="w-full h-11 rounded-full border-white/20 text-white hover:bg-white/10 text-sm font-medium">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Request a Custom Rockscape Design
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Durability bar */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-            <p
-              className="text-lg md:text-xl font-light text-white/80 tracking-tight"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              "I build things to get better with age, not worse. Waterproof, mold-resistant, doesn't fade in the sun — that's the standard, every time."
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== HANDYMAN (secondary) ===== */}
-      <section className="py-14 px-6 md:px-12 bg-[#FAFAF9] border-y border-border/40" data-testid="handyman-section">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
-          <div className="flex-1 min-w-0">
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-muted-foreground/60 mb-2">
-              Also Available
-            </p>
-            <h3
-              className="text-xl md:text-2xl font-light tracking-tight text-foreground mb-3"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              Need a handyman? I do that too.
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
-              Drywall patches, fixture installs, door and trim work, painting, pressure washing, and general repairs. My main focus is seamless surfaces — but I'm happy to help with the small stuff while I'm already there.
-            </p>
-          </div>
-          <a href={SMS_LINK} className="flex-shrink-0" data-testid="handyman-text-btn">
-            <Button variant="outline" className="h-11 px-6 rounded-full border-border/60 text-foreground hover:bg-accent text-sm font-medium">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Text me — {PHONE}
-            </Button>
-          </a>
-        </div>
-      </section>
-
       {/* ===== HOW IT WORKS (simplified) ===== */}
       <section id="how-it-works" className="py-20 md:py-28 px-6 md:px-12" data-testid="how-it-works-section">
         <div className="max-w-7xl mx-auto">
@@ -1018,109 +580,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ===== GALLERY — What the AI shows = what I build ===== */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E0E]" data-testid="gallery-section">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-              From Screen to Reality
-            </p>
-            <h2
-              className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4"
-              style={{ fontFamily: "'Fraunces', serif" }}
-            >
-              What you see in the tool<br />can be built in real life.
-            </h2>
-            <p className="text-sm text-white/45 max-w-lg mx-auto">
-              The Seamless Studio designs with the exact same finishes I install. Every surface you preview is something I can put on your walls, floors, and counters.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              {
-                title: "Bathrooms",
-                desc: "Tadelakt showers, micro quartz wet zones, seamless vanity walls",
-                image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHw0fHxwb2xpc2hlZCUyMGNvbmNyZXRlJTIwbHV4dXJ5JTIwYmF0aHJvb20lMjBtaW5pbWFsfGVufDB8fHx8MTc3NjQ1MjM2Mnww&ixlib=rb-4.1.0&q=85",
-                type: "Bathroom",
-              },
-              {
-                title: "Floors",
-                desc: "Microcement, beton cire, and microterrazzo — wall to wall, no seams",
-                image: "https://images.unsplash.com/photo-1758957530781-4ff54e09bee2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxwb2xpc2hlZCUyMGNvbmNyZXRlJTIwZmxvb3IlMjBpbnRlcmlvciUyMG9wZW4lMjBwbGFuJTIwbW9kZXJufGVufDB8fHx8MTc3NjQ1Mzc3Mnww&ixlib=rb-4.1.0&q=85",
-                type: "Living Room",
-              },
-              {
-                title: "Feature Walls",
-                desc: "Rockscape, venetian plaster, marmorino — the focal point of any room",
-                image: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHx0ZXh0dXJlZCUyMHN0b25lJTIwYWNjZW50JTIwd2FsbCUyMGludGVyaW9yJTIwbHV4dXJ5JTIwZHJhbWF0aWMlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzY0NTM1Njd8MA&ixlib=rb-4.1.0&q=85",
-                type: "Bedroom",
-              },
-              {
-                title: "Outdoor Spaces",
-                desc: "Pool decks, patios, outdoor kitchens — sealed against sun and rain",
-                image: "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvdXRkb29yJTIwcGF0aW8lMjBjb25jcmV0ZSUyMHBvb2wlMjBkZWNrJTIwbHV4dXJ5fGVufDB8fHx8MTc3NjQ1Mzc2Nnww&ixlib=rb-4.1.0&q=85",
-                type: "Pool Deck",
-              },
-            ].map((cat) => (
-              <button
-                key={cat.title}
-                onClick={() => navigate("/upload", { state: { projectType: cat.type } })}
-                className="group relative rounded-2xl overflow-hidden aspect-[3/4] cursor-pointer"
-                data-testid={`gallery-${cat.title.toLowerCase().replace(/\s/g, "-")}`}
-              >
-                <img
-                  src={cat.image}
-                  alt={`${cat.title} — seamless surface renovation example by The Shirtless Handyman, New Orleans`}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3
-                    className="text-xl font-medium text-white mb-1.5"
-                    style={{ fontFamily: "'Fraunces', serif" }}
-                  >
-                    {cat.title}
-                  </h3>
-                  <p className="text-xs text-white/60 leading-relaxed mb-4">{cat.desc}</p>
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#D97757]">
-                    <Upload className="w-3.5 h-3.5" />
-                    Try in Seamless Studio
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== OUR WORK ===== */}
-      <section className="py-16 px-6 md:px-12 bg-white" data-testid="our-work-section">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-3">
-            Real Results
-          </p>
-          <h2
-            className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            See completed projects
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            Real before and after photos from jobs I've done — no renders, no stock photos.
-          </p>
-          <Button
-            onClick={() => navigate("/portfolio")}
-            variant="outline"
-            className="rounded-full h-12 px-8 border-[#D97757]/40 text-[#D97757] hover:bg-[#D97757]/5 text-sm font-medium"
-            data-testid="home-see-our-work-btn"
-          >
-            See My Work
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
         </div>
       </section>
 
@@ -1384,16 +843,13 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
-              <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">My Work</button>
-              <button onClick={() => navigate("/blog")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-journal">Journal</button>
-              <a href="/color-preview.html" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-color-preview">Color Preview</a>
-              <button onClick={() => navigate("/how-i-started")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-how-i-started">How I Started</button>
-              <button onClick={() => navigate("/faq")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-faq">FAQ</button>
-              <button onClick={() => navigate("/book")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-book">Book</button>
-              <button onClick={() => navigate("/contractor/login")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-login">Contractor Login</button>
-              <button onClick={() => navigate("/contractor/register")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-signup">Contractor Sign Up</button>
-              <button onClick={() => navigate("/contractor/login")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-contractor-login">Contractor Login</button>
-              <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-admin-link">Admin</button>
+              <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">Work</button>
+              <a href="/#finishes" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-finishes">Finishes</a>
+              <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-process">Process</a>
+              <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-pricing">Pricing</a>
+              <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-about">About</button>
+              <button onClick={() => navigate("/contractors")} className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors" data-testid="footer-contractors">For Contractors</button>
+              <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground/40 hover:text-foreground transition-colors" data-testid="footer-admin-link">Admin</button>
             </div>
           </div>
         </div>

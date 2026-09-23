@@ -55,7 +55,6 @@ export const LeadGenWidgets = () => {
 
   return (
     <>
-      <StickyMobileCTA />
       <SocialProofToast />
       <ChatWidget />
     </>
