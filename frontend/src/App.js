@@ -75,9 +75,13 @@ function App() {
 
             {/* About */}
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/how-i-started" element={<HowIStartedPage />} />
-            <Route path="/qr" element={<QrCodePage />} />
-            <Route path="/contractors" element={<ContractorsPage />} />
+
+            {/* viewTube — live camera DIY coach */}
+            <Route path="/viewtube" element={<ViewTubeLandingPage />} />
+            <Route path="/viewtube/show" element={<ViewTubeShowPage />} />
+            <Route path="/viewtube-show.html" element={<ViewTubeShowPage />} />
+            <Route path="/viewtube/setup" element={<ViewTubeSetupPage />} />
+            <Route path="/viewtube/watch/:sessionId" element={<ViewTubeWatchPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

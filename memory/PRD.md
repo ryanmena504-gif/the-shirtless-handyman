@@ -29,6 +29,19 @@ High-converting lead-gen + SEO site for Ryan Mena's NOLA seamless-surfaces busin
 - **Feb 2026 — P2 Admin Schedule Blocker**: New `/admin/schedule` UI + `schedule_admin_service.py` module. Supports full-day + partial-day one-time blocks (`availability_blocks`) and recurring weekly rules (`availability_rules`). Categories: personal / project / vacation / unavailable / other. Every admin write endpoint requires admin JWT + performs conflict pre-check against existing bookings (returns 409 with conflict list; admin must explicitly `acknowledge_conflicts: true` to save). Existing bookings NEVER modified. All computation in America/Chicago. `is_slot_available` and `get_availability` in `schedule_service.py` extended to honor both blocks and rules — so `/book`, chatbot, and direct-API bookings are all rejected server-side for blocked slots. Bookings now persist `slot_end_utc` alongside `slot_start_utc` for accurate conflict detection. 8/8 acceptance tests passed (full-day block hides date, partial-day hides only affected slots, weekly Sunday closes future Sundays, delete restores availability, existing bookings untouched, 409 conflict warning, direct-API rejection, Chicago tz served).
 - **Feb 2026 — Origin story + singular CTA + review number honesty**: Added new `/how-i-started` page with 4-chapter vertical timeline (handyman → tile years → learning seamless surfaces → today) linked from Navbar (desktop + mobile) and homepage footer. Homepage hero collapsed from 2 competing CTAs to a single dominant "Try The Seamless Studio" primary button (with "Or text me directly" as a quiet secondary link) so first-time visitors immediately understand the product. Deflated review-count claims: `TrustStrip` "200+ NOLA Homes" → "50+ NOLA Homes"; Ryan Mena easter-egg contractor record in `prompts.py` review_count 999 → 42.
 
+### 2026-08-16 — viewTube
+The live camera DIY coach from the market brief is now a first-class product named **viewTube**.
+- Brand: `viewTube` — "YouTube shows you how. viewTube watches you do it."
+- Coaches: Cole (he/him) and Avery (she/her). Charming, gendered, PG.
+- Four structured projects: flat-pack shelf, drywall patch, paint a wall, circular-saw safety.
+- Hard stop / soft pause / ask live in `backend/viewtube.py` and are unit-tested without Mongo.
+- Routes: `/viewtube`, `/viewtube/setup`, `/viewtube/watch/:sessionId`.
+- API: `GET /api/viewtube/catalog`, `POST /api/viewtube/sessions`, `GET /api/viewtube/sessions/{id}`, `POST /api/viewtube/sessions/{id}/events`.
+- Existing Shirtless Handyman lead-gen site is unchanged. viewTube is a new surface.
+- **AI voices only** (2026-08-16): Cole = OpenAI `onyx`, Avery = `nova` via `POST /api/viewtube/speak`. No browser speechSynthesis, no human recordings. Illustrated AI portraits replace stock photos of real people.
+- **Look at the bench** (2026-08-16): `Check me` / `I'm set` / `I am safe` send a still. gpt-4o inspects it conservatively (unsure = ask, never a fake green light). Two more projects: floating shelf, faucet swap. Demo invert toggle removed.
+- **PPE is optional** (2026-08-16): Missing glasses never hard-stops a session. `bypass_safety` / Skip this. Stickler shop-class rules are a product killer.
+
 ## Backlog
 - P1: Get correct Google Business Profile Place ID from Ryan → activate reviews widget
 - P1: Admin UI for Ryan to block dates on the calendar (vacation, on-site jobs)

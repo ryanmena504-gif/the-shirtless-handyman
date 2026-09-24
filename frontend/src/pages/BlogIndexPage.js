@@ -5,7 +5,7 @@ import { TrustStrip } from "../components/TrustStrip";
 import { BLOG_POSTS } from "../blog/posts";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 
-const PAGE_URL = "https://theshirtlesshandyman.com/blog";
+const PAGE_URL = "https://theshirtlesshandyman.com/blog/";
 const POSTS_PER_PAGE = 12;
 
 const BLOG_SCHEMA = {

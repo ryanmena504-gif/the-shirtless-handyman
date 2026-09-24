@@ -28,9 +28,6 @@ export function RevealText({ text, as = "span", className = "", delay = 0, stagg
       className={className}
       initial="hidden"
       animate="visible"
-      // Accessibility + SEO: the screen-reader / crawler-visible text is the full sentence.
-      // The visual letter-reveal is purely decorative on top.
-      aria-label={text}
       variants={{
         visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
         hidden: {},

@@ -9,7 +9,7 @@ import { MessageCircle, Phone, Award, Hammer, Heart, MapPin } from "lucide-react
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%20want%20to%20chat%20about%20a%20project.`;
 const TEL_LINK = "tel:5042644919";
-const PAGE_URL = "https://theshirtlesshandyman.com/about";
+const PAGE_URL = "https://theshirtlesshandyman.com/about/";
 
 const ABOUT_SCHEMA = {
   "@context": "https://schema.org",
