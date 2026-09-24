@@ -61,8 +61,8 @@ export default function ResultsPage() {
 
       await axios.post(`${API}/projects/${projectId}/generate`, {}, { timeout: 15000 });
 
-      const pollInterval = 3000;
-      const maxAttempts = 60;
+      const pollInterval = 2000;
+      const maxAttempts = 90;
       let attempts = 0;
 
       const poll = async () => {
@@ -107,7 +107,7 @@ export default function ResultsPage() {
         }
       };
 
-      setTimeout(poll, 2000);
+      setTimeout(poll, 1000);
 
     } catch (err) {
       const detail = err.response?.data?.detail || "";
@@ -251,7 +251,7 @@ export default function ResultsPage() {
                     data-testid="build-this-btn"
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />
-                    Build This — Free Quote
+                    Build This — Request an Assessment
                   </Button>
                 </div>
               </div>
@@ -574,10 +574,10 @@ export default function ResultsPage() {
                     className="text-2xl md:text-3xl font-light tracking-tight text-white mb-4"
                     style={{ fontFamily: "'Fraunces', serif" }}
                   >
-                    This isn&apos;t just a preview —<br />we can build this.
+                    This isn&apos;t just a preview —<br />I can build this.
                   </h3>
                   <p className="text-sm text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
-                    Every surface you just saw is something we install. Text Ryan the design you like, get a fast quote, and we&apos;ll make your space seamless for real.
+                    Every surface you just saw is something I install. Text me the design you like, get a fast quote, and I&apos;ll make your space seamless for real.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
                     <Button

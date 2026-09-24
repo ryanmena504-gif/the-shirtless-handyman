@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../lib/AuthContext";
 import { Button } from "../components/ui/button";
-import { Menu, X, Hammer, LogIn, LayoutDashboard } from "lucide-react";
+import { Menu, X, Hammer } from "lucide-react";
+
+// Spec: Logo / Work / Finishes / Process / Pricing / About + one "Start a Project" CTA.
+// Items below the fold (Color Preview, Journal, How I Started, Book, FAQ, Contractor Login)
+// live in the footer to keep the header uncluttered.
+const NAV_ITEMS = [
+  { label: "Work", to: "/portfolio", testid: "nav-work" },
+  { label: "Finishes", to: "/#finishes", testid: "nav-finishes" },
+  { label: "Process", to: "/#how-it-works", testid: "nav-process" },
+  { label: "Pricing", to: "/#pricing", testid: "nav-pricing" },
+  { label: "About", to: "/about", testid: "nav-about" },
+];
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
-  const { contractorAuth } = useAuth();
 
   return (
     <nav
@@ -65,44 +74,52 @@ export const Navbar = () => {
             onClick={() => navigate("/blog")}
             data-testid="nav-blog-btn"
           >
-            Journal
-          </Button>
-          <Button
-            variant="ghost"
-            className="rounded-full text-sm font-medium"
-            onClick={() => navigate("/about")}
-            data-testid="nav-about-btn"
-          >
-            About Ryan
-          </Button>
-          {contractorAuth ? (
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <Hammer className="w-4 h-4 text-primary-foreground" />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span
+                className="font-semibold text-lg tracking-tight"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                The Shirtless Handyman
+              </span>
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium -mt-0.5">
+                Seamless Surfaces
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop nav — 5 items + 1 CTA */}
+          <div className="hidden md:flex items-center gap-1">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.testid}
+                to={item.to}
+                className="inline-flex items-center h-9 px-4 rounded-full text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                data-testid={item.testid}
+              >
+                {item.label}
+              </Link>
+            ))}
             <Button
-              variant="ghost"
-              className="rounded-full text-sm font-medium"
-              onClick={() => navigate("/contractor/dashboard")}
-              data-testid="nav-dashboard-btn"
+              onClick={() => navigate("/upload")}
+              className="ml-3 rounded-full bg-primary text-primary-foreground text-sm font-medium h-9 px-5"
+              data-testid="nav-cta-btn"
             >
-              <LayoutDashboard className="w-4 h-4 mr-1.5" />
-              Dashboard
+              Start a Project
             </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              className="rounded-full text-sm font-medium"
-              onClick={() => navigate("/contractor/login")}
-              data-testid="nav-contractor-login-btn"
-            >
-              <LogIn className="w-4 h-4 mr-1.5" />
-              Contractor Login
-            </Button>
-          )}
-          <Button
-            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 btn-pill"
-            onClick={() => navigate("/upload")}
-            data-testid="nav-cta-btn"
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            data-testid="mobile-menu-toggle"
+            aria-label="Toggle menu"
           >
-            Get Free Estimate
-          </Button>
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -161,32 +178,18 @@ export const Navbar = () => {
           </Button>
           {contractorAuth ? (
             <Button
-              variant="ghost"
-              className="w-full justify-start rounded-lg"
-              onClick={() => { navigate("/contractor/dashboard"); setMobileOpen(false); }}
-              data-testid="mobile-dashboard-btn"
+              className="w-full rounded-lg bg-primary text-primary-foreground mt-1"
+              onClick={() => {
+                navigate("/upload");
+                setMobileOpen(false);
+              }}
+              data-testid="mobile-cta-btn"
             >
-              Dashboard
+              Start a Project
             </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              className="w-full justify-start rounded-lg"
-              onClick={() => { navigate("/contractor/login"); setMobileOpen(false); }}
-              data-testid="mobile-contractor-login-btn"
-            >
-              Contractor Login
-            </Button>
-          )}
-          <Button
-            className="w-full rounded-lg bg-primary text-primary-foreground"
-            onClick={() => { navigate("/upload"); setMobileOpen(false); }}
-            data-testid="mobile-cta-btn"
-          >
-            Get Free Estimate
-          </Button>
-        </div>
-      )}
-    </nav>
+          </div>
+        )}
+      </nav>
+    </div>
   );
 };

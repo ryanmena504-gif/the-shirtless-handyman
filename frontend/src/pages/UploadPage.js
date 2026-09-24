@@ -167,10 +167,10 @@ export default function UploadPage() {
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Show us your room
+              Show me your room
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Snap a photo of any space — bathroom, kitchen, living room, patio, you name it. Upload up to 3 angles. Pick one as the main shot, and we'll handle the rest.
+              Snap a photo of any space — bathroom, kitchen, living room, patio, you name it. Upload up to 3 angles. Pick one as the main shot, and I&apos;ll handle the rest.
             </p>
           </div>
 

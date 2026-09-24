@@ -23,6 +23,18 @@ const SEO_ROUTES = [
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
+    path: "/book",
+    title: "Book Ryan Mena | The Shirtless Handyman — New Orleans",
+    description: "Pick your own time. Free in-home walkthroughs, phone consults, and project starts — book direct with Ryan. Mon–Sat, 8am–5pm Central.",
+    ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/faq",
+    title: "FAQ | The Shirtless Handyman — Microcement, Tadelakt & Seamless Surfaces in New Orleans",
+    description: "Straight answers about microcement, tadelakt, rockscape walls, pricing, licensing, and hiring a seamless surface installer in New Orleans. From Ryan Mena.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
+  },
+  {
     path: "/about",
     title: "About Ryan Mena | The Shirtless Handyman — New Orleans Microcement Specialist",
     description: "Meet Ryan Mena — New Orleans-born craftsman behind The Shirtless Handyman. I used to install tile. Now I install microcement, tadelakt, and rockscape walls.",
@@ -45,6 +57,12 @@ const SEO_ROUTES = [
     path: "/microcement-new-orleans",
     title: "Microcement New Orleans | Seamless Bathroom & Floor Installation — The Shirtless Handyman",
     description: "Microcement specialist in New Orleans. Seamless, waterproof, zero-grout shower & floor installation across Metairie, Gretna, Lakeview & the Westbank. Free design preview in 60 seconds. Text Ryan: 504-264-4919.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
+  },
+  {
+    path: "/microcement-installers-new-orleans",
+    title: "Microcement Installers New Orleans | Local Specialist, Real Photos, Fast Quotes — The Shirtless Handyman",
+    description: "Hire a microcement installer in New Orleans. Ryan Mena installs seamless, waterproof microcement showers, floors & walls — no demolition, no grout, no subcontractors. Free design preview. Text 504-264-4919.",
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
@@ -104,6 +122,13 @@ const SEO_ROUTES = [
     title: "Why Tile Fails in New Orleans Humidity (And What to Install Instead)",
     description: "Black grout. Peeling caulk. Mold. Here's why tile keeps failing in NOLA bathrooms — and the seamless surface that lasts decades.",
     ogImage: DEFAULT_OG,
+    ogType: "article",
+  },
+  {
+    path: "/blog/how-to-choose-microcement-installer-new-orleans",
+    title: "How to Choose a Microcement Installer in New Orleans (6-Question Checklist)",
+    description: "Hiring a microcement installer in NOLA? Use this 6-question checklist to spot the pros from the pretenders — what to ask, what to see, and what red flags to walk away from.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
     ogType: "article",
   },
   // -------- Neighborhood handyman micro-pages --------

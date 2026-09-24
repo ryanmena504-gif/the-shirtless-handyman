@@ -38,7 +38,7 @@ export default function PortfolioPage() {
           {/* Header */}
           <div className="mb-12 text-center">
             <p className="text-sm uppercase tracking-widest font-semibold text-[#D97757] mb-3">
-              Our Work
+              My Work
             </p>
             <h1
               className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-4"
@@ -47,7 +47,7 @@ export default function PortfolioPage() {
               Real Transformations
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Browse before and after photos from actual renovation projects completed by our team. See the quality of work firsthand.
+              Browse before and after photos from actual renovation projects — every job installed personally by Ryan. See the quality of work firsthand.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ export default function PortfolioPage() {
                 Portfolio Coming Soon
               </h3>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                We're adding photos from our completed renovation projects. Check back soon to see real before and after transformations.
+                I&rsquo;m adding photos from recent renovation projects. Check back soon to see real before and after transformations.
               </p>
               <Button
                 onClick={() => navigate("/upload")}

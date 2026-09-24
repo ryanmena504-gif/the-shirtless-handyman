@@ -56,7 +56,7 @@ const RoomAnalysis = ({ analysis, projectType, isLoading }) => {
             <h3 className="text-lg font-semibold" style={{ fontFamily: "'Fraunces', serif" }}>
               Analyzing Your {projectType}...
             </h3>
-            <p className="text-sm text-muted-foreground">Our AI is inspecting the photo for renovation needs</p>
+            <p className="text-sm text-muted-foreground">My AI is inspecting the photo for renovation needs</p>
           </div>
         </div>
         <div className="space-y-3">

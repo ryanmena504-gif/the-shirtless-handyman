@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { ExitIntentModal } from "./ExitIntentModal";
 import { StickyMobileCTA } from "./StickyMobileCTA";
 import { SocialProofToast } from "./SocialProofToast";
 import { ChatWidget } from "./ChatWidget";
@@ -9,6 +8,7 @@ import { ChatWidget } from "./ChatWidget";
 const LEADGEN_ROUTES = [
   "/", "/upload", "/portfolio", "/blog", "/about",
   "/microcement-new-orleans",
+  "/microcement-installers-new-orleans",
   "/microcement-metairie",
   "/tadelakt-new-orleans",
   "/rockscape-walls-new-orleans",
@@ -27,12 +27,12 @@ const LEADGEN_PREFIXES = ["/results", "/analysis", "/share", "/blog/"];
 const OPERATOR_PREFIXES = ["/admin", "/contractor", "/viewtube"];
 
 /**
- * LeadGenWidgets — global overlay that mounts the sticky CTA, exit-intent modal,
- * and social-proof toast on homeowner-facing pages only.
+ * LeadGenWidgets — global overlay that mounts the sticky CTA, social-proof
+ * toast, and AI chat widget on homeowner-facing pages only. The promotional
+ * banner is rendered inside <Navbar /> (route-aware itself).
  *
  * Also gates the Klaviyo signup form by toggling a body data-attribute so CSS
- * can hide Klaviyo's auto-injected overlays on operator (admin/contractor) routes
- * and while our own ExitIntentModal is open.
+ * can hide Klaviyo's auto-injected overlays on operator (admin/contractor) routes.
  */
 export const LeadGenWidgets = () => {
   const { pathname } = useLocation();
@@ -55,9 +55,7 @@ export const LeadGenWidgets = () => {
 
   return (
     <>
-      <StickyMobileCTA />
       <SocialProofToast />
-      <ExitIntentModal />
       <ChatWidget />
     </>
   );

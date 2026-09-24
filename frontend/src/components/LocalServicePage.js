@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { Navbar } from "./Navbar";
 import { InstantQuoteForm } from "./InstantQuoteForm";
 import { TrustStrip } from "./TrustStrip";
+import { PricingCalculator } from "./PricingCalculator";
+import { GoogleReviews } from "./GoogleReviews";
 import { SeoHead } from "./SeoHead";
 import {
   ArrowRight, Upload, ShieldCheck, Droplets, Layers, Clock,
@@ -68,15 +70,27 @@ export default function LocalServicePage({ config }) {
           name: "The Shirtless Handyman",
           url: "https://theshirtlesshandyman.com",
           telephone: "(504) 264-4919",
+          priceRange: "$$",
+          areaServed: { "@type": "City", name: city },
         },
         areaServed: { "@type": "City", name: city },
         serviceType,
+        // priceRange is the field Google SERP renderers read directly when deciding
+        // whether to show a "From $X" pricing snippet alongside the search result.
+        priceRange: `$${priceLow.toLocaleString()}–$${priceHigh.toLocaleString()}`,
         offers: {
           "@type": "AggregateOffer",
           priceCurrency: "USD",
           lowPrice: String(priceLow),
           highPrice: String(priceHigh),
           offerCount: "5",
+          availability: "https://schema.org/InStock",
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            priceCurrency: "USD",
+            minPrice: String(priceLow),
+            maxPrice: String(priceHigh),
+          },
         },
       },
       {
@@ -135,13 +149,13 @@ export default function LocalServicePage({ config }) {
               <a href={smsLink}>
                 <Button variant="outline" className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium">
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Text Ryan
+                  Text Me
                 </Button>
               </a>
             </div>
 
             <p className="text-sm text-white/45">
-              Or call Ryan directly:{" "}
+              Or call me directly:{" "}
               <a href={TEL_LINK} className="text-white/70 hover:text-white underline underline-offset-2">{PHONE}</a>
             </p>
 
@@ -152,6 +166,12 @@ export default function LocalServicePage({ config }) {
         </section>
 
         <TrustStrip variant="dark" />
+
+        {/* Google Reviews — auto-hides if API key not configured */}
+        <GoogleReviews variant="light" />
+
+        {/* Pricing calculator — instant estimate */}
+        <PricingCalculator />
 
         {/* Benefits */}
         <section className="py-20 px-6 md:px-12 bg-[#FAFAF9]">
@@ -206,9 +226,9 @@ export default function LocalServicePage({ config }) {
                 ))}
               </div>
               <p className="text-sm text-muted-foreground mt-8 max-w-xl mx-auto">
-                Don't see your neighborhood? Text Ryan at{" "}
+                Don't see your neighborhood? Text me at{" "}
                 <a href={TEL_LINK} className="underline underline-offset-2 text-foreground">{PHONE}</a>{" "}
-                — we travel for the right project.
+                — I travel for the right project.
               </p>
             </div>
           </section>
@@ -302,6 +322,60 @@ export default function LocalServicePage({ config }) {
             </div>
           </section>
         )}
+
+        {/* Cross-link footer — internal SEO juice & topical-cluster signal */}
+        <section className="py-14 px-6 md:px-12 bg-[#FAFAF9] border-t border-[#E5E0D5]" data-testid="cross-links-section">
+          <div className="max-w-5xl mx-auto">
+            <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[#D97757] mb-4">
+              Also serving
+            </p>
+            <div className="flex flex-wrap gap-2.5 mb-7">
+              {[
+                { slug: "lakeview-handyman", label: "Lakeview" },
+                { slug: "uptown-handyman", label: "Uptown" },
+                { slug: "mid-city-handyman", label: "Mid-City" },
+                { slug: "bywater-handyman", label: "Bywater" },
+                { slug: "french-quarter-handyman", label: "French Quarter" },
+                { slug: "garden-district-handyman", label: "Garden District" },
+              ]
+                .filter((n) => n.slug !== slug)
+                .map((n) => (
+                  <a
+                    key={n.slug}
+                    href={`/${n.slug}`}
+                    className="inline-flex items-center px-4 py-2 rounded-full border border-[#1A3C34]/15 text-sm text-[#1A3C34] hover:bg-[#1A3C34] hover:text-white hover:border-[#1A3C34] transition-colors"
+                    data-testid={`crosslink-${n.slug}`}
+                  >
+                    {n.label} handyman
+                  </a>
+                ))}
+            </div>
+            <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[#D97757] mb-4">
+              Other crafts I install
+            </p>
+            <div className="flex flex-wrap gap-2.5">
+              {[
+                { slug: "microcement-new-orleans", label: "Microcement" },
+                { slug: "microcement-installers-new-orleans", label: "Microcement Installers" },
+                { slug: "tadelakt-new-orleans", label: "Tadelakt" },
+                { slug: "rockscape-walls-new-orleans", label: "Rockscape Walls" },
+                { slug: "pool-deck-resurfacing-new-orleans", label: "Pool Deck Resurfacing" },
+                { slug: "microcement-metairie", label: "Microcement in Metairie" },
+              ]
+                .filter((n) => n.slug !== slug)
+                .map((n) => (
+                  <a
+                    key={n.slug}
+                    href={`/${n.slug}`}
+                    className="inline-flex items-center px-4 py-2 rounded-full border border-[#1A3C34]/15 text-sm text-[#1A3C34] hover:bg-[#1A3C34] hover:text-white hover:border-[#1A3C34] transition-colors"
+                    data-testid={`crosslink-${n.slug}`}
+                  >
+                    {n.label}
+                  </a>
+                ))}
+            </div>
+          </div>
+        </section>
 
         {/* Final CTA */}
         <section className="py-24 px-6 md:px-12 bg-[#0E0E0E] text-white text-center">

@@ -66,6 +66,102 @@ def _build_homeowner_autoreply(lead: dict) -> str:
     )
 
 
+def _parse_calculator_estimate(description: str) -> dict:
+    """Pull the finish / sqft / price range out of the calculator's
+    `project_description` string (format set by PricingCalculator.js)."""
+    import re
+    out = {"finish": "", "sqft": "", "price_range": ""}
+    if not description:
+        return out
+    m = re.match(r"Pricing Calculator:\s*([^·]+)·\s*(\d+)\s*sq ft\s*·\s*estimate\s*(.+)", description)
+    if m:
+        out["finish"] = m.group(1).strip()
+        out["sqft"] = m.group(2).strip()
+        out["price_range"] = m.group(3).strip()
+    return out
+
+
+def _build_estimate_confirmation_html(lead: dict) -> str:
+    """Customer-facing email confirming the estimate they just generated
+    on the pricing calculator. Sent to the visitor's own inbox via Resend."""
+    first_name = (lead.get("name") or "there").split()[0][:30]
+    parsed = _parse_calculator_estimate(lead.get("project_description") or "")
+    finish = parsed["finish"] or (lead.get("project_type") or "your project")
+    sqft = parsed["sqft"]
+    price_range = parsed["price_range"] or "(see below)"
+    return f"""<!DOCTYPE html>
+<html><body style="font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background:#FAFAF9; padding:24px; margin:0;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px; margin:0 auto; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+  <tr><td style="background:#0E0E0E; padding:30px 32px; color:#fff;">
+    <p style="margin:0; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#D97757; font-weight:bold;">Your Estimate · The Shirtless Handyman</p>
+    <h1 style="margin:10px 0 0 0; font-size:28px; font-weight:300; color:#fff; font-family: Georgia, serif;">Here&rsquo;s your quote, {first_name}.</h1>
+  </td></tr>
+  <tr><td style="padding:30px 32px;">
+    <p style="margin:0 0 18px 0; font-size:15px; color:#1F2A28; line-height:1.55;">
+      Thanks for trying the calculator. Here&rsquo;s a snapshot of what you just priced — keep this for reference, forward it to your partner, or hit reply with questions.
+    </p>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#FAF7F2; border-radius:12px; padding:6px; margin:18px 0;">
+      <tr><td style="padding:18px 22px;">
+        <p style="margin:0 0 4px 0; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; font-weight:bold;">Finish</p>
+        <p style="margin:0 0 14px 0; font-size:18px; color:#1F2A28; font-weight:600;">{finish}</p>
+        {f'<p style="margin:0 0 4px 0; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; font-weight:bold;">Project Size</p><p style="margin:0 0 14px 0; font-size:18px; color:#1F2A28; font-weight:600;">{sqft} sq ft</p>' if sqft else ''}
+        <p style="margin:0 0 4px 0; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; font-weight:bold;">Estimated Range</p>
+        <p style="margin:0; font-size:30px; color:#0E0E0E; font-family: Georgia, serif; font-weight:300;">{price_range}</p>
+      </td></tr>
+    </table>
+    <p style="margin:18px 0; font-size:13px; color:#555; line-height:1.6;">
+      <strong>What&rsquo;s included:</strong> substrate prep + bonding primer, premium materials &amp; pigment, 5&ndash;7 hand-applied layers, topcoat sealing for a 10-year finish.
+    </p>
+    <p style="margin:18px 0; font-size:13px; color:#555; line-height:1.6;">
+      <strong>What&rsquo;s next:</strong> I&rsquo;ll text you within the hour to confirm the details and offer a free in-person walkthrough. The final quote is locked in after I see the space.
+    </p>
+    <table cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;"><tr>
+      <td style="padding-right:8px;"><a href="sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20got%20my%20estimate%20and%20want%20to%20talk." style="background:#D97757; color:#fff; text-decoration:none; padding:13px 24px; border-radius:999px; font-size:14px; font-weight:600; display:inline-block;">Text Ryan now</a></td>
+      <td><a href="tel:5042644919" style="background:#0E0E0E; color:#fff; text-decoration:none; padding:13px 24px; border-radius:999px; font-size:14px; font-weight:600; display:inline-block;">Call 504-264-4919</a></td>
+    </tr></table>
+    <p style="margin:30px 0 0 0; font-size:12px; color:#999; line-height:1.5;">
+      &mdash; Ryan Mena<br/>The Shirtless Handyman &middot; Greater New Orleans<br/>
+      <a href="https://theshirtlesshandyman.com" style="color:#D97757; text-decoration:none;">theshirtlesshandyman.com</a>
+    </p>
+  </td></tr>
+</table>
+</body></html>"""
+
+
+async def send_estimate_confirmation(lead: dict) -> bool:
+    """Send the visitor a copy of their pricing-calculator estimate via Resend."""
+    api_key = os.environ.get("RESEND_API_KEY", "").strip()
+    from_email = os.environ.get("RESEND_FROM_EMAIL", "onboarding@resend.dev").strip()
+    to_email = (lead.get("email") or "").strip()
+
+    if not api_key:
+        logger.info("Estimate confirmation skipped — RESEND_API_KEY not configured")
+        return False
+    if not to_email or "@" not in to_email:
+        logger.info("Estimate confirmation skipped — no homeowner email on the lead")
+        return False
+    if (lead.get("source") or "") != "pricing_calculator":
+        return False
+
+    try:
+        import resend
+        resend.api_key = api_key
+        first_name = (lead.get("name") or "there").split()[0][:30]
+        params = {
+            "from": from_email,
+            "to": [to_email],
+            "subject": f"Your renovation estimate, {first_name} — The Shirtless Handyman",
+            "html": _build_estimate_confirmation_html(lead),
+            "reply_to": os.environ.get("LEAD_NOTIFICATION_EMAIL", "").strip() or None,
+        }
+        result = await asyncio.to_thread(resend.Emails.send, params)
+        logger.info(f"Estimate confirmation sent (id={result.get('id')}) to {to_email}")
+        return True
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Estimate confirmation failed: {type(e).__name__}: {e}")
+        return False
+
+
 async def send_lead_email(lead: dict) -> bool:
     """Send the lead notification via Resend. Returns True on success."""
     api_key = os.environ.get("RESEND_API_KEY", "").strip()
@@ -167,10 +263,13 @@ async def send_homeowner_autoreply(lead: dict) -> bool:
 
 
 async def notify_new_lead(lead: dict) -> None:
-    """Fire-and-forget: email Ryan + SMS Ryan + SMS auto-reply to homeowner — all in parallel."""
+    """Fire-and-forget: email Ryan + SMS Ryan + SMS auto-reply to homeowner +
+    (for pricing-calculator leads only) email the homeowner a copy of their
+    estimate — all in parallel."""
     await asyncio.gather(
         send_lead_email(lead),
         send_lead_sms(lead),
         send_homeowner_autoreply(lead),
+        send_estimate_confirmation(lead),
         return_exceptions=True,
     )

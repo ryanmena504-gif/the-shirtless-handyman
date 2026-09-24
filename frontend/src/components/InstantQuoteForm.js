@@ -5,12 +5,13 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { trackEvent, identifyLead } from "../lib/tracking";
+import { tagLeadSource } from "../utils/leadSource";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 /**
  * InstantQuoteForm — name + phone, single-step, goes straight to Ryan's inbox.
- * Designed to sit next to "Show Us Your Room" in the hero or inside modals.
+ * Designed to sit next to "Show Me Your Room" in the hero or inside modals.
  * Variants: `dark` (on dark hero), `light` (on white sections).
  */
 export const InstantQuoteForm = ({
@@ -33,17 +34,18 @@ export const InstantQuoteForm = ({
     }
     setLoading(true);
     try {
+      const taggedSource = tagLeadSource(source);
       await axios.post(`${API}/leads/quick`, {
         name: name.trim(),
         phone: phone.trim(),
         project_type: defaultProjectType,
-        source,
+        source: taggedSource,
       });
-      trackEvent("quick_lead_submitted", { source });
-      identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source });
+      trackEvent("quick_lead_submitted", { source: taggedSource });
+      identifyLead({ name: name.trim(), phone: phone.trim(), project_type: defaultProjectType, source: taggedSource });
       try { sessionStorage.setItem("lead_submitted_this_session", "1"); } catch (e) { /* ignore */ }
       setDone(true);
-      toast.success("Got it! Ryan will text you within an hour.");
+      toast.success("Got it! I'll text you within an hour.");
       onSubmitted?.();
     } catch {
       toast.error("Something glitched — try again or text 504-264-4919.");
@@ -63,7 +65,7 @@ export const InstantQuoteForm = ({
         data-testid="instant-quote-success"
       >
         <p className={`text-sm font-semibold ${isDark ? "text-white" : "text-foreground"}`}>
-          ✓ You're on Ryan's list.
+          ✓ You're on my list.
         </p>
         <p className={`text-xs mt-1 ${isDark ? "text-white/60" : "text-muted-foreground"}`}>
           Expect a text from <span className="font-semibold">{name.split(" ")[0]}</span> in under an hour.
@@ -133,7 +135,7 @@ export const InstantQuoteForm = ({
         </Button>
       </div>
       <p className={`text-[11px] mt-2.5 ${isDark ? "text-white/40" : "text-muted-foreground"}`}>
-        Direct to Ryan's phone. No spam, no call center. Avg response under 1 hr.
+        Sent directly to me. No spam, no call center. Avg response under 1 hr.
       </p>
     </form>
   );

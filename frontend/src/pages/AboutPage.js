@@ -16,22 +16,43 @@ const ABOUT_SCHEMA = {
   "@type": "Person",
   "@id": `${PAGE_URL}#ryan`,
   name: "Ryan Mena",
+  givenName: "Ryan",
+  familyName: "Mena",
   jobTitle: "Microcement & Seamless Surface Craftsman",
   description:
-    "New Orleans-born craftsman specializing in microcement, tadelakt, and custom rockscape installations. Founder of The Shirtless Handyman.",
+    "New Orleans-born craftsman and founder of The Shirtless Handyman. Personally installs microcement, tadelakt, Venetian plaster, and custom rockscape feature walls in homes across the greater New Orleans metropolitan area. Started as a tile installer, transitioned to seamless surfaces after seeing traditional tile fail from Louisiana humidity.",
   worksFor: {
     "@type": "HomeAndConstructionBusiness",
+    "@id": "https://theshirtlesshandyman.com/#business",
     name: "The Shirtless Handyman",
     url: "https://theshirtlesshandyman.com",
-    telephone: "(504) 264-4919",
+    telephone: "+1-504-264-4919",
   },
+  founderOf: { "@id": "https://theshirtlesshandyman.com/#business" },
   address: {
     "@type": "PostalAddress",
     addressLocality: "New Orleans",
     addressRegion: "LA",
     addressCountry: "US",
   },
-  knowsAbout: ["Microcement", "Tadelakt", "Venetian Plaster", "Rockscape Walls", "Pool Deck Resurfacing"],
+  areaServed: [
+    { "@type": "City", name: "New Orleans" },
+    { "@type": "City", name: "Metairie" },
+    { "@type": "City", name: "Gretna" },
+    { "@type": "City", name: "Kenner" },
+  ],
+  telephone: "+1-504-264-4919",
+  knowsAbout: [
+    "Microcement", "Tadelakt", "Venetian Plaster", "Marmorino", "Beton cire",
+    "Rockscape Walls", "Pool Deck Resurfacing", "Cocciopesto", "Microterrazzo",
+    "Seamless waterproof coatings", "Moroccan lime plaster",
+  ],
+  hasCredential: [
+    { "@type": "EducationalOccupationalCredential", credentialCategory: "License", name: "Louisiana Residential Home Improvement License" },
+    { "@type": "EducationalOccupationalCredential", credentialCategory: "Insurance", name: "General Liability Insured" },
+  ],
+  image: "https://theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
+  url: PAGE_URL,
 };
 
 const VALUES = [
@@ -105,16 +126,16 @@ export default function AboutPage() {
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34]">
                 <img
                   src="/portfolio/microcement-vanity-bathroom.jpg"
-                  alt="Ryan Mena hand-finishing a microcement bathroom in New Orleans"
+                  alt="A finished microcement bathroom by Ryan Mena in New Orleans — stone vanity, plaster walls, seamless floor"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/85 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
-                    Ryan Mena
+                    Recent work · Lakeview
                   </p>
                   <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
-                    Founder · Craftsman · NOLA-born
+                    Microcement bath · stone vanity · seamless throughout
                   </p>
                 </div>
               </div>
@@ -205,7 +226,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap gap-3 justify-center mt-6">
               <a href={SMS_LINK}>
                 <Button className="h-12 px-6 rounded-full bg-[#1A3C34] text-white hover:bg-[#0E2A24] font-medium">
-                  <MessageCircle className="w-4 h-4 mr-2" /> Text Ryan
+                  <MessageCircle className="w-4 h-4 mr-2" /> Text Me
                 </Button>
               </a>
               <a href={TEL_LINK}>

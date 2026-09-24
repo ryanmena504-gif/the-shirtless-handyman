@@ -1,10 +1,12 @@
 import "@/App.css";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
 import { CustomCursor } from "./components/cinematic";
+import { trackVisit } from "./utils/leadSource";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
 import AnalysisPage from "./pages/AnalysisPage";
@@ -13,18 +15,23 @@ import ContractorLoginPage from "./pages/ContractorLoginPage";
 import ContractorRegisterPage from "./pages/ContractorRegisterPage";
 import ContractorDashboardPage from "./pages/ContractorDashboardPage";
 import AdminPage from "./pages/AdminPage";
+import AdminSchedulePage from "./pages/AdminSchedulePage";
 import SharePage from "./pages/SharePage";
 import PortfolioPage from "./pages/PortfolioPage";
 import LocalServiceRoute from "./pages/LocalServiceRoute";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
-import ViewTubeLandingPage from "./pages/ViewTubeLandingPage";
-import ViewTubeSetupPage from "./pages/ViewTubeSetupPage";
-import ViewTubeWatchPage from "./pages/ViewTubeWatchPage";
-import ViewTubeShowPage from "./pages/ViewTubeShowPage";
+import HowIStartedPage from "./pages/HowIStartedPage";
+import QrCodePage from "./pages/QrCodePage";
+import ContractorsPage from "./pages/ContractorsPage";
+import BookPage from "./pages/BookPage";
+import FaqPage from "./pages/FaqPage";
 
 function App() {
+  useEffect(() => {
+    trackVisit();
+  }, []);
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -33,6 +40,8 @@ function App() {
           <CustomCursor />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/book" element={<BookPage />} />
+            <Route path="/faq" element={<FaqPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/analysis/:projectId" element={<AnalysisPage />} />
             <Route path="/results/:projectId" element={<ResultsPage />} />
@@ -40,11 +49,13 @@ function App() {
             <Route path="/contractor/register" element={<ContractorRegisterPage />} />
             <Route path="/contractor/dashboard" element={<ContractorDashboardPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/schedule" element={<AdminSchedulePage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/share/:shareId" element={<SharePage />} />
 
             {/* Local-SEO landing pages (all five share the LocalServiceRoute → LocalServicePage template) */}
             <Route path="/microcement-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/microcement-installers-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/microcement-metairie" element={<LocalServiceRoute />} />
             <Route path="/tadelakt-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/rockscape-walls-new-orleans" element={<LocalServiceRoute />} />

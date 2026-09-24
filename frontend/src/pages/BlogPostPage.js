@@ -40,14 +40,33 @@ function SectionRenderer({ section, navigate }) {
       return (
         <div className="my-8 p-6 bg-[#1A3C34] text-white rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <p className="font-medium">{section.text}</p>
-          <Button
-            onClick={() => navigate(section.href)}
-            className="h-11 px-6 rounded-full bg-[#D97757] text-white font-medium hover:bg-[#C56545] whitespace-nowrap"
+          <a
+            href={section.href}
+            className="inline-flex items-center h-11 px-6 rounded-full bg-[#D97757] text-white font-medium hover:bg-[#C56545] whitespace-nowrap no-underline"
+            data-testid="blog-post-cta-link"
           >
             {section.href === "/upload" ? <Upload className="w-4 h-4 mr-2" /> : <ArrowRight className="w-4 h-4 mr-2" />}
             {section.href === "/upload" ? "Try Free" : "Learn more"}
-          </Button>
+          </a>
         </div>
+      );
+    case "image":
+      return (
+        <figure className="my-8">
+          <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-[#F5F1EA] shadow-sm">
+            <img
+              src={section.src}
+              alt={section.alt || ""}
+              loading="lazy"
+              className="block w-full h-auto"
+            />
+          </div>
+          {section.caption && (
+            <figcaption className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {section.caption}
+            </figcaption>
+          )}
+        </figure>
       );
     default:
       return null;
@@ -187,7 +206,7 @@ export default function BlogPostPage() {
               </Button>
               <a href={SMS_LINK}>
                 <Button variant="outline" className="h-12 px-6 rounded-full font-medium">
-                  <MessageCircle className="w-4 h-4 mr-2" /> Text Ryan
+                  <MessageCircle className="w-4 h-4 mr-2" /> Text Me
                 </Button>
               </a>
             </div>

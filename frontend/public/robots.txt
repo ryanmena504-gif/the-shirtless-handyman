@@ -1,5 +1,6 @@
 # The Shirtless Handyman - robots.txt
-# Allow all major crawlers full access to the public site.
+# Allow all major search + AI crawlers full access to the public site.
+# Sensitive routes (admin, api, contractor auth) are excluded from all bots.
 
 User-agent: *
 Allow: /
@@ -8,6 +9,7 @@ Disallow: /api/
 Disallow: /contractor/login
 Disallow: /contractor/dashboard
 
+# ---------- Search engines ----------
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
@@ -46,7 +48,98 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-# Allow social media crawlers full access for rich previews
+# ---------- AI / LLM crawlers ----------
+# Explicitly welcome the major LLM training + retrieval crawlers so this site
+# can be cited by ChatGPT, Perplexity, Claude, Gemini, and their peers.
+
+# OpenAI — ChatGPT training (offline)
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# OpenAI — ChatGPT browsing / search plugin (real-time)
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# OpenAI — user-triggered on-demand fetches from ChatGPT
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Google — Bard / Gemini training + retrieval opt-in
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Anthropic — Claude
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Perplexity — search-and-cite engine (big driver of AI citations)
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# You.com AI search
+User-agent: YouBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Common Crawl — bulk data used by most open LLMs
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Meta / Facebook AI training
+User-agent: FacebookBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Amazon — Alexa / Q + AI shopping assistants
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# xAI — Grok
+User-agent: xAI-Bot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# ---------- Social preview crawlers ----------
 User-agent: Twitterbot
 Allow: /
 
@@ -62,7 +155,7 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-# Block known SEO scrapers / content harvesters
+# ---------- Block known SEO scrapers / content harvesters ----------
 User-agent: SemrushBot
 Disallow: /
 
@@ -75,4 +168,5 @@ Disallow: /
 User-agent: DotBot
 Disallow: /
 
+# ---------- Sitemaps + LLM manifests ----------
 Sitemap: https://theshirtlesshandyman.com/sitemap.xml

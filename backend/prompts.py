@@ -246,7 +246,7 @@ SHIRTLESS_HANDYMAN_PROFILE = {
     "latitude": 29.9100,
     "longitude": -90.0500,
     "rating": 5.0,
-    "review_count": 999,
+    "review_count": 42,
     "distance_miles": 0.1,
     "is_easter_egg": True,
 }
