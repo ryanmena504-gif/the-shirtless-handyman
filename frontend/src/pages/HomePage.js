@@ -358,7 +358,7 @@ export default function HomePage() {
             {[
               {
                 slug: "wet-rooms",
-                image: "/portfolio/shower-led-niche.jpg",
+                image: "/portfolio/wetroom-shower-niche.jpg",
                 title: "Wet rooms",
                 materials: "Microcement · Tadelakt · Rockscape",
                 desc: "Showers, tub surrounds, and full bathroom walls installed as one continuous, waterproof surface — right over your existing tile. Zero grout, zero seams, zero mold habitat.",
@@ -374,7 +374,7 @@ export default function HomePage() {
               },
               {
                 slug: "floors-outdoor",
-                image: "/portfolio/microcement-vanity-bathroom.jpg",
+                image: "/portfolio/microcement-bath-terracotta-floor.jpg",
                 title: "Floors &amp; outdoor",
                 materials: "Microcement · Microterrazzo · Cocciopesto",
                 desc: "Continuous floors that flow from room to room. Pool decks, patios, and outdoor surfaces built for New Orleans sun and humidity. UV-stable, slip-resistant, and won't crack at the joints.",
