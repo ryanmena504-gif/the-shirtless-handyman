@@ -8,7 +8,7 @@ import { Menu, X, Hammer } from "lucide-react";
 // live in the footer to keep the header uncluttered.
 const NAV_ITEMS = [
   { label: "Work", to: "/portfolio", testid: "nav-work" },
-  { label: "Finishes", to: "/#finishes", testid: "nav-finishes" },
+  { label: "Finishes", to: "/finishes", testid: "nav-finishes" },
   { label: "Process", to: "/#how-it-works", testid: "nav-process" },
   { label: "Pricing", to: "/#pricing", testid: "nav-pricing" },
   { label: "About", to: "/about", testid: "nav-about" },
@@ -159,6 +159,22 @@ export const Navbar = () => {
             data-testid="mobile-portfolio-btn"
           >
             Our Work
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/finishes"); setMobileOpen(false); }}
+            data-testid="mobile-finishes-btn"
+          >
+            Finishes
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => { navigate("/#how-it-works"); setMobileOpen(false); }}
+            data-testid="mobile-process-btn"
+          >
+            Process
           </Button>
           <Button
             variant="ghost"
