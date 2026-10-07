@@ -1,6 +1,6 @@
 import "@/App.css";
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
@@ -27,6 +27,28 @@ import QrCodePage from "./pages/QrCodePage";
 import ContractorsPage from "./pages/ContractorsPage";
 import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
+import FinishesPage from "./pages/FinishesPage";
+
+/**
+ * ScrollToHash — makes #anchor nav links (e.g. "Process" -> /#how-it-works)
+ * actually scroll. React Router navigates via pushState, which does NOT fire
+ * the window "hashchange" event, so hash links clicked from the same page
+ * otherwise do nothing. This listens to the router location instead and
+ * scrolls to the hashed element after the target route mounts.
+ */
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.replace("#", "");
+    const t = setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [pathname, hash]);
+  return null;
+}
 
 function App() {
   useEffect(() => {
@@ -35,6 +57,7 @@ function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <ScrollToHash />
         <AuthProvider>
           <Toaster position="top-right" richColors />
           <CustomCursor />
@@ -42,6 +65,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/book" element={<BookPage />} />
             <Route path="/faq" element={<FaqPage />} />
+            <Route path="/finishes" element={<FinishesPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/analysis/:projectId" element={<AnalysisPage />} />
             <Route path="/results/:projectId" element={<ResultsPage />} />
