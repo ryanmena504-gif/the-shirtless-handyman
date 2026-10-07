@@ -281,7 +281,7 @@ export default function HomePage() {
                 </MagneticButton>
                 <p className="text-sm text-white/50">
                   Upload a photo — see it in microcement in ~60 seconds. Free.{" "}
-                  <a href="#finishes" className="text-white/70 hover:text-white underline underline-offset-2" data-testid="hero-finishes-anchor">
+                  <a href="/finishes" className="text-white/70 hover:text-white underline underline-offset-2" data-testid="hero-finishes-anchor">
                     Or explore finishes ↓
                   </a>
                 </p>
@@ -868,7 +868,7 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
               <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">Work</button>
-              <a href="/#finishes" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-finishes">Finishes</a>
+              <a href="/finishes" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-finishes">Finishes</a>
               <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-process">Process</a>
               <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-pricing">Pricing</a>
               <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-about">About</button>
