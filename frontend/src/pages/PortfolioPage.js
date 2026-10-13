@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navbar } from "../components/Navbar";
-import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
+import { FilmstripGallery } from "../components/FilmstripGallery";
 import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
 import { ArrowRight, ImageIcon, Loader2 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -85,41 +84,9 @@ export default function PortfolioPage() {
             </div>
           )}
 
-          {/* Portfolio Items */}
+          {/* Portfolio filmstrip */}
           {!loading && items.length > 0 && (
-            <div className="space-y-16" data-testid="portfolio-items">
-              {items.map((item, i) => (
-                <div key={item.id} data-testid={`portfolio-item-${i}`}>
-                  {/* Item header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3
-                        className="text-xl md:text-2xl font-medium text-foreground"
-                        style={{ fontFamily: "'Fraunces', serif" }}
-                      >
-                        {item.title}
-                      </h3>
-                      {item.description && (
-                        <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                      )}
-                    </div>
-                    {item.room_type && (
-                      <Badge variant="secondary" className="text-xs bg-accent text-accent-foreground">
-                        {item.room_type}
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Before/After slider */}
-                  <BeforeAfterSlider
-                    beforeImage={item.before_image}
-                    afterImage={item.after_image}
-                    beforeLabel="Before"
-                    afterLabel="After"
-                  />
-                </div>
-              ))}
-            </div>
+            <FilmstripGallery items={items} />
           )}
 
           {/* CTA at bottom */}
