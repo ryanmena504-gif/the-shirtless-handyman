@@ -5,7 +5,6 @@ import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
-import { CustomCursor } from "./components/cinematic";
 import { trackVisit } from "./utils/leadSource";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
@@ -60,7 +59,6 @@ function App() {
         <ScrollToHash />
         <AuthProvider>
           <Toaster position="top-right" richColors />
-          <CustomCursor />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/book" element={<BookPage />} />
