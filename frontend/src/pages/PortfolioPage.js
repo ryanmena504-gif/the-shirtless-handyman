@@ -8,6 +8,46 @@ import { ArrowRight, ImageIcon, Loader2 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+// Static fallback — Ryan's actual project photos shipped with the site.
+// Used when the portfolio API is unreachable or returns nothing.
+const STATIC_PORTFOLIO = [
+  {
+    id: "static-1",
+    after_image: "/portfolio/shower-led-niche.jpg",
+    title: "Seamless Shower with LED Niche",
+    room_type: "Bathroom",
+    description: "Microcement shower with integrated LED niche — no grout, no mold.",
+  },
+  {
+    id: "static-2",
+    after_image: "/portfolio/microcement-vanity-bathroom.jpg",
+    title: "Microcement Vanity Bathroom",
+    room_type: "Bathroom",
+    description: "Full microcement bathroom — walls, vanity, seamless finish.",
+  },
+  {
+    id: "static-3",
+    after_image: "/portfolio/microcement-bath-terracotta-floor.jpg",
+    title: "Terracotta Microcement Bath",
+    room_type: "Bathroom",
+    description: "Warm terracotta microcement with seamless floor transition.",
+  },
+  {
+    id: "static-4",
+    after_image: "/portfolio/wetroom-shower-niche.jpg",
+    title: "Wetroom Shower",
+    room_type: "Wetroom",
+    description: "Fully waterproof wetroom — seamless surfaces throughout.",
+  },
+  {
+    id: "static-5",
+    after_image: "/portfolio/third-job.jpg",
+    title: "Custom Renovation",
+    room_type: "Bathroom",
+    description: "Seamless surface transformation by Ryan Mena.",
+  },
+];
+
 export default function PortfolioPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -20,9 +60,12 @@ export default function PortfolioPage() {
   const fetchPortfolio = async () => {
     try {
       const res = await axios.get(`${API}/portfolio`);
-      setItems(res.data.items || []);
+      const apiItems = res.data.items || [];
+      // Fall back to static photos when the API has nothing
+      setItems(apiItems.length > 0 ? apiItems : STATIC_PORTFOLIO);
     } catch {
-      // Portfolio load failure is non-critical — empty state handles it
+      // API unreachable — show Ryan's static portfolio photos
+      setItems(STATIC_PORTFOLIO);
     } finally {
       setLoading(false);
     }

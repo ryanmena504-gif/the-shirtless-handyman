@@ -24,7 +24,7 @@ const LEADGEN_ROUTES = [
 const LEADGEN_PREFIXES = ["/results", "/analysis", "/share", "/blog/"];
 
 // Routes where ANY 3rd-party homeowner-targeted overlay (Klaviyo signup, etc.) must be hidden.
-const OPERATOR_PREFIXES = ["/admin", "/contractor", "/viewtube"];
+const OPERATOR_PREFIXES = ["/admin", "/contractor"];
 
 /**
  * LeadGenWidgets — global overlay that mounts the sticky CTA, social-proof
