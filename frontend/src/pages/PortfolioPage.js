@@ -46,6 +46,34 @@ const STATIC_PORTFOLIO = [
     room_type: "Bathroom",
     description: "Seamless surface transformation by Ryan Mena.",
   },
+  {
+    id: "static-6",
+    after_image: "/portfolio/venetian-plaster-panels.jpg",
+    title: "Venetian Plaster Wall Panels",
+    room_type: "Interior",
+    description: "Hand-troweled Venetian plaster panels with built-in niche.",
+  },
+  {
+    id: "static-7",
+    after_image: "/portfolio/limewash-room-inprogress.jpg",
+    title: "Limewash Room",
+    room_type: "Interior",
+    description: "Limewash walls — soft, natural texture.",
+  },
+  {
+    id: "static-8",
+    after_image: "/portfolio/terrazzo-chip-floor.jpg",
+    title: "Terrazzo Chip Detail",
+    room_type: "Floor",
+    description: "Close-up of seamless chip detail.",
+  },
+  {
+    id: "static-9",
+    after_image: "/portfolio/textured-plaster-closeup.jpg",
+    title: "Textured Plaster Finish",
+    room_type: "Interior",
+    description: "Hand-applied textured plaster — close-up of the trowel work.",
+  },
 ];
 
 export default function PortfolioPage() {
