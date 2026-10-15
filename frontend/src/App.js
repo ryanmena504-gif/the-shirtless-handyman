@@ -27,6 +27,10 @@ import ContractorsPage from "./pages/ContractorsPage";
 import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 import FinishesPage from "./pages/FinishesPage";
+import ViewTubeLandingPage from "./pages/ViewTubeLandingPage";
+import ViewTubeShowPage from "./pages/ViewTubeShowPage";
+import ViewTubeSetupPage from "./pages/ViewTubeSetupPage";
+import ViewTubeWatchPage from "./pages/ViewTubeWatchPage";
 
 /**
  * ScrollToHash — makes #anchor nav links (e.g. "Process" -> /#how-it-works)
