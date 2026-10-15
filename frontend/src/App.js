@@ -1,6 +1,6 @@
 import "@/App.css";
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
@@ -73,6 +73,8 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/schedule" element={<AdminSchedulePage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
+            {/* Old /work URL -> portfolio (the nav's real Work page lives here) */}
+            <Route path="/work" element={<Navigate to="/portfolio" replace />} />
             <Route path="/share/:shareId" element={<SharePage />} />
 
             {/* Local-SEO landing pages (all five share the LocalServiceRoute → LocalServicePage template) */}
