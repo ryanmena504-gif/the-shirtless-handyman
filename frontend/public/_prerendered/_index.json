@@ -18,7 +18,7 @@
     {
       "path": "/about",
       "slug": "about",
-      "size": 23483
+      "size": 23409
     },
     {
       "path": "/upload",
@@ -121,5 +121,5 @@
       "size": 47112
     }
   ],
-  "generatedAt": "2026-10-16T21:51:01.745Z"
+  "generatedAt": "2026-10-29T16:45:31.106Z"
 }
