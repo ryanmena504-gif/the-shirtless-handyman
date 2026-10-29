@@ -125,17 +125,17 @@ export default function AboutPage() {
             <div className="md:col-span-2">
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#1A3C34]">
                 <img
-                  src="/portfolio/microcement-vanity-bathroom.jpg"
-                  alt="A finished microcement bathroom by Ryan Mena in New Orleans — stone vanity, plaster walls, seamless floor"
+                  src="/ryan-mena-workshop.jpg"
+                  alt="Ryan Mena, The Shirtless Handyman, in his New Orleans workshop"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E]/85 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D97757] mb-1">
-                    Recent work · Lakeview
+                    Ryan Mena · New Orleans
                   </p>
                   <p className="text-lg font-light" style={{ fontFamily: "'Fraunces', serif" }}>
-                    Microcement bath · stone vanity · seamless throughout
+                    The Shirtless Handyman · in the workshop
                   </p>
                 </div>
               </div>
