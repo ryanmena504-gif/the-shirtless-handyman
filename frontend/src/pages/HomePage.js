@@ -236,7 +236,7 @@ export default function HomePage() {
               </motion.p>
 
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white mb-6"
+                className="text-5xl sm:text-6xl lg:text-8xl font-light tracking-tight leading-[0.95] text-white mb-6"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
                 <RevealText text="Seamless surfaces," as="span" className="block" delay={0.25} />
@@ -306,6 +306,17 @@ export default function HomePage() {
           />
         </motion.div>
       </section>
+
+      {/* Marquee strip — Midnight Cement signature: one continuous line, like the surfaces */}
+      <div className="overflow-hidden border-y border-white/10 bg-black/60 py-4" aria-hidden="true">
+        <div className="marquee-track">
+          {[0, 1].map((copy) => (
+            <span key={copy} className="whitespace-nowrap text-sm md:text-base uppercase tracking-[0.3em] font-semibold text-white/70 pr-8">
+              No grout <span className="text-[#D97757] px-2">•</span> No tile <span className="text-[#D97757] px-2">•</span> No mold <span className="text-[#D97757] px-2">•</span> One seamless surface <span className="text-[#D97757] px-2">•</span> New Orleans <span className="text-[#D97757] px-2">•</span>&nbsp;
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
       <TrustStrip variant="dark" />

@@ -5,32 +5,35 @@
 @tailwind utilities;
 
 @layer base {
+    /* Midnight Cement theme: warm near-black cement, warm linen text,
+       terracotta as the single loud accent. Flat microcement look kept —
+       no heavy texture, grain is a faint overlay only. */
     :root {
-        --background: 40 6% 97%;
-        --foreground: 160 38% 16%;
-        --card: 0 0% 100%;
-        --card-foreground: 160 38% 16%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 160 38% 16%;
-        --primary: 160 38% 17%;
+        --background: 24 8% 7%;
+        --foreground: 40 20% 92%;
+        --card: 24 8% 11%;
+        --card-foreground: 40 20% 92%;
+        --popover: 24 8% 11%;
+        --popover-foreground: 40 20% 92%;
+        --primary: 16 65% 58%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 16 60% 60%;
-        --secondary-foreground: 0 0% 100%;
-        --muted: 30 6% 96%;
-        --muted-foreground: 24 6% 45%;
-        --accent: 130 30% 92%;
-        --accent-foreground: 160 38% 17%;
+        --secondary: 160 30% 22%;
+        --secondary-foreground: 40 20% 92%;
+        --muted: 24 8% 14%;
+        --muted-foreground: 30 8% 68%;
+        --accent: 160 30% 16%;
+        --accent-foreground: 40 20% 92%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 24 6% 90%;
-        --input: 24 6% 90%;
-        --ring: 160 38% 17%;
-        --chart-1: 16 60% 60%;
-        --chart-2: 160 38% 17%;
-        --chart-3: 197 37% 24%;
+        --border: 24 8% 20%;
+        --input: 24 8% 20%;
+        --ring: 16 65% 58%;
+        --chart-1: 16 65% 58%;
+        --chart-2: 160 30% 35%;
+        --chart-3: 197 37% 45%;
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
-        --radius: 0.75rem;
+        --radius: 0.5rem;
     }
 }
 
@@ -152,4 +155,25 @@
 
 .animate-scale-in {
     animation: scale-in 0.2s ease-out forwards;
+}
+
+/* Midnight Cement: scrolling marquee + outlined display type */
+@keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 28s linear infinite;
+}
+
+.text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(245, 241, 234, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
 }

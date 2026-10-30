@@ -78,11 +78,11 @@ body[data-scope="operator"] [id^="component_"] {
     background-size: 20px 20px;
 }
 
-/* Glass card */
+/* Glass card — Midnight Cement: dark glass over photos */
 .glass-card {
     backdrop-filter: blur(16px);
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(18, 16, 14, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* Loading shimmer */
