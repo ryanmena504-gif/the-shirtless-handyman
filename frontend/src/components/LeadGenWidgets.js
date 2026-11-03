@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { StickyMobileCTA } from "./StickyMobileCTA";
-import { SocialProofToast } from "./SocialProofToast";
 import { ChatWidget } from "./ChatWidget";
 
 // Routes where lead-gen widgets should appear (homeowner-facing pages).
@@ -55,7 +54,6 @@ export const LeadGenWidgets = () => {
 
   return (
     <>
-      <SocialProofToast />
       <ChatWidget />
     </>
   );
