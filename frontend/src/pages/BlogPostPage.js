@@ -93,7 +93,7 @@ export default function BlogPostPage() {
     );
   }
 
-  const pageUrl = `https://theshirtlesshandyman.com/blog/${post.slug}/`;
+  const pageUrl = `https://www.theshirtlesshandyman.com/blog/${post.slug}/`;
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const articleSchema = {
@@ -107,11 +107,11 @@ export default function BlogPostPage() {
         image: post.heroImage,
         datePublished: post.publishedAt,
         dateModified: post.publishedAt,
-        author: { "@type": "Person", name: "Ryan Mena", url: "https://theshirtlesshandyman.com" },
+        author: { "@type": "Person", name: "Ryan Mena", url: "https://www.theshirtlesshandyman.com" },
         publisher: {
           "@type": "HomeAndConstructionBusiness",
           name: "The Shirtless Handyman",
-          url: "https://theshirtlesshandyman.com",
+          url: "https://www.theshirtlesshandyman.com",
         },
         mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
         keywords: post.tags?.join(", "),
@@ -119,8 +119,8 @@ export default function BlogPostPage() {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://theshirtlesshandyman.com" },
-          { "@type": "ListItem", position: 2, name: "Journal", item: "https://theshirtlesshandyman.com/blog" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://www.theshirtlesshandyman.com" },
+          { "@type": "ListItem", position: 2, name: "Journal", item: "https://www.theshirtlesshandyman.com/blog" },
           { "@type": "ListItem", position: 3, name: post.title, item: pageUrl },
         ],
       },

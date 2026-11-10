@@ -1,149 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://theshirtlesshandyman.com/</loc>
+    <loc>https://www.theshirtlesshandyman.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/book</loc>
+    <loc>https://www.theshirtlesshandyman.com/book</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/faq</loc>
+    <loc>https://www.theshirtlesshandyman.com/faq</loc>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/upload</loc>
+    <loc>https://www.theshirtlesshandyman.com/upload</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/portfolio</loc>
+    <loc>https://www.theshirtlesshandyman.com/portfolio</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Local-service landing pages -->
   <url>
-    <loc>https://theshirtlesshandyman.com/microcement-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/microcement-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/microcement-installers-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/microcement-installers-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/microcement-metairie</loc>
+    <loc>https://www.theshirtlesshandyman.com/microcement-metairie</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/tadelakt-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/tadelakt-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/rockscape-walls-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/rockscape-walls-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/pool-deck-resurfacing-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/pool-deck-resurfacing-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <!-- Blog -->
   <url>
-    <loc>https://theshirtlesshandyman.com/blog</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/about</loc>
+    <loc>https://www.theshirtlesshandyman.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/blog/microcement-vs-tile-cost-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog/microcement-vs-tile-cost-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/blog/best-microcement-contractor-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog/best-microcement-contractor-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/blog/tadelakt-vs-microcement-bathroom</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog/tadelakt-vs-microcement-bathroom</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/blog/why-tile-fails-in-new-orleans-humidity</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog/why-tile-fails-in-new-orleans-humidity</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/blog/how-to-choose-microcement-installer-new-orleans</loc>
+    <loc>https://www.theshirtlesshandyman.com/blog/how-to-choose-microcement-installer-new-orleans</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://theshirtlesshandyman.com/contractor/login</loc>
+    <loc>https://www.theshirtlesshandyman.com/contractor/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/contractor/register</loc>
+    <loc>https://www.theshirtlesshandyman.com/contractor/register</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <!-- Neighborhood handyman micro-pages -->
   <url>
-    <loc>https://theshirtlesshandyman.com/lakeview-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/lakeview-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/uptown-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/uptown-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/mid-city-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/mid-city-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/bywater-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/bywater-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/french-quarter-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/french-quarter-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/garden-district-handyman</loc>
+    <loc>https://www.theshirtlesshandyman.com/garden-district-handyman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/viewtube</loc>
+    <loc>https://www.theshirtlesshandyman.com/viewtube</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://theshirtlesshandyman.com/viewtube/setup</loc>
+    <loc>https://www.theshirtlesshandyman.com/viewtube/setup</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

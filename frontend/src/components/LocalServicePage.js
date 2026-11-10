@@ -52,7 +52,7 @@ export default function LocalServicePage({ config }) {
     defaultProjectType,
   } = config;
 
-  const pageUrl = `https://theshirtlesshandyman.com/${slug}`;
+  const pageUrl = `https://www.theshirtlesshandyman.com/${slug}`;
   const smsLink = `sms:${PHONE.replace(/-/g, "")}?body=${encodeURIComponent(smsBody)}`;
   const finalOgImage = ogImage || heroImage;
 
@@ -68,7 +68,7 @@ export default function LocalServicePage({ config }) {
         provider: {
           "@type": "HomeAndConstructionBusiness",
           name: "The Shirtless Handyman",
-          url: "https://theshirtlesshandyman.com",
+          url: "https://www.theshirtlesshandyman.com",
           telephone: "(504) 264-4919",
           priceRange: "$$",
           areaServed: { "@type": "City", name: city },
@@ -96,7 +96,7 @@ export default function LocalServicePage({ config }) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://theshirtlesshandyman.com" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://www.theshirtlesshandyman.com" },
           { "@type": "ListItem", position: 2, name: `${serviceName} ${city}`, item: pageUrl },
         ],
       },

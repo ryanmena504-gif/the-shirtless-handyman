@@ -9,7 +9,7 @@ import { MessageCircle, Phone, Award, Hammer, Heart, MapPin } from "lucide-react
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%20want%20to%20chat%20about%20a%20project.`;
 const TEL_LINK = "tel:5042644919";
-const PAGE_URL = "https://theshirtlesshandyman.com/about/";
+const PAGE_URL = "https://www.theshirtlesshandyman.com/about/";
 
 const ABOUT_SCHEMA = {
   "@context": "https://schema.org",
@@ -23,12 +23,12 @@ const ABOUT_SCHEMA = {
     "New Orleans-born craftsman and founder of The Shirtless Handyman. Personally installs microcement, tadelakt, Venetian plaster, and custom rockscape feature walls in homes across the greater New Orleans metropolitan area. Started as a tile installer, transitioned to seamless surfaces after seeing traditional tile fail from Louisiana humidity.",
   worksFor: {
     "@type": "HomeAndConstructionBusiness",
-    "@id": "https://theshirtlesshandyman.com/#business",
+    "@id": "https://www.theshirtlesshandyman.com/#business",
     name: "The Shirtless Handyman",
-    url: "https://theshirtlesshandyman.com",
+    url: "https://www.theshirtlesshandyman.com",
     telephone: "+1-504-264-4919",
   },
-  founderOf: { "@id": "https://theshirtlesshandyman.com/#business" },
+  founderOf: { "@id": "https://www.theshirtlesshandyman.com/#business" },
   address: {
     "@type": "PostalAddress",
     addressLocality: "New Orleans",
@@ -51,7 +51,7 @@ const ABOUT_SCHEMA = {
     { "@type": "EducationalOccupationalCredential", credentialCategory: "License", name: "Louisiana Residential Home Improvement License" },
     { "@type": "EducationalOccupationalCredential", credentialCategory: "Insurance", name: "General Liability Insured" },
   ],
-  image: "https://theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
+  image: "https://www.theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
   url: PAGE_URL,
 };
 
@@ -87,7 +87,7 @@ export default function AboutPage() {
         title="Meet Ryan Mena — Founder of The Shirtless Handyman | New Orleans Microcement Specialist"
         description="New Orleans-born craftsman specializing in microcement, tadelakt, and custom rockscape installations. The Shirtless Handyman is one guy doing the craft right. Text: 504-264-4919."
         canonical={PAGE_URL}
-        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
+        ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
         ogType="profile"
       >
         <script type="application/ld+json">{JSON.stringify(ABOUT_SCHEMA)}</script>

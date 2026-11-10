@@ -5,7 +5,7 @@ import { TrustStrip } from "../components/TrustStrip";
 import { BLOG_POSTS } from "../blog/posts";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 
-const PAGE_URL = "https://theshirtlesshandyman.com/blog/";
+const PAGE_URL = "https://www.theshirtlesshandyman.com/blog/";
 const POSTS_PER_PAGE = 12;
 
 const BLOG_SCHEMA = {
@@ -19,14 +19,14 @@ const BLOG_SCHEMA = {
   publisher: {
     "@type": "HomeAndConstructionBusiness",
     name: "The Shirtless Handyman",
-    url: "https://theshirtlesshandyman.com",
+    url: "https://www.theshirtlesshandyman.com",
   },
   blogPost: BLOG_POSTS.map((p) => ({
     "@type": "BlogPosting",
     headline: p.title,
     description: p.description,
     datePublished: p.publishedAt,
-    url: `https://theshirtlesshandyman.com/blog/${p.slug}`,
+    url: `https://www.theshirtlesshandyman.com/blog/${p.slug}`,
     author: { "@type": "Person", name: "Ryan Mena" },
   })),
 };
@@ -41,7 +41,7 @@ const BLOG_ITEMLIST_SCHEMA = {
   itemListElement: BLOG_POSTS.map((p, i) => ({
     "@type": "ListItem",
     position: i + 1,
-    url: `https://theshirtlesshandyman.com/blog/${p.slug}`,
+    url: `https://www.theshirtlesshandyman.com/blog/${p.slug}`,
     name: p.title,
   })),
 };

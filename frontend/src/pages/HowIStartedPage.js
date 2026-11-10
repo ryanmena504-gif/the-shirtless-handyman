@@ -7,7 +7,7 @@ import { Hammer, Wrench, Layers, Sparkles, MessageCircle, ArrowRight } from "luc
 
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%20read%20your%20story%20and%20want%20to%20talk%20about%20a%20project.`;
-const PAGE_URL = "https://theshirtlesshandyman.com/how-i-started";
+const PAGE_URL = "https://www.theshirtlesshandyman.com/how-i-started";
 
 const STORY_SCHEMA = {
   "@context": "https://schema.org",
@@ -18,7 +18,7 @@ const STORY_SCHEMA = {
     "The origin story of The Shirtless Handyman — how Ryan Mena went from a New Orleans handyman fixing doors, drywall, and leaky faucets to a high-end seamless-surface craftsman installing microcement, tadelakt, and rockscape walls.",
   mainEntity: {
     "@type": "Person",
-    "@id": "https://theshirtlesshandyman.com/about#ryan",
+    "@id": "https://www.theshirtlesshandyman.com/about#ryan",
     name: "Ryan Mena",
     jobTitle: "Microcement & Seamless Surface Craftsman",
   },
@@ -79,7 +79,7 @@ export default function HowIStartedPage() {
         title="How I Started — From NOLA Handyman to Seamless-Surface Craftsman | The Shirtless Handyman"
         description="The origin story of The Shirtless Handyman. How Ryan Mena went from a New Orleans handyman fixing drywall and doors to a high-end microcement, tadelakt, and rockscape specialist."
         canonical={PAGE_URL}
-        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
+        ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
         ogType="article"
       >
         <script type="application/ld+json">{JSON.stringify(STORY_SCHEMA)}</script>

@@ -32,7 +32,7 @@ Each `*.json` file is a payload:
   "slug": "lakeview-handyman",
   "title": "...",
   "description": "...",
-  "canonical": "https://theshirtlesshandyman.com/lakeview-handyman",
+  "canonical": "https://www.theshirtlesshandyman.com/lakeview-handyman",
   "ogType": "website",
   "ogImage": "https://...",
   "jsonLd": ["{...}", "{...}"],
