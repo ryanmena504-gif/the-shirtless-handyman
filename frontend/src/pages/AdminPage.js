@@ -15,7 +15,7 @@ import {
   LogOut, Camera
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 
 export default function AdminPage() {
   const { adminAuth, loginAdmin, logoutAdmin, checkAdminAuth } = useAuth();

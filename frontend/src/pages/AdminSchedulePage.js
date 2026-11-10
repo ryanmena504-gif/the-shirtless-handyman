@@ -14,7 +14,7 @@ import {
   Pencil, X, AlertTriangle, Check, Calendar as CalendarIcon,
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 const CATEGORIES = ["personal", "project", "vacation", "unavailable", "other"];
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 

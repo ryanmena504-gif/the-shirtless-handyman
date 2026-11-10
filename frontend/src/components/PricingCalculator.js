@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { trackEvent, identifyLead } from "../lib/tracking";
 import { tagLeadSource } from "../utils/leadSource";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 const SMS_LINK = "sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20priced%20a%20project%20on%20your%20site%20and%20want%20to%20talk.";
 
 /**

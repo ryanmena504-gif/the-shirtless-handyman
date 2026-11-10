@@ -16,7 +16,7 @@ import {
   Mail, Phone, MapPin, Calendar, Building2
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 
 export default function ContractorDashboardPage() {
   const navigate = useNavigate();

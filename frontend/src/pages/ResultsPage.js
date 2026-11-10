@@ -17,7 +17,7 @@ import {
   Star, MapPin, Phone, CheckCircle, AlertCircle, Share2, FileDown, MessageCircle
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 
 export default function ResultsPage() {
   const { projectId } = useParams();

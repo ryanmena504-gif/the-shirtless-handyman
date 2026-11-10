@@ -6,7 +6,7 @@ import { Calendar, Clock, Check, ChevronLeft, ChevronRight, Loader2, MessageCirc
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 const PHONE = "504-264-4919";
 
 /**
@@ -118,6 +118,8 @@ export default function BookPage() {
         path="/book"
         title="Book an Appointment | The Shirtless Handyman — New Orleans"
         description="Pick your own time. Free in-home walkthroughs, phone consults, and project starts — book direct with Ryan. Mon–Sat, 8am–5pm CT."
+        canonical="https://www.theshirtlesshandyman.com/book"
+        ogImage="https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85"
         noindex={false}
       />
       <Navbar />

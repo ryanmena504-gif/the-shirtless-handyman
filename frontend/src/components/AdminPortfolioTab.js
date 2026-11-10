@@ -7,7 +7,7 @@ import { Badge } from "./ui/badge";
 import { toast } from "sonner";
 import { Upload, X, Trash2, Image as ImageIcon } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 
 export const AdminPortfolioTab = ({ portfolio, onRefresh }) => {
   const [uploading, setUploading] = useState(false);

@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Send, CheckCircle, Image as ImageIcon, Paintbrush } from "lucide-react";
 import { trackEvent, identifyLead } from "../lib/tracking";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
 
 const ContextPreview = ({ designStyle, roomPhoto }) => {
   if (!designStyle && !roomPhoto) return null;
