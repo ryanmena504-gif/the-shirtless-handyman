@@ -6,7 +6,7 @@ import { FilmstripGallery } from "../components/FilmstripGallery";
 import { Button } from "../components/ui/button";
 import { ArrowRight, ImageIcon, Loader2 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 // Static fallback — Ryan's actual project photos shipped with the site.
 // Used when the portfolio API is unreachable or returns nothing.

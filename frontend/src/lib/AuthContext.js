@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import axios from "axios";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 const AuthContext = createContext(null);
 
