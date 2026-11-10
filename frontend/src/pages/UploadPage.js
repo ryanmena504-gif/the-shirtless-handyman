@@ -13,7 +13,7 @@ import {
   TreePine, Waves, Flower2, Flame, Mountain
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 const ROOM_CATEGORIES = [
   {

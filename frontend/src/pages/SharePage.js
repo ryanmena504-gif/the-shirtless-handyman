@@ -9,7 +9,7 @@ import {
   Facebook, MessageCircle, Link2, Check
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 export default function SharePage() {
   const { shareId } = useParams();

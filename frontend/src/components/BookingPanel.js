@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Calendar, Clock, Check, Loader2 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 const TIME_SLOTS = [
   { value: "morning",   label: "Morning",   sub: "8am – 12pm" },

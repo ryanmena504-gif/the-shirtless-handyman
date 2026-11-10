@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { trackEvent, identifyLead } from "../lib/tracking";
 import { tagLeadSource } from "../utils/leadSource";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
 
 /**
  * InstantQuoteForm — name + phone, single-step, goes straight to Ryan's inbox.
