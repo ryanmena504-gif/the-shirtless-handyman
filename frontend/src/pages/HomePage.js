@@ -21,7 +21,7 @@ const TEL_LINK = "tel:5042644919";
 // One graph that names the business (LocalBusiness/HomeAndConstructionBusiness),
 // the person (Ryan Mena), the website, and the core services. LLMs treat this
 // as the authoritative "who / what / where" for the entity behind the domain.
-const SITE_URL = "https://theshirtlesshandyman.com";
+const SITE_URL = "https://www.theshirtlesshandyman.com";
 const GLOBAL_SCHEMA = {
   "@context": "https://schema.org",
   "@graph": [
@@ -204,8 +204,8 @@ export default function HomePage() {
       <SeoHead
         title="The Shirtless Handyman | Microcement, Tadelakt & Seamless Surfaces in New Orleans"
         description="I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in New Orleans homes — no demolition, no grout, no tile. Free design preview. Text: 504-264-4919."
-        canonical="https://theshirtlesshandyman.com/"
-        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
+        canonical="https://www.theshirtlesshandyman.com/"
+        ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
       >
         <script type="application/ld+json">{JSON.stringify(GLOBAL_SCHEMA)}</script>
       </SeoHead>

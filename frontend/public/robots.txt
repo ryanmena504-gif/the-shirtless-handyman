@@ -169,4 +169,4 @@ User-agent: DotBot
 Disallow: /
 
 # ---------- Sitemaps + LLM manifests ----------
-Sitemap: https://theshirtlesshandyman.com/sitemap.xml
+Sitemap: https://www.theshirtlesshandyman.com/sitemap.xml

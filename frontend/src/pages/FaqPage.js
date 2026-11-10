@@ -4,7 +4,7 @@ import { SeoHead } from "../components/SeoHead";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
 import { ArrowRight, MessageCircle, Calendar } from "lucide-react";
 
-const PAGE_URL = "https://theshirtlesshandyman.com/faq";
+const PAGE_URL = "https://www.theshirtlesshandyman.com/faq";
 const PHONE_TEL = "tel:5042644919";
 const PHONE_SMS = "sms:5042644919?body=Hey%20Ryan%2C%20I%20saw%20your%20FAQ%20and%20have%20a%20question.";
 
@@ -168,7 +168,7 @@ export default function FaqPage() {
         title="FAQ | The Shirtless Handyman — Microcement, Tadelakt & Seamless Surfaces in New Orleans"
         description="Straight answers about microcement, tadelakt, rockscape walls, pricing, licensing, and hiring a seamless surface installer in New Orleans. From Ryan Mena, the actual installer."
         canonical={PAGE_URL}
-        ogImage="https://theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
+        ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
       >
         <script type="application/ld+json">{JSON.stringify(FAQ_SCHEMA)}</script>
       </SeoHead>

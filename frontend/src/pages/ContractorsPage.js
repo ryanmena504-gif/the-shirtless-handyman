@@ -29,7 +29,7 @@ export default function ContractorsPage() {
       <SeoHead
         title="For Contractors — Partner With The Shirtless Handyman | Seamless Surface Sub in New Orleans"
         description="I install microcement, tadelakt, venetian plaster, and rockscape as a subcontractor for GCs, remodelers, and design firms in New Orleans. You run the job — I install the surface."
-        canonical="https://theshirtlesshandyman.com/contractors"
+        canonical="https://www.theshirtlesshandyman.com/contractors"
       />
 
       <div className="min-h-screen bg-[#0E0E0E] text-white" data-testid="contractors-page">

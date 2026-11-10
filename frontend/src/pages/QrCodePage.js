@@ -5,7 +5,7 @@ import { SeoHead } from "../components/SeoHead";
 import { Button } from "../components/ui/button";
 import { Download, Printer, ArrowRight } from "lucide-react";
 
-const BASE = "https://theshirtlesshandyman.com";
+const BASE = "https://www.theshirtlesshandyman.com";
 
 const QR_CODES = [
   {

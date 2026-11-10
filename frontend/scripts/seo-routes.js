@@ -12,7 +12,7 @@
  * This is purely about the *first byte* seen by non-JS crawlers.
  */
 
-const SITE = "https://theshirtlesshandyman.com";
+const SITE = "https://www.theshirtlesshandyman.com";
 const DEFAULT_OG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317?w=1200&h=630&fit=crop&fm=jpg&q=85";
 
 const SEO_ROUTES = [

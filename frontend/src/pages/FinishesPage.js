@@ -3,7 +3,7 @@ import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ArrowRight, MessageCircle } from "lucide-react";
 
-const PAGE_URL = "https://theshirtlesshandyman.com/finishes";
+const PAGE_URL = "https://www.theshirtlesshandyman.com/finishes";
 const PHONE_SMS =
   "sms:5042644919?body=Hey%20Ryan%2C%20I%20saw%20your%20finishes%20page%20and%20have%20a%20question.";
 
@@ -52,7 +52,7 @@ const FINISHES_SCHEMA = {
     position: i + 1,
     name: f.name,
     description: `${f.category}: ${f.description}`,
-    image: `https://theshirtlesshandyman.com${f.image}`,
+    image: `https://www.theshirtlesshandyman.com${f.image}`,
   })),
 };
 
@@ -63,7 +63,7 @@ export default function FinishesPage() {
         title="Microcement & Plaster Finishes | The Shirtless Handyman"
         description="Finish tones I mix and hand-trowel on site: French Quarter Alabaster, Smoked Industrial Concrete, Garden District Terracotta, and Warm Linen Wetroom Finish. Seamless, waterproof microcement and plaster in New Orleans."
         canonical={PAGE_URL}
-        ogImage="https://theshirtlesshandyman.com/finishes/french-quarter-alabaster.jpg"
+        ogImage="https://www.theshirtlesshandyman.com/finishes/french-quarter-alabaster.jpg"
       >
         <script type="application/ld+json">
           {JSON.stringify(FINISHES_SCHEMA)}
