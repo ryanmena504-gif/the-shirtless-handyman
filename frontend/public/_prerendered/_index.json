@@ -3,7 +3,7 @@
     {
       "path": "/",
       "slug": "home",
-      "size": 99300
+      "size": 98745
     },
     {
       "path": "/book",
@@ -13,7 +13,7 @@
     {
       "path": "/faq",
       "slug": "faq",
-      "size": 43160
+      "size": 43012
     },
     {
       "path": "/about",
@@ -33,32 +33,32 @@
     {
       "path": "/microcement-new-orleans",
       "slug": "microcement-new-orleans",
-      "size": 56510
+      "size": 56333
     },
     {
       "path": "/microcement-installers-new-orleans",
       "slug": "microcement-installers-new-orleans",
-      "size": 60482
+      "size": 59927
     },
     {
       "path": "/microcement-metairie",
       "slug": "microcement-metairie",
-      "size": 54416
+      "size": 54307
     },
     {
       "path": "/tadelakt-new-orleans",
       "slug": "tadelakt-new-orleans",
-      "size": 55436
+      "size": 55631
     },
     {
       "path": "/rockscape-walls-new-orleans",
       "slug": "rockscape-walls-new-orleans",
-      "size": 54937
+      "size": 54904
     },
     {
       "path": "/pool-deck-resurfacing-new-orleans",
       "slug": "pool-deck-resurfacing-new-orleans",
-      "size": 54677
+      "size": 54578
     },
     {
       "path": "/blog",
@@ -93,53 +93,53 @@
     {
       "path": "/microcement-showers-new-orleans",
       "slug": "microcement-showers-new-orleans",
-      "size": 57080
+      "size": 57025
     },
     {
       "path": "/bathroom-remodel-new-orleans",
       "slug": "bathroom-remodel-new-orleans",
-      "size": 56732
+      "size": 56933
     },
     {
       "path": "/venetian-plaster-new-orleans",
       "slug": "venetian-plaster-new-orleans",
-      "size": 53460
+      "size": 53445
     },
     {
       "path": "/microcement-countertops-new-orleans",
       "slug": "microcement-countertops-new-orleans",
-      "size": 52988
+      "size": 52955
     },
     {
       "path": "/lakeview-handyman",
       "slug": "lakeview-handyman",
-      "size": 52931
+      "size": 52818
     },
     {
       "path": "/uptown-handyman",
       "slug": "uptown-handyman",
-      "size": 52785
+      "size": 52752
     },
     {
       "path": "/mid-city-handyman",
       "slug": "mid-city-handyman",
-      "size": 52060
+      "size": 52027
     },
     {
       "path": "/bywater-handyman",
       "slug": "bywater-handyman",
-      "size": 52079
+      "size": 52046
     },
     {
       "path": "/french-quarter-handyman",
       "slug": "french-quarter-handyman",
-      "size": 52489
+      "size": 52456
     },
     {
       "path": "/garden-district-handyman",
       "slug": "garden-district-handyman",
-      "size": 53510
+      "size": 53661
     }
   ],
-  "generatedAt": "2026-11-14T21:04:54.550Z"
+  "generatedAt": "2026-11-14T23:35:30.401Z"
 }
