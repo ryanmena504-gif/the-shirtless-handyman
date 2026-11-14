@@ -3,123 +3,143 @@
     {
       "path": "/",
       "slug": "home",
-      "size": 60217
+      "size": 99300
     },
     {
       "path": "/book",
       "slug": "book",
-      "size": 7597
+      "size": 9466
     },
     {
       "path": "/faq",
       "slug": "faq",
-      "size": 37755
+      "size": 43160
     },
     {
       "path": "/about",
       "slug": "about",
-      "size": 22296
+      "size": 26609
     },
     {
       "path": "/upload",
       "slug": "upload",
-      "size": 28109
+      "size": 32446
     },
     {
       "path": "/portfolio",
       "slug": "portfolio",
-      "size": 18098
+      "size": 22435
     },
     {
       "path": "/microcement-new-orleans",
       "slug": "microcement-new-orleans",
-      "size": 48994
+      "size": 56510
     },
     {
       "path": "/microcement-installers-new-orleans",
       "slug": "microcement-installers-new-orleans",
-      "size": 52936
+      "size": 60482
     },
     {
       "path": "/microcement-metairie",
       "slug": "microcement-metairie",
-      "size": 46906
+      "size": 54416
     },
     {
       "path": "/tadelakt-new-orleans",
       "slug": "tadelakt-new-orleans",
-      "size": 47936
+      "size": 55436
     },
     {
       "path": "/rockscape-walls-new-orleans",
       "slug": "rockscape-walls-new-orleans",
-      "size": 47399
+      "size": 54937
     },
     {
       "path": "/pool-deck-resurfacing-new-orleans",
       "slug": "pool-deck-resurfacing-new-orleans",
-      "size": 47153
+      "size": 54677
     },
     {
       "path": "/blog",
       "slug": "blog",
-      "size": 23974
+      "size": 28242
     },
     {
       "path": "/blog/microcement-vs-tile-cost-new-orleans",
       "slug": "blog__microcement-vs-tile-cost-new-orleans",
-      "size": 19893
+      "size": 24540
     },
     {
       "path": "/blog/best-microcement-contractor-new-orleans",
       "slug": "blog__best-microcement-contractor-new-orleans",
-      "size": 19696
+      "size": 24343
     },
     {
       "path": "/blog/tadelakt-vs-microcement-bathroom",
       "slug": "blog__tadelakt-vs-microcement-bathroom",
-      "size": 19192
+      "size": 23839
     },
     {
       "path": "/blog/why-tile-fails-in-new-orleans-humidity",
       "slug": "blog__why-tile-fails-in-new-orleans-humidity",
-      "size": 19976
+      "size": 24623
     },
     {
       "path": "/blog/how-to-choose-microcement-installer-new-orleans",
       "slug": "blog__how-to-choose-microcement-installer-new-orleans",
-      "size": 23292
+      "size": 27924
+    },
+    {
+      "path": "/microcement-showers-new-orleans",
+      "slug": "microcement-showers-new-orleans",
+      "size": 57080
+    },
+    {
+      "path": "/bathroom-remodel-new-orleans",
+      "slug": "bathroom-remodel-new-orleans",
+      "size": 56732
+    },
+    {
+      "path": "/venetian-plaster-new-orleans",
+      "slug": "venetian-plaster-new-orleans",
+      "size": 53460
+    },
+    {
+      "path": "/microcement-countertops-new-orleans",
+      "slug": "microcement-countertops-new-orleans",
+      "size": 52988
     },
     {
       "path": "/lakeview-handyman",
       "slug": "lakeview-handyman",
-      "size": 45396
+      "size": 52931
     },
     {
       "path": "/uptown-handyman",
       "slug": "uptown-handyman",
-      "size": 45278
+      "size": 52785
     },
     {
       "path": "/mid-city-handyman",
       "slug": "mid-city-handyman",
-      "size": 44555
+      "size": 52060
     },
     {
       "path": "/bywater-handyman",
       "slug": "bywater-handyman",
-      "size": 44562
+      "size": 52079
     },
     {
       "path": "/french-quarter-handyman",
       "slug": "french-quarter-handyman",
-      "size": 44989
+      "size": 52489
     },
     {
       "path": "/garden-district-handyman",
       "slug": "garden-district-handyman",
-      "size": 45991
+      "size": 53510
     }
   ],
-  "generatedAt": "2026-11-10T14:48:43.814Z"
+  "generatedAt": "2026-11-14T21:04:54.550Z"
 }
