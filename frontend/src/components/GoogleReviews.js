@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Star, ExternalLink } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 
 /**
  * GoogleReviews — fetches Place Details from the backend (cached 12h) and

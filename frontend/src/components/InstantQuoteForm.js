@@ -10,7 +10,7 @@ import {
   PHONE_DISPLAY, TEL_LINK, HOURS_LABEL, PROJECT_TYPES, smsLink, mailtoLink,
 } from "../lib/contact";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 
 /**
  * InstantQuoteForm — name + phone (+ optional project type), single step.

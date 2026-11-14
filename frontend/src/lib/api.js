@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API } from "./apiBase";
 
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`,
+  baseURL: API,
   withCredentials: true,
 });
 

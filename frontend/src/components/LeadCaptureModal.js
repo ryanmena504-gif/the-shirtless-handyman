@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Send, CheckCircle, Image as ImageIcon, Paintbrush } from "lucide-react";
 import { trackEvent, identifyLead } from "../lib/tracking";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 
 const ContextPreview = ({ designStyle, roomPhoto }) => {
   if (!designStyle && !roomPhoto) return null;

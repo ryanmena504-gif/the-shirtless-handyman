@@ -16,7 +16,7 @@ import {
   Mail, Phone, MapPin, Calendar, Building2
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 
 export default function ContractorDashboardPage() {
   const navigate = useNavigate();

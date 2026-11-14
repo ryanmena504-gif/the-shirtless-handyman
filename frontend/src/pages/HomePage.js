@@ -10,7 +10,7 @@ import { SeoHead } from "../components/SeoHead";
 import { RevealText, ScrollReveal, MagneticButton } from "../components/cinematic";
 import { motion } from "framer-motion";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User, Flame, ClipboardCheck, HandCoins, Search, Mail, MapPin } from "lucide-react";
-import { TEL_LINK as TEL_HREF, EMAIL, HOURS_LABEL, SERVICE_AREA_LABEL, HEATED_FLOORS_OFFER_SHORT, HEATED_FLOORS_OFFER_LONG, scrollToQuoteForm } from "../lib/contact";
+import { TEL_LINK as TEL_HREF, EMAIL, HOURS_LABEL, SERVICE_AREA_LABEL, HEATED_FLOORS_OFFER_SHORT, HEATED_FLOORS_OFFER_LONG, scrollToQuoteForm, PRICING_HEADLINE, PRICING_SUBHEAD, PRICE_SHOWER, PRICE_FULL_BATH, PRICE_FULL_BATH_RANGE, PRICE_WALLS } from "../lib/contact";
 import { HOME_FAQ, TESTIMONIALS, BEFORE_AFTER, SERVICE_LINKS, WATERPROOF_STEPS } from "../lib/homeContent";
 
 const HERO_BG = "/portfolio/shower-led-niche.jpg";
@@ -38,7 +38,7 @@ const GLOBAL_SCHEMA = {
       description:
         "Owner-operated microcement, tadelakt, and seamless-surface installation studio in New Orleans, Louisiana. Founder Ryan Mena personally installs every project — no subcontractors, no franchise.",
       telephone: "+1-504-264-4919",
-      email: "ryan@theshirtlesshandyman.com",
+      email: "ryanmena@theshirtlesshandyman.com",
       priceRange: "$$-$$$",
       address: {
         "@type": "PostalAddress",
@@ -80,21 +80,21 @@ const GLOBAL_SCHEMA = {
         itemListElement: [
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Essential Seamless Bathroom Overlay", description: "Microcement or tadelakt overlay on an existing bathroom footprint. Starting at $5,500. Most qualifying overlays range from $5,500–$9,500." },
+            itemOffered: { "@type": "Service", name: "Seamless Shower", description: "Microcement or tadelakt shower or tub surround, often over existing tile when it's stable. Starting around $3,000. Quoted per project after a free site visit." },
             priceCurrency: "USD",
-            priceSpecification: { "@type": "PriceSpecification", minPrice: 5500, maxPrice: 9500, priceCurrency: "USD" },
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 3000, priceCurrency: "USD" },
           },
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Signature Grout-Free Bathroom Transformation", description: "Full bathroom rebuild in seamless surfaces — walls, floor, shower in one continuous shell with new fixtures and lighting. Starting at $15,000. Most Signature transformations range from $18,000–$35,000+. Includes free underfloor heating, supplied and installed at no charge." },
+            itemOffered: { "@type": "Service", name: "Full Seamless Bathroom", description: "Walls, floor, and shower in one continuous waterproof shell. Starting around $6,000; most land between $6,000 and $10,000. Includes free underfloor heating, supplied and installed at no charge." },
             priceCurrency: "USD",
-            priceSpecification: { "@type": "PriceSpecification", minPrice: 15000, maxPrice: 35000, priceCurrency: "USD" },
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 6000, maxPrice: 10000, priceCurrency: "USD" },
           },
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Luxury Seamless Wet Room", description: "Fully custom wet-room build with rockscape or feature-wall integration, radiant heat, layered lighting, and bespoke finishes. Starting at $30,000. Custom luxury projects are priced individually." },
+            itemOffered: { "@type": "Service", name: "Venetian Plaster & Feature Walls", description: "Venetian plaster, marmorino, Roman clay, and rockscape feature walls. Starting around $3,000. Quoted per project after a free site visit." },
             priceCurrency: "USD",
-            priceSpecification: { "@type": "PriceSpecification", minPrice: 30000, priceCurrency: "USD" },
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 3000, priceCurrency: "USD" },
           },
         ],
       },
@@ -165,35 +165,35 @@ const SERVICES = [
     finishId: "microcement",
     description: "Seamless waterproof showers, floors, and walls — installed directly over existing tile.",
     image: "/portfolio/shower-led-niche.jpg",
-    priceRange: "From $5,500",
+    priceRange: "From around $3,000",
   },
   {
     title: "Tadelakt",
     finishId: "tadelakt",
     description: "Hand-burnished Moroccan lime plaster. Naturally waterproof. 800-year-old craft.",
     image: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=900&fit=crop&fm=jpg&q=85",
-    priceRange: "From $5,500",
+    priceRange: "From around $3,000",
   },
   {
     title: "Venetian Plaster",
     finishId: "venetian",
     description: "Mirror-polished Italian lime plaster. Marbled depth that catches the light. A Renaissance finish, hand-applied today.",
     image: "/venetian-plaster-hero.jpg",
-    priceRange: "From $1,800",
+    priceRange: "From around $3,000",
   },
   {
     title: "Rockscape Walls",
     finishId: "rockscape",
     description: "Sculpted feature walls that look like carved stone. Optional LED backlighting.",
     image: "https://images.unsplash.com/photo-1738585608732-49294c24ece0?w=900&fit=crop&fm=jpg&q=85",
-    priceRange: "From $3,500",
+    priceRange: "From around $3,500",
   },
   {
     title: "Pool Decks & Outdoor",
     finishId: "microterrazzo",
     description: "Microterrazzo + cocciopesto resurfacing. UV-stable. Slip-resistant. Built for NOLA sun.",
     image: "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?w=900&fit=crop&fm=jpg&q=85",
-    priceRange: "From $3,000",
+    priceRange: "From around $3,000",
   },
 ];
 
@@ -824,36 +824,36 @@ export default function HomePage() {
             <h2
               className="text-3xl md:text-4xl font-light tracking-tight text-foreground mb-4"
               style={{ fontFamily: "'Fraunces', serif" }}
+              data-testid="pricing-headline"
             >
-              Three ways I build seamless.
+              {PRICING_HEADLINE}
             </h2>
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Every seamless bathroom I install falls into one of three tiers. The Seamless Studio helps you (and me) figure out which one fits your space before I quote a fixed number.
+            <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
+              {PRICING_SUBHEAD}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
-            {/* Tier 1 — Essential */}
-            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-essential">
+            {/* Seamless shower */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-shower">
               <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
-                <Wrench className="w-5 h-5 text-muted-foreground" />
+                <Droplets className="w-5 h-5 text-muted-foreground" />
               </div>
               <h3
                 className="text-xl font-medium text-foreground mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Essential Seamless Bathroom Overlay
+                Seamless Shower
               </h3>
-              <p className="text-xs text-muted-foreground mb-5">Single bathroom, existing footprint</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">Starting at $5,500</p>
-              <p className="text-xs text-muted-foreground mb-6">Most qualifying overlays range from $5,500–$9,500.</p>
+              <p className="text-xs text-muted-foreground mb-5">One shower or tub surround</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">{PRICE_SHOWER}</p>
+              <p className="text-xs text-muted-foreground mb-6">Quoted per project after a free site visit.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  "Microcement or tadelakt over existing tile (when stable)",
-                  "One shower or tub surround",
-                  "Standard bathroom footprint",
+                  "Microcement or tadelakt, often right over existing tile when it's stable",
                   "Little or no demolition on qualifying projects",
-                  "5-year bond warranty, 1-year seal warranty",
+                  "Waterproofed layer by layer, with no grout lines for mold to grow in",
+                  "Custom color and hand finish",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                     <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
@@ -863,16 +863,16 @@ export default function HomePage() {
               </ul>
               <a href={SMS_LINK} className="mt-auto">
                 <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
-                  See If Your Bathroom Qualifies
+                  Text Me About Your Shower
                 </Button>
               </a>
             </div>
 
-            {/* Tier 2 — Signature (highlighted) */}
-            <div className="bg-[#0E0E0E] border-2 border-[#D97757]/40 rounded-2xl p-8 flex flex-col relative" data-testid="pricing-signature">
+            {/* Full bathroom (highlighted) */}
+            <div className="bg-[#0E0E0E] border-2 border-[#D97757]/40 rounded-2xl p-8 flex flex-col relative" data-testid="pricing-full-bathroom">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                 <span className="px-4 py-1 rounded-full bg-[#D97757] text-white text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
-                  Most Popular
+                  Free heated floors
                 </span>
               </div>
               <div className="w-11 h-11 rounded-xl bg-[#D97757]/15 flex items-center justify-center mb-5">
@@ -882,20 +882,19 @@ export default function HomePage() {
                 className="text-xl font-medium text-white mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Signature Grout-Free Bathroom Transformation
+                Full Seamless Bathroom
               </h3>
-              <p className="text-xs text-white/40 mb-5">Full bathroom rebuild in seamless</p>
-              <p className="text-3xl font-semibold text-white mb-1">Starting at $15,000</p>
-              <p className="text-xs text-white/40 mb-6">Most Signature transformations range from $18,000–$35,000+.</p>
+              <p className="text-xs text-white/50 mb-5">Walls, floor, and shower in one continuous shell</p>
+              <p className="text-3xl font-semibold text-white mb-1">{PRICE_FULL_BATH}</p>
+              <p className="text-xs text-white/60 mb-6">{PRICE_FULL_BATH_RANGE}</p>
               <ul className="space-y-3 mb-6 flex-1">
                 {[
-                  "Walls, floor, and shower in one continuous shell",
-                  "Fixture upgrades + integrated lighting",
-                  "Selective demolition + waterproofing rebuild",
-                  "New plumbing runs & niche builds",
-                  "Custom color, texture, and hand-finish",
+                  "No grout lines anywhere, so mold has nowhere to grow",
+                  "Selective demolition and a waterproofing rebuild where needed",
+                  "Niche builds and fixture upgrades",
+                  "Custom color, texture, and hand finish",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-white/60">
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-white/70">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] flex-shrink-0 mt-1.5" />
                     {item}
                   </li>
@@ -906,24 +905,22 @@ export default function HomePage() {
                   Included, at no charge
                 </p>
                 <p className="text-xs text-white/80 leading-relaxed">
-                  Every whole-bathroom renovation or whole-floor coating includes free underfloor heating — I buy the system and install it at no charge.
+                  {HEATED_FLOORS_OFFER_LONG}
                 </p>
               </div>
               <Button
                 onClick={() => {
-                  const formEl = document.querySelector('[data-testid="instant-quote-form-hero_form"]');
-                  formEl?.scrollIntoView({ behavior: "smooth", block: "center" });
-                  formEl?.querySelector('input')?.focus();
+                  if (!scrollToQuoteForm()) navigate("/#quote");
                 }}
                 className="w-full h-11 rounded-full bg-[#D97757] text-white text-sm font-medium btn-pill shadow-lg shadow-[#D97757]/30 hover:bg-[#C56545] mt-auto"
-                data-testid="pricing-signature-cta"
+                data-testid="pricing-full-bathroom-cta"
               >
-                Get a Seamless Transformation Quote
+                Get My Free Quote
               </Button>
             </div>
 
-            {/* Tier 3 — Luxury */}
-            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-luxury">
+            {/* Plaster & feature walls */}
+            <div className="bg-white border border-border/40 rounded-2xl p-8 flex flex-col" data-testid="pricing-walls">
               <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-5">
                 <Home className="w-5 h-5 text-muted-foreground" />
               </div>
@@ -931,18 +928,17 @@ export default function HomePage() {
                 className="text-xl font-medium text-foreground mb-1 leading-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                Luxury Seamless Wet Room
+                Venetian Plaster &amp; Feature Walls
               </h3>
-              <p className="text-xs text-muted-foreground mb-5">Fully custom, no-limits build</p>
-              <p className="text-3xl font-semibold text-foreground mb-1">Starting at $30,000</p>
-              <p className="text-xs text-muted-foreground mb-6">Custom luxury projects are priced individually.</p>
+              <p className="text-xs text-muted-foreground mb-5">Accent walls, rooms, and stone-look features</p>
+              <p className="text-3xl font-semibold text-foreground mb-1">{PRICE_WALLS}</p>
+              <p className="text-xs text-muted-foreground mb-6">Priced by wall area and finish after a free site visit.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  "Open-plan wet-room layouts",
-                  "Rockscape or feature-wall integration",
-                  "Radiant floor heating included",
-                  "Layered lighting + smart controls",
-                  "Bespoke tadelakt or Venetian finishes",
+                  "Venetian plaster, marmorino, and Roman clay",
+                  "Rockscape feature walls, with optional LED backlighting",
+                  "Mirror-polished or soft matte finishes",
+                  "Bigger custom builds, like wet rooms and whole floors, quoted per project",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                     <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0 mt-1.5" />
@@ -952,14 +948,14 @@ export default function HomePage() {
               </ul>
               <a href={SMS_LINK} className="mt-auto">
                 <Button variant="outline" className="w-full h-11 rounded-full border-border/60 text-foreground text-sm font-medium">
-                  Request a Bathroom Assessment
+                  Text Me About Your Walls
                 </Button>
               </a>
             </div>
           </div>
 
           <p className="text-center text-xs md:text-sm text-muted-foreground/80 mt-10 max-w-2xl mx-auto leading-relaxed">
-            Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.
+            The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish. You get it in writing before any work starts.
           </p>
         </div>
       </section>

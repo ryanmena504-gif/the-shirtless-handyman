@@ -9,7 +9,7 @@ import {
   Thermometer, Zap, CheckCircle2, Loader2
 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 
 // Dynamic analysis content based on room type
 const ROOM_ANALYSIS_DATA = {

@@ -32,10 +32,9 @@ from notifications import notify_new_lead
 import lead_webhook
 from image_utils import normalize_image_for_ai
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection (real Mongo when MONGO_URL is set, in-memory otherwise —
+# see db_setup.py)
+from db_setup import client, db, open_thread_db, IN_MEMORY as DB_IN_MEMORY
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -125,6 +124,23 @@ async def get_zip_coords_async(zip_code: str):
 @api_router.get("/")
 async def root():
     return {"message": "AI Renovation Visualizer API"}
+
+
+@api_router.get("/health")
+async def health():
+    """Cheap wake-up/health check. The website pings this on page load so a
+    sleeping free Render instance is awake before anyone submits a form.
+    Reports which delivery paths are configured — never their values."""
+    import airtable_leads
+    return {
+        "ok": True,
+        "database": "in-memory (data resets on restart)" if DB_IN_MEMORY else "mongodb",
+        "airtable": "dry-run" if airtable_leads._dry_run() else bool(airtable_leads._token()),
+        "email": bool(os.environ.get("RESEND_API_KEY", "").strip() and os.environ.get("LEAD_NOTIFICATION_EMAIL", "").strip()),
+        "sms": bool(os.environ.get("TWILIO_ACCOUNT_SID", "").strip() and os.environ.get("TWILIO_FROM_NUMBER", "").strip()),
+        "make_webhook": bool(lead_webhook._webhook_url()),
+        "chat": chat_mode(),
+    }
 
 
 @api_router.get("/health/ai")
@@ -258,8 +274,7 @@ def _run_analysis_sync(project_id: str, project: dict):
     """Run analysis in a separate thread with its own event loop and DB client."""
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    thread_client = AsyncIOMotorClient(mongo_url)
-    thread_db = thread_client[os.environ['DB_NAME']]
+    thread_client, thread_db = open_thread_db()
     try:
         _run_analysis(project_id, project, thread_db, loop)
     except Exception as e:
@@ -279,8 +294,7 @@ def _run_generation_sync(project_id: str, project: dict):
     """Run generation in a separate thread with its own event loop and DB client."""
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    thread_client = AsyncIOMotorClient(mongo_url)
-    thread_db = thread_client[os.environ['DB_NAME']]
+    thread_client, thread_db = open_thread_db()
     try:
         _do_generation(project_id, project, thread_db, loop)
     except Exception as e:
@@ -766,6 +780,17 @@ async def get_contractor_public(contractor_id: str):
 
 # --- Lead Routes ---
 
+async def _safe_db(awaitable, what: str):
+    """Run a DB call for a lead/booking/chat write without letting a database
+    outage swallow the lead. On failure: log, return None, and let the
+    request continue so Airtable / email / SMS delivery still happens."""
+    try:
+        return await awaitable
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"DB {what} failed (lead still delivered): {type(e).__name__}: {e}")
+        return None
+
+
 @api_router.post("/leads")
 async def create_lead(data: LeadCreate):
     lead_id = str(uuid.uuid4())
@@ -776,7 +801,7 @@ async def create_lead(data: LeadCreate):
         "status": "new",
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    await db.leads.insert_one(lead)
+    await _safe_db(db.leads.insert_one(lead), "insert lead")
     # Fire notifications in background — never block the lead submission.
     lead_clean = {k: v for k, v in lead.items() if k != "_id"}
     asyncio.create_task(notify_new_lead(lead_clean))
@@ -828,7 +853,7 @@ async def create_quick_lead(data: QuickLead):
         "status": "new",
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    await db.leads.insert_one(lead)
+    await _safe_db(db.leads.insert_one(lead), "insert lead")
     lead_clean = {k: v for k, v in lead.items() if k != "_id"}
     asyncio.create_task(notify_new_lead(lead_clean))
     asyncio.create_task(followup_service.schedule_followups(db, lead_clean))
@@ -869,11 +894,11 @@ async def create_quick_lead(data: QuickLead):
 # AI Chat Bot — Claude Sonnet via Emergent Universal Key
 # =========================================================================
 from chat_service import (
-    make_chat,
-    replay_history,
+    get_reply,
+    chat_mode,
+    FALLBACK_REPLY,
     extract_contact,
     build_chat_message_doc,
-    UserMessage,
 )
 
 
@@ -896,22 +921,19 @@ async def chat_endpoint(req: ChatRequest):
 
     # Restore prior turns
     cursor = db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1)
-    history = await cursor.to_list(50)
+    history = await _safe_db(cursor.to_list(50), "load chat history") or []
 
     try:
-        chat = make_chat(session_id)
-        await replay_history(chat, history)
-        reply = await chat.send_message(UserMessage(text=user_text))
-    except Exception as e:
-        logger.exception(f"Chat error for session {session_id}: {e}")
-        raise HTTPException(
-            status_code=502,
-            detail="The AI is napping right now — text Ryan directly at 504-264-4919.",
-        )
+        reply = await get_reply(session_id, history, user_text)
+    except Exception as e:  # noqa: BLE001 — one attempt only, never retried
+        logger.error(f"Chat AI error for session {session_id} (not retried): {type(e).__name__}: {e}")
+        reply = FALLBACK_REPLY
+    if not reply:
+        reply = FALLBACK_REPLY
 
     # Persist this turn
-    await db.chat_messages.insert_one(build_chat_message_doc(session_id, "user", user_text))
-    await db.chat_messages.insert_one(build_chat_message_doc(session_id, "assistant", reply))
+    await _safe_db(db.chat_messages.insert_one(build_chat_message_doc(session_id, "user", user_text)), "save chat")
+    await _safe_db(db.chat_messages.insert_one(build_chat_message_doc(session_id, "assistant", reply)), "save chat")
 
     # If the user dropped contact info in their message, save them as a lead.
     contact = extract_contact(user_text)
@@ -936,7 +958,7 @@ async def chat_endpoint(req: ChatRequest):
             "status": "new",
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
-        await db.leads.insert_one(lead_doc)
+        await _safe_db(db.leads.insert_one(lead_doc), "insert chat lead")
         lead_id = lead_doc["id"]
         lead_clean_chat = {k: v for k, v in lead_doc.items() if k != "_id"}
         asyncio.create_task(notify_new_lead(lead_clean_chat))
@@ -1012,7 +1034,7 @@ async def create_booking(data: BookingRequest):
         slot_local = schedule_service.parse_slot_iso(slot_iso)
         if not slot_local:
             raise HTTPException(status_code=400, detail="That time slot isn't a valid working-hours slot.")
-        if not await schedule_service.is_slot_available(db, slot_local):
+        if await _safe_db(schedule_service.is_slot_available(db, slot_local), "check slot") is False:
             raise HTTPException(status_code=409, detail="That slot was just booked. Please pick another.")
         slot_utc = slot_local.astimezone(timezone.utc)
         slot_end_utc = slot_utc + timedelta(minutes=schedule_service.SLOT_MINUTES)
@@ -1042,7 +1064,7 @@ async def create_booking(data: BookingRequest):
         "status": "confirmed",
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    await db.bookings.insert_one(booking)
+    await _safe_db(db.bookings.insert_one(booking), "insert booking")
 
     # Also persist as a lead so it flows through the normal lead pipeline + follow-ups.
     # Share the booking's id so DELETE /admin/bookings/{id} auto-cleans both.
@@ -1063,7 +1085,7 @@ async def create_booking(data: BookingRequest):
         "booking_id": booking["id"],
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    await db.leads.insert_one(lead_doc)
+    await _safe_db(db.leads.insert_one(lead_doc), "insert booking lead")
 
     # Send Ryan an SMS that's clearly a booking (not just a generic lead)
     from notifications import send_lead_email, send_lead_sms, send_homeowner_autoreply
@@ -1626,22 +1648,27 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    # Create indexes
-    await db.contractors.create_index("email", unique=True)
-    await db.contractors.create_index("service_zip_codes")
-    await db.projects.create_index("id")
-    await db.leads.create_index("contractor_id")
-    await db.shares.create_index("id")
-    await db.shares.create_index("project_id")
-    await db.portfolio.create_index("id")
-    # Follow-up + Google Reviews infra
-    await followup_service.ensure_indexes(db)
-    await google_reviews.ensure_indexes(db)
-    await schedule_service.ensure_indexes(db)
-    await schedule_admin_service.ensure_indexes(db)
+    # Create indexes. A database hiccup must not stop the API from booting —
+    # lead delivery (Airtable / email / SMS) does not depend on it.
+    try:
+        await db.contractors.create_index("email", unique=True)
+        await db.contractors.create_index("service_zip_codes")
+        await db.projects.create_index("id")
+        await db.leads.create_index("contractor_id")
+        await db.shares.create_index("id")
+        await db.shares.create_index("project_id")
+        await db.portfolio.create_index("id")
+        # Follow-up + Google Reviews infra
+        await followup_service.ensure_indexes(db)
+        await google_reviews.ensure_indexes(db)
+        await schedule_service.ensure_indexes(db)
+        await schedule_admin_service.ensure_indexes(db)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Index setup failed (continuing): {type(e).__name__}: {e}")
     # Background worker: scan for due follow-up emails every 5 min.
     asyncio.create_task(followup_service.background_worker(db, interval_seconds=300))
-    logger.info("AI Renovation Visualizer API started")
+    logger.info("Shirtless Handyman API started (db=%s, chat=%s)",
+                "in-memory" if DB_IN_MEMORY else "mongodb", chat_mode())
 
 
 @app.on_event("shutdown")

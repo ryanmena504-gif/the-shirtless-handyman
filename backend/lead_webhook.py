@@ -167,14 +167,22 @@ async def _post_webhook(url: str, payload: dict) -> dict:
 
 def forward_lead(payload: dict) -> None:
     """Fire-and-forget dispatch. Safe to call from any request handler —
-    caller is not awaited for the outbound HTTP round-trip. Never raises."""
+    caller is not awaited for the outbound HTTP round-trip. Never raises.
+
+    Also writes the lead straight into the GEAUXleads Airtable "Leads" table
+    when AIRTABLE_API_KEY is set (see airtable_leads.py). Make is optional."""
     global _missing_url_warned
+    try:
+        import airtable_leads
+        airtable_leads.push_lead_background(payload)
+    except Exception as e:  # noqa: BLE001
+        logger.error("airtable_leads dispatch failed: %s", e)
     url = _webhook_url()
     if not url:
         if not _missing_url_warned:
-            logger.warning(
-                "lead_webhook: MAKE_LEAD_WEBHOOK_URL is not configured — skipping "
-                "webhook forwarding. Set it in backend/.env to enable Make/Airtable."
+            logger.info(
+                "lead_webhook: MAKE_LEAD_WEBHOOK_URL not set — Make forwarding off "
+                "(optional; Airtable is written directly)."
             )
             _missing_url_warned = True
         _recent_events.appendleft({
