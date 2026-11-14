@@ -177,3 +177,43 @@
 @media (prefers-reduced-motion: reduce) {
     .marquee-track { animation: none; }
 }
+
+/* ------------------------------------------------------------------------
+   Readability fix for the Midnight Cement theme.
+   The theme turned --foreground / --muted-foreground light, but many cards
+   and sections still use light "paper" backgrounds (bg-white, #FAFAF9 …), so
+   text on them rendered light-on-light (e.g. the Essential + Luxury pricing
+   cards, landing-page benefit cards, FAQ cards). On light surfaces we flip
+   the text tokens back to dark; dark surfaces nested inside restore them.
+   ------------------------------------------------------------------------ */
+.bg-white,
+.bg-\[\#FAFAF9\],
+.bg-\[\#FAFAF9\]\/95,
+.bg-\[\#F5F5F4\],
+.bg-\[\#F5F1EA\],
+.bg-\[\#F0E8D8\],
+.bg-neutral-100 {
+    --foreground: 24 10% 10%;
+    --card-foreground: 24 10% 10%;
+    --popover-foreground: 24 10% 10%;
+    --muted: 40 15% 94%;
+    --muted-foreground: 30 6% 36%;
+    --accent: 40 20% 90%;
+    --accent-foreground: 24 10% 10%;
+    --border: 30 10% 84%;
+    --input: 30 10% 80%;
+}
+.bg-\[\#0E0E0E\],
+.bg-\[\#1A3C34\],
+.bg-background,
+.bg-card {
+    --foreground: 40 20% 92%;
+    --card-foreground: 40 20% 92%;
+    --popover-foreground: 40 20% 92%;
+    --muted: 24 8% 14%;
+    --muted-foreground: 30 8% 68%;
+    --accent: 160 30% 16%;
+    --accent-foreground: 40 20% 92%;
+    --border: 24 8% 20%;
+    --input: 24 8% 20%;
+}

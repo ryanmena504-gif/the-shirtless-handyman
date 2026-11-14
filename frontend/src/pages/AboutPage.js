@@ -47,10 +47,6 @@ const ABOUT_SCHEMA = {
     "Rockscape Walls", "Pool Deck Resurfacing", "Cocciopesto", "Microterrazzo",
     "Seamless waterproof coatings", "Moroccan lime plaster",
   ],
-  hasCredential: [
-    { "@type": "EducationalOccupationalCredential", credentialCategory: "License", name: "Louisiana Residential Home Improvement License" },
-    { "@type": "EducationalOccupationalCredential", credentialCategory: "Insurance", name: "General Liability Insured" },
-  ],
   image: "https://www.theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
   url: PAGE_URL,
 };

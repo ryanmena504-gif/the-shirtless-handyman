@@ -250,7 +250,7 @@ export const BLOG_POSTS = [
       ]},
       { type: "p", content: "If you spot two or more of these, walk away — even if the quote looks attractive. The cost of a failed microcement install is 3–4x the cost of doing it right the first time, because demolition becomes the only path to fix." },
       { type: "h2", content: "How we stack up against the checklist" },
-      { type: "p", content: "I built The Shirtless Handyman around exactly this checklist. I personally install every microcement project. I use Italian-imported systems. I can show you a finished installation in your zip code. I'm licensed and insured in Louisiana. I offer a 5-year bond warranty and a 1-year seal warranty in writing." },
+      { type: "p", content: "I built The Shirtless Handyman around exactly this checklist. I personally install every microcement project. I use Italian-imported systems. I'll walk you through every layer of the waterproofing before you sign anything. I offer a 5-year bond warranty and a 1-year seal warranty in writing." },
       { type: "p", content: "If you want to compare quotes — and we recommend you do — use this checklist as your scorecard. Any installer who passes it is worth talking to. If you'd like to start with us, see our microcement service page below." },
       { type: "cta", text: "See the microcement installer page — book a free in-home walkthrough", href: "/microcement-installers-new-orleans" },
     ],

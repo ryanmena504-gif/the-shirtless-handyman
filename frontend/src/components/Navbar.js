@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import { Menu, X, Hammer } from "lucide-react";
+import { Menu, X, Hammer, Phone } from "lucide-react";
+import { PHONE_DISPLAY, TEL_LINK, scrollToQuoteForm } from "../lib/contact";
 
 // Header nav: Logo / Work / Finishes / Process / Pricing / About + "Start a Project" CTA.
 const NAV_ITEMS = [
@@ -10,6 +11,7 @@ const NAV_ITEMS = [
   { label: "Process", to: "/#how-it-works", testid: "nav-process" },
   { label: "Pricing", to: "/#pricing", testid: "nav-pricing" },
   { label: "About", to: "/about", testid: "nav-about" },
+  { label: "FAQ", to: "/faq", testid: "nav-faq" },
 ];
 
 export const Navbar = () => {
@@ -19,6 +21,12 @@ export const Navbar = () => {
   const goMobile = (to) => {
     navigate(to);
     setMobileOpen(false);
+  };
+
+  // "Free Quote" scrolls to this page's quote form, or opens the homepage one.
+  const goQuote = () => {
+    setMobileOpen(false);
+    if (!scrollToQuoteForm()) navigate("/#quote");
   };
 
   return (
@@ -51,22 +59,40 @@ export const Navbar = () => {
             <Link
               key={item.testid}
               to={item.to}
-              className="inline-flex items-center h-9 px-4 rounded-full text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="inline-flex items-center h-9 px-2.5 lg:px-4 rounded-full text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               data-testid={item.testid}
             >
               {item.label}
             </Link>
           ))}
+          <a
+            href={TEL_LINK}
+            className="ml-2 hidden lg:inline-flex items-center gap-1.5 h-9 px-3 rounded-full text-sm font-semibold text-foreground hover:bg-accent transition-colors whitespace-nowrap"
+            data-testid="nav-call"
+          >
+            <Phone className="w-4 h-4 text-[#D97757]" />
+            {PHONE_DISPLAY}
+          </a>
           <Button
-            onClick={() => navigate("/upload")}
-            className="ml-3 rounded-full bg-primary text-primary-foreground text-sm font-medium h-9 px-5"
+            onClick={goQuote}
+            className="ml-2 rounded-full bg-[#D97757] text-white hover:bg-[#C56545] text-sm font-semibold h-9 px-5"
             data-testid="nav-cta-btn"
           >
-            Start a Project
+            Free Quote
           </Button>
         </div>
 
-        {/* Mobile toggle */}
+        {/* Mobile: one-tap call + menu toggle */}
+        <div className="md:hidden flex items-center gap-1">
+        <a
+          href={TEL_LINK}
+          className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-[#D97757] text-white text-sm font-semibold"
+          aria-label={`Call Ryan at ${PHONE_DISPLAY}`}
+          data-testid="mobile-nav-call"
+        >
+          <Phone className="w-4 h-4" />
+          Call
+        </a>
         <button
           className="md:hidden p-2"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -75,6 +101,7 @@ export const Navbar = () => {
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -92,11 +119,19 @@ export const Navbar = () => {
             </Button>
           ))}
           <Button
-            className="w-full rounded-lg bg-primary text-primary-foreground mt-1"
-            onClick={() => goMobile("/upload")}
+            className="w-full rounded-lg bg-[#D97757] text-white mt-1"
+            onClick={goQuote}
             data-testid="mobile-cta-btn"
           >
-            Start a Project
+            Get a Free Quote
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-lg"
+            onClick={() => goMobile("/upload")}
+            data-testid="mobile-studio-btn"
+          >
+            Preview my room (free)
           </Button>
         </div>
       )}

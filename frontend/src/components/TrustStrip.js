@@ -1,4 +1,4 @@
-import { UserCheck, ShieldCheck, Star, Clock } from "lucide-react";
+import { UserCheck, ShieldCheck, Flame, CalendarCheck } from "lucide-react";
 
 /**
  * ProofBar — the single-line trust strip that sits right under the hero.
@@ -8,10 +8,12 @@ import { UserCheck, ShieldCheck, Star, Clock } from "lucide-react";
 export const TrustStrip = ({ variant = "dark" }) => {
   const isDark = variant === "dark";
   const items = [
-    { icon: UserCheck, label: "One craftsman, start to finish" },
-    { icon: ShieldCheck, label: "Licensed & insured" },
-    { icon: Star, label: "4.9 local reviews" },
-    { icon: Clock, label: "Reply within 4 hours" },
+    // Every item here must be literally true. Do not add insurance, review
+    // counts, or ratings until they exist and can be verified.
+    { icon: UserCheck, label: "Owner-installed, start to finish" },
+    { icon: ShieldCheck, label: "Louisiana LLC · locally owned" },
+    { icon: CalendarCheck, label: "Free site visit + written quote" },
+    { icon: Flame, label: "Free heated floors with a full bathroom" },
   ];
 
   return (
