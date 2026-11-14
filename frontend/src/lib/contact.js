@@ -5,7 +5,7 @@
 export const PHONE_DISPLAY = "504-264-4919";
 export const PHONE_E164 = "+15042644919";
 export const TEL_LINK = "tel:+15042644919";
-export const EMAIL = "ryan@theshirtlesshandyman.com";
+export const EMAIL = "ryanmena@theshirtlesshandyman.com";
 export const HOURS_LABEL = "Mon–Sat, 9am–5pm";
 export const SERVICE_AREA_LABEL = "New Orleans metro + the Northshore";
 

@@ -24,7 +24,7 @@ table (`tbliTlH5mmdOjc280`):
 | Notes         | starts with `WEBSITE LEAD — <which form>`, then project, ZIP, phone, email, notes |
 | ID            | the website's lead id                    |
 
-Email to ryan@theshirtlesshandyman.com comes from an Airtable automation,
+Email to ryanmena@theshirtlesshandyman.com comes from an Airtable automation,
 **"Website lead → email Ryan"**, which is already saved in the base and is
 **off** until Ryan turns it on (step 4 below). It uses Airtable's built-in
 email, so there's no new account.

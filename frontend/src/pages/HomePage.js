@@ -38,7 +38,7 @@ const GLOBAL_SCHEMA = {
       description:
         "Owner-operated microcement, tadelakt, and seamless-surface installation studio in New Orleans, Louisiana. Founder Ryan Mena personally installs every project — no subcontractors, no franchise.",
       telephone: "+1-504-264-4919",
-      email: "ryan@theshirtlesshandyman.com",
+      email: "ryanmena@theshirtlesshandyman.com",
       priceRange: "$$-$$$",
       address: {
         "@type": "PostalAddress",
