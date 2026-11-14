@@ -48,7 +48,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, specializes in microcement installation across Greater New Orleans — including Metairie, Gretna, Harvey, Lakeview, Uptown, Mid-City, Marigny, Algiers, and the Westbank." },
-      { q: "How much does microcement cost per square foot in New Orleans?", a: "I price by project tier rather than square foot. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room: starting at $30,000 (custom luxury projects are priced individually). Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
+      { q: "How much does microcement cost per square foot in New Orleans?", a: "I price by project tier rather than square foot. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Seamless Wet Room: starting at $30,000 (custom luxury projects are priced individually). Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
       { q: "Can microcement be installed over existing tile in a New Orleans shower?", a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying Essential Overlay projects may require little or no demolition. When the underlying tile is failing or the waterproofing needs to be rebuilt, the project moves into the Signature tier." },
       { q: "Is microcement a good choice for New Orleans humidity?", a: "Microcement is fully waterproof when properly sealed and is widely used in wet zones including showers, pool decks, and exterior surfaces. Its sealed, jointless surface makes it especially well-suited to high-humidity climates like New Orleans, where grout is prone to mold and failure." },
     ],
@@ -78,7 +78,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     priceHigh: 35000,
     benefits: [
       { icon: "Award", title: "The Installer Touches Every Job", body: "I install every microcement project personally — same hands from estimate to final seal. No 'we'll send a crew.' No language-barrier subs. You get one accountable craftsman." },
-      { icon: "ShieldCheck", title: "Licensed, Insured & NOLA-Based", body: "Fully licensed and insured Louisiana home-improvement business. Local addresses, local references, local accountability. No national franchise pulling permits from Texas." },
+      { icon: "ShieldCheck", title: "Louisiana LLC, NOLA-Based", body: "The Shirtless Handyman LLC is a registered Louisiana business, owner-operated out of New Orleans. Local references, local accountability. No national franchise pulling permits from Texas." },
       { icon: "Layers", title: "Real Microcement, Real Portfolio", body: "Italian microcement systems — not paint, not faux, not a knock-off. Ask to see in-person samples and references in your zip code before you commit a dollar." },
       { icon: "Clock", title: "Quote in 24 Hours, Install in 2–3 Weeks", body: "Quotes go out same-day or next-morning. Most New Orleans microcement installs are booked within 2–3 weeks of approval — much faster than the typical contractor pipeline." },
     ],
@@ -94,7 +94,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (I use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
       { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
-      { q: "How much do microcement installers charge in New Orleans?", a: "I price by project tier. Essential Seamless Bathroom Overlay (existing footprint, little or no demolition on qualifying projects): starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation (full bathroom rebuild): starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room (custom wet room, radiant heat, feature walls): starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity. Fixed all-in quote after an in-home assessment — no hidden change orders." },
+      { q: "How much do microcement installers charge in New Orleans?", a: "I price by project tier. Essential Seamless Bathroom Overlay (existing footprint, little or no demolition on qualifying projects): starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation (full bathroom rebuild): starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Seamless Wet Room (custom wet room, radiant heat, feature walls): starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity. Fixed all-in quote after an in-home assessment — no hidden change orders." },
       { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
       { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. I schedule around your life — you can keep using the rest of the house while I work, and the room is back in service within 48 hours of the final seal." },
       { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying Essential Overlay projects may require little or no demolition. Prep typically includes mechanical scarification and a bonding primer. When the underlying tile is unstable or waterproofing needs to be rebuilt, the project moves into the Signature tier." },
@@ -137,7 +137,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in Metairie?", a: "The Shirtless Handyman, run by Ryan Mena, installs microcement throughout Metairie, Old Metairie, Bucktown, Bonnabel, and the rest of Jefferson Parish." },
-      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "Metairie bathrooms follow my three-tier pricing. Essential Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Wet Room: starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
+      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "Metairie bathrooms follow my three-tier pricing. Essential Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Wet Room: starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
       { q: "Can microcement be installed on a concrete slab home?", a: "Yes — concrete slab homes (very common in Metairie) are an ideal substrate for microcement. I install directly on properly prepped concrete, often without any subfloor work." },
       { q: "How does microcement hold up in Louisiana humidity?", a: "Properly sealed microcement is fully waterproof and mold-resistant — making it especially well-suited to Metairie's humid, year-round wet climate. It's used in walk-in showers, wet rooms, and outdoor patios across the metro." },
     ],
@@ -179,7 +179,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs tadelakt in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, installs tadelakt across Greater New Orleans — including Uptown, Garden District, Lakeview, Mid-City, and the Westbank." },
-      { q: "How much does a tadelakt shower cost in New Orleans?", a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Wet Room: starting at $30,000, priced individually." },
+      { q: "How much does a tadelakt shower cost in New Orleans?", a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Wet Room: starting at $30,000, priced individually." },
       { q: "Is tadelakt really waterproof without a sealer?", a: "Yes. Authentic tadelakt is burnished with river stone and treated with olive-oil soap, which creates a self-sealing surface. It has been the traditional finish for Moroccan hammams (steam baths) for centuries." },
       { q: "How long does a tadelakt shower take to install?", a: "Most tadelakt shower installs take 5 to 8 days because of the multiple hand-applied layers and burnishing time. The result is a one-of-a-kind hand-finished surface that machine-made tile can never replicate." },
     ],
@@ -294,7 +294,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     priceHigh: 12000,
     benefits: [
       { icon: "Clock", title: "Same-Week Availability", body: "Lakeview is 12 minutes from my truck. Small repairs usually get scheduled within a week, microcement within 2–3." },
-      { icon: "ShieldCheck", title: "Licensed & Insured Locally", body: "Fully covered, NOLA-based business. Not a national franchise quote." },
+      { icon: "ShieldCheck", title: "Locally Owned & Accountable", body: "A registered Louisiana LLC, based right here in New Orleans. Not a national franchise quote." },
       { icon: "Wrench", title: "From Drywall to Microcement", body: "One call covers handyman repairs and full seamless renovations — no juggling 3 contractors." },
       { icon: "Award", title: "Real Lakeview References", body: "Ask for a list of Lakeview clients — I'll put you in touch with neighbors who've used me." },
     ],
@@ -309,7 +309,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Do you cover all of Lakeview?", a: "Yes — from Robert E. Lee down to West End and across to Lake Vista. Lakeview is one of my most-requested neighborhoods because of its post-Katrina rebuild density." },
       { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while I'm there. One trip, one invoice." },
-      { q: "How much does a Lakeview microcement bathroom cost?", a: "Lakeview bathrooms follow my three-tier structure. Essential Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Wet Room: starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
+      { q: "How much does a Lakeview microcement bathroom cost?", a: "Lakeview bathrooms follow my three-tier structure. Essential Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Wet Room: starting at $30,000, custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity." },
     ],
   },
 
@@ -334,7 +334,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     benefits: [
       { icon: "Award", title: "Historic Home Experience", body: "Lath-and-plaster walls, old subfloors, narrow shotgun layouts — I've worked them all. I don't damage what I'm hired to improve." },
       { icon: "Layers", title: "Microcement Over Anything", body: "Bonds directly to original tile, plaster, or even old wood — perfect for Uptown homes where demolition is too risky." },
-      { icon: "ShieldCheck", title: "Insured for Historic Properties", body: "Full liability coverage for older homes, including documented prep on heritage-style walls." },
+      { icon: "ShieldCheck", title: "Built for Historic Properties", body: "Older-home know-how, including documented, photographed prep on heritage-style walls." },
       { icon: "Sparkles", title: "Modern Finish, Classic Bones", body: "Microcement, tadelakt, and venetian plaster sit beautifully in century-old Uptown architecture." },
     ],
     serviceAreas: ["Uptown", "University Area", "Audubon", "Carrollton", "Riverbend", "Black Pearl", "Touro"],
@@ -374,7 +374,7 @@ export const LOCAL_SERVICE_CONFIGS = {
       { icon: "Wrench", title: "All-in-One Craftsman", body: "Handyman to high-end microcement under one phone number. No subcontracting." },
       { icon: "Layers", title: "Microcement Over Old Tile", body: "Most Mid-City bathrooms still have 1950s tile. We bond microcement directly — no demolition required." },
       { icon: "Clock", title: "5-Minute Drive Door-to-Door", body: "I live nearby. Mid-City is one of my fastest-turnaround neighborhoods." },
-      { icon: "ShieldCheck", title: "Insured & Locally Accountable", body: "Same craftsman before and after the install. If something needs attention, I'm one text away." },
+      { icon: "ShieldCheck", title: "Locally Accountable", body: "Same craftsman before and after the install. If something needs attention, I'm one text away." },
     ],
     serviceAreas: ["Mid-City", "Bayou St. John", "Esplanade Ridge", "Faubourg St. John", "Tulane", "Treme"],
     whereItShines: [
@@ -441,7 +441,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     eyebrow: "French Quarter · New Orleans, LA",
     h1: "French Quarter handyman — respectful renovations on 200-year-old buildings.",
     heroParagraph:
-      "Working in the French Quarter takes patience, the right insurance, and a craftsman who actually understands historic plaster, courtyards, and short-term rental turnover. I cover Royal Street to Dauphine, Esplanade to Canal. Handyman repairs, microcement bathrooms, tadelakt showers, and plaster restoration.",
+      "Working in the French Quarter takes patience, planning, and a craftsman who actually understands historic plaster, courtyards, and short-term rental turnover. I cover Royal Street to Dauphine, Esplanade to Canal. Handyman repairs, microcement bathrooms, tadelakt showers, and plaster restoration.",
     heroImage: "https://images.unsplash.com/photo-1738748444626-08b04513bcac?w=2000&fit=crop&fm=jpg&q=85",
     primaryCta: "Text My French Quarter Project",
     smsBody: "Hey Ryan, I'm in the French Quarter and have a project to discuss.",
@@ -450,7 +450,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     priceHigh: 25000,
     benefits: [
       { icon: "Award", title: "Historic Property Experience", body: "Quarter buildings need a craftsman who respects what's there. We test before we touch and document every step." },
-      { icon: "ShieldCheck", title: "Insured for Quarter Work", body: "Full coverage and familiar with VCC restrictions, courtyard access, and STR licensing context." },
+      { icon: "ShieldCheck", title: "Ready for Quarter Work", body: "Familiar with VCC restrictions, courtyard access, and STR licensing context." },
       { icon: "Layers", title: "Modern Finish, Historic Bones", body: "Tadelakt and microcement sit beautifully against original Quarter plaster — no seam, no joint, no jarring contrast." },
       { icon: "Clock", title: "Scheduled Around Bookings", body: "STR-friendly turnaround. We work around your guest calendar." },
     ],
@@ -491,7 +491,7 @@ export const LOCAL_SERVICE_CONFIGS = {
       { icon: "Award", title: "High-End Finish Specialist", body: "Tadelakt, hand-burnished microcement, custom-tinted venetian plaster. Built for homes where the finish has to look the part." },
       { icon: "Sparkles", title: "Historic-Sensitive Approach", body: "I work around original moldings, plaster, and trim. We test substrates and protect what's there." },
       { icon: "Layers", title: "Modern + Classic, Coexisting", body: "Microcement bathrooms and tadelakt showers integrate beautifully against 150-year-old plaster walls." },
-      { icon: "ShieldCheck", title: "Discreet, Insured, Local", body: "Quiet jobsite. Full coverage. NOLA-based. No national franchise quotes." },
+      { icon: "ShieldCheck", title: "Discreet & Local", body: "Quiet jobsite. Owner on site. NOLA-based. No national franchise quotes." },
     ],
     serviceAreas: ["Garden District", "Lower Garden District", "Irish Channel", "St. Charles Corridor", "Touro"],
     whereItShines: [
@@ -503,7 +503,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Do you work on Garden District historic homes?", a: "Yes — a large portion of my high-end work is Garden District renovations. We move carefully around original moldings, plaster, and trim, and we test every substrate before we apply microcement or tadelakt." },
-      { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt in the Garden District follows the same three service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room: starting at $30,000, priced individually." },
+      { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt in the Garden District follows the same three service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Seamless Wet Room: starting at $30,000, priced individually." },
       { q: "Can you coordinate with our architect or designer?", a: "Absolutely. A lot of my Garden District work is designer-specified — I'm comfortable presenting samples, color matching, and meeting on-site to walk specs." },
     ],
   },

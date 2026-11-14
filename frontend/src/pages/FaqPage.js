@@ -25,7 +25,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: starting at $5,500 — most qualifying overlays range from $5,500–$9,500. Signature Grout-Free Bathroom Transformation: starting at $15,000 — most Signature transformations range from $18,000–$35,000+, and every qualifying Signature project includes up to 30 square feet of radiant heated flooring at no additional charge. Luxury Seamless Wet Room: starting at $30,000 — custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
+        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: starting at $5,500 — most qualifying overlays range from $5,500–$9,500. Signature Grout-Free Bathroom Transformation: starting at $15,000 — most Signature transformations range from $18,000–$35,000+, and every whole-bathroom renovation or whole-floor coating includes free underfloor heating — I buy the system and install it at no charge. Luxury Seamless Wet Room: starting at $30,000 — custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
       },
       {
         q: "Can I install microcement over existing tile?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes up to 30 sq ft of radiant heated flooring at no additional charge). Luxury Seamless Wet Room: starting at $30,000, priced individually.",
+        a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Seamless Wet Room: starting at $30,000, priced individually.",
       },
     ],
   },
@@ -129,7 +129,7 @@ const CATEGORIES = [
       },
       {
         q: "Are there any current promotions?",
-        a: "Yes. Every qualifying Signature Grout-Free Bathroom Transformation includes up to 30 square feet of radiant heated flooring at no additional charge. Contact Ryan to confirm project qualification.",
+        a: "Yes. Every whole-bathroom renovation or whole-floor coating includes free underfloor heating — I buy the system and install it at no charge. Contact Ryan to confirm project qualification.",
       },
     ],
   },

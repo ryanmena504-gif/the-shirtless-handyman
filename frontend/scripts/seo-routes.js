@@ -18,14 +18,14 @@ const DEFAULT_OG = "https://images.unsplash.com/photo-1587023705112-34a9b4fe8317
 const SEO_ROUTES = [
   {
     path: "/",
-    title: "The Shirtless Handyman | Microcement, Tadelakt & Seamless Surfaces in New Orleans",
-    description: "I'm Ryan Mena. I install microcement, tadelakt, and custom rockscape walls in New Orleans homes — no demolition, no grout, no tile. Free design preview. Text: 504-264-4919.",
+    title: "Microcement Showers & Bathrooms New Orleans | No Grout, No Mold — The Shirtless Handyman",
+    description: "Seamless, waterproof microcement showers, bathrooms, Venetian plaster & countertops in New Orleans + the Northshore. No grout, no seams, no mold. Free quote + free heated floors with a full bathroom. Call 504-264-4919.",
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
     path: "/book",
     title: "Book Ryan Mena | The Shirtless Handyman — New Orleans",
-    description: "Pick your own time. Free in-home walkthroughs, phone consults, and project starts — book direct with Ryan. Mon–Sat, 8am–5pm Central.",
+    description: "Pick your own time. Free in-home walkthroughs, phone consults, and project starts — book direct with Ryan. Mon–Sat, 9am–5pm Central.",
     ogImage: DEFAULT_OG,
   },
   {
@@ -130,6 +130,31 @@ const SEO_ROUTES = [
     description: "Hiring a microcement installer in NOLA? Use this 6-question checklist to spot the pros from the pretenders — what to ask, what to see, and what red flags to walk away from.",
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
     ogType: "article",
+  },
+  // -------- Core service pages --------
+  {
+    path: "/microcement-showers-new-orleans",
+    title: "Microcement Showers New Orleans | Seamless, Grout-Free & Waterproof — The Shirtless Handyman",
+    description: "Seamless waterproof microcement showers in New Orleans. No grout, no seams, no mold. Often installed over existing tile. Free quote + free heated floors with a full bathroom. Call 504-264-4919.",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/wetroom-shower-niche.jpg",
+  },
+  {
+    path: "/bathroom-remodel-new-orleans",
+    title: "Bathroom Remodel New Orleans | Seamless Microcement Bathrooms + Free Heated Floors — The Shirtless Handyman",
+    description: "Full bathroom transformations in New Orleans: walls, floor, and shower in one seamless, grout-free microcement shell — with free underfloor heating included. Free quote: 504-264-4919.",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-bath-terracotta-floor.jpg",
+  },
+  {
+    path: "/venetian-plaster-new-orleans",
+    title: "Venetian Plaster New Orleans | Hand-Troweled Lime Plaster Walls — The Shirtless Handyman",
+    description: "Hand-troweled Venetian plaster and marmorino walls in New Orleans — feature walls, dining rooms, powder baths, and fireplaces in older homes. Free quote: 504-264-4919.",
+    ogImage: "https://www.theshirtlesshandyman.com/venetian-plaster-hero.jpg",
+  },
+  {
+    path: "/microcement-countertops-new-orleans",
+    title: "Microcement Countertops New Orleans | Seamless Vanity & Counter Resurfacing — The Shirtless Handyman",
+    description: "Seamless microcement countertops and vanity tops in New Orleans — a continuous, grout-free surface that can match your microcement walls and floors. Free quote: 504-264-4919.",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
   },
   // -------- Neighborhood handyman micro-pages --------
   {

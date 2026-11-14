@@ -5,7 +5,12 @@ import { ChatWidget } from "./ChatWidget";
 
 // Routes where lead-gen widgets should appear (homeowner-facing pages).
 const LEADGEN_ROUTES = [
-  "/", "/upload", "/portfolio", "/blog", "/about",
+  "/", "/upload", "/portfolio", "/blog", "/about", "/faq", "/finishes", "/contractors",
+  // Service pages
+  "/microcement-showers-new-orleans",
+  "/bathroom-remodel-new-orleans",
+  "/venetian-plaster-new-orleans",
+  "/microcement-countertops-new-orleans",
   "/microcement-new-orleans",
   "/microcement-installers-new-orleans",
   "/microcement-metairie",
@@ -55,6 +60,7 @@ export const LeadGenWidgets = () => {
   return (
     <>
       <ChatWidget />
+      <StickyMobileCTA />
     </>
   );
 };

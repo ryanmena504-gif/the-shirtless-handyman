@@ -85,6 +85,12 @@ function App() {
             <Route path="/rockscape-walls-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/pool-deck-resurfacing-new-orleans" element={<LocalServiceRoute />} />
 
+            {/* Core service pages — one per thing Ryan sells */}
+            <Route path="/microcement-showers-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/bathroom-remodel-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/venetian-plaster-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/microcement-countertops-new-orleans" element={<LocalServiceRoute />} />
+
             {/* Neighborhood handyman micro-pages — long-tail local SEO */}
             <Route path="/lakeview-handyman" element={<LocalServiceRoute />} />
             <Route path="/uptown-handyman" element={<LocalServiceRoute />} />
@@ -99,6 +105,12 @@ function App() {
 
             {/* About */}
             <Route path="/about" element={<AboutPage />} />
+
+            {/* Linked from the homepage + footer; was missing, so those links rendered a blank page */}
+            <Route path="/contractors" element={<ContractorsPage />} />
+
+            {/* Unknown URLs (old links, typos) land on the homepage instead of a blank screen */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

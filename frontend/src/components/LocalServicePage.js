@@ -8,11 +8,12 @@ import { GoogleReviews } from "./GoogleReviews";
 import { SeoHead } from "./SeoHead";
 import {
   ArrowRight, Upload, ShieldCheck, Droplets, Layers, Clock,
-  Sparkles, CheckCircle, MessageCircle, Phone, Wrench, Paintbrush, Award,
+  Sparkles, CheckCircle, MessageCircle, Phone, Wrench, Paintbrush, Award, Flame,
 } from "lucide-react";
+import { HEATED_FLOORS_OFFER_SHORT, scrollToQuoteForm } from "../lib/contact";
 
 const PHONE = "504-264-4919";
-const TEL_LINK = `tel:${PHONE.replace(/-/g, "")}`;
+const TEL_LINK = "tel:+15042644919";
 
 // Map icon string identifiers used in config -> lucide icon components
 const ICONS = {
@@ -69,29 +70,30 @@ export default function LocalServicePage({ config }) {
           "@type": "HomeAndConstructionBusiness",
           name: "The Shirtless Handyman",
           url: "https://www.theshirtlesshandyman.com",
-          telephone: "(504) 264-4919",
-          priceRange: "$$",
+          "@id": "https://www.theshirtlesshandyman.com/#business",
+          telephone: "+1-504-264-4919",
+          priceRange: "$$-$$$",
           areaServed: { "@type": "City", name: city },
         },
         areaServed: { "@type": "City", name: city },
         serviceType,
-        // priceRange is the field Google SERP renderers read directly when deciding
-        // whether to show a "From $X" pricing snippet alongside the search result.
-        priceRange: `$${priceLow.toLocaleString()}–$${priceHigh.toLocaleString()}`,
-        offers: {
-          "@type": "AggregateOffer",
-          priceCurrency: "USD",
-          lowPrice: String(priceLow),
-          highPrice: String(priceHigh),
-          offerCount: "5",
-          availability: "https://schema.org/InStock",
-          priceSpecification: {
-            "@type": "PriceSpecification",
-            priceCurrency: "USD",
-            minPrice: String(priceLow),
-            maxPrice: String(priceHigh),
-          },
-        },
+        // Pricing is only emitted when the config has real numbers. Pages for
+        // services Ryan prices purely per project (no published range) skip it
+        // rather than inventing one.
+        ...(priceLow
+          ? {
+              priceRange: priceHigh
+                ? `$${priceLow.toLocaleString()}–$${priceHigh.toLocaleString()}`
+                : `From $${priceLow.toLocaleString()}`,
+              offers: {
+                "@type": "AggregateOffer",
+                priceCurrency: "USD",
+                lowPrice: String(priceLow),
+                ...(priceHigh ? { highPrice: String(priceHigh) } : {}),
+                availability: "https://schema.org/InStock",
+              },
+            }
+          : {}),
       },
       {
         "@type": "BreadcrumbList",
@@ -137,15 +139,26 @@ export default function LocalServicePage({ config }) {
             </h1>
             <p className="text-base md:text-lg text-white/65 max-w-2xl mb-8 leading-relaxed">{heroParagraph}</p>
 
-            <div className="flex flex-wrap gap-3 mb-8">
+            <p className="inline-flex items-center gap-2 text-sm text-white/85 bg-[#D97757]/15 border border-[#D97757]/40 rounded-full px-4 py-1.5 mb-6">
+              <Flame className="w-4 h-4 text-[#D97757]" aria-hidden="true" />
+              {HEATED_FLOORS_OFFER_SHORT}
+            </p>
+
+            <div className="flex flex-wrap gap-3 mb-6">
               <Button
-                onClick={() => navigate("/upload")}
+                onClick={() => scrollToQuoteForm()}
                 className="h-13 px-7 rounded-full bg-[#D97757] text-white font-medium hover:bg-[#C56545]"
-                data-testid={`${slug}-cta-upload`}
+                data-testid={`${slug}-cta-quote`}
               >
-                <Upload className="w-4 h-4 mr-2" />
-                {primaryCta}
+                {primaryCta || "Get my free quote"}
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
+              <a href={TEL_LINK} data-testid={`${slug}-cta-call`}>
+                <Button variant="outline" className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Call {PHONE}
+                </Button>
+              </a>
               <a href={smsLink}>
                 <Button variant="outline" className="h-13 px-7 rounded-full border-white/30 text-white hover:bg-white/10 font-medium">
                   <MessageCircle className="w-4 h-4 mr-2" />
@@ -155,12 +168,19 @@ export default function LocalServicePage({ config }) {
             </div>
 
             <p className="text-sm text-white/45">
-              Or call me directly:{" "}
-              <a href={TEL_LINK} className="text-white/70 hover:text-white underline underline-offset-2">{PHONE}</a>
+              Want to see it first?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/upload")}
+                className="text-white/75 hover:text-white underline underline-offset-2"
+                data-testid={`${slug}-cta-upload`}
+              >
+                Preview your own room in microcement — free
+              </button>
             </p>
 
             <div className="mt-8 max-w-xl">
-              <InstantQuoteForm variant="dark" source={`landing_${slug}`} defaultProjectType={defaultProjectType} />
+              <InstantQuoteForm id="quote" variant="dark" source={`landing_${slug}`} defaultProjectType={defaultProjectType} />
             </div>
           </div>
         </section>
@@ -355,6 +375,10 @@ export default function LocalServicePage({ config }) {
             </p>
             <div className="flex flex-wrap gap-2.5">
               {[
+                { slug: "microcement-showers-new-orleans", label: "Seamless Showers" },
+                { slug: "bathroom-remodel-new-orleans", label: "Bathroom Transformations" },
+                { slug: "venetian-plaster-new-orleans", label: "Venetian Plaster" },
+                { slug: "microcement-countertops-new-orleans", label: "Countertops" },
                 { slug: "microcement-new-orleans", label: "Microcement" },
                 { slug: "microcement-installers-new-orleans", label: "Microcement Installers" },
                 { slug: "tadelakt-new-orleans", label: "Tadelakt" },

@@ -1,7 +1,10 @@
 import { useLocation } from "react-router-dom";
 import LocalServicePage from "../components/LocalServicePage";
 import { LOCAL_SERVICE_CONFIGS } from "../lib/localServiceConfigs";
+import { SERVICE_PAGE_CONFIGS } from "../lib/servicePageConfigs";
 import HomePage from "./HomePage";
+
+const ALL_CONFIGS = { ...LOCAL_SERVICE_CONFIGS, ...SERVICE_PAGE_CONFIGS };
 
 /**
  * LocalServiceRoute — single route component that resolves the current pathname
@@ -15,7 +18,7 @@ import HomePage from "./HomePage";
 export default function LocalServiceRoute() {
   const { pathname } = useLocation();
   const slug = pathname.replace(/^\//, "").replace(/\/$/, "");
-  const config = LOCAL_SERVICE_CONFIGS[slug];
+  const config = ALL_CONFIGS[slug];
   if (!config) return <HomePage />;
   return <LocalServicePage config={config} />;
 }

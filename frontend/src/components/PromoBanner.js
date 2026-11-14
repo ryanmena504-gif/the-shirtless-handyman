@@ -54,7 +54,7 @@ export const PromoBanner = () => {
             Signature offer:
           </span>
           <span>
-            Every qualifying <strong>Signature Grout-Free Bathroom Transformation</strong> includes <strong>up to 30 sq ft of radiant heated flooring at no additional charge</strong>.
+            Every whole-bathroom renovation or whole-floor coating includes <strong>free underfloor heating — I buy the system and install it at no charge</strong>.
           </span>{" "}
           <a
             href="sms:5042644919?body=Hey%20Ryan%2C%20I%27d%20like%20to%20see%20if%20my%20bathroom%20qualifies%20for%20the%20radiant%20heated%20flooring%20included%20with%20the%20Signature%20package."
