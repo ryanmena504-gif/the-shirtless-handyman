@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { trackEvent, identifyLead } from "../lib/tracking";
 import { tagLeadSource } from "../utils/leadSource";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 const SMS_LINK = "sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20priced%20a%20project%20on%20your%20site%20and%20want%20to%20talk.";
 
 /**
@@ -60,7 +60,7 @@ const FINISHES = [
     id: "rockscape",
     label: "Rockscape Feature Wall",
     sub: "Sculpted stone-look accent wall, optional LED backlighting",
-    flat: [800, 2500],
+    flat: [3500, 10000],
     sizeMin: 20,
     sizeMax: 120,
     sizeDefault: 40,
@@ -83,16 +83,33 @@ function fmt(n) {
   return `$${Math.round(n).toLocaleString()}`;
 }
 
+// Ryan's real range: most projects land between $3,000 and $10,000, and every
+// job is quoted per project after a free site visit. The calculator never
+// shows a number below the $3k starting point, and anything past $10k shows
+// as "$10,000+" instead of a scary big number.
+const PROJECT_MIN = 3000;
+const TYPICAL_MAX = 10000;
+
 function calcRange(finish, sqft) {
-  if (finish.flat) return finish.flat;
-  let low = sqft * finish.perSqFt[0];
-  let high = sqft * finish.perSqFt[1];
-  if (finish.floor) {
-    low = Math.max(low, finish.floor[0]);
-    high = Math.max(high, finish.floor[1]);
+  let low;
+  let high;
+  if (finish.flat) {
+    [low, high] = finish.flat;
+  } else {
+    low = sqft * finish.perSqFt[0];
+    high = sqft * finish.perSqFt[1];
+    if (finish.floor) {
+      low = Math.max(low, finish.floor[0]);
+      high = Math.max(high, finish.floor[1]);
+    }
   }
+  low = Math.max(low, PROJECT_MIN);
+  high = Math.max(high, low);
+  const over = high > TYPICAL_MAX;
+  low = Math.min(low, TYPICAL_MAX);
+  high = Math.min(high, TYPICAL_MAX);
   // Round to nearest 50
-  return [Math.round(low / 50) * 50, Math.round(high / 50) * 50];
+  return [Math.round(low / 50) * 50, Math.round(high / 50) * 50, over];
 }
 
 export function PricingCalculator() {
@@ -107,7 +124,8 @@ export function PricingCalculator() {
     if (next) setSqft(next.sizeDefault);
   };
 
-  const [low, high] = useMemo(() => calcRange(finish, sqft), [finish, sqft]);
+  const [low, high, over] = useMemo(() => calcRange(finish, sqft), [finish, sqft]);
+  const highLabel = `${fmt(high)}${over ? "+" : ""}`;
 
   // Lead capture state
   const [name, setName] = useState("");
@@ -134,7 +152,7 @@ export function PricingCalculator() {
         source: taggedSource,
         // Include the calculated quote in the description so Ryan sees the
         // estimate that the lead is responding to.
-        project_description: `Pricing Calculator: ${finish.label} · ${sqft} sq ft · estimate ${fmt(low)}–${fmt(high)}`,
+        project_description: `Pricing Calculator: ${finish.label} · ${sqft} sq ft · estimate ${fmt(low)}–${highLabel}`,
       });
       trackEvent("pricing_calculator_lead", { finish: finish.id, sqft, low, high });
       identifyLead({
@@ -264,13 +282,17 @@ export function PricingCalculator() {
                 className="text-4xl md:text-5xl font-light leading-tight tracking-tight"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                {fmt(low)}
-                <span className="text-white/40 mx-1.5">–</span>
-                {fmt(high)}
+                {low === high && !over ? `Around ${fmt(low)}` : (
+                  <>
+                    {fmt(low)}
+                    <span className="text-white/40 mx-1.5">–</span>
+                    {highLabel}
+                  </>
+                )}
               </p>
               <p className="text-xs text-white/45 mt-2 leading-relaxed">
-                Honest range. Includes prep, materials, labor, and topcoat sealing.
-                Final quote after Ryan walks the space.
+                Honest ballpark. Most of my projects land between $3,000 and $10,000.
+                Every job is quoted per project after a free site visit.
               </p>
             </motion.div>
 
@@ -283,7 +305,7 @@ export function PricingCalculator() {
                 <li>· Substrate prep + bonding primer</li>
                 <li>· Material + premium pigment</li>
                 <li>· 5–7 hand-applied layers</li>
-                <li>· Topcoat sealing for a 10-year finish</li>
+                <li>· Protective topcoat sealing</li>
               </ul>
             </div>
 

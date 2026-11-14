@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 import { LeadGenWidgets } from "./components/LeadGenWidgets";
 import { trackVisit } from "./utils/leadSource";
+import { warmUpApi } from "./lib/apiBase";
 import HomePage from "./pages/HomePage";
 import UploadPage from "./pages/UploadPage";
 import AnalysisPage from "./pages/AnalysisPage";
@@ -52,6 +53,7 @@ function ScrollToHash() {
 function App() {
   useEffect(() => {
     trackVisit();
+    warmUpApi();
   }, []);
   return (
     <HelmetProvider>

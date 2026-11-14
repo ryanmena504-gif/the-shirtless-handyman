@@ -6,7 +6,7 @@ import { Calendar, Clock, Check, ChevronLeft, ChevronRight, Loader2, MessageCirc
 import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || "https://design-reveal.preview.emergentagent.com"}/api`;
+import { API } from "../lib/apiBase";
 const PHONE = "504-264-4919";
 
 /**

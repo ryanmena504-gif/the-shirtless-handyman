@@ -1,0 +1,49 @@
+# Render Blueprint for the website's API ONLY.
+#
+# It creates one FREE web service: theshirtlesshandyman-api ($0/month).
+# It does NOT touch the existing static site that serves
+# www.theshirtlesshandyman.com — that site stays managed in the dashboard.
+# If Render ever offers to change or delete a service you didn't expect,
+# cancel and follow docs/BACKEND_SETUP.md by hand instead.
+#
+# Free instances sleep after ~15 idle minutes and take up to a minute to
+# wake. The website pings /api/health on every page load to wake it early,
+# and every form falls back to "Text it to Ryan" if the API is slow.
+# Upgrading this one service to Starter ($7/month) removes the sleep. Only
+# do that if Ryan decides it's worth it.
+services:
+  - type: web
+    name: theshirtlesshandyman-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: CORS_ORIGINS
+        value: https://www.theshirtlesshandyman.com,https://theshirtlesshandyman.com
+      - key: DB_NAME
+        value: shirtless_handyman
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SITE_BASE_URL
+        value: https://www.theshirtlesshandyman.com
+      # --- Lead delivery: Airtable (GEAUXleads "Leads" table) ---
+      # Paste the same Airtable token GEAUXleads uses. Never commit it.
+      - key: AIRTABLE_API_KEY
+        sync: false
+      - key: AIRTABLE_BASE_ID
+        value: appuyAHSSzJrPWlec
+      - key: AIRTABLE_LEADS_TABLE_ID
+        value: tbliTlH5mmdOjc280
+      # --- Admin page password (/admin) ---
+      - key: ADMIN_PASSWORD
+        sync: false
+      # --- Optional: permanent storage (free MongoDB Atlas M0). Leave
+      # blank to run on the in-memory database. ---
+      - key: MONGO_URL
+        sync: false

@@ -25,11 +25,11 @@ const CATEGORIES = [
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Every bathroom I install falls into one of three tiers. Essential Seamless Bathroom Overlay: starting at $5,500 — most qualifying overlays range from $5,500–$9,500. Signature Grout-Free Bathroom Transformation: starting at $15,000 — most Signature transformations range from $18,000–$35,000+, and every whole-bathroom renovation or whole-floor coating includes free underfloor heating — I buy the system and install it at no charge. Luxury Seamless Wet Room: starting at $30,000 — custom luxury projects are priced individually. Final pricing depends on substrate condition, square footage, waterproofing requirements, plumbing, fixtures, electrical work, access, and finish complexity.",
+        a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
       },
       {
         q: "Can I install microcement over existing tile?",
-        a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying Essential Overlay projects may require little or no demolition. Prep typically includes mechanical scarification, a quartz-loaded bonding primer, a 24-hour cure, and reinforcement mesh embedded in the first coat. When the underlying tile assembly is unstable, delaminating, or waterproofing needs to be rebuilt, the project moves into the Signature tier.",
+        a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying overlay projects may require little or no demolition. Prep typically includes mechanical scarification, a quartz-loaded bonding primer, a 24-hour cure, and reinforcement mesh embedded in the first coat. When the underlying tile assembly is unstable, delaminating, or waterproofing needs to be rebuilt, the project becomes a full-bathroom rebuild instead of an overlay.",
       },
       {
         q: "Is microcement waterproof?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt projects follow the same general service tiers as microcement, but final pricing may differ based on surface preparation, application complexity, finish selection, and wet-area requirements. Essential Seamless Bathroom Overlay: starting at $5,500 (most qualifying overlays $5,500–$9,500). Signature Grout-Free Bathroom Transformation: starting at $15,000 (most Signature transformations $18,000–$35,000+, includes free underfloor heating, supplied and installed at no charge). Luxury Seamless Wet Room: starting at $30,000, priced individually.",
+        a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
       },
     ],
   },

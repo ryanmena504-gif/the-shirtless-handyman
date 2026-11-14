@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException, Depends, Request, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-SECRET_KEY = os.environ['JWT_SECRET']
+SECRET_KEY = os.environ.get('JWT_SECRET') or __import__('secrets').token_urlsafe(48)  # random fallback: admin logins reset on restart
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 COOKIE_NAME = "auth_token"
@@ -35,7 +35,10 @@ def set_auth_cookie(response: Response, token: str):
         value=token,
         httponly=True,
         secure=True,
-        samesite="lax",
+        # The API runs on its own domain (onrender.com), so the admin cookie
+        # must be allowed cross-site. Override with COOKIE_SAMESITE=lax when
+        # the API sits on api.theshirtlesshandyman.com.
+        samesite=os.environ.get("COOKIE_SAMESITE", "none").strip().lower() or "none",
         max_age=ACCESS_TOKEN_EXPIRE_HOURS * 3600,
         path="/",
     )
