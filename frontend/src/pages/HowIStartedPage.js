@@ -29,8 +29,8 @@ const CHAPTERS = [
     year: "The start",
     icon: Hammer,
     title: "A handyman with a truck and a phone",
-    image: "/story/chapter-1-handyman.jpg",
-    imageAlt: "The Shirtless Handyman illustration — Ryan Mena with a drill, tool belt, and heart tattoo",
+    image: "/story/chapter-1-handyman.jpg?v=2",
+    imageAlt: "The Shirtless Handyman illustration — Ryan Mena with a drill, tool belt, and sacred heart chest tattoo",
     imageCaption: "The Shirtless Handyman, day one — one guy, one phone.",
     body:
       "The Shirtless Handyman didn't start as a high-end finish studio. It started with me — one guy, one truck, and a phone that wouldn't stop ringing. Doors that wouldn't close. Drywall a kid put a foot through. Leaky faucets. Ceiling fans nobody could figure out. If it was broken in a New Orleans house, I'd show up and fix it.",

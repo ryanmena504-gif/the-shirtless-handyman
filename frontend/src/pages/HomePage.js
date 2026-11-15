@@ -628,7 +628,7 @@ export default function HomePage() {
             <ScrollReveal className="order-2 md:order-1" delay={0.1}>
               <div className="relative aspect-square rounded-3xl overflow-hidden bg-[#F0E8D8]">
                 <img
-                  src="/ryan-mena-illustration.jpg"
+                  src="/ryan-mena-illustration.jpg?v=2"
                   alt="Ryan Mena — The Shirtless Handyman — illustration"
                   className="absolute inset-0 w-full h-full object-contain"
                 />
