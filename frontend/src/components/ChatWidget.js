@@ -11,7 +11,7 @@ const SESSION_STORAGE_KEY = "shh_chat_session_v1";
 
 // Whitelist of site paths the AI is allowed to link to. Anything else stays as
 // plain text — the AI cannot fabricate a route into a live link.
-const KNOWN_PATHS = ["/book", "/upload", "/faq", "/portfolio", "/about", "/blog"];
+const KNOWN_PATHS = ["/book", "/upload", "/faq", "/portfolio", "/about", "/blog", "/shop"];
 
 /**
  * Render a chat message string as React nodes, converting known site paths,

@@ -5,7 +5,7 @@ import { ChatWidget } from "./ChatWidget";
 
 // Routes where lead-gen widgets should appear (homeowner-facing pages).
 const LEADGEN_ROUTES = [
-  "/", "/upload", "/portfolio", "/blog", "/about", "/faq", "/finishes", "/contractors",
+  "/", "/upload", "/portfolio", "/blog", "/about", "/faq", "/finishes", "/shop", "/contractors",
   // Service pages
   "/microcement-showers-new-orleans",
   "/bathroom-remodel-new-orleans",

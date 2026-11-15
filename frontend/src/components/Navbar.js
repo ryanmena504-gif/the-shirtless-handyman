@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { label: "Pricing", to: "/#pricing", testid: "nav-pricing" },
   { label: "About", to: "/about", testid: "nav-about" },
   { label: "FAQ", to: "/faq", testid: "nav-faq" },
+  { label: "Shop", to: "/shop", testid: "nav-shop" },
 ];
 
 export const Navbar = () => {
@@ -37,7 +38,7 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-16">
         <Link
           to="/"
-          className="flex items-center gap-2 text-foreground"
+          className="flex items-center gap-2 shrink-0 whitespace-nowrap text-foreground"
           data-testid="navbar-logo"
         >
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
@@ -53,13 +54,14 @@ export const Navbar = () => {
           </div>
         </Link>
 
-        {/* Desktop nav — 5 items + 1 CTA */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Desktop nav. Shop makes seven links, so the row starts at lg
+            and padding stays tight until xl — otherwise the wordmark squishes. */}
+        <div className="hidden lg:flex items-center gap-1">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.testid}
               to={item.to}
-              className="inline-flex items-center h-9 px-2.5 lg:px-4 rounded-full text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="inline-flex items-center h-9 px-2.5 xl:px-4 rounded-full text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               data-testid={item.testid}
             >
               {item.label}
@@ -83,7 +85,7 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile: one-tap call + menu toggle */}
-        <div className="md:hidden flex items-center gap-1">
+        <div className="lg:hidden flex items-center gap-1">
         <a
           href={TEL_LINK}
           className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-[#D97757] text-white text-sm font-semibold"
@@ -94,7 +96,7 @@ export const Navbar = () => {
           Call
         </a>
         <button
-          className="md:hidden p-2"
+          className="lg:hidden p-2"
           onClick={() => setMobileOpen(!mobileOpen)}
           data-testid="mobile-menu-toggle"
           aria-label="Toggle menu"
@@ -106,7 +108,7 @@ export const Navbar = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden glass-card border-t border-border/40 p-4 flex flex-col gap-2 animate-fade-in">
+        <div className="lg:hidden glass-card border-t border-border/40 p-4 flex flex-col gap-2 animate-fade-in">
           {NAV_ITEMS.map((item) => (
             <Button
               key={item.testid}

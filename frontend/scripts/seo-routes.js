@@ -35,6 +35,12 @@ const SEO_ROUTES = [
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
+    path: "/shop",
+    title: "Shop | Rep the Shirtless Handyman — Tanks & Caps",
+    description: "Rep the Shirtless Handyman. Muscle tanks and a fitted cap from New Orleans' microcement and Venetian plaster pro. Cheeky name, high-end work. No grout. No seams. No shirt.",
+    ogImage: `${SITE}/merch/tattoo-torso-tank.webp`,
+  },
+  {
     path: "/about",
     title: "About Ryan Mena | The Shirtless Handyman — New Orleans Microcement Specialist",
     description: "Meet Ryan Mena — New Orleans-born craftsman behind The Shirtless Handyman. I used to install tile. Now I install microcement, tadelakt, and rockscape walls.",

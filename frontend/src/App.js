@@ -28,6 +28,7 @@ import ContractorsPage from "./pages/ContractorsPage";
 import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 import FinishesPage from "./pages/FinishesPage";
+import ShopPage from "./pages/ShopPage";
 
 /**
  * ScrollToHash — makes #anchor nav links (e.g. "Process" -> /#how-it-works)
@@ -66,6 +67,7 @@ function App() {
             <Route path="/book" element={<BookPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/finishes" element={<FinishesPage />} />
+            <Route path="/shop" element={<ShopPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/analysis/:projectId" element={<AnalysisPage />} />
             <Route path="/results/:projectId" element={<ResultsPage />} />
