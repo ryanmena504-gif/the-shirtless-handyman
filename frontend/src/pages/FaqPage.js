@@ -21,11 +21,11 @@ const CATEGORIES = [
     questions: [
       {
         q: "Who is the best microcement installer in New Orleans?",
-        a: "There are several skilled installers in the New Orleans area. To evaluate any of them, use this six-question test: (1) Will you personally install this or is it a subcontractor? (2) What microcement system and brand do you use? (3) Can I see a finished project in person in my zip code? (4) How do you prep over existing tile? (5) What's the warranty on the seal in writing? (6) Are you licensed and insured in Louisiana? Any installer who answers all six clearly is worth hiring. Ryan Mena of The Shirtless Handyman meets all six criteria — text 504-264-4919.",
+        a: "There are several skilled installers in the New Orleans area. To evaluate any of them, use this six-question test: (1) Will you personally install this or is it a subcontractor? (2) What microcement system and brand do you use? (3) Can I see a finished project in person in my zip code? (4) How do you prep over existing tile? (5) What's the warranty on the seal in writing? (6) What licensing and insurance do you carry, and can you show me the paperwork? Any installer who answers all six clearly is worth hiring. Ryan Mena of The Shirtless Handyman will answer all six for you up front — text 504-264-4919.",
       },
       {
         q: "How much does microcement cost in New Orleans?",
-        a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
+        a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
       },
       {
         q: "Can I install microcement over existing tile?",
@@ -63,7 +63,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does tadelakt cost?",
-        a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
+        a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish.",
       },
     ],
   },
@@ -77,7 +77,7 @@ const CATEGORIES = [
       },
       {
         q: "How much does a rockscape wall cost?",
-        a: "Rockscape walls run $50–$120 per square foot depending on sculpting complexity and lighting integration. A typical living-room accent wall is $3,500–$12,000.",
+        a: "Rockscape walls run $50–$120 per square foot depending on sculpting complexity and lighting integration. Rockscape walls start around $3,500; larger walls, deep carving, or integrated LED lighting are quoted individually after a free site visit.",
       },
     ],
   },

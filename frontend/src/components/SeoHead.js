@@ -39,6 +39,11 @@ export function SeoHead({ title, description, canonical, ogImage, ogType = "webs
           tags[i].parentNode?.removeChild(tags[i]);
         }
       });
+      // Drop the JSON-LD baked into the prerendered HTML once Helmet has
+      // rendered the live copy, so the page never carries two versions.
+      document
+        .querySelectorAll('script[type="application/ld+json"][data-prerendered]')
+        .forEach((el) => el.parentNode?.removeChild(el));
     }, 0);
     return () => clearTimeout(t);
   });

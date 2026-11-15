@@ -29,8 +29,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "See If Your Bathroom Qualifies",
     smsBody: "Hey Ryan, I'm interested in microcement in New Orleans.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3000,
     benefits: [
       { icon: "Droplets", title: "100% Waterproof", body: "Sealed microcement has zero seams or grout — no path for water to enter. Built for NOLA wet zones, humidity, and decades of use." },
       { icon: "Layers", title: "Installs Over Existing Tile", body: "We bond directly to your existing shower tile, floor, or walls. No demolition, no debris, no dumpster in your driveway." },
@@ -48,7 +47,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, specializes in microcement installation across Greater New Orleans — including Metairie, Gretna, Harvey, Lakeview, Uptown, Mid-City, Marigny, Algiers, and the Westbank." },
-      { q: "How much does microcement cost per square foot in New Orleans?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "How much does microcement cost per square foot in New Orleans?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Can microcement be installed over existing tile in a New Orleans shower?", a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying overlay projects may require little or no demolition. When the underlying tile is failing or the waterproofing needs to be rebuilt, the project becomes a full-bathroom rebuild instead of an overlay." },
       { q: "Is microcement a good choice for New Orleans humidity?", a: "Microcement is fully waterproof when properly sealed and is widely used in wet zones including showers, pool decks, and exterior surfaces. Its sealed, jointless surface makes it especially well-suited to high-humidity climates like New Orleans, where grout is prone to mold and failure." },
     ],
@@ -74,8 +73,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Get a Seamless Transformation Quote",
     smsBody: "Hey Ryan, I'm looking for a microcement installer in New Orleans.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3000,
     benefits: [
       { icon: "Award", title: "The Installer Touches Every Job", body: "I install every microcement project personally — same hands from estimate to final seal. No 'we'll send a crew.' No language-barrier subs. You get one accountable craftsman." },
       { icon: "ShieldCheck", title: "Louisiana LLC, NOLA-Based", body: "The Shirtless Handyman LLC is a registered Louisiana business, owner-operated out of New Orleans. Local references, local accountability. No national franchise pulling permits from Texas." },
@@ -94,7 +92,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (I use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
       { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
-      { q: "How much do microcement installers charge in New Orleans?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "How much do microcement installers charge in New Orleans?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
       { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. I schedule around your life — you can keep using the rest of the house while I work, and the room is back in service within 48 hours of the final seal." },
       { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying overlay projects may require little or no demolition. Prep typically includes mechanical scarification and a bonding primer. When the underlying tile is unstable or waterproofing needs to be rebuilt, the project becomes a full-bathroom rebuild instead of an overlay." },
@@ -119,8 +117,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "See If Your Bathroom Qualifies",
     smsBody: "Hey Ryan, I'm in Metairie and interested in microcement.",
     defaultProjectType: "Microcement Bathroom",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3000,
     benefits: [
       { icon: "Droplets", title: "Built for slab-on-grade homes", body: "Most Metairie homes sit on a concrete slab — the perfect substrate for microcement. We bond directly with zero subfloor work." },
       { icon: "Layers", title: "Installs Over Existing Tile", body: "Keep your current bathroom intact. We bond microcement directly to the tile — no demolition, no debris in your driveway." },
@@ -137,7 +134,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs microcement in Metairie?", a: "The Shirtless Handyman, run by Ryan Mena, installs microcement throughout Metairie, Old Metairie, Bucktown, Bonnabel, and the rest of Jefferson Parish." },
-      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "What's the average cost of a microcement bathroom in Metairie?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Can microcement be installed on a concrete slab home?", a: "Yes — concrete slab homes (very common in Metairie) are an ideal substrate for microcement. I install directly on properly prepped concrete, often without any subfloor work." },
       { q: "How does microcement hold up in Louisiana humidity?", a: "Properly sealed microcement is fully waterproof and mold-resistant — making it especially well-suited to Metairie's humid, year-round wet climate. It's used in walk-in showers, wet rooms, and outdoor patios across the metro." },
     ],
@@ -161,8 +158,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "See If Your Shower Qualifies",
     smsBody: "Hey Ryan, I'm interested in a tadelakt shower in New Orleans.",
     defaultProjectType: "Tadelakt Shower",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3000,
     benefits: [
       { icon: "Droplets", title: "Naturally Waterproof", body: "Tadelakt has been used in Moroccan hammams for 800+ years because the lime + olive-soap finish self-seals against water. No surface coating required." },
       { icon: "Sparkles", title: "Antibacterial by Chemistry", body: "The high-pH lime substrate naturally resists mold, mildew, and bacteria — a real advantage in New Orleans humidity." },
@@ -179,7 +175,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who installs tadelakt in New Orleans?", a: "The Shirtless Handyman, run by Ryan Mena, installs tadelakt across Greater New Orleans — including Uptown, Garden District, Lakeview, Mid-City, and the Westbank." },
-      { q: "How much does a tadelakt shower cost in New Orleans?", a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "How much does a tadelakt shower cost in New Orleans?", a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Is tadelakt really waterproof without a sealer?", a: "Yes. Authentic tadelakt is burnished with river stone and treated with olive-oil soap, which creates a self-sealing surface. It has been the traditional finish for Moroccan hammams (steam baths) for centuries." },
       { q: "How long does a tadelakt shower take to install?", a: "Most tadelakt shower installs take 5 to 8 days because of the multiple hand-applied layers and burnishing time. The result is a one-of-a-kind hand-finished surface that machine-made tile can never replicate." },
     ],
@@ -203,8 +199,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Request a Custom Rockscape Consult",
     smsBody: "Hey Ryan, I want a custom rockscape wall in New Orleans.",
     defaultProjectType: "Rockscape Feature Wall",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3500,
     benefits: [
       { icon: "Award", title: "Built for Your Exact Space", body: "We sculpt each panel to fit your wall dimensions, ceiling line, and architectural features. No two rockscape walls are alike." },
       { icon: "Sparkles", title: "LED Backlighting Available", body: "Integrate warm or color-shifting LED behind the sculpted face for cinematic depth — perfect for living rooms and lobbies." },
@@ -221,7 +216,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "What is a rockscape wall?", a: "A rockscape wall is a hand-sculpted accent wall made from foam-core panels coated in microaggregate to give the look and feel of carved natural stone. It can be backlit, color-tinted, or shaped to integrate with existing architecture." },
-      { q: "How much does a custom rockscape wall cost in New Orleans?", a: "Most rockscape walls run $3,500 to $12,000 depending on wall size, depth of carving, and whether LED backlighting is integrated. Large commercial installations can reach $25,000." },
+      { q: "How much does a custom rockscape wall cost in New Orleans?", a: "Rockscape walls start around $3,500. Wall size, depth of carving, and whether LED backlighting is integrated change the number, so larger walls are quoted individually after a free site visit." },
       { q: "Is the surface real stone?", a: "No — and that's a feature, not a bug. Real carved stone of this scale would weigh hundreds of pounds and require structural reinforcement. Our sculpted foam + microaggregate panels are lightweight, look and feel real to the touch, and install on any standard wall." },
       { q: "How long does a rockscape wall take to install?", a: "A typical accent wall takes 3 to 6 days depending on size and detail. Larger commercial walls may take 1–2 weeks of on-site sculpting and finishing." },
     ],
@@ -245,8 +240,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     primaryCta: "Request a Pool Deck Assessment",
     smsBody: "Hey Ryan, I need pool deck resurfacing in New Orleans.",
     defaultProjectType: "Pool Deck",
-    priceLow: 5500,
-    priceHigh: 35000,
+    priceLow: 3000,
     benefits: [
       { icon: "Droplets", title: "Weatherproof + UV-Stable", body: "Sealed microterrazzo handles year-round NOLA sun, summer thunderstorms, and the occasional flood. No cracking. No fading." },
       { icon: "ShieldCheck", title: "Slip-Resistant Finish", body: "We add a fine aggregate to the topcoat so the deck stays grippy when wet — important for pools and bare feet." },
@@ -291,7 +285,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I'm in Lakeview and need help with a project.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 150,
-    priceHigh: 12000,
     benefits: [
       { icon: "Clock", title: "Same-Week Availability", body: "Lakeview is 12 minutes from my truck. Small repairs usually get scheduled within a week, microcement within 2–3." },
       { icon: "ShieldCheck", title: "Locally Owned & Accountable", body: "A registered Louisiana LLC, based right here in New Orleans. Not a national franchise quote." },
@@ -309,7 +302,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     faq: [
       { q: "Do you cover all of Lakeview?", a: "Yes — from Robert E. Lee down to West End and across to Lake Vista. Lakeview is one of my most-requested neighborhoods because of its post-Katrina rebuild density." },
       { q: "Can you do both handyman and microcement on the same visit?", a: "Absolutely. Many Lakeview clients book a microcement bathroom and have me knock out the to-do list (drywall patches, fixture installs, paint touch-ups) while I'm there. One trip, one invoice." },
-      { q: "How much does a Lakeview microcement bathroom cost?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "How much does a Lakeview microcement bathroom cost?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
     ],
   },
 
@@ -330,7 +323,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I'm in Uptown and need help with a project.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 150,
-    priceHigh: 18000,
     benefits: [
       { icon: "Award", title: "Historic Home Experience", body: "Lath-and-plaster walls, old subfloors, narrow shotgun layouts — I've worked them all. I don't damage what I'm hired to improve." },
       { icon: "Layers", title: "Microcement Over Anything", body: "Bonds directly to original tile, plaster, or even old wood — perfect for Uptown homes where demolition is too risky." },
@@ -369,7 +361,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I'm in Mid-City and need help with a project.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 150,
-    priceHigh: 14000,
     benefits: [
       { icon: "Wrench", title: "All-in-One Craftsman", body: "Handyman to high-end microcement under one phone number. No subcontracting." },
       { icon: "Layers", title: "Microcement Over Old Tile", body: "Most Mid-City bathrooms still have 1950s tile. We bond microcement directly — no demolition required." },
@@ -408,7 +399,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I'm in Bywater and want to chat about a project.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 150,
-    priceHigh: 16000,
     benefits: [
       { icon: "Sparkles", title: "Fits the Bywater Aesthetic", body: "Microcement, tadelakt, and rockscape look the way Bywater wants to look — warm, hand-finished, never sterile." },
       { icon: "Award", title: "STR-Friendly Turnaround", body: "Quick-turn renovations between Airbnb guests. Tested process for Bywater short-term rentals." },
@@ -447,7 +437,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I'm in the French Quarter and have a project to discuss.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 200,
-    priceHigh: 25000,
     benefits: [
       { icon: "Award", title: "Historic Property Experience", body: "Quarter buildings need a craftsman who respects what's there. We test before we touch and document every step." },
       { icon: "ShieldCheck", title: "Ready for Quarter Work", body: "Familiar with VCC restrictions, courtyard access, and STR licensing context." },
@@ -486,7 +475,6 @@ export const LOCAL_SERVICE_CONFIGS = {
     smsBody: "Hey Ryan, I have a Garden District home and need help.",
     defaultProjectType: "Handyman / Microcement",
     priceLow: 200,
-    priceHigh: 35000,
     benefits: [
       { icon: "Award", title: "High-End Finish Specialist", body: "Tadelakt, hand-burnished microcement, custom-tinted venetian plaster. Built for homes where the finish has to look the part." },
       { icon: "Sparkles", title: "Historic-Sensitive Approach", body: "I work around original moldings, plaster, and trim. We test substrates and protect what's there." },
@@ -503,7 +491,7 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Do you work on Garden District historic homes?", a: "Yes — a large portion of my high-end work is Garden District renovations. We move carefully around original moldings, plaster, and trim, and we test every substrate before we apply microcement or tadelakt." },
-      { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
+      { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Can you coordinate with our architect or designer?", a: "Absolutely. A lot of my Garden District work is designer-specified — I'm comfortable presenting samples, color matching, and meeting on-site to walk specs." },
     ],
   },
