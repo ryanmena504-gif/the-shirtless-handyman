@@ -1095,6 +1095,7 @@ export default function HomePage() {
               <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-process">Process</a>
               <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-pricing">Pricing</a>
               <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-about">About</button>
+              <a href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-shop">Shop</a>
               <button onClick={() => navigate("/contractors")} className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors" data-testid="footer-contractors">For Contractors</button>
               <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground/40 hover:text-foreground transition-colors" data-testid="footer-admin-link">Admin</button>
             </div>
