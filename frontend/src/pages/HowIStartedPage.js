@@ -29,7 +29,7 @@ const CHAPTERS = [
     year: "The start",
     icon: Hammer,
     title: "A handyman with a truck and a phone",
-    image: "/story/chapter-1-handyman.jpg?v=2",
+    image: "/story/chapter-1-handyman.jpg?v=3",
     imageAlt: "The Shirtless Handyman illustration — Ryan Mena with a drill, tool belt, and sacred heart chest tattoo",
     imageCaption: "The Shirtless Handyman, day one — one guy, one phone.",
     body:
