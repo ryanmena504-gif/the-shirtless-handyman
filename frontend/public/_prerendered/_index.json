@@ -3,7 +3,7 @@
     {
       "path": "/",
       "slug": "home",
-      "size": 98845
+      "size": 98841
     },
     {
       "path": "/book",
@@ -63,12 +63,12 @@
     {
       "path": "/blog",
       "slug": "blog",
-      "size": 28241
+      "size": 28242
     },
     {
       "path": "/blog/microcement-vs-tile-cost-new-orleans",
       "slug": "blog__microcement-vs-tile-cost-new-orleans",
-      "size": 24539
+      "size": 24540
     },
     {
       "path": "/blog/best-microcement-contractor-new-orleans",
@@ -141,5 +141,5 @@
       "size": 53744
     }
   ],
-  "generatedAt": "2026-11-15T21:08:29.782Z"
+  "generatedAt": "2026-11-15T21:16:59.153Z"
 }
