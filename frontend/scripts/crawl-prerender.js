@@ -80,9 +80,15 @@ async function snapshot(browser, route) {
     return root ? root.innerHTML : "";
   });
 
-  // Extract any JSON-LD blocks placed in <head> by Helmet — we want these too.
+  // Extract the JSON-LD blocks the LIVE app rendered (via Helmet). Skip any
+  // blocks inject-prerendered.js baked into the served HTML from the previous
+  // snapshot (data-prerendered) — re-capturing those is how stale pricing and
+  // hours kept surviving every regeneration. Dedupe identical blocks.
   const jsonLdBlocks = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map((s) => s.textContent || "");
+    const live = Array.from(document.querySelectorAll('script[type="application/ld+json"]:not([data-prerendered])'))
+      .map((s) => (s.textContent || "").trim())
+      .filter(Boolean);
+    return Array.from(new Set(live));
   });
 
   await page.close();

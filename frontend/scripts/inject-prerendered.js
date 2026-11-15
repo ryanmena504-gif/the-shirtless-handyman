@@ -81,10 +81,14 @@ function rewriteHead(shell, payload) {
     out = re.test(out) ? out.replace(re, tag) : out.replace("</head>", `    ${tag}\n  </head>`);
   }
 
-  // Insert JSON-LD blocks just before </head> (Helmet will re-render duplicates
-  // after hydration; harmless — Google reads the first set fine).
+  // Insert JSON-LD blocks just before </head>. They are tagged
+  // data-prerendered so (a) SeoHead removes them once Helmet renders the live
+  // copy, and (b) crawl-prerender.js never re-captures them. Without the tag,
+  // every crawl re-captured the previous build's blocks and stale data
+  // (old pricing, old hours) piled up in the snapshots forever.
   if (payload.jsonLd && payload.jsonLd.length > 0) {
-    const blocks = payload.jsonLd.map((j) => `<script type="application/ld+json">${j}</script>`).join("\n    ");
+    const unique = [...new Set(payload.jsonLd)];
+    const blocks = unique.map((j) => `<script type="application/ld+json" data-prerendered="true">${j}</script>`).join("\n    ");
     out = out.replace("</head>", `    ${blocks}\n  </head>`);
   }
 

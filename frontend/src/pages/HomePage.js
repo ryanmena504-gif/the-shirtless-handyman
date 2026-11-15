@@ -86,9 +86,9 @@ const GLOBAL_SCHEMA = {
           },
           {
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: "Full Seamless Bathroom", description: "Walls, floor, and shower in one continuous waterproof shell. Starting around $6,000; most land between $6,000 and $10,000. Includes free underfloor heating, supplied and installed at no charge." },
+            itemOffered: { "@type": "Service", name: "Full Seamless Bathroom", description: "Walls, floor, and shower in one continuous waterproof shell. Starting around $6,000; most land between $6,000 and $10,000, and larger or luxury bathrooms are quoted individually. Includes free underfloor heating, supplied and installed at no charge." },
             priceCurrency: "USD",
-            priceSpecification: { "@type": "PriceSpecification", minPrice: 6000, maxPrice: 10000, priceCurrency: "USD" },
+            priceSpecification: { "@type": "PriceSpecification", minPrice: 6000, priceCurrency: "USD" },
           },
           {
             "@type": "Offer",
