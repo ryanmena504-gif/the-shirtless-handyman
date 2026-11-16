@@ -47,6 +47,12 @@ const SEO_ROUTES = [
     ogImage: DEFAULT_OG,
   },
   {
+    path: "/finishes",
+    title: "Microcement & Plaster Finishes | The Shirtless Handyman",
+    description: "Finish tones I mix and hand-trowel on site: French Quarter Alabaster, Smoked Industrial Concrete, Garden District Terracotta, and Warm Linen Wetroom Finish. Seamless, waterproof microcement and plaster in New Orleans.",
+    ogImage: `${SITE}/finishes/french-quarter-alabaster.jpg`,
+  },
+  {
     path: "/upload",
     title: "The Seamless Studio | Preview Your Renovation Free — The Shirtless Handyman",
     description: "Upload a photo of any room and instantly preview it in microcement, tadelakt, or rockscape. Free 60-second AI preview. Serving Greater New Orleans.",
