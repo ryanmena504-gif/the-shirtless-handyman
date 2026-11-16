@@ -3,7 +3,7 @@
     {
       "path": "/",
       "slug": "home",
-      "size": 99360
+      "size": 99359
     },
     {
       "path": "/book",
@@ -24,6 +24,11 @@
       "path": "/about",
       "slug": "about",
       "size": 26911
+    },
+    {
+      "path": "/finishes",
+      "slug": "finishes",
+      "size": 19908
     },
     {
       "path": "/upload",
@@ -146,5 +151,5 @@
       "size": 54033
     }
   ],
-  "generatedAt": "2026-11-16T19:23:11.281Z"
+  "generatedAt": "2026-11-16T21:53:09.265Z"
 }
