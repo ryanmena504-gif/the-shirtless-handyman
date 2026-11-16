@@ -98,6 +98,30 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+        <!--
+          Static legal links live OUTSIDE #root so they ship in the HTML
+          crawlers and carrier reviewers receive without waiting for JavaScript.
+          inject-prerendered.js only replaces <div id="root">…</div>, so this
+          block is preserved on the homepage and every prerendered route.
+        -->
+        <nav id="static-legal-links" aria-label="Legal">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span aria-hidden="true"> · </span>
+            <a href="/terms.html">Terms &amp; Conditions</a>
+            <span aria-hidden="true"> · </span>
+            <a href="/sms-alerts.html">SMS Alerts</a>
+        </nav>
+        <style>
+            #static-legal-links {
+                border-top: 1px solid #d9d6d0;
+                background: #faf8f4;
+                color: #6b726f;
+                text-align: center;
+                font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                padding: 14px 20px 20px;
+            }
+            #static-legal-links a { color: #1A3C34; }
+        </style>
         <script>
             !(function (t, e) {
                 var o, n, p, r;

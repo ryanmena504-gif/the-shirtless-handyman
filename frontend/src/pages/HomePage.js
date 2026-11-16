@@ -1086,6 +1086,11 @@ export default function HomePage() {
                 <a href={TEL_LINK} className="hover:text-foreground inline-flex items-center gap-1" data-testid="footer-call"><Phone className="w-3 h-3" />{PHONE}</a>
                 <a href={`mailto:${EMAIL}`} className="hover:text-foreground inline-flex items-center gap-1" data-testid="footer-email"><Mail className="w-3 h-3" />{EMAIL}</a>
               </p>
+              <p className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1" aria-label="Legal">
+                <a href="/privacy-policy.html" className="hover:text-foreground" data-testid="footer-privacy">Privacy Policy</a>
+                <a href="/terms.html" className="hover:text-foreground" data-testid="footer-terms">Terms &amp; Conditions</a>
+                <a href="/sms-alerts.html" className="hover:text-foreground" data-testid="footer-sms-alerts">SMS Alerts</a>
+              </p>
             </div>
             <div className="flex flex-wrap gap-6 justify-center">
               <button onClick={() => navigate("/portfolio")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-portfolio">Work</button>
