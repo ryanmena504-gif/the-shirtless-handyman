@@ -148,6 +148,45 @@ export default function FinishesPage() {
           </p>
         </section>
 
+        {/* Floors & outdoor — moved here from the homepage so the homepage
+            stays about showers and bathrooms */}
+        <section className="pb-16 md:pb-24 px-6 md:px-12" data-testid="finishes-floors-outdoor">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center rounded-3xl border border-border/40 bg-card overflow-hidden">
+            <div className="aspect-[4/3] md:aspect-auto md:h-full overflow-hidden">
+              <img
+                src="/portfolio/terrazzo-chip-floor.jpg"
+                alt="Close-up of a seamless microterrazzo chip floor"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-6 md:p-10">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
+                Also on the menu
+              </p>
+              <h2
+                className="text-2xl md:text-3xl font-semibold tracking-tight mb-3"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Floors, patios &amp; pool decks
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                Continuous floors that flow from room to room, plus outdoor
+                resurfacing in microterrazzo and cocciopesto: UV-stable,
+                slip-resistant, and built for New Orleans sun and humidity.
+                Quoted per project after a free site visit.
+              </p>
+              <Link
+                to="/pool-deck-resurfacing-new-orleans"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#D97757] hover:text-[#C56545] transition-colors"
+                data-testid="finishes-pool-deck-link"
+              >
+                Pool decks &amp; outdoor surfaces <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="px-6 md:px-12 pb-20 md:pb-28">
           <div className="max-w-5xl mx-auto rounded-3xl bg-primary/5 border border-primary/20 p-10 md:p-14 text-center">

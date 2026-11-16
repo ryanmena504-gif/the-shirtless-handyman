@@ -2,6 +2,7 @@ import { Navbar } from "../components/Navbar";
 import { SeoHead } from "../components/SeoHead";
 import { ArrowRight } from "lucide-react";
 import { PRODUCTS, SHOP_URL } from "../lib/shop";
+import { PHONE_DISPLAY, TEL_LINK } from "../lib/contact";
 
 const PAGE_URL = "https://www.theshirtlesshandyman.com/shop";
 
@@ -23,7 +24,7 @@ export default function ShopPage() {
     <>
       <SeoHead
         title="Shop | Rep the Shirtless Handyman — Tanks & Caps"
-        description="Rep the Shirtless Handyman. Muscle tanks and a fitted cap from New Orleans' microcement and Venetian plaster pro. Cheeky name, high-end work. No grout. No seams. No shirt."
+        description="Rep the Shirtless Handyman. Muscle tanks and a snapback from New Orleans' microcement and Venetian plaster pro. Cheeky name, high-end work. No grout. No seams. No shirt."
         canonical={PAGE_URL}
         ogImage="https://www.theshirtlesshandyman.com/merch/tattoo-torso-tank.webp"
       >
@@ -121,15 +122,30 @@ export default function ShopPage() {
               Sizes, shipping, and checkout are on Fourthwall. I just make the
               bathrooms.
             </p>
-            <a
-              href={SHOP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-12 px-8 rounded-full bg-[#D97757] hover:bg-[#C56545] text-white font-semibold transition-colors"
-              data-testid="shop-cta-visit"
-            >
-              Visit the full shop <ArrowRight className="w-4 h-4" />
-            </a>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <a
+                href={SHOP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 h-12 px-8 rounded-full bg-[#D97757] hover:bg-[#C56545] text-white font-semibold transition-colors"
+                data-testid="shop-cta-visit"
+              >
+                Visit the full shop <ArrowRight className="w-4 h-4" />
+              </a>
+              <a
+                href="/#quote"
+                className="inline-flex items-center gap-2 h-12 px-8 rounded-full bg-[#1A3C34] hover:bg-[#0E2A24] text-white font-semibold transition-colors"
+                data-testid="shop-cta-quote"
+              >
+                Need the bathroom too? Free quote <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+            <p className="text-muted-foreground text-sm mt-5">
+              Or call or text me:{" "}
+              <a href={TEL_LINK} className="font-semibold text-foreground underline underline-offset-2" data-testid="shop-cta-phone">
+                {PHONE_DISPLAY}
+              </a>
+            </p>
           </div>
         </section>
       </div>

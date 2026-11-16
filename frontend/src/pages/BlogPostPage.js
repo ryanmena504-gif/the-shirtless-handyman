@@ -190,7 +190,7 @@ export default function BlogPostPage() {
                 Want a real quote on your project?
               </h3>
               <p className="text-sm text-muted-foreground mb-5">
-                Drop your name and phone — Ryan texts you back personally within an hour.
+                Drop your name and phone. It goes straight to Ryan's phone, and he texts back the same day, Mon–Sat.
               </p>
               <InstantQuoteForm variant="light" source={`blog_${post.slug}`} />
             </div>

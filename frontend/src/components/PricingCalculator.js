@@ -9,6 +9,7 @@ import { trackEvent, identifyLead } from "../lib/tracking";
 import { tagLeadSource } from "../utils/leadSource";
 
 import { API } from "../lib/apiBase";
+import { REPLY_PROMISE } from "../lib/contact";
 const SMS_LINK = "sms:5042644919?body=Hey%20Ryan%2C%20I%20just%20priced%20a%20project%20on%20your%20site%20and%20want%20to%20talk.";
 
 /**
@@ -112,9 +113,15 @@ function calcRange(finish, sqft) {
   return [Math.round(low / 50) * 50, Math.round(high / 50) * 50, over];
 }
 
-export function PricingCalculator() {
+/**
+ * `exclude` hides finishes by id on a given page (the homepage leaves out
+ * pool decks so it stays about showers and bathrooms; landing pages keep
+ * the full list).
+ */
+export function PricingCalculator({ exclude = [] } = {}) {
+  const finishes = useMemo(() => FINISHES.filter((f) => !exclude.includes(f.id)), [exclude]);
   const [finishId, setFinishId] = useState("microcement");
-  const finish = useMemo(() => FINISHES.find((f) => f.id === finishId), [finishId]);
+  const finish = useMemo(() => finishes.find((f) => f.id === finishId) || finishes[0], [finishes, finishId]);
 
   const [sqft, setSqft] = useState(finish.sizeDefault);
   // Reset sqft to the new finish's default whenever finish changes
@@ -216,7 +223,7 @@ export function PricingCalculator() {
                 1. Pick a finish
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {FINISHES.map((f) => (
+                {finishes.map((f) => (
                   <button
                     key={f.id}
                     onClick={() => handleFinish(f.id)}
@@ -315,7 +322,7 @@ export function PricingCalculator() {
                 <p className="text-xs text-white/65 leading-relaxed">
                   {contact.includes("@")
                     ? "Check your inbox in a minute — your estimate is on its way. "
-                    : "Ryan got your quote and will text you within the hour. "}
+                    : "Ryan got your quote and will text you back the same day (Mon–Sat). "}
                   Want him sooner? Text{" "}
                   <a href={SMS_LINK} className="text-[#D97757] underline">504-264-4919</a>.
                 </p>
@@ -327,7 +334,7 @@ export function PricingCalculator() {
                 </p>
                 <p className="text-[11px] text-white/55 leading-relaxed -mt-0.5 mb-2 flex items-center gap-1.5">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
-                  Ryan typically replies within an hour · 7 days a week
+                  {REPLY_PROMISE}
                 </p>
                 <Input
                   value={name}

@@ -25,20 +25,8 @@ const STATIC_PORTFOLIO = [
     room_type: "Bathroom",
     description: "Full microcement bathroom — walls, vanity, seamless finish.",
   },
-  {
-    id: "static-3",
-    after_image: "/portfolio/microcement-bath-terracotta-floor.jpg",
-    title: "Terracotta Microcement Bath",
-    room_type: "Bathroom",
-    description: "Warm terracotta microcement with seamless floor transition.",
-  },
-  {
-    id: "static-4",
-    after_image: "/portfolio/wetroom-shower-niche.jpg",
-    title: "Wetroom Shower",
-    room_type: "Wetroom",
-    description: "Fully waterproof wetroom — seamless surfaces throughout.",
-  },
+  // static-3 and static-4 were second copies of the two photos above under
+  // different file names, so they were removed to avoid showing them twice.
   {
     id: "static-5",
     after_image: "/portfolio/third-job.jpg",
