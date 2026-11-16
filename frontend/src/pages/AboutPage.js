@@ -214,7 +214,7 @@ export default function AboutPage() {
               Tell me about your space.
             </h2>
             <p className="text-base text-muted-foreground mb-8 max-w-md mx-auto">
-              Drop your name and phone. I'll text you back personally within the hour — no auto-reply, no call center, no script.
+              Drop your name and phone. It goes straight to my phone, and I text back the same day, Mon–Sat. No auto-reply, no call center, no script.
             </p>
             <div className="max-w-md mx-auto">
               <InstantQuoteForm variant="light" source="about_page" />

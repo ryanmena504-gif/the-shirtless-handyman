@@ -37,7 +37,7 @@ const SEO_ROUTES = [
   {
     path: "/shop",
     title: "Shop | Rep the Shirtless Handyman — Tanks & Caps",
-    description: "Rep the Shirtless Handyman. Muscle tanks and a fitted cap from New Orleans' microcement and Venetian plaster pro. Cheeky name, high-end work. No grout. No seams. No shirt.",
+    description: "Rep the Shirtless Handyman. Muscle tanks and a snapback from New Orleans' microcement and Venetian plaster pro. Cheeky name, high-end work. No grout. No seams. No shirt.",
     ogImage: `${SITE}/merch/tattoo-torso-tank.webp`,
   },
   {

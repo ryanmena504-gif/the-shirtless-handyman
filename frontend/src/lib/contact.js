@@ -7,6 +7,8 @@ export const PHONE_E164 = "+15042644919";
 export const TEL_LINK = "tel:+15042644919";
 export const EMAIL = "ryanmena@theshirtlesshandyman.com";
 export const HOURS_LABEL = "Mon–Sat, 9am–5pm";
+/** The one reply-time promise used under every quote form and the estimator. Keep it true. */
+export const REPLY_PROMISE = "Goes straight to my phone. I text back the same day, Mon–Sat.";
 export const SERVICE_AREA_LABEL = "New Orleans metro + the Northshore";
 
 export const HEATED_FLOORS_OFFER_SHORT = "Free heated floors with any full bathroom or whole-floor coating";

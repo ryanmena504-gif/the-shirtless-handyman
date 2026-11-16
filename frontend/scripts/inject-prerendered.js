@@ -142,6 +142,41 @@ function main() {
   }
   console.log(`[inject-prerendered] Done. ${count} per-route HTML files written.`);
 
+  // Safety net: any route in seo-routes.js that has no snapshot yet (a brand
+  // new page, or a snapshot that hasn't been regenerated) still gets its own
+  // head tags (title, description, canonical, OG/Twitter) with an empty root,
+  // so social previews and crawlers never fall back to the homepage's tags.
+  // No JSON-LD is added here, so the PR #38 data-prerendered logic is untouched.
+  try {
+    const { SEO_ROUTES, SITE } = require("./seo-routes");
+    const covered = new Set();
+    for (const file of files) {
+      try {
+        const p = JSON.parse(fs.readFileSync(path.join(FRAGMENTS_DIR, file), "utf8"));
+        if (p.path && p.fragment) covered.add(p.path);
+      } catch {
+        /* already reported above */
+      }
+    }
+    let metaOnly = 0;
+    for (const route of SEO_ROUTES) {
+      if (covered.has(route.path) || route.path === "/") continue;
+      const html = rewriteHead(shell, {
+        title: route.title,
+        description: route.description,
+        canonical: `${SITE}${route.path}`,
+        ogImage: route.ogImage,
+        ogType: route.ogType,
+      });
+      const out = writeRouteFile(route.path, html);
+      console.log(`  + ${route.path.padEnd(48)} -> ${out} (head tags only, no snapshot yet)`);
+      metaOnly++;
+    }
+    if (metaOnly) console.log(`[inject-prerendered] ${metaOnly} route(s) got head tags without a snapshot.`);
+  } catch (e) {
+    console.warn(`[inject-prerendered] Head-only fallback skipped: ${e.message}`);
+  }
+
   // Clean up: remove the _prerendered directory from the deployed build to keep it small
   try {
     fs.rmSync(FRAGMENTS_DIR, { recursive: true, force: true });

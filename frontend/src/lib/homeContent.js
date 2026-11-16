@@ -1,20 +1,40 @@
 /**
  * Homepage content Ryan can edit without touching layout code.
  *
- * TESTIMONIALS and BEFORE_AFTER are intentionally EMPTY. The "Real jobs"
- * section on the homepage stays hidden until real entries are added here.
- * Only add real customer words (with their permission) and real photos of
- * your own jobs. Never add made-up reviews, ratings, or stock photos.
+ * PROOF SECTION ("Real jobs" on the homepage)
+ * ------------------------------------------
+ * The section stays HIDDEN until at least one slot below is completely
+ * filled in. Half-filled slots are ignored, so it's safe to fill them one
+ * at a time.
+ *
+ * Rules: only real customers' own words (with their OK), and only photos of
+ * YOUR jobs. Never made-up reviews, ratings, or stock photos.
  */
 
-// TODO(Ryan): add real customer quotes, e.g.
-// { quote: "Exact words from the customer.", name: "First name + last initial", area: "Lakeview" },
-export const TESTIMONIALS = [];
+// ---- Customer quotes -------------------------------------------------------
+// Fill in quote + name to publish a slot (area is optional but helps). Example:
+//   { quote: "Their exact words, copied from the text or review.", name: "Dana R.", area: "Lakeview" },
+const TESTIMONIAL_SLOTS = [
+  { quote: "", name: "", area: "" }, // slot 1
+  { quote: "", name: "", area: "" }, // slot 2
+  { quote: "", name: "", area: "" }, // slot 3
+];
 
-// TODO(Ryan): drop before/after photos of YOUR jobs into frontend/public/portfolio/
-// and list them here, e.g.
-// { before: "/portfolio/lakeview-shower-before.jpg", after: "/portfolio/lakeview-shower-after.jpg", caption: "Tile shower → seamless microcement, Lakeview" },
-export const BEFORE_AFTER = [];
+// ---- Before / after photos ---------------------------------------------------
+// 1. Put both photos in frontend/public/portfolio/ (jpg or webp, about 1200px wide).
+// 2. Type their paths and a short caption below. Example of a filled slot:
+//   { before: "/portfolio/metairie-shower-before.jpg", after: "/portfolio/metairie-shower-after.jpg",
+//     caption: "Metairie · 1960s tile shower → seamless microcement, over the existing tile, 4 days" },
+const BEFORE_AFTER_SLOTS = [
+  { before: "", after: "", caption: "" }, // slot 1
+  { before: "", after: "", caption: "" }, // slot 2
+  { before: "", after: "", caption: "" }, // slot 3
+];
+
+const filled = (obj, keys) => keys.every((k) => typeof obj[k] === "string" && obj[k].trim() !== "");
+
+export const TESTIMONIALS = TESTIMONIAL_SLOTS.filter((t) => filled(t, ["quote", "name"]));
+export const BEFORE_AFTER = BEFORE_AFTER_SLOTS.filter((p) => filled(p, ["before", "after", "caption"]));
 
 export const SERVICE_LINKS = [
   { label: "Seamless microcement showers", href: "/microcement-showers-new-orleans" },

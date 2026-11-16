@@ -121,11 +121,11 @@ const CATEGORIES = [
       },
       {
         q: "How do I book an appointment with Ryan?",
-        a: "Three options: (1) The self-serve calendar at theshirtlesshandyman.com/book — pick a free walkthrough, phone consult, or project start slot. (2) Text 504-264-4919. (3) Fill in the quote form on any page. Average response time is under an hour, direct from Ryan.",
+        a: "Three options: (1) The self-serve calendar at theshirtlesshandyman.com/book — pick a free walkthrough, phone consult, or project start slot. (2) Text 504-264-4919. (3) Fill in the quote form on any page. It goes straight to Ryan's phone, and he texts back the same day, Mon–Sat.",
       },
       {
         q: "What's the response time?",
-        a: "Under an hour, direct from Ryan personally. No auto-reply, no call center, no lead-broker in between.",
+        a: "Same day, Mon–Sat, direct from Ryan personally. It goes straight to his phone. No auto-reply, no call center, no lead-broker in between.",
       },
       {
         q: "Are there any current promotions?",

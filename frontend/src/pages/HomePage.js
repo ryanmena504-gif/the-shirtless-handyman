@@ -159,6 +159,10 @@ const GLOBAL_SCHEMA = {
   ],
 };
 
+// The homepage estimator stays on showers, bathrooms, and walls; pool decks
+// live on their own landing page and the Finishes page.
+const HOME_CALC_EXCLUDE = ["pool_deck"];
+
 const SERVICES = [
   {
     title: "Microcement",
@@ -275,12 +279,23 @@ export default function HomePage() {
               </motion.p>
 
               <motion.p
-                className="text-sm text-white/50 mb-8"
+                className="text-sm text-white/50 mb-2"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
                 Personally installed by Ryan Mena · New Orleans metro &amp; the Northshore.
+              </motion.p>
+
+              {/* Own the name before the visitor wonders about it */}
+              <motion.p
+                className="text-sm italic text-white/70 mb-6"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.22 }}
+                data-testid="hero-name-line"
+              >
+                Yes, that&rsquo;s really the name. The work is the serious part.
               </motion.p>
 
               {/* Offer — the heated floors are the hook, so they sit above the fold */}
@@ -401,8 +416,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <img src="/portfolio/wetroom-shower-niche.jpg" alt="Seamless microcement shower with built-in niche, no grout lines — New Orleans" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full" />
-            <img src="/portfolio/textured-plaster-closeup.jpg" alt="Close-up of hand-troweled microcement texture" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full mt-8" />
+            <img src="/portfolio/textured-plaster-closeup.jpg" alt="Close-up of hand-troweled microcement texture" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full" />
+            <img src="/portfolio/terrazzo-chip-floor.jpg" alt="Close-up of a seamless, grout-free floor finish" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full mt-8" />
           </div>
         </div>
       </section>
@@ -418,8 +433,8 @@ export default function HomePage() {
               className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-foreground leading-tight"
               style={{ fontFamily: "'Fraunces', serif" }}
             >
-              Three types of rooms.<br />
-              <span className="italic">One seamless philosophy.</span>
+              Showers and bathrooms first.<br />
+              <span className="italic">Then the walls around them.</span>
             </h2>
           </ScrollReveal>
 
@@ -427,30 +442,31 @@ export default function HomePage() {
             {[
               {
                 slug: "wet-rooms",
-                image: "/portfolio/wetroom-shower-niche.jpg",
-                title: "Wet rooms",
-                materials: "Microcement · Tadelakt · Rockscape",
-                desc: "Showers, tub surrounds, and full bathroom walls installed as one continuous, waterproof surface — right over your existing tile. Zero grout, zero seams, zero mold habitat.",
+                // Not wetroom-shower-niche.jpg: that's the same photo as the hero background.
+                image: "/portfolio/third-job.jpg",
+                title: "Seamless showers",
+                materials: "Microcement · Tadelakt",
+                desc: "Showers and tub surrounds built as one continuous, waterproof surface — often right over your existing tile, once I've checked it's solid. No grout, no seams, nowhere for mold to start.",
                 finishHint: "microcement",
                 href: "/microcement-showers-new-orleans",
               },
               {
+                slug: "full-bathrooms",
+                image: "/portfolio/microcement-bath-terracotta-floor.jpg",
+                title: "Full bathrooms",
+                materials: "Walls · Floor · Shower",
+                desc: "Walls, floor, and shower in one continuous shell, with the waterproofing rebuilt where it needs it. Free heated floors with every full bathroom.",
+                finishHint: "microcement",
+                href: "/bathroom-remodel-new-orleans",
+              },
+              {
                 slug: "architectural-walls",
                 image: "/venetian-plaster-hero.jpg",
-                title: "Architectural walls",
+                title: "Venetian plaster walls",
                 materials: "Venetian plaster · Marmorino · Rockscape",
                 desc: "Feature walls, fireplaces, dining rooms, and powder baths. Hand-troweled Italian and Moroccan plasters that catch the light and turn a flat wall into the room's centerpiece.",
                 finishHint: "venetian",
                 href: "/venetian-plaster-new-orleans",
-              },
-              {
-                slug: "floors-outdoor",
-                image: "/portfolio/microcement-bath-terracotta-floor.jpg",
-                title: "Floors &amp; outdoor",
-                materials: "Microcement · Microterrazzo · Cocciopesto",
-                desc: "Continuous floors that flow from room to room. Pool decks, patios, and outdoor surfaces built for New Orleans sun and humidity. UV-stable, slip-resistant, and won't crack at the joints.",
-                finishHint: "microterrazzo",
-                href: "/bathroom-remodel-new-orleans",
               },
             ].map((cat, i) => (
               <ScrollReveal key={cat.slug} delay={i * 0.08}>
@@ -611,7 +627,7 @@ export default function HomePage() {
 
       {/* ===== PRICING CALCULATOR — instant estimate ===== */}
       <div id="pricing">
-        <PricingCalculator />
+        <PricingCalculator exclude={HOME_CALC_EXCLUDE} />
       </div>
 
       {/* ===== MEET RYAN ===== (warm hybrid palette: light bone bg, warm taupe accents) */}
@@ -659,28 +675,25 @@ export default function HomePage() {
                   I'm Ryan, born and raised in New Orleans. I spent years installing tile in NOLA bathrooms — and watching that exact same tile fail inside a decade. It's not the tile's fault. It's just the wrong material for this climate.
                 </p>
                 <p>
-                  So I went and learned the alternative. Microcement. Tadelakt. Marmorino. Sculpted rockscape. Surfaces that don't have seams to fail. Surfaces that look like a Tulum hotel or a Moroccan riad — and last in NOLA humidity for decades.
+                  So I went and learned the alternative. Microcement. Tadelakt. Marmorino. Sculpted rockscape. Surfaces that don't have seams to fail. Surfaces that look like a Tulum hotel or a Moroccan riad — built so there's no grout to fail.
                 </p>
                 <p>
                   Now that's all I do. One craftsman. Real materials. Photos of every step. <strong className="text-[#1A3C34] font-semibold">You text me, I show up, I treat your home like my own.</strong> That's the whole pitch.
                 </p>
               </div>
 
-              {/* Pull-quote — proven copy, elevated so it lands hard */}
-              <blockquote
-                className="mt-8 mb-8 border-l-4 border-[#D97757] pl-5 md:pl-6"
-                data-testid="ryan-pull-quote"
-              >
-                <p
+              {/* What Ryan sees on site — a plain heading, not a testimonial */}
+              <div className="mt-8 mb-8 border-l-4 border-[#D97757] pl-5 md:pl-6" data-testid="ryan-pull-quote">
+                <h3
                   className="text-2xl md:text-3xl lg:text-[2rem] font-light leading-[1.2] text-[#1A3C34] tracking-tight"
                   style={{ fontFamily: "'Fraunces', serif" }}
                 >
-                  &ldquo;Grout turning black. Caulk peeling. Mold finding the smallest seam.&rdquo;
+                  What I see in every NOLA bathroom I&rsquo;m called to.
+                </h3>
+                <p className="mt-3 text-base text-[#1A3C34]/75">
+                  Grout turning black. Caulk peeling. Mold finding the smallest seam.
                 </p>
-                <footer className="mt-3 text-xs uppercase tracking-[0.22em] font-bold text-[#D97757]">
-                  — Every NOLA bathroom I&rsquo;ve been called back to
-                </footer>
-              </blockquote>
+              </div>
 
               <div className="flex flex-wrap gap-3">
                 <a href={SMS_LINK}>

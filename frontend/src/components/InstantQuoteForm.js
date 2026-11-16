@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { trackEvent, identifyLead } from "../lib/tracking";
 import { tagLeadSource } from "../utils/leadSource";
 import {
-  PHONE_DISPLAY, TEL_LINK, HOURS_LABEL, PROJECT_TYPES, smsLink, mailtoLink,
+  PHONE_DISPLAY, TEL_LINK, REPLY_PROMISE, PROJECT_TYPES, smsLink, mailtoLink,
 } from "../lib/contact";
 
 import { API } from "../lib/apiBase";
@@ -233,7 +233,7 @@ export const InstantQuoteForm = ({
         )}
       </Button>
       <p className={`text-[11px] mt-2.5 ${isDark ? "text-white/50" : "text-muted-foreground"}`}>
-        Goes straight to me — no call center, no spam. {HOURS_LABEL}. Rather talk?{" "}
+        {REPLY_PROMISE} No call center, no spam. Rather talk?{" "}
         <a href={TEL_LINK} className="underline underline-offset-2">Call {PHONE_DISPLAY}</a>
       </p>
     </form>
