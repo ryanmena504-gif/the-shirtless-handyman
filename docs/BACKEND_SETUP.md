@@ -94,8 +94,10 @@ the name and notes, then queues that lead too if the fallback fails.
   only worth it once leads are flowing.
 - **In-memory database.** With `MONGO_URL` blank, the API still works, but the
   `/admin` inbox history, booked calendar slots, chat history, and scheduled
-  follow-up emails reset whenever the server restarts or sleeps. Airtable is
-  the permanent record of every lead.
+  follow-up emails reset whenever the server restarts or sleeps, unless
+  `AIRTABLE_STORE_TABLE` is set (that snapshot is separate and optional).
+  Every lead is still written to the GEAUXleads Leads table, which is the
+  permanent record.
 
 ## Optional upgrades (each needs Ryan's OK)
 
