@@ -151,6 +151,7 @@ async def health():
         "ok": True,
         "database": _database_label(),
         "airtable": "dry-run" if airtable_leads._dry_run() else bool(airtable_leads._token()),
+        "airtable_pending": airtable_leads.pending_count(),
         "email": bool(os.environ.get("RESEND_API_KEY", "").strip() and os.environ.get("LEAD_NOTIFICATION_EMAIL", "").strip()),
         "sms": bool(os.environ.get("TWILIO_ACCOUNT_SID", "").strip() and os.environ.get("TWILIO_FROM_NUMBER", "").strip()),
         "make_webhook": bool(lead_webhook._webhook_url()),

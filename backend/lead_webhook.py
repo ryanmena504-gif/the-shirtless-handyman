@@ -170,7 +170,8 @@ def forward_lead(payload: dict) -> None:
     caller is not awaited for the outbound HTTP round-trip. Never raises.
 
     Also writes the lead straight into the GEAUXleads Airtable "Leads" table
-    when AIRTABLE_API_KEY is set (see airtable_leads.py). Make is optional."""
+    (see airtable_leads.py). If Airtable is down or unconfigured, the lead
+    is logged and kept for an in-memory retry. Make is optional."""
     global _missing_url_warned
     try:
         import airtable_leads
