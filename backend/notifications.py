@@ -203,7 +203,10 @@ async def send_lead_sms(lead: dict) -> bool:
     to_num = os.environ.get("LEAD_NOTIFICATION_PHONE", "").strip()
 
     if not (sid and token and from_num and to_num):
-        logger.warning("Lead SMS skipped — Twilio not fully configured")
+        logger.warning(
+            "Lead SMS skipped — set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, "
+            "TWILIO_FROM_NUMBER, and LEAD_NOTIFICATION_PHONE to text Ryan"
+        )
         return False
 
     try:

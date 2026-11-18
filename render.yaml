@@ -40,6 +40,13 @@ services:
         value: appuyAHSSzJrPWlec
       - key: AIRTABLE_LEADS_TABLE_ID
         value: tbliTlH5mmdOjc280
+      # Owner email from this API is optional. The free alert is the Airtable
+      # automation "Website lead → email Ryan" (no extra account). To email
+      # from the API as well, set these in the dashboard — do not commit them:
+      #   RESEND_API_KEY, RESEND_FROM_EMAIL, LEAD_NOTIFICATION_EMAIL
+      # SMS is paid (Twilio) and stays off unless all four are set:
+      #   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER,
+      #   LEAD_NOTIFICATION_PHONE
       # --- Admin page password (/admin) ---
       - key: ADMIN_PASSWORD
         sync: false

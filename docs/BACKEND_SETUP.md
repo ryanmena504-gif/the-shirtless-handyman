@@ -24,17 +24,24 @@ table (`tbliTlH5mmdOjc280`):
 | Notes         | starts with `WEBSITE LEAD — <which form>`, then project, ZIP, phone, email, notes |
 | ID            | the website's lead id                    |
 
-Email to ryanmena@theshirtlesshandyman.com comes from an Airtable automation,
-**"Website lead → email Ryan"**, which is already saved in the base and is
-**off** until Ryan turns it on (step 4 below). It uses Airtable's built-in
-email, so there's no new account.
+Email does **not** come from the API unless Resend is configured (see
+below). The free alert is an Airtable automation, **"Website lead → email
+Ryan"**, which emails when a Leads record's Notes contain `WEBSITE LEAD`.
+It uses Airtable's built-in email, so there's no new account. It has run
+successfully; confirm the toggle on that automation is On (step 4). The
+API's own mailer and the Twilio texter are separate and are off until their
+env vars are set.
 
 If the API ever fails, the visitor's form shows a **Text it to Ryan** button
 with their info already filled in, so the lead still reaches Ryan's phone.
 
-The backend makes ONE attempt per lead and never auto-retries. If Airtable
-rejects a field (say a column gets renamed), it makes one fallback write with
-just the name and notes so the lead isn't lost.
+The visitor always gets a success response. If Airtable is down or
+`AIRTABLE_API_KEY` is missing, the API logs the lead at error level (name,
+phone, email, which form — never the token) and keeps it in an in-memory
+retry queue with backoff for as long as this process stays up. A restart
+clears that queue; the error log is what is left. If Airtable rejects a
+field (say a column gets renamed), it makes one fallback write with just
+the name and notes, then queues that lead too if the fallback fails.
 
 ## Steps only Ryan can do (about 10 minutes)
 
@@ -64,10 +71,13 @@ just the name and notes so the lead isn't lost.
    code now defaults to the new address). Then **Manual Deploy → Clear build
    cache & deploy**. If Render gave the API a different URL (it adds a suffix
    when a name is taken), use that URL here.
-4. **Turn on the email alert.** Open
+4. **Turn on the email alert** if the toggle is off. Open
    https://airtable.com/appuyAHSSzJrPWlec/wflMBEtIdcW7yv6ED → review →
    toggle **On**. (Airtable's free plan includes a monthly number of
-   automation runs; one run per website lead.)
+   automation runs; one run per website lead.) This is the free way Ryan
+   gets mail. It does not need `RESEND_API_KEY`. The live API reports
+   `"email": false` until the Resend vars below are set; that flag is the
+   API mailer, not this automation.
 5. **Check it.** Visit
    `https://theshirtlesshandyman-api.onrender.com/api/health`. You should see
    `"ok": true` and `"airtable": true`. Then submit the quick quote form on
@@ -93,11 +103,17 @@ just the name and notes so the lead isn't lost.
   (mongodb.com/atlas, free signup, no card needed for M0), copy its
   connection string into `MONGO_URL`. That keeps booked slots, so two people
   can't book the same time across restarts.
-- **Emails to the customer + SMS:** the code already supports Resend
-  (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `LEAD_NOTIFICATION_EMAIL`; free tier,
-  needs a Resend account and a DNS record) and Twilio (`TWILIO_ACCOUNT_SID`,
-  `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `LEAD_NOTIFICATION_PHONE`;
-  pay-per-text, and needs A2P 10DLC registration first).
+- **Email from the API, and SMS:** both are off on the live service.
+  Health reports `"email": false` because `RESEND_API_KEY` and
+  `LEAD_NOTIFICATION_EMAIL` are unset, so `send_lead_email` logs a warning
+  and skips. Health reports `"sms": false` because Twilio is unset
+  (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`,
+  `LEAD_NOTIFICATION_PHONE`); Twilio is pay-per-text and needs A2P 10DLC,
+  so leave it unset. To email from the API as well as the Airtable
+  automation, set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and
+  `LEAD_NOTIFICATION_EMAIL` on the Render service (Resend's free tier;
+  needs a Resend account and a DNS record, or Resend's onboarding sender
+  which only delivers to the account owner). Do not put those values in git.
 - **AI chat replies:** set `OPENAI_API_KEY` (pay-per-use, pennies per chat).
   Without it the chat widget gives a friendly scripted reply that points to
   your phone and `/book` and still captures any phone/email typed in.
