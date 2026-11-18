@@ -47,3 +47,8 @@ services:
       # blank to run on the in-memory database. ---
       - key: MONGO_URL
         sync: false
+      # --- Free permanent storage without Mongo: save the in-memory DB to an
+      # Airtable table with fields Key (primary, single line text) and Data
+      # (long text). See backend/airtable_store.py. Ignored if MONGO_URL is set.
+      - key: AIRTABLE_STORE_TABLE
+        sync: false  # set to: Website Data (after creating the table)

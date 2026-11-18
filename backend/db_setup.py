@@ -14,6 +14,10 @@ Two modes:
   scheduled follow-up emails) is wiped whenever the server restarts.
   This keeps the forms working at $0 before a database is set up.
 
+  With AIRTABLE_STORE_TABLE set, airtable_store.py restores the in-memory
+  database from Airtable on boot and saves changes back, so it persists
+  across restarts at $0 (see that module for the table and API-call budget).
+
 DB_NAME defaults to "shirtless_handyman" so it does not have to be set.
 """
 import logging

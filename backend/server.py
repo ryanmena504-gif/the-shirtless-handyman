@@ -126,6 +126,21 @@ async def root():
     return {"message": "AI Renovation Visualizer API"}
 
 
+# In-memory DB + Airtable snapshot (see airtable_store.py). None when off.
+_store = None
+_store_status = "off"
+
+
+def _database_label() -> str:
+    if not DB_IN_MEMORY:
+        return "mongodb"
+    if _store_status == "ok":
+        return "in-memory, saved to Airtable (persists across restarts)"
+    if _store_status == "restore_failed":
+        return "in-memory (Airtable restore FAILED; saving paused, data resets on restart)"
+    return "in-memory (data resets on restart)"
+
+
 @api_router.get("/health")
 async def health():
     """Cheap wake-up/health check. The website pings this on page load so a
@@ -134,7 +149,7 @@ async def health():
     import airtable_leads
     return {
         "ok": True,
-        "database": "in-memory (data resets on restart)" if DB_IN_MEMORY else "mongodb",
+        "database": _database_label(),
         "airtable": "dry-run" if airtable_leads._dry_run() else bool(airtable_leads._token()),
         "email": bool(os.environ.get("RESEND_API_KEY", "").strip() and os.environ.get("LEAD_NOTIFICATION_EMAIL", "").strip()),
         "sms": bool(os.environ.get("TWILIO_ACCOUNT_SID", "").strip() and os.environ.get("TWILIO_FROM_NUMBER", "").strip()),
@@ -1648,6 +1663,19 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
+    # Restore the in-memory DB from Airtable before anything reads it.
+    global _store, _store_status
+    import airtable_store
+    if airtable_store.enabled(DB_IN_MEMORY):
+        _store = airtable_store.AirtableStore(db)
+        try:
+            counts = await _store.restore()
+            _store_status = "ok"
+            _store.start()
+            logger.info("Airtable store: restored %s", counts)
+        except Exception as e:  # noqa: BLE001
+            _store_status = "restore_failed"
+            logger.error("Airtable store restore failed; NOT saving this run: %s", str(e)[:200])
     # Create indexes. A database hiccup must not stop the API from booting —
     # lead delivery (Airtable / email / SMS) does not depend on it.
     try:
@@ -1673,4 +1701,6 @@ async def startup():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    if _store is not None:
+        await _store.stop()
     client.close()
