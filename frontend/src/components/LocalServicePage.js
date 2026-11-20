@@ -6,6 +6,7 @@ import { TrustStrip } from "./TrustStrip";
 import { PricingCalculator } from "./PricingCalculator";
 import { GoogleReviews } from "./GoogleReviews";
 import { SeoHead } from "./SeoHead";
+import { WhyShowersDontLeak } from "./WhyShowersDontLeak";
 import {
   ArrowRight, Upload, ShieldCheck, Droplets, Layers, Clock,
   Sparkles, CheckCircle, MessageCircle, Phone, Wrench, Paintbrush, Award, Flame,
@@ -51,6 +52,8 @@ export default function LocalServicePage({ config }) {
     priceLow,
     priceHigh,
     defaultProjectType,
+    oneLiner,
+    showWhyShowersDontLeak,
   } = config;
 
   const pageUrl = `https://www.theshirtlesshandyman.com/${slug}`;
@@ -137,6 +140,14 @@ export default function LocalServicePage({ config }) {
             >
               {h1}
             </h1>
+            {oneLiner ? (
+              <p
+                className="text-base md:text-xl text-white max-w-2xl mb-4 leading-relaxed"
+                data-testid="service-one-liner"
+              >
+                {oneLiner}
+              </p>
+            ) : null}
             <p className="text-base md:text-lg text-white/65 max-w-2xl mb-8 leading-relaxed">{heroParagraph}</p>
 
             <p className="inline-flex items-center gap-2 text-sm text-white/85 bg-[#D97757]/15 border border-[#D97757]/40 rounded-full px-4 py-1.5 mb-6">
@@ -186,6 +197,8 @@ export default function LocalServicePage({ config }) {
         </section>
 
         <TrustStrip variant="dark" />
+
+        {showWhyShowersDontLeak ? <WhyShowersDontLeak /> : null}
 
         {/* Google Reviews — auto-hides if API key not configured */}
         <GoogleReviews variant="light" />
