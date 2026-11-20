@@ -18,7 +18,7 @@ const TEL_LINK = "tel:+15042644919";
 // Map icon string identifiers used in config -> lucide icon components
 const ICONS = {
   Droplets, Layers, Clock, ShieldCheck, Wrench, Paintbrush, Award,
-  Sparkles, CheckCircle,
+  Sparkles, CheckCircle, Flame,
 };
 
 /**
@@ -357,6 +357,9 @@ export default function LocalServicePage({ config }) {
                 { slug: "bywater-handyman", label: "Bywater" },
                 { slug: "french-quarter-handyman", label: "French Quarter" },
                 { slug: "garden-district-handyman", label: "Garden District" },
+                { slug: "microcement-mandeville", label: "Mandeville" },
+                { slug: "microcement-covington", label: "Covington" },
+                { slug: "microcement-slidell", label: "Slidell" },
               ]
                 .filter((n) => n.slug !== slug)
                 .map((n) => (
@@ -385,6 +388,10 @@ export default function LocalServicePage({ config }) {
                 { slug: "rockscape-walls-new-orleans", label: "Rockscape Walls" },
                 { slug: "pool-deck-resurfacing-new-orleans", label: "Pool Deck Resurfacing" },
                 { slug: "microcement-metairie", label: "Microcement in Metairie" },
+                { slug: "microcement-mandeville", label: "Microcement in Mandeville" },
+                { slug: "microcement-covington", label: "Microcement in Covington" },
+                { slug: "microcement-slidell", label: "Microcement in Slidell" },
+                { slug: "walk-in-shower-remodel-new-orleans", label: "Walk-in Shower Remodel" },
               ]
                 .filter((n) => n.slug !== slug)
                 .map((n) => (

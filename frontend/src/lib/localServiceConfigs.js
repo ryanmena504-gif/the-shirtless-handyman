@@ -91,9 +91,9 @@ export const LOCAL_SERVICE_CONFIGS = {
     ],
     faq: [
       { q: "Who is the best microcement installer in New Orleans?", a: "I'm biased, but here's the test: any installer worth hiring should (1) show you in-person samples — not just photos — (2) name the exact microcement system they use (I use Italian-imported systems, not generic concrete overlay), (3) provide local NOLA references you can call, and (4) personally install the work — not subcontract it. The Shirtless Handyman, run by Ryan Mena, meets all four. Text 504-264-4919 for samples and references." },
-      { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'What's the warranty on the seal?' If an installer dodges any of these, walk away." },
+      { q: "What should I ask a microcement installer before hiring them?", a: "Five questions: 'Will you personally install this or is it a subcontractor?', 'What microcement system and brand do you use?', 'Can I see a finished project in person in my zip code?', 'How do you prep over existing tile or substrate?', and 'How is the shower waterproofed, including the drain and the pan?' If an installer dodges any of these, walk away." },
       { q: "How much do microcement installers charge in New Orleans?", a: "Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
-      { q: "Do microcement installers in New Orleans need to be licensed?", a: "Yes. Microcement installation is an interior-finish trade that falls under Louisiana's residential home-improvement licensing rules for projects above the state threshold. Always hire a licensed and insured installer — ask to see the license number and a current insurance certificate before signing a contract." },
+      { q: "What should I ask about waterproofing before hiring a microcement installer in New Orleans?", a: "Ask how the shower is waterproofed, ask to see past work and the layers used, and ask about the drain and the pan. I walk through those on a site visit — what's under the finish, how the corners, niche, and drain are detailed, and what I do if the existing pan has failed — and you can look at finished showers before you commit to anything. Call or text 504-264-4919." },
       { q: "How long does a microcement installation take in New Orleans?", a: "Most single-bathroom microcement installs in New Orleans take 4 to 7 working days, with cure time between layers. I schedule around your life — you can keep using the rest of the house while I work, and the room is back in service within 48 hours of the final seal." },
       { q: "Can you install microcement over existing tile in a New Orleans home?", a: "Microcement can often be installed over existing tile after the tile assembly is inspected, cleaned, prepared, and confirmed to be stable. Qualifying overlay projects may require little or no demolition. Prep typically includes mechanical scarification and a bonding primer. When the underlying tile is unstable or waterproofing needs to be rebuilt, the project becomes a full-bathroom rebuild instead of an overlay." },
     ],
@@ -493,6 +493,121 @@ export const LOCAL_SERVICE_CONFIGS = {
       { q: "Do you work on Garden District historic homes?", a: "Yes — a large portion of my high-end work is Garden District renovations. We move carefully around original moldings, plaster, and trim, and we test every substrate before we apply microcement or tadelakt." },
       { q: "What does a Garden District tadelakt shower cost?", a: "Tadelakt follows the same pricing as microcement, though the final number can differ with prep, application complexity, and wet-area requirements. Most of my projects land between $3,000 and $10,000, and every job is quoted per project after a free site visit. Seamless showers start around $3,000. Full seamless bathrooms (walls, floor, and shower in one continuous shell) start around $6,000 and include free underfloor heating — I buy the system and install it at no charge. Larger and luxury bathrooms are quoted individually. Venetian plaster and feature walls start around $3,000. The final number depends on the condition of what's there, the size, waterproofing, plumbing, fixtures, and finish." },
       { q: "Can you coordinate with our architect or designer?", a: "Absolutely. A lot of my Garden District work is designer-specified — I'm comfortable presenting samples, color matching, and meeting on-site to walk specs." },
+    ],
+  },
+
+  // ---- Northshore location pages ------------------------------------------
+  "microcement-mandeville": {
+    slug: "microcement-mandeville",
+    serviceName: "Microcement",
+    serviceType: "Microcement",
+    city: "Mandeville",
+    title: "Microcement Mandeville LA | Seamless Showers on the Northshore — The Shirtless Handyman",
+    description:
+      "Seamless microcement showers and bathrooms in Mandeville and across the Northshore. Three-layer waterproofing, no grout, no seams, no mold. Free underfloor heating with a whole-bathroom renovation. Call 504-264-4919.",
+    eyebrow: "Microcement · Mandeville, LA",
+    h1: "Mandeville showers without grout, seams, or a place for mold.",
+    heroParagraph:
+      "I install seamless microcement on the Northshore — Old Mandeville, Fontainebleau, Lewisburg, and out toward Madisonville. Lake humidity does the same thing here that it does in the city: grout goes dark and mold finds every joint. The finish you see is the last of three layers. Under it is a repaired substrate and a waterproofing layer tied into the corners, the niche, and the drain and pan.",
+    heroImage: "/portfolio/shower-led-niche.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.webp",
+    primaryCta: "Get my free Mandeville quote",
+    smsBody: "Hey Ryan, I'm in Mandeville and want a seamless microcement shower.",
+    defaultProjectType: "Microcement bathroom",
+    benefits: [
+      { icon: "Layers", title: "Three layers, explained in person", body: "Reinforced substrate, a waterproofing layer through the wet zone and into the drain and pan, then the sealed microcement. I walk each layer before you commit." },
+      { icon: "Droplets", title: "No grout, no seams, no mold habitat", body: "One continuous surface. There's no grout line for lake humidity to sit in." },
+      { icon: "Flame", title: "Free heated floors with a full bathroom", body: "Book a whole-bathroom renovation and I buy and install the underfloor heating at no charge." },
+      { icon: "Award", title: "I come to you", body: "Site visits on the Northshore are with me, the same person who trowels the finish. Call or text 504-264-4919." },
+    ],
+    serviceAreas: ["Old Mandeville", "Fontainebleau", "Lewisburg", "Madisonville", "Lacombe", "Covington"],
+    whereItShines: [
+      "Walk-in showers in older Mandeville baths where the grout has gone black.",
+      "Newer slab homes that want one continuous floor and shower.",
+      "Whole bathrooms where the free underfloor heat goes in with the new floor.",
+      "Showers that need the drain and pan rebuilt instead of covered.",
+    ],
+    faq: [
+      { q: "Do you actually come to Mandeville?", a: "Yes. I work the New Orleans metro and the Northshore, including Mandeville, Madisonville, Covington, and Slidell. The site visit is at your house. Call or text 504-264-4919." },
+      { q: "What is the three-layer waterproofing system?", a: "Layer one is the substrate: I inspect what's there, fix what has failed, then prime and reinforce it. Layer two is the waterproofing through the wet zone — corners, niche, and the drain and pan — so water has a path out, not into the wall. Layer three is the hand-troweled microcement, sealed. No grout and no seams in that finish." },
+      { q: "Will mold grow in a Mandeville microcement shower?", a: "Mold in tile showers usually lives in grout and failing caulk. A sealed microcement shower is one surface, so there is no grout for it to live in. It still needs normal cleaning and ventilation, which I go over at handoff." },
+      { q: "Is underfloor heating included?", a: "With a whole-bathroom renovation, yes. I buy the underfloor heating system and install it at no charge. A shower-only job is scoped on its own at the site visit." },
+    ],
+  },
+
+  "microcement-covington": {
+    slug: "microcement-covington",
+    serviceName: "Microcement",
+    serviceType: "Microcement",
+    city: "Covington",
+    title: "Microcement Covington LA | Seamless Northshore Bathrooms — The Shirtless Handyman",
+    description:
+      "Microcement showers and full bathrooms in Covington, LA. A three-layer waterproofing system, no grout, no seams, no mold. Free underfloor heating when you renovate the whole bathroom. Call 504-264-4919.",
+    eyebrow: "Microcement · Covington, LA",
+    h1: "Covington bathrooms finished as one surface — no grout lines to scrub.",
+    heroParagraph:
+      "Downtown Covington houses and the newer subdivisions north of the Causeway both end up with the same shower problem: tile joints that stay damp. I replace that with microcement built in three layers — a solid substrate, waterproofing detailed at the drain and pan, and a sealed finish with no grout and no seams. If the job is the whole bathroom, the underfloor heat is included.",
+    heroImage: "/portfolio/wetroom-shower-niche.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/wetroom-shower-niche.webp",
+    primaryCta: "Get my free Covington quote",
+    smsBody: "Hey Ryan, I'm in Covington and want a quote on a seamless bathroom.",
+    defaultProjectType: "Microcement bathroom",
+    benefits: [
+      { icon: "ShieldCheck", title: "Waterproofing you can ask about", body: "Ask how the shower is waterproofed, ask to see past work and the layers used, and ask about the drain and the pan. I answer those on the site visit." },
+      { icon: "Droplets", title: "Built for Northshore humidity", body: "No grout joints and no caulk seams for moisture to sit in. One sealed surface from the floor up through the niche." },
+      { icon: "Flame", title: "Heated floor with the full renovation", body: "A whole-bathroom renovation includes underfloor heating. I supply the system and install it." },
+      { icon: "Layers", title: "Often over sound existing tile", body: "If the tile is stable, the new layers can go over it. If the pan has failed, I show you and we rebuild that part." },
+    ],
+    serviceAreas: ["Downtown Covington", "Covington", "Madisonville", "Abita Springs", "Mandeville", "Folsom"],
+    whereItShines: [
+      "Older Covington baths with original tile that still feels solid.",
+      "Primary bathrooms you want finished as one shell, floor included.",
+      "Walk-in showers where the drain needs to be reworked, not ignored.",
+      "Northshore houses that want the heated floor with the new bathroom.",
+    ],
+    faq: [
+      { q: "How do you waterproof a Covington shower?", a: "In three layers. First I repair and reinforce the substrate. Then I install a waterproofing layer through the wet zone and tie it into the corners, niche, drain, and pan. Last is the hand-troweled microcement, sealed, with no grout and no seams. I show you which of those layers your bathroom actually needs." },
+      { q: "Can I see the layers on a finished job?", a: "Yes. Ask to see past work and I'll walk the layers — what sits under the finish and how the drain and pan were handled. That's the useful question, and I can answer it in person. Text 504-264-4919." },
+      { q: "Do whole Covington bathrooms include heated floors?", a: "Yes. Book the whole-bathroom renovation and I buy and install the underfloor heating at no charge." },
+      { q: "Is there grout to maintain?", a: "No. The finish is continuous. Mold that used to live in grout lines doesn't have that joint to occupy. Clean it like a shower and ventilate the room." },
+    ],
+  },
+
+  "microcement-slidell": {
+    slug: "microcement-slidell",
+    serviceName: "Microcement",
+    serviceType: "Microcement",
+    city: "Slidell",
+    title: "Microcement Slidell LA | Seamless Showers, No Grout — The Shirtless Handyman",
+    description:
+      "Seamless microcement showers in Slidell and the east Northshore. Three-layer waterproofing, no grout, no seams, no mold. Free underfloor heating with a whole-bathroom renovation. Call 504-264-4919.",
+    eyebrow: "Microcement · Slidell, LA",
+    h1: "Slidell showers with nowhere for mold to settle in.",
+    heroParagraph:
+      "Slidell sits in the same wet air as the rest of the Northshore, and slab baths here often still have the original tile. I install microcement as a three-layer system: a sound base, waterproofing that includes the drain and pan, and a sealed finish with no grout and no seams. Whole-bathroom renovations include underfloor heating — I buy the system and install it.",
+    heroImage: "/portfolio/microcement-bath-terracotta-floor.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-bath-terracotta-floor.webp",
+    primaryCta: "Get my free Slidell quote",
+    smsBody: "Hey Ryan, I'm in Slidell and want a seamless microcement shower.",
+    defaultProjectType: "Microcement bathroom",
+    benefits: [
+      { icon: "Droplets", title: "No grout lines in the wet zone", body: "The mold problem in a tile shower is usually the joint. Microcement doesn't have one." },
+      { icon: "Layers", title: "Drain and pan are part of the system", body: "Layer two of the waterproofing is detailed at the drain and the pan, not just rolled on the walls." },
+      { icon: "Flame", title: "Free heat on a full bathroom", body: "A whole-bathroom renovation includes the underfloor heating system, supplied and installed." },
+      { icon: "Clock", title: "One person, start to finish", body: "I quote it and I install it. Call or text 504-264-4919 to set the site visit." },
+    ],
+    serviceAreas: ["Olde Towne", "Eden Isles", "Pearl River", "Slidell", "Lacombe", "Mandeville"],
+    whereItShines: [
+      "Eden Isles and lake-adjacent houses that stay damp for months.",
+      "Olde Towne baths with dated but solid tile.",
+      "Slab floors that can take a continuous microcement finish.",
+      "Full remodels where the heated floor goes in with the new bathroom.",
+    ],
+    faq: [
+      { q: "Do you work in Slidell?", a: "Yes. Slidell, Eden Isles, Olde Towne, and the rest of the east Northshore are in the area I drive for site visits and installs, along with Mandeville and Covington. Text 504-264-4919." },
+      { q: "What are the three layers?", a: "A repaired and reinforced substrate, a waterproofing layer carried through the corners, niche, drain, and pan, and the sealed microcement finish. No grout and no seams in that last layer. I name which layers your shower needs after I see it." },
+      { q: "What should I ask you on the site visit?", a: "Ask how the shower is waterproofed, ask to see past work and the layers used, and ask about the drain and the pan. I'll answer those against your actual bathroom, not a brochure." },
+      { q: "When is the heated floor included?", a: "When the job is a whole-bathroom renovation. I purchase the underfloor heating and install it as part of that scope." },
     ],
   },
 };

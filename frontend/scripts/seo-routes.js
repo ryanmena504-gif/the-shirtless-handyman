@@ -31,7 +31,7 @@ const SEO_ROUTES = [
   {
     path: "/faq",
     title: "FAQ | The Shirtless Handyman — Microcement, Tadelakt & Seamless Surfaces in New Orleans",
-    description: "Straight answers about microcement, tadelakt, rockscape walls, pricing, licensing, and hiring a seamless surface installer in New Orleans. From Ryan Mena.",
+    description: "Straight answers about microcement, tadelakt, rockscape walls, pricing, waterproofing, and hiring a seamless surface installer in New Orleans. From Ryan Mena.",
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
@@ -204,6 +204,30 @@ const SEO_ROUTES = [
     title: "Garden District Handyman & Microcement Specialist | The Shirtless Handyman",
     description: "Garden District New Orleans handyman and seamless-surface specialist. Historic mansions, microcement bathrooms, tadelakt, plaster restoration. Text Ryan: 504-264-4919.",
     ogImage: DEFAULT_OG,
+  },
+  {
+    path: "/microcement-mandeville",
+    title: "Microcement Mandeville LA | Seamless Showers on the Northshore — The Shirtless Handyman",
+    description: "Seamless microcement showers and bathrooms in Mandeville and across the Northshore. Three-layer waterproofing, no grout, no seams, no mold. Free underfloor heating with a whole-bathroom renovation. Call 504-264-4919.",
+    ogImage: `${SITE}/portfolio/shower-led-niche.webp`,
+  },
+  {
+    path: "/microcement-covington",
+    title: "Microcement Covington LA | Seamless Northshore Bathrooms — The Shirtless Handyman",
+    description: "Microcement showers and full bathrooms in Covington, LA. A three-layer waterproofing system, no grout, no seams, no mold. Free underfloor heating when you renovate the whole bathroom. Call 504-264-4919.",
+    ogImage: `${SITE}/portfolio/wetroom-shower-niche.webp`,
+  },
+  {
+    path: "/microcement-slidell",
+    title: "Microcement Slidell LA | Seamless Showers, No Grout — The Shirtless Handyman",
+    description: "Seamless microcement showers in Slidell and the east Northshore. Three-layer waterproofing, no grout, no seams, no mold. Free underfloor heating with a whole-bathroom renovation. Call 504-264-4919.",
+    ogImage: `${SITE}/portfolio/microcement-bath-terracotta-floor.webp`,
+  },
+  {
+    path: "/walk-in-shower-remodel-new-orleans",
+    title: "Walk-in Shower Remodel New Orleans | Seamless, No Grout, No Mold — The Shirtless Handyman",
+    description: "Walk-in shower remodels in New Orleans. A three-layer waterproofing system, no grout, no seams, no mold. Free underfloor heating when the shower is part of a whole-bathroom renovation. Call 504-264-4919.",
+    ogImage: `${SITE}/portfolio/third-job.webp`,
   },
 ];
 

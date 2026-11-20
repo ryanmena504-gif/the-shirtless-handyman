@@ -154,7 +154,7 @@ export default function FinishesPage() {
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center rounded-3xl border border-border/40 bg-card overflow-hidden">
             <div className="aspect-[4/3] md:aspect-auto md:h-full overflow-hidden">
               <img
-                src="/portfolio/terrazzo-chip-floor.jpg"
+                src="/portfolio/terrazzo-chip-floor.webp"
                 alt="Close-up of a seamless microterrazzo chip floor"
                 loading="lazy"
                 className="w-full h-full object-cover"

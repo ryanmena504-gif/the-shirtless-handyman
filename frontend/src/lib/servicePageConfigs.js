@@ -42,8 +42,8 @@ export const SERVICE_PAGE_CONFIGS = {
     h1: "No grout. No seams. No mold. A shower built for New Orleans humidity.",
     heroParagraph:
       "I replace the grout lines where mold lives with one continuous, sealed microcement surface — walls, niche, bench, and floor. Often right over your existing tile once I've confirmed it's solid. I explain every layer of the waterproofing before you commit.",
-    heroImage: "/portfolio/wetroom-shower-niche.jpg",
-    ogImage: "https://www.theshirtlesshandyman.com/portfolio/wetroom-shower-niche.jpg",
+    heroImage: "/portfolio/wetroom-shower-niche.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/wetroom-shower-niche.webp",
     primaryCta: "Get my free shower quote",
     smsBody: "Hey Ryan, I'd like a quote on a seamless microcement shower.",
     defaultProjectType: "Seamless shower",
@@ -84,8 +84,8 @@ export const SERVICE_PAGE_CONFIGS = {
     h1: "A spa bathroom with no grout to scrub — and the heated floor is on me.",
     heroParagraph:
       "Walls, floor, and shower wrapped in one continuous microcement surface, rebuilt with proper waterproofing for older New Orleans homes. Book a whole-bathroom renovation and I buy and install the underfloor heating for free.",
-    heroImage: "/portfolio/microcement-bath-terracotta-floor.jpg",
-    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-bath-terracotta-floor.jpg",
+    heroImage: "/portfolio/microcement-bath-terracotta-floor.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-bath-terracotta-floor.webp",
     primaryCta: "Get my free bathroom quote",
     smsBody: "Hey Ryan, I'd like a quote on a full bathroom transformation (with the free heated floors).",
     defaultProjectType: "Full bathroom transformation",
@@ -126,8 +126,8 @@ export const SERVICE_PAGE_CONFIGS = {
     h1: "Venetian plaster walls with depth you can feel — hand-troweled in New Orleans.",
     heroParagraph:
       "Polished lime plaster that catches the light and turns a flat wall into the room's centerpiece. Right at home in New Orleans' older houses, from shotgun doubles to Garden District mansions.",
-    heroImage: "/venetian-plaster-hero.jpg",
-    ogImage: "https://www.theshirtlesshandyman.com/venetian-plaster-hero.jpg",
+    heroImage: "/venetian-plaster-hero.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/venetian-plaster-hero.webp",
     primaryCta: "Get my free plaster quote",
     smsBody: "Hey Ryan, I'd like a quote on Venetian plaster walls.",
     defaultProjectType: "Venetian plaster / walls",
@@ -166,8 +166,8 @@ export const SERVICE_PAGE_CONFIGS = {
     h1: "Seamless microcement counters and vanities that match the rest of the room.",
     heroParagraph:
       "One continuous, grout-free surface on your vanity or counter — perfect for wrapping a bathroom in a single material from floor to shower to sink.",
-    heroImage: "/portfolio/microcement-vanity-bathroom.jpg",
-    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.jpg",
+    heroImage: "/portfolio/microcement-vanity-bathroom.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-vanity-bathroom.webp",
     primaryCta: "Get my free countertop quote",
     smsBody: "Hey Ryan, I'd like a quote on microcement countertops / a vanity top.",
     defaultProjectType: "Countertops / vanity",
@@ -190,6 +190,44 @@ export const SERVICE_PAGE_CONFIGS = {
       { q: "Can microcement go on a countertop?", a: "Yes, on a sound, rigid base. I check the existing counter or vanity top at the site visit and tell you whether it can be resurfaced or needs a new base." },
       { q: "How much do microcement countertops cost?", a: "They're priced per project after a site visit, based on size, edges, sink cutouts, and the condition of what's there now." },
       HEATED_FAQ,
+    ],
+  },
+
+  "walk-in-shower-remodel-new-orleans": {
+    slug: "walk-in-shower-remodel-new-orleans",
+    serviceName: "Walk-in Shower Remodels",
+    serviceType: "Walk-in shower remodel",
+    city: "New Orleans",
+    title: "Walk-in Shower Remodel New Orleans | Seamless, No Grout, No Mold — The Shirtless Handyman",
+    description:
+      "Walk-in shower remodels in New Orleans. A three-layer waterproofing system, no grout, no seams, no mold. Free underfloor heating when the shower is part of a whole-bathroom renovation. Call 504-264-4919.",
+    eyebrow: "Walk-in Showers · New Orleans, LA",
+    h1: "A walk-in shower remodel with no grout lines and a real drain detail.",
+    heroParagraph:
+      "I turn tiled stalls and tub surrounds into walk-in showers finished in seamless microcement. The pretty surface is the third layer. Under it: a substrate I repair and reinforce, then a waterproofing layer carried into the corners, the niche, and the drain and pan. No grout, no seams, and no joint for mold to occupy. If the walk-in is part of a whole-bathroom renovation, the underfloor heating is included.",
+    heroImage: "/portfolio/third-job.webp",
+    ogImage: "https://www.theshirtlesshandyman.com/portfolio/third-job.webp",
+    primaryCta: "Get my free walk-in quote",
+    smsBody: "Hey Ryan, I want a walk-in shower remodel in New Orleans.",
+    defaultProjectType: "Walk-in shower remodel",
+    benefits: [
+      { icon: "Layers", title: "Three-layer waterproofing", body: "Reinforced base, waterproofing tied into the drain and pan, then sealed microcement. I explain each layer for your shower before you commit." },
+      { icon: "Droplets", title: "No grout, no seams, no mold", body: "The walk-in is one continuous surface. Water doesn't have a grout line to sit in." },
+      { icon: "ShieldCheck", title: "The pan is part of the conversation", body: "Ask about the drain and the pan. If the existing one has failed, I show you and we rebuild it instead of coating over it." },
+      { icon: "Flame", title: "Free heat with the whole bathroom", body: "A walk-in that's part of a whole-bathroom renovation includes underfloor heating, supplied and installed." },
+    ],
+    serviceAreas: AREAS,
+    whereItShines: [
+      "Tub-to-walk-in conversions in older New Orleans baths.",
+      "Stalls where the grout is stained and the caulk has pulled away.",
+      "Curbless showers when the floor can be sloped to the drain.",
+      "Whole-bathroom remodels that include the heated floor.",
+    ],
+    faq: [
+      { q: "What should I ask before a walk-in shower remodel?", a: "Ask how the shower is waterproofed, ask to see past work and the layers used, and ask about the drain and the pan. Those three tell you whether the person builds the wet zone or just coats it. I walk them on the site visit. Call or text 504-264-4919." },
+      { q: "How is a walk-in shower waterproofed?", a: "Three layers. I fix and reinforce the substrate, install waterproofing through the wet zone and into the drain and pan, then trowel and seal the microcement. The finish has no grout and no seams." },
+      { q: "Can a tub become a walk-in?", a: "Often, yes. It depends on the floor structure, the drain location, and whether the pan needs to be rebuilt. I look at that in person before I tell you it can." },
+      { q: "Do I get the free heated floor?", a: "When the walk-in is part of a whole-bathroom renovation, yes. I buy the underfloor heating system and install it at no charge. A shower-only remodel is scoped on its own." },
     ],
   },
 };

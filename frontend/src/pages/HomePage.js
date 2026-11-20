@@ -7,13 +7,13 @@ import { TrustStrip } from "../components/TrustStrip";
 import { PricingCalculator } from "../components/PricingCalculator";
 import { GoogleReviews } from "../components/GoogleReviews";
 import { SeoHead } from "../components/SeoHead";
-import { RevealText, ScrollReveal, MagneticButton } from "../components/cinematic";
+import { ScrollReveal, MagneticButton } from "../components/cinematic";
 import { motion } from "framer-motion";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User, Flame, ClipboardCheck, HandCoins, Search, Mail, MapPin } from "lucide-react";
 import { TEL_LINK as TEL_HREF, EMAIL, HOURS_LABEL, SERVICE_AREA_LABEL, HEATED_FLOORS_OFFER_SHORT, HEATED_FLOORS_OFFER_LONG, scrollToQuoteForm, PRICING_HEADLINE, PRICING_SUBHEAD, PRICE_SHOWER, PRICE_FULL_BATH, PRICE_FULL_BATH_RANGE, PRICE_WALLS } from "../lib/contact";
 import { HOME_FAQ, TESTIMONIALS, BEFORE_AFTER, SERVICE_LINKS, WATERPROOF_STEPS } from "../lib/homeContent";
 
-const HERO_BG = "/portfolio/shower-led-niche.jpg";
+const HERO_BG = "/portfolio/shower-led-niche.webp";
 
 const PHONE = "504-264-4919";
 const SMS_LINK = `sms:5042644919?body=Hey%20Ryan%2C%20I%27m%20interested%20in%20a%20seamless%20surface%20project.`;
@@ -112,11 +112,7 @@ const GLOBAL_SCHEMA = {
         priceCurrency: "USD",
       },
       sameAs: [
-        // Fill in once GBP / Yelp / Facebook / Instagram are live:
-        // "https://www.google.com/maps/place/?q=place_id:XXXX",
-        // "https://www.yelp.com/biz/the-shirtless-handyman-new-orleans",
-        // "https://www.facebook.com/theshirtlesshandyman",
-        // "https://www.instagram.com/theshirtlesshandyman",
+        "https://g.page/r/CZgh4ltLoG1SEBI",
       ],
     },
     {
@@ -238,45 +234,36 @@ export default function HomePage() {
 
       {/* ===== HERO ===== */}
       <section className="relative min-h-[92vh] overflow-hidden" data-testid="hero-section">
-        <motion.img
+        <img
           src={HERO_BG}
           alt="Seamless microcement shower wall installed by The Shirtless Handyman in New Orleans"
           className="absolute inset-0 w-full h-full object-cover"
-          initial={{ scale: 1.08 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2.6, ease: [0.22, 1, 0.36, 1] }}
+          width="788"
+          height="1122"
+          fetchPriority="high"
+          decoding="sync"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/30" />
 
         <div className="relative z-10 h-full flex items-center min-h-[92vh] pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div className="max-w-2xl">
-              <motion.p
-                className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-6"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#D97757] mb-6">
                 Microcement Showers &amp; Bathrooms · New Orleans + Northshore
-              </motion.p>
+              </p>
 
               <h1
                 className="text-5xl sm:text-6xl lg:text-7xl font-light tracking-tight leading-[0.95] text-white mb-6"
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
-                <RevealText text="No grout." as="span" className="block" delay={0.25} />
-                <RevealText text="No seams." as="span" className="block" delay={0.45} />
-                <RevealText text="No mold." as="span" className="block italic" delay={0.65} />
+                <span className="block">No grout.</span>
+                <span className="block">No seams.</span>
+                <span className="block italic">No mold.</span>
               </h1>
 
-              <motion.p
-                className="text-base md:text-lg leading-relaxed text-white/75 mb-3 max-w-xl"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.1 }}
-              >
+              <p className="text-base md:text-lg leading-relaxed text-white/75 mb-3 max-w-xl">
                 Seamless, waterproof microcement showers and full bathroom transformations — built for New Orleans humidity, where grout goes black and mold finds every seam.
-              </motion.p>
+              </p>
 
               <motion.p
                 className="text-sm text-white/50 mb-2"
@@ -416,8 +403,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <img src="/portfolio/textured-plaster-closeup.jpg" alt="Close-up of hand-troweled microcement texture" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full" />
-            <img src="/portfolio/terrazzo-chip-floor.jpg" alt="Close-up of a seamless, grout-free floor finish" loading="lazy" className="rounded-2xl aspect-[3/4] object-cover w-full mt-8" />
+            <img src="/portfolio/textured-plaster-closeup.webp" alt="Close-up of hand-troweled microcement texture" loading="lazy" decoding="async" className="rounded-2xl aspect-[3/4] object-cover w-full" />
+            <img src="/portfolio/terrazzo-chip-floor.webp" alt="Close-up of a seamless, grout-free floor finish" loading="lazy" decoding="async" className="rounded-2xl aspect-[3/4] object-cover w-full mt-8" />
           </div>
         </div>
       </section>
@@ -443,7 +430,7 @@ export default function HomePage() {
               {
                 slug: "wet-rooms",
                 // Not wetroom-shower-niche.jpg: that's the same photo as the hero background.
-                image: "/portfolio/third-job.jpg",
+                image: "/portfolio/third-job.webp",
                 title: "Seamless showers",
                 materials: "Microcement · Tadelakt",
                 desc: "Showers and tub surrounds built as one continuous, waterproof surface — often right over your existing tile, once I've checked it's solid. No grout, no seams, nowhere for mold to start.",
@@ -452,7 +439,7 @@ export default function HomePage() {
               },
               {
                 slug: "full-bathrooms",
-                image: "/portfolio/microcement-bath-terracotta-floor.jpg",
+                image: "/portfolio/microcement-bath-terracotta-floor.webp",
                 title: "Full bathrooms",
                 materials: "Walls · Floor · Shower",
                 desc: "Walls, floor, and shower in one continuous shell, with the waterproofing rebuilt where it needs it. Free heated floors with every full bathroom.",
@@ -461,7 +448,7 @@ export default function HomePage() {
               },
               {
                 slug: "architectural-walls",
-                image: "/venetian-plaster-hero.jpg",
+                image: "/venetian-plaster-hero.webp",
                 title: "Venetian plaster walls",
                 materials: "Venetian plaster · Marmorino · Rockscape",
                 desc: "Feature walls, fireplaces, dining rooms, and powder baths. Hand-troweled Italian and Moroccan plasters that catch the light and turn a flat wall into the room's centerpiece.",
@@ -646,6 +633,8 @@ export default function HomePage() {
                 <img
                   src="/ryan-mena-illustration.jpg?v=3"
                   alt="Ryan Mena — The Shirtless Handyman — illustration"
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-contain"
                 />
               </div>
@@ -1114,6 +1103,7 @@ export default function HomePage() {
               <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-pricing">Pricing</a>
               <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-about">About</button>
               <a href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-shop">Shop</a>
+              <a href="https://g.page/r/CZgh4ltLoG1SEBI/review" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-review">Leave us a review</a>
               <button onClick={() => navigate("/contractors")} className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors" data-testid="footer-contractors">For Contractors</button>
               <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground/40 hover:text-foreground transition-colors" data-testid="footer-admin-link">Admin</button>
             </div>
