@@ -55,12 +55,31 @@ row is Action **Rewrite**; the source has no trailing slash.
 | 27 | `/bywater-handyman` | `/bywater-handyman/index.html` |
 | 28 | `/french-quarter-handyman` | `/french-quarter-handyman/index.html` |
 | 29 | `/garden-district-handyman` | `/garden-district-handyman/index.html` |
-| 30 | `/*` | `/index.html` |
+There is **no** `/* → /index.html` catch-all. That rule served the homepage
+with status 200 for every unknown URL. Delete it in the dashboard if it is
+still there.
 
-`/* → /index.html` is the existing SPA rule. Keep it, and keep it **last**.
+Unknown paths then match no file and no rule, and Render returns
+`404.html` (shipped in `frontend/public/404.html`) with status **404**.
 
-When you add a route to `frontend/scripts/seo-routes.js`, add its rewrite
-above `/*` too.
+A few real app routes are not prerendered files. The script adds rewrites
+only for those (`/admin`, `/contractor/*`, `/share/*`, `/analysis/*`,
+`/results/*`, `/contractors`) so they still load the SPA shell. `/work`
+redirects to `/portfolio`.
+
+When you add a route to `frontend/scripts/seo-routes.js`, re-run the script
+and add the new rewrite. Do not put the catch-all back.
+
+## Cache header
+
+Hashed CRA bundles live under `/static/*`. In **Render → Headers**:
+
+| Path | Name | Value |
+|---|---|---|
+| `/static/*` | `Cache-Control` | `public, max-age=31536000, immutable` |
+
+The static site is not in `render.yaml` (that blueprint is the API only).
+These rules are the in-repo source of truth; apply them in the dashboard.
 
 ## Check it
 

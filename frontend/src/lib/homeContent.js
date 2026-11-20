@@ -43,6 +43,10 @@ export const SERVICE_LINKS = [
   { label: "Microcement countertops", href: "/microcement-countertops-new-orleans" },
   { label: "Tadelakt", href: "/tadelakt-new-orleans" },
   { label: "Microcement in Metairie", href: "/microcement-metairie" },
+  { label: "Microcement in Mandeville", href: "/microcement-mandeville" },
+  { label: "Microcement in Covington", href: "/microcement-covington" },
+  { label: "Microcement in Slidell", href: "/microcement-slidell" },
+  { label: "Walk-in shower remodel", href: "/walk-in-shower-remodel-new-orleans" },
 ];
 
 // Plain-English version of the wet-area build. Ryan: adjust wording to match

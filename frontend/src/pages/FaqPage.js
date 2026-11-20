@@ -21,7 +21,7 @@ const CATEGORIES = [
     questions: [
       {
         q: "Who is the best microcement installer in New Orleans?",
-        a: "There are several skilled installers in the New Orleans area. To evaluate any of them, use this six-question test: (1) Will you personally install this or is it a subcontractor? (2) What microcement system and brand do you use? (3) Can I see a finished project in person in my zip code? (4) How do you prep over existing tile? (5) What's the warranty on the seal in writing? (6) What licensing and insurance do you carry, and can you show me the paperwork? Any installer who answers all six clearly is worth hiring. Ryan Mena of The Shirtless Handyman will answer all six for you up front — text 504-264-4919.",
+        a: "There are several skilled installers in the New Orleans area. To evaluate any of them, use this six-question test: (1) Will you personally install this or is it a subcontractor? (2) What microcement system and brand do you use? (3) Can I see a finished project in person in my zip code? (4) How do you prep over existing tile? (5) How is the shower waterproofed, including the drain and the pan? (6) Can I see past work and the layers used? Any installer who answers all six clearly is worth hiring. Ryan Mena of The Shirtless Handyman will answer all six for you up front — text 504-264-4919.",
       },
       {
         q: "How much does microcement cost in New Orleans?",
@@ -86,16 +86,16 @@ const CATEGORIES = [
     title: "Hiring an installer",
     questions: [
       {
-        q: "Do microcement installers need to be licensed in Louisiana?",
-        a: "Yes — Louisiana requires a residential home-improvement license for any project above $7,500. Always ask for the license number and a current insurance certificate before signing a contract. Unlicensed work can void homeowners insurance if anything goes wrong.",
+        q: "What should I ask about waterproofing before I hire someone?",
+        a: "Ask how the shower is waterproofed, ask to see past work and the layers used, and ask about the drain and the pan. A straight answer covers what's under the finish, how the corners and niche are detailed, and what happens if the existing pan has failed. Ryan walks through that on a site visit — text 504-264-4919.",
       },
       {
         q: "What should I ask a microcement installer before hiring?",
-        a: "Five questions minimum: (1) Will you personally install this or is it a subcontractor? (2) What microcement brand do you use? (3) Can I see a finished project locally in person? (4) How do you prep the substrate? (5) What's the sealer warranty in writing? Skip any installer who dodges these.",
+        a: "Five questions minimum: (1) Will you personally install this or is it a subcontractor? (2) What microcement brand do you use? (3) Can I see a finished project locally in person? (4) How do you prep the substrate? (5) How is the shower waterproofed, including the drain and the pan? Skip any installer who dodges these.",
       },
       {
         q: "How do I know if a microcement installer is legit?",
-        a: "Three checks: (a) A Louisiana state license number you can verify online at the LSLBC website. (b) A current general liability insurance certificate ($1M minimum). (c) At least one finished installation you can visit in person locally. If they can provide all three, they're legit — pick based on portfolio + price.",
+        a: "Three checks: (a) They explain how the shower is waterproofed, including the drain and the pan. (b) They show past work and the layers used, in person if you ask. (c) They name what they keep and what they rebuild before any finish goes on. If they can do all three, you're talking to someone who builds the wet zone on purpose.",
       },
       {
         q: "How long does the whole process take from first contact to installed bathroom?",
@@ -166,7 +166,7 @@ export default function FaqPage() {
     <>
       <SeoHead
         title="FAQ | The Shirtless Handyman — Microcement, Tadelakt & Seamless Surfaces in New Orleans"
-        description="Straight answers about microcement, tadelakt, rockscape walls, pricing, licensing, and hiring a seamless surface installer in New Orleans. From Ryan Mena, the actual installer."
+        description="Straight answers about microcement, tadelakt, rockscape walls, pricing, waterproofing, and hiring a seamless surface installer in New Orleans. From Ryan Mena, the actual installer."
         canonical={PAGE_URL}
         ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
       >
@@ -193,7 +193,7 @@ export default function FaqPage() {
             </h1>
             <p className="text-base md:text-lg text-white/60 max-w-2xl leading-relaxed">
               Everything a New Orleans homeowner asks about microcement, tadelakt, rockscape,
-              pricing, licensing, and hiring an installer. Written by Ryan, the actual installer.
+              pricing, waterproofing, and hiring an installer. Written by Ryan, the actual installer.
             </p>
           </div>
         </section>

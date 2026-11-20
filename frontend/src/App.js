@@ -29,6 +29,7 @@ import BookPage from "./pages/BookPage";
 import FaqPage from "./pages/FaqPage";
 import FinishesPage from "./pages/FinishesPage";
 import ShopPage from "./pages/ShopPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 /**
  * ScrollToHash — makes #anchor nav links (e.g. "Process" -> /#how-it-works)
@@ -94,6 +95,10 @@ function App() {
             <Route path="/bathroom-remodel-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/venetian-plaster-new-orleans" element={<LocalServiceRoute />} />
             <Route path="/microcement-countertops-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/walk-in-shower-remodel-new-orleans" element={<LocalServiceRoute />} />
+            <Route path="/microcement-mandeville" element={<LocalServiceRoute />} />
+            <Route path="/microcement-covington" element={<LocalServiceRoute />} />
+            <Route path="/microcement-slidell" element={<LocalServiceRoute />} />
 
             {/* Neighborhood handyman micro-pages — long-tail local SEO */}
             <Route path="/lakeview-handyman" element={<LocalServiceRoute />} />
@@ -113,8 +118,7 @@ function App() {
             {/* Linked from the homepage + footer; was missing, so those links rendered a blank page */}
             <Route path="/contractors" element={<ContractorsPage />} />
 
-            {/* Unknown URLs (old links, typos) land on the homepage instead of a blank screen */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <LeadGenWidgets />
         </AuthProvider>

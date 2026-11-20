@@ -92,7 +92,7 @@ export default function HowIStartedPage() {
         <section className="pt-32 pb-16 px-6 md:px-12 bg-[#0E0E0E] text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-25">
             <img
-              src="/portfolio/shower-led-niche.jpg"
+              src="/portfolio/shower-led-niche.webp"
               alt=""
               className="w-full h-full object-cover"
               aria-hidden="true"

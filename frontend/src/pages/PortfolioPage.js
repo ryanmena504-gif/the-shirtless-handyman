@@ -13,14 +13,14 @@ import { API } from "../lib/apiBase";
 const STATIC_PORTFOLIO = [
   {
     id: "static-1",
-    after_image: "/portfolio/shower-led-niche.jpg",
+    after_image: "/portfolio/shower-led-niche.webp",
     title: "Seamless Shower with LED Niche",
     room_type: "Bathroom",
     description: "Microcement shower with integrated LED niche — no grout, no mold.",
   },
   {
     id: "static-2",
-    after_image: "/portfolio/microcement-vanity-bathroom.jpg",
+    after_image: "/portfolio/microcement-vanity-bathroom.webp",
     title: "Microcement Vanity Bathroom",
     room_type: "Bathroom",
     description: "Full microcement bathroom — walls, vanity, seamless finish.",
@@ -29,35 +29,35 @@ const STATIC_PORTFOLIO = [
   // different file names, so they were removed to avoid showing them twice.
   {
     id: "static-5",
-    after_image: "/portfolio/third-job.jpg",
+    after_image: "/portfolio/third-job.webp",
     title: "Custom Renovation",
     room_type: "Bathroom",
     description: "Seamless surface transformation by Ryan Mena.",
   },
   {
     id: "static-6",
-    after_image: "/portfolio/venetian-plaster-panels.jpg",
+    after_image: "/portfolio/venetian-plaster-panels.webp",
     title: "Venetian Plaster Wall Panels",
     room_type: "Interior",
     description: "Hand-troweled Venetian plaster panels with built-in niche.",
   },
   {
     id: "static-7",
-    after_image: "/portfolio/limewash-room-inprogress.jpg",
+    after_image: "/portfolio/limewash-room-inprogress.webp",
     title: "Limewash Room",
     room_type: "Interior",
     description: "Limewash walls — soft, natural texture.",
   },
   {
     id: "static-8",
-    after_image: "/portfolio/terrazzo-chip-floor.jpg",
+    after_image: "/portfolio/terrazzo-chip-floor.webp",
     title: "Terrazzo Chip Detail",
     room_type: "Floor",
     description: "Close-up of seamless chip detail.",
   },
   {
     id: "static-9",
-    after_image: "/portfolio/textured-plaster-closeup.jpg",
+    after_image: "/portfolio/textured-plaster-closeup.webp",
     title: "Textured Plaster Finish",
     room_type: "Interior",
     description: "Hand-applied textured plaster — close-up of the trowel work.",
