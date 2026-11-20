@@ -19,7 +19,7 @@ const SEO_ROUTES = [
   {
     path: "/",
     title: "Microcement Showers & Bathrooms New Orleans | No Grout, No Mold — The Shirtless Handyman",
-    description: "Seamless, waterproof microcement showers, bathrooms, Venetian plaster & countertops in New Orleans + the Northshore. No grout, no seams, no mold. Free quote + free heated floors with a full bathroom. Call 504-264-4919.",
+    description: "Seamless microcement showers in New Orleans with three-layer waterproofing. No grout, no seams, no mold. Book a site visit with The Shirtless Handyman.",
     ogImage: `${SITE}/portfolio/shower-led-niche.jpg`,
   },
   {
@@ -147,13 +147,13 @@ const SEO_ROUTES = [
   {
     path: "/microcement-showers-new-orleans",
     title: "Microcement Showers New Orleans | Seamless, Grout-Free & Waterproof — The Shirtless Handyman",
-    description: "Seamless waterproof microcement showers in New Orleans. No grout, no seams, no mold. Often installed over existing tile. Free quote + free heated floors with a full bathroom. Call 504-264-4919.",
+    description: "Seamless microcement showers in New Orleans, built on three-layer waterproofing. No grout, no seams, no mold. Book a site visit: 504-264-4919.",
     ogImage: "https://www.theshirtlesshandyman.com/portfolio/wetroom-shower-niche.jpg",
   },
   {
     path: "/bathroom-remodel-new-orleans",
     title: "Bathroom Remodel New Orleans | Seamless Microcement Bathrooms + Free Heated Floors — The Shirtless Handyman",
-    description: "Full bathroom transformations in New Orleans: walls, floor, and shower in one seamless, grout-free microcement shell — with free underfloor heating included. Free quote: 504-264-4919.",
+    description: "Seamless microcement bathrooms in New Orleans, with showers on three-layer waterproofing and free underfloor heating. Book a site visit: 504-264-4919.",
     ogImage: "https://www.theshirtlesshandyman.com/portfolio/microcement-bath-terracotta-floor.jpg",
   },
   {
