@@ -37,7 +37,10 @@ export const SERVICE_PAGE_CONFIGS = {
     city: "New Orleans",
     title: "Microcement Showers New Orleans | Seamless, Grout-Free & Waterproof — The Shirtless Handyman",
     description:
-      "Seamless waterproof microcement showers in New Orleans. No grout, no seams, no mold. Often installed over existing tile. Free quote + free heated floors with a full bathroom. Call 504-264-4919.",
+      "Seamless microcement showers in New Orleans, built on three-layer waterproofing. No grout, no seams, no mold. Book a site visit: 504-264-4919.",
+    oneLiner:
+      "Gorgeous on top, overbuilt underneath: seamless microcement showers built on a three-layer waterproofing system most installers skip.",
+    showWhyShowersDontLeak: true,
     eyebrow: "Seamless Showers · New Orleans, LA",
     h1: "No grout. No seams. No mold. A shower built for New Orleans humidity.",
     heroParagraph:
@@ -79,7 +82,10 @@ export const SERVICE_PAGE_CONFIGS = {
     city: "New Orleans",
     title: "Bathroom Remodel New Orleans | Seamless Microcement Bathrooms + Free Heated Floors — The Shirtless Handyman",
     description:
-      "Full bathroom transformations in New Orleans: walls, floor, and shower in one seamless, grout-free microcement shell — with free underfloor heating included. Free quote: 504-264-4919.",
+      "Seamless microcement bathrooms in New Orleans, with showers on three-layer waterproofing and free underfloor heating. Book a site visit: 504-264-4919.",
+    oneLiner:
+      "Gorgeous on top, overbuilt underneath: seamless microcement showers built on a three-layer waterproofing system most installers skip.",
+    showWhyShowersDontLeak: true,
     eyebrow: "Bathroom Transformations · New Orleans, LA",
     h1: "A spa bathroom with no grout to scrub — and the heated floor is on me.",
     heroParagraph:

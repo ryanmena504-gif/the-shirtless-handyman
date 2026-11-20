@@ -3,7 +3,7 @@
     {
       "path": "/",
       "slug": "home",
-      "size": 99359
+      "size": 105787
     },
     {
       "path": "/book",
@@ -103,12 +103,12 @@
     {
       "path": "/microcement-showers-new-orleans",
       "slug": "microcement-showers-new-orleans",
-      "size": 57293
+      "size": 63725
     },
     {
       "path": "/bathroom-remodel-new-orleans",
       "slug": "bathroom-remodel-new-orleans",
-      "size": 57303
+      "size": 63753
     },
     {
       "path": "/venetian-plaster-new-orleans",
@@ -151,5 +151,5 @@
       "size": 54033
     }
   ],
-  "generatedAt": "2026-11-16T21:53:09.265Z"
+  "generatedAt": "2026-11-20T18:55:28.635Z"
 }

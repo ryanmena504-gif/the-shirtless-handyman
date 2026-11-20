@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Navbar } from "../components/Navbar";
 import { InstantQuoteForm } from "../components/InstantQuoteForm";
@@ -7,6 +7,7 @@ import { TrustStrip } from "../components/TrustStrip";
 import { PricingCalculator } from "../components/PricingCalculator";
 import { GoogleReviews } from "../components/GoogleReviews";
 import { SeoHead } from "../components/SeoHead";
+import { WhyShowersDontLeak } from "../components/WhyShowersDontLeak";
 import { ScrollReveal, MagneticButton } from "../components/cinematic";
 import { motion } from "framer-motion";
 import { ArrowRight, Upload, Sparkles, DollarSign, ChevronRight, MessageCircle, Phone, Droplets, ShieldCheck, Paintbrush, AlertCircle, Layers, CalendarCheck, Wrench, Home, Clock, CheckCircle, Star, Gem, Hammer, User, Flame, ClipboardCheck, HandCoins, Search, Mail, MapPin } from "lucide-react";
@@ -36,7 +37,7 @@ const GLOBAL_SCHEMA = {
       logo: `${SITE_URL}/portfolio/microcement-vanity-bathroom.jpg`,
       image: `${SITE_URL}/portfolio/shower-led-niche.jpg`,
       description:
-        "Owner-operated microcement, tadelakt, and seamless-surface installation studio in New Orleans, Louisiana. Founder Ryan Mena personally installs every project — no subcontractors, no franchise.",
+        "Owner-operated studio in New Orleans for seamless microcement showers built with three-layer waterproofing, plus tadelakt and other seamless surfaces. Founder Ryan Mena personally installs every project — no subcontractors, no franchise.",
       telephone: "+1-504-264-4919",
       email: "ryanmena@theshirtlesshandyman.com",
       priceRange: "$$-$$$",
@@ -224,7 +225,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background" data-testid="home-page">
       <SeoHead
         title="Microcement Showers & Bathrooms New Orleans | No Grout, No Mold — The Shirtless Handyman"
-        description="Seamless, waterproof microcement showers, bathrooms, Venetian plaster & countertops in New Orleans + the Northshore. No grout, no seams, no mold. Free quote + free heated floors with a full bathroom. Call 504-264-4919."
+        description="Seamless microcement showers in New Orleans with three-layer waterproofing. No grout, no seams, no mold. Book a site visit with The Shirtless Handyman."
         canonical="https://www.theshirtlesshandyman.com/"
         ogImage="https://www.theshirtlesshandyman.com/portfolio/shower-led-niche.jpg"
       >
@@ -253,71 +254,59 @@ export default function HomePage() {
               </p>
 
               <h1
-                className="text-5xl sm:text-6xl lg:text-7xl font-light tracking-tight leading-[0.95] text-white mb-6"
+                className="text-[2.15rem] sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.08] text-white mb-6 max-w-xl"
                 style={{ fontFamily: "'Fraunces', serif" }}
+                data-testid="hero-headline"
               >
-                <span className="block">No grout.</span>
-                <span className="block">No seams.</span>
-                <span className="block italic">No mold.</span>
+                Yes, that&rsquo;s really the name.{" "}
+                <span className="italic">The work is the serious part.</span>
               </h1>
 
-              <p className="text-base md:text-lg leading-relaxed text-white/75 mb-3 max-w-xl">
-                Seamless, waterproof microcement showers and full bathroom transformations — built for New Orleans humidity, where grout goes black and mold finds every seam.
+              <p
+                className="text-base md:text-lg leading-relaxed text-white/80 mb-3 max-w-xl"
+                data-testid="hero-sub"
+              >
+                Three layers of waterproofing under every seamless shower. No grout, no seams, no mold, and no leaks waiting to happen.
               </p>
 
-              <motion.p
-                className="text-sm text-white/50 mb-2"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
-              >
+              <p className="text-sm text-white/50 mb-6">
                 Personally installed by Ryan Mena · New Orleans metro &amp; the Northshore.
-              </motion.p>
+              </p>
 
-              {/* Own the name before the visitor wonders about it */}
-              <motion.p
-                className="text-sm italic text-white/70 mb-6"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.22 }}
-                data-testid="hero-name-line"
-              >
-                Yes, that&rsquo;s really the name. The work is the serious part.
-              </motion.p>
-
-              {/* Offer — the heated floors are the hook, so they sit above the fold */}
-              <motion.p
-                className="inline-flex items-center gap-2 text-sm text-white bg-[#D97757]/20 border border-[#D97757]/50 rounded-full px-4 py-1.5 mb-6"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.25 }}
-                data-testid="hero-heated-offer"
-              >
-                <Flame className="w-4 h-4 text-[#D97757]" aria-hidden="true" />
-                {HEATED_FLOORS_OFFER_SHORT}
-              </motion.p>
-
-              {/* CTAs — call first (phones), then the quote form right here */}
+              {/* CTAs — book a visit first, then phone, then the quote form */}
               <motion.div
                 className="flex flex-col gap-3"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.3 }}
               >
-                <div className="flex flex-wrap gap-3">
-                  <a href={TEL_LINK} data-testid="hero-call-btn">
-                    <Button className="h-12 px-6 rounded-full bg-white text-[#0E0E0E] text-base font-semibold hover:bg-white/90">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                  <Button asChild className="h-12 px-6 rounded-full bg-white text-[#0E0E0E] text-base font-semibold hover:bg-white/90 w-full sm:w-auto">
+                    <Link to="/book" data-testid="hero-book-visit-btn">
+                      Book a site visit
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </Button>
+                  <a href={TEL_LINK} data-testid="hero-call-btn" className="w-full sm:w-auto">
+                    <Button variant="outline" className="h-12 px-6 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
                       <Phone className="w-4 h-4 mr-2" />
                       Call {PHONE}
                     </Button>
                   </a>
-                  <a href={SMS_LINK} data-testid="hero-text-btn">
-                    <Button variant="outline" className="h-12 px-6 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium">
+                  <a href={SMS_LINK} data-testid="hero-text-btn" className="w-full sm:w-auto">
+                    <Button variant="outline" className="h-12 px-6 rounded-full border-white/30 text-white hover:bg-white/10 text-base font-medium w-full sm:w-auto">
                       <MessageCircle className="w-4 h-4 mr-2" />
                       Text me
                     </Button>
                   </a>
                 </div>
+                <p
+                  className="flex items-start gap-2 text-sm text-white bg-[#D97757]/20 border border-[#D97757]/50 rounded-2xl px-4 py-2 max-w-full"
+                  data-testid="hero-heated-offer"
+                >
+                  <Flame className="w-4 h-4 text-[#D97757] shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>{HEATED_FLOORS_OFFER_SHORT}</span>
+                </p>
                 <InstantQuoteForm id="quote" variant="dark" source="hero_form" className="max-w-xl" />
                 <p className="text-sm text-white/55">
                   Want to see it first?{" "}
@@ -365,6 +354,8 @@ export default function HomePage() {
 
       {/* Trust strip — right under the hero, sets the bar before scrolling */}
       <TrustStrip variant="dark" />
+
+      <WhyShowersDontLeak />
 
       {/* ===== WHAT IS MICROCEMENT? — most visitors have never heard of it ===== */}
       <section id="what-is-microcement" className="py-20 md:py-24 px-6 md:px-12 bg-[#F5F1EA]" data-testid="what-is-microcement-section">
