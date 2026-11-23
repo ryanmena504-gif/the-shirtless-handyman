@@ -18,7 +18,7 @@
     {
       "path": "/shop",
       "slug": "shop",
-      "size": 18918
+      "size": 19516
     },
     {
       "path": "/about",
@@ -171,5 +171,5 @@
       "size": 56677
     }
   ],
-  "generatedAt": "2026-11-20T20:13:10.797Z"
+  "generatedAt": "2026-11-23T17:48:05.764Z"
 }
