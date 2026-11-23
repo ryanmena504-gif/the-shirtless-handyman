@@ -55,11 +55,20 @@ export default function ShopPage() {
             >
               No grout. No seams. No shirt.
             </p>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
               Cheeky name, high-end work. Muscle tanks and a cap from the guy
               who installs seamless microcement and Venetian plaster across
               New Orleans. The joke&rsquo;s on the shirt. The bathrooms are serious.
             </p>
+            <a
+              href={SHOP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-12 px-8 rounded-full bg-[#D97757] hover:bg-[#C56545] text-white font-semibold transition-colors"
+              data-testid="shop-the-merch"
+            >
+              Shop the merch <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </section>
 
